@@ -1,0 +1,43 @@
+Let there be Levels
+===========
+Seamless loading from level to level. No transitions.
+
+Goals:
+Load levels from a file.
+Append a level to another level from two level files.
+Gradually load and de-load levels during exploration.
+Append levels based on a world file's data.
+
+
+Let there be People
+===========
+Nut is born, and she has basic controls.
+Interaction with NPCs and enemies.
+
+Goals:
+Make Nut with basic left and right controls.
+Make an enemy which moves left and right and hurts Nut.
+Make an NPC to interact with Nut.
+Allow the NPC to provide Nut with an option which activates a flag.
+Allow Nut to select an action with an NPC which makes it turn hostile.
+
+
+Let there be Pain and Death
+=============
+Entities will now have health and can die.
+
+Add (100) health to each Entity by default.
+Add an attack for Nut (a slap) and the enemy (running in to her).
+When Nut dies (0), add a death transition which resets the level.
+When the enemy dies, make it disappear.
+
+
+Let there be... Cool Controls?
+=============
+Nut wants some cool moves, now.
+
+Goals:
+Make a wall-hang: when Nut just misses a platform, she grabs on to it.
+	(Automatically pulls herself up quickly, Galaxy-style)
+Test ledge-kicking: when wall-hanging, Nut may perform a push-jump from it.
+	(Facing the opposite direction and jumping)
