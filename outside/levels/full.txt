@@ -1,0 +1,12 @@
+aaababababababababababababababab
+ab            abab            ab
+ab            abab            ab
+ab      ab    abab    ab      ab
+abab    ab    abab    ab    abab
+abab    ab    abab    ab    abab
+ab            abab            ab
+ab            abab            ab
+ab    ab      abab      ab    ab
+ab      abababababababab      ab
+abab          abab          abab
+abababababababababababababababab

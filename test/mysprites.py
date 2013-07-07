@@ -1,7 +1,7 @@
 import modules as mo
 rtrn = mo.KeyTracker(mo.sf.Keyboard.RETURN)
 
-tex = mo.sf.Texture.load_from_file("img/test.png")
+tex = mo.sf.Texture.load_from_file("img/test/test.png")
 sprites = []
 def make_sprite():
 	i = len(sprites)

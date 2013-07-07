@@ -8,18 +8,24 @@ Append a level to another level from two level files.
 Gradually load and de-load levels during exploration.
 Append levels based on a world file's data.
 
-----
+	Mid-term:
+	Ctrl-Right-click to bring up a list of tiles to choose.
+	Camera moves in all four directions.
+	Mouse scroller zooms the camera in and out.
 
+----
 0.0.2 - Level saving
 + Added a Level Editor.
 + Added MyMouse.
-
-~ Level
+	MyMouse overrides Button instance methods.
++ Level
+	+ May be saved.
 	Loads from strings.
 	level is now formatted the same as tiles.
 	level and tiles are now given empty space in advance.
 		and then tiles alter that space.
 
+A
 x Move Level in to it's own module.
 x Draw tiles to fill the screen.
 x Click to place a tile.
@@ -32,8 +38,15 @@ x Fix sprite sheet being loaded the wrong way.
 	x Vertical instead of horizontal.
 x Fix window resizing altering mouse.
 
-Press Ctrl+S to save progress.
-Right-click to bring up a list of tiles to choose.
+-
+B
+x Fix initializing tiles being extremely slow.
+	x Texture was loaded each time. Not anymore.
+x Put Level Editor in to it's own module.
+x Press Ctrl+S to save progress.
+x Right-click to remove a tile.
+	x Allow MyMouse to pick up right-clicks.
+		x Required an instance method override.
 
 
 ----

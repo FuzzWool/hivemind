@@ -1,6 +1,6 @@
 import sfml as sf
 
-SCALE = 2
+SCALE = 1
 
 SCREEN_WIDTH = 400 * SCALE
 SCREEN_HEIGHT = 300 * SCALE

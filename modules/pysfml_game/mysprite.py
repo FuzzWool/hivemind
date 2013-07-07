@@ -60,6 +60,7 @@ class MySprite(sf.Sprite, Rectangle):
 
 	def draw(self): window.draw(self)
 
+
 class resize: #PRIVATE
 #Scales the image proportionally based on absolute sizing.
 	def __init__ (self, mysprite):

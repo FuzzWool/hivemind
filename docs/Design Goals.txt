@@ -3,7 +3,7 @@ Let there be Levels
 Seamless loading from level to level. No transitions.
 
 Goals:
-Load levels from a file.
+x Load levels from a file.
 Append a level to another level from two level files.
 Gradually load and de-load levels during exploration.
 Append levels based on a world file's data.

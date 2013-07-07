@@ -3,9 +3,11 @@ import modules as mo
 class Level:
 	level = []
 	tiles = []
+	level_dir = ""
 	alphabet = ["a","b","c","d","e","f","g",\
 	 "h","i","j","k","l","m","n","o","p","q",\
 	 "q","r","s","t","u","v","w","x","y","z"]
+	texture = mo.texture("img/test/level.png") 
 
 	def __call__(self): return self.level
 	
@@ -14,6 +16,7 @@ class Level:
 
 		def get_level(level_dir):
 		#Grab level data from text file.
+			self.level_dir = level_dir
 			f = open("outside/levels/"+level_dir+".txt")
 			level = f.read()
 			f.close()
@@ -78,9 +81,7 @@ class Level:
 			if clip == "  ":
 				return None
 			#
-			tex = mo.sf.Texture.load_from_file\
-				("img/test/level.png")
-			sprite = mo.MySprite(tex)
+			sprite = mo.MySprite(self.texture)
 			sprite.clip.set(mo.GRID, mo.GRID)
 			cx = self.alphabet.index(clip[0])
 			cy = self.alphabet.index(clip[1])
@@ -96,9 +97,27 @@ class Level:
 		self.tiles[x][y] = tile
 		self.level[x][y] = clip
 
+	def save(self):
+	#Saves the level back in to the file it originated.
+		#Grab the data.
+		text = ""
+		for iy, y in enumerate(self.level[0]):
+			for ix, x in enumerate(self.level):
+				text += str(self.level[ix][iy])		
+			text += "\n"
+		text = text[:-1]
+
+		#Save it to the original file.
+		f = open("outside/levels/"+self.level_dir+".txt", "r+")
+		f.write(text)
+		f.close()
+
+		print "Saved level '%s'!" % self.level_dir
+		
+
 	def draw(self):
-		#tiles[x][y]
-		for x in self.tiles:
-			for y in x:
-				if y != None:
-					y.draw()
+		# tiles[x][y]
+		for x in range(len(self.tiles)):
+			for y in range(len(self.tiles[0])):
+				if self.tiles[x][y] != None:
+					self.tiles[x][y].draw()

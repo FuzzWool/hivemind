@@ -1,7 +1,23 @@
-y = 3
-foo = [None for i in range(y)]
-barr = []
-for i in range(3):
-	barr.append(foo[:])
+import modules as mo
+import new
 
-print barr
+rtrn = mo.KeyTracker(mo.sf.Keyboard.RETURN)
+
+mouse = mo.MyMouse()
+#########################################################
+running = True
+while running:
+	
+	#Logic
+	if mo.quit(): running = False
+
+	if mouse.right.pressed():
+		print "Click."
+	#Animation
+	#
+
+	#Video
+	mo.window.clear(mo.sf.Color.WHITE)
+	#
+	#
+	mo.window.display()
