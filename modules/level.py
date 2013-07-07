@@ -1,0 +1,104 @@
+import modules as mo
+
+class Level:
+	level = []
+	tiles = []
+	alphabet = ["a","b","c","d","e","f","g",\
+	 "h","i","j","k","l","m","n","o","p","q",\
+	 "q","r","s","t","u","v","w","x","y","z"]
+
+	def __call__(self): return self.level
+	
+	def __init__ (self, level_dir):
+	#Grabs level data and creates tiles.
+
+		def get_level(level_dir):
+		#Grab level data from text file.
+			f = open("outside/levels/"+level_dir+".txt")
+			level = f.read()
+			f.close()
+			return level
+
+		def format_level(level):
+		#The level is now in an [x][y] format.
+			rows = level.split("\n")
+			format = []
+			i = 0
+			while i < len(rows[0])-1:
+				format.append([c[i]+c[i+1] for c in rows])
+				i += 2
+			return format
+
+		def initialize_tiles(tiles, level):
+		#Make empty spaces for tiles using the level size.
+			fill = [None for y in level[0]]
+			while len(tiles) < len(level):
+				tiles.append(fill)
+			return tiles
+
+		def make_tiles(level):
+		#Add tile graphics based on the level[x][y]
+			for ix, x in enumerate(level):
+				for iy, y in enumerate(x):
+					self.change_tile((ix, iy), y)
+
+		level = get_level(level_dir)
+		level = format_level(level)
+		tiles = []
+		tiles = initialize_tiles(tiles, level)
+		self.level = level
+		self.tiles = [t[:] for t in tiles]
+
+		make_tiles(self.level)
+
+	def change_tile(self, pos, clip):
+	#Changes a tile, updates the level and tiles.
+
+		def add_filler(x, y):
+		#Adds extra empty spaces in levels and tiles.
+		#So that new data may be added.
+			#Maximum boundary.
+			x += 1; y += 1
+			if x < len(self.level): x = len(self.level)
+			if y < len(self.level[0]): y = len(self.level[0])
+			#Make longer. y
+			for ic, row in enumerate(self.level):
+				while len(row) < y:
+					self.level[ic].append("  ")
+					self.tiles[ic].append(None)
+			#Add more. x
+			l_filler = ["  " for i in range(y)]
+			t_filler = [None for i in range(y)]
+			while len(self.level) < x:
+				self.level.append(l_filler[:])
+				self.tiles.append(t_filler[:])
+
+		def make_tile(pos=(), clip=()):
+		#Make a new tile. Requires filler to be in place.
+			if clip == "  ":
+				return None
+			#
+			tex = mo.sf.Texture.load_from_file\
+				("img/test/level.png")
+			sprite = mo.MySprite(tex)
+			sprite.clip.set(mo.GRID, mo.GRID)
+			cx = self.alphabet.index(clip[0])
+			cy = self.alphabet.index(clip[1])
+			sprite.clip.use(cy, cx)
+			sprite.goto = pos[0]*mo.GRID, pos[1]*mo.GRID
+			return sprite
+
+		x, y = pos[0], pos[1]
+		add_filler(x, y)
+
+		tile = make_tile(pos, clip)
+
+		self.tiles[x][y] = tile
+		self.level[x][y] = clip
+
+	def draw(self):
+		#tiles[x][y]
+		for x in self.tiles:
+			for y in x:
+				if y != None:
+					y.draw()

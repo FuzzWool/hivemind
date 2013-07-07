@@ -13,3 +13,5 @@ view = sf.View.from_rect(\
 window.view = view
 
 GRID = 25
+RENDER_WIDTH = SCREEN_WIDTH / SCALE
+RENDER_HEIGHT = SCREEN_HEIGHT / SCALE

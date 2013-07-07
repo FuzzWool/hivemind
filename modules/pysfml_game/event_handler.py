@@ -13,6 +13,23 @@ def quit():
 	return False
 
 
+class MyMouse:
+	was_held = False
+
+	def position(self):
+		return sf.Mouse.get_position(wi.window)
+
+	def held(self):
+		return \
+		sf.Mouse.is_button_pressed(sf.Mouse.LEFT)
+
+	def pressed(self):
+		truth = False
+		if not self.was_held:
+			if self.held(): truth = True
+		self.was_held = self.held()
+		return truth
+
 #Tracks whether or not a key is pressed, held, and the intervals it is held for.
 class KeyTracker:
 	def __init__ (self, key):
