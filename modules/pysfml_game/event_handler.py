@@ -40,6 +40,7 @@ class Button:
 #Instance designed to be overriden.
 #An event which notices changes to a bool.
 	old_held = None
+	old_held2 = None
 
 	def held(self):
 	#Override me!
@@ -52,6 +53,14 @@ class Button:
 				press = True
 		self.old_held = self.held()
 		return press
+
+	def released(self):
+		release = False
+		if self.old_held2 == True:
+			if self.held() == False:
+				release = True
+		self.old_held2 = self.held()
+		return release
 
 #
 

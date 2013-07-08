@@ -15,13 +15,46 @@ Append levels based on a world file's data.
 
 ----
 0.0.3 - Level Editor: tile selection
-+ TileSelector
++ class TileSelector
+	Ctrl+Click brings open a menu for selecting tiles.
+	Selections cannot go out of bounds.
+
++ class MyMouse
+
+*LevelEditor needs Mouse and Level.
+*TileSelector needs Level('s texture and alphabet)
+			 and LevelEditor('s Mouse and mouse_tex)
+
 ~ module LevelEditor now resizes/scales the window.
+
+---
+B
+
+x Make a review of the hierachy between Level, LevelEditor and TileSelector.
+x Clean-up test1, LevelEditor and TileSelector.
+
+x LevelEditor holds mouse.
+	x toggle grid
+	x place position
+	x remove position
+	x select grid
+	x move_cursor position
+
+x Close the TileSelector upon mouse release.
+	x MyMouse (left, right) needs 'release'.
+		x Button needs 'release'.
+
+x Don't let tile selections go out of bounds.
+
+Move LevelEditor and TileSelector in to the module.
+
+---
+A
 
 x Resize window when using the level editor.
 	x Scale 1, shows 4 rooms
 
-Ctrl-Right-click to bring up a list of tiles to choose.
+Ctrl-Left-click to bring up a list of tiles to choose.
 	
 	x Open and close a mysprite box*.
 	x Create multiple sprites within this box.
@@ -40,10 +73,3 @@ Ctrl-Right-click to bring up a list of tiles to choose.
 			x Cursor is moved.
 			x Tile is selected.
 		x Tile being used is placed by LevelEditor.
-
-	Make A.
-
-	B
-	-
-	Make a review of the hierachy between Level, LevelEditor and TileSelector.
-	Clean-up test1, LevelEditor and TileSelector.

@@ -7,7 +7,7 @@ mouse = le.EditMouse()
 
 Level = mo.Level("full")
 grid = le.make_grid()
-LevelEditor = le.LevelEditor(Level)
+LevelEditor = le.LevelEditor(mouse, Level)
 #########################################################
 running = True
 while running:
@@ -16,17 +16,22 @@ while running:
 	if mo.quit(): running = False
 
 	if ctrl.held():
+
 		if s.pressed():
 			Level.save()
-		if mouse.right.pressed():
-			print mouse.grid_position()
+		if mouse.left.pressed():
+			LevelEditor.TileSelector.open()
+			
 	else:
 		if mouse.left.held():
-			LevelEditor.place_tile(*mouse.position())
+			LevelEditor.place_tile()
 		if mouse.right.held():
-			LevelEditor.remove_tile(*mouse.position())
+			LevelEditor.remove_tile()
 
-	LevelEditor.loop()
+		if mouse.left.pressed():
+			LevelEditor.TileSelector.select()
+		if mouse.left.released():
+			LevelEditor.TileSelector.close()
 
 	#Animation
 	#
