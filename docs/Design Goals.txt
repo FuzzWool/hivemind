@@ -9,6 +9,16 @@ Gradually load and de-load levels during exploration.
 Append levels based on a world file's data.
 
 
+Let there be a Camera
+============
+A dynamic, zooming camera for focusing on special events.
+*Relies on the game's 2x ratio for zooming out.
+
+Goals:
+TU-styled camera positioning for level sections.
+Camera may zoom in and out within certain boundaries.
+
+
 Let there be People
 ===========
 Nut is born, and she has basic controls.

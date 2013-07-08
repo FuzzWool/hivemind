@@ -8,68 +8,48 @@ Append a level to another level from two level files.
 Gradually load and de-load levels during exploration.
 Append levels based on a world file's data.
 
-	Mid-term:
-	x Ctrl-Right-click to bring up a list of tiles to choose.
-	Camera moves in all four directions.
-	Mouse scroller zooms the camera in and out.
 
-----
-0.0.3 - Level Editor: tile selection
-+ class TileSelector
-	Ctrl+Click brings open a menu for selecting tiles.
-	Selections cannot go out of bounds.
-
-+ class MyMouse
-
-*LevelEditor needs Mouse and Level.
-*TileSelector needs Level('s texture and alphabet)
-			 and LevelEditor('s Mouse and mouse_tex)
-
-~ module LevelEditor now resizes/scales the window.
+0.0.5
+Goals:
+	Level de-loads any unnecessary space.
+	Level adds filler to -x and -y, moving the level.
 
 ---
-B
 
-x Make a review of the hierachy between Level, LevelEditor and TileSelector.
-x Clean-up test1, LevelEditor and TileSelector.
+0.0.4 - Editor Movement
+Goals:
+	x Camera moves in all four directions.
+	x Mouse scroller zooms the camera in and out.
 
-x LevelEditor holds mouse.
-	x toggle grid
-	x place position
-	x remove position
-	x select grid
-	x move_cursor position
+x Camera moves in all four directions.
+	x Using WASD.
+	x Save the offset of the view.
+		x get/set x
+		x get/set y
 
-x Close the TileSelector upon mouse release.
-	x MyMouse (left, right) needs 'release'.
-		x Button needs 'release'.
+x MyCamera, seperate module.
+*LevelEditor's window recalls it.
+x Fix MyMouse being affected by camera offset.
 
-x Don't let tile selections go out of bounds.
+x Make a 'key' module with all the KeyTrackers defined already.
+	x Add to it's own module with everything working.
 
-Move LevelEditor and TileSelector in to the module.
+x Zooming in with Ctrl+ and Ctrl-.
+	x Fix MyMouse being messed up by Zoom.
+	Zooms cannot go further than 1:1.
+	x Default is 2:1. (For level_editor)
 
----
-A
+-
 
-x Resize window when using the level editor.
-	x Scale 1, shows 4 rooms
++ Editor may now move with the WASD keys.
++ Editor may now zoom in and out with Ctrl + and -.
 
-Ctrl-Left-click to bring up a list of tiles to choose.
-	
-	x Open and close a mysprite box*.
-	x Create multiple sprites within this box.
-	x Box only opens upon being called.
-	x Snap the cursor to the tile-box.
-		x Make a special mouse subclass for grids.
-	x Disable the placement of tiles while active.
-	x Loop now uses the mouse object.
-	x Snap box opening to absolute grid.
++ class MyCamera (+ global Camera)
+global Camera holds the current window view.
+! MyCamera has not been tested for Camera swapping.
 
-	TileSelector
-		x Holds tile data for placement.
-			 x Tiles should be held in an [x][y] format.
-		
-		x Tile being used is highlighted on the list.
-			x Cursor is moved.
-			x Tile is selected.
-		x Tile being used is placed by LevelEditor.
++ All KeyTracker instances are defined in advance.
+	Using the same names as their sf.Keyboard counterparts.
+~ KeyTracker is now located in pysfml_game/key.py
+
+! SCALE is now redundant, because Camera holds zoom.

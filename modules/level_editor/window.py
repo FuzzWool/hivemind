@@ -18,3 +18,7 @@ mo.window.vertical_sync_enabled = True
 view = mo.sf.View.from_rect(\
 	mo.sf.FloatRect(0, 0, mo.SCREEN_WIDTH/mo.SCALE, mo.SCREEN_HEIGHT/mo.SCALE))
 mo.window.view = view
+
+#Update Camera.
+mo.Camera._ = mo.window.view
+mo.Camera.zoom = mo.SCALE

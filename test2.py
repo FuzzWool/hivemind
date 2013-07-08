@@ -1,73 +1,55 @@
 import modules as mo
-rtrn = mo.KeyTracker(mo.mo.sf.Keyboard.RETURN)
+import modules.pysfml_game.key as key
+import modules.level_editor as le
 
-import new
-#MyMouse release.
-class MyMouse:
-	def __init__(self):
-		def left_held(self):
-			return mo.sf.Mouse.is_button_pressed\
-			 (mo.sf.Mouse.LEFT)
+#Camera Zooming
+mouse = le.EditMouse()
 
-		def right_held(self):
-			return mo.sf.Mouse.is_button_pressed\
-			 (mo.sf.Mouse.RIGHT)
+Level = mo.Level("full")
+grid = le.make_grid()
+LevelEditor = le.LevelEditor(mouse, Level)
 
-		self.left = Button()
-		self.left.held = \
-		 new.instancemethod(left_held, self.left, None)
-
-		self.right = Button()
-		self.right.held = \
-		 new.instancemethod(right_held, self.right, None)
-
-	def position(self):
-		return mo.sf.Mouse.get_position(wi.window)
-
-class Button:
-#Instance designed to be overriden.
-#An event which notices changes to a bool.
-	old_held = None
-	old_held2 = None
-
-	def held(self):
-	#Override me!
-		return False
-
-	def pressed(self):
-		press = False
-		if self.old_held == False:
-			if self.held() == True:
-				press = True
-		self.old_held = self.held()
-		return press
-
-	def released(self):
-		release = False
-		if self.old_held2 == True:
-			if self.held() == False:
-				release = True
-		self.old_held2 = self.held()
-		return release
-
-
-Mouse = MyMouse()
 #########################################################
-
 running = True
 while running:
+
 	#Logic
 	if mo.quit(): running = False
 
-	if Mouse.left.released():
-		print 100
+	if key.L_CTRL.held():
+
+		if key.S.pressed():
+			Level.save()
+		if mouse.left.pressed():
+			LevelEditor.TileSelector.open()
+			
+	else:
+		if mouse.left.held():
+			LevelEditor.place_tile()
+		if mouse.right.held():
+			LevelEditor.remove_tile()
+
+		if mouse.left.pressed():
+			LevelEditor.TileSelector.select()
+		if mouse.left.released():
+			LevelEditor.TileSelector.close()
+
+		if key.RETURN.pressed():
+			print mo.Camera.x, mo.Camera.y
+		if key.W.held(): mo.Camera.y -= mo.GRID
+		if key.S.held(): mo.Camera.y += mo.GRID
+		if key.A.held(): mo.Camera.x -= mo.GRID
+		if key.D.held(): mo.Camera.x += mo.GRID
 
 	#Animation
 	#
 
 	#Video
-	mo.window.clear(mo.sf.Color.WHITE)
+	mo.window.clear(mo.sf.Color(128, 128, 128))
 	#
-
+	for g in grid:
+		g.draw()
+	Level.draw()
+	LevelEditor.draw()
 	#
 	mo.window.display()
