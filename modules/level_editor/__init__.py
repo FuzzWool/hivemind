@@ -1,3 +1,6 @@
+from window import *
+from mouse import *
+#
 import modules as mo
 
 def make_grid():

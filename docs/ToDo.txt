@@ -9,56 +9,41 @@ Gradually load and de-load levels during exploration.
 Append levels based on a world file's data.
 
 	Mid-term:
-	Ctrl-Right-click to bring up a list of tiles to choose.
+	x Ctrl-Right-click to bring up a list of tiles to choose.
 	Camera moves in all four directions.
 	Mouse scroller zooms the camera in and out.
 
 ----
-0.0.2 - Level saving
-+ Added a Level Editor.
-+ Added MyMouse.
-	MyMouse overrides Button instance methods.
-+ Level
-	+ May be saved.
-	Loads from strings.
-	level is now formatted the same as tiles.
-	level and tiles are now given empty space in advance.
-		and then tiles alter that space.
+0.0.3 - Level Editor: tile selection
++ TileSelector
+~ module LevelEditor now resizes/scales the window.
 
-A
-x Move Level in to it's own module.
-x Draw tiles to fill the screen.
-x Click to place a tile.
-x make_tile adds tiles in pre-existing spaces.
-x Clean-up ugly nesting in Level.
-x Fix disappearing tiles glitch.
-	x Fix x's being updated with y in tiles.
-	x Fixed by changing self.tile's inheritance of tile.
-x Fix sprite sheet being loaded the wrong way.
-	x Vertical instead of horizontal.
-x Fix window resizing altering mouse.
+x Resize window when using the level editor.
+	x Scale 1, shows 4 rooms
 
--
-B
-x Fix initializing tiles being extremely slow.
-	x Texture was loaded each time. Not anymore.
-x Put Level Editor in to it's own module.
-x Press Ctrl+S to save progress.
-x Right-click to remove a tile.
-	x Allow MyMouse to pick up right-clicks.
-		x Required an instance method override.
+Ctrl-Right-click to bring up a list of tiles to choose.
+	
+	x Open and close a mysprite box*.
+	x Create multiple sprites within this box.
+	x Box only opens upon being called.
+	x Snap the cursor to the tile-box.
+		x Make a special mouse subclass for grids.
+	x Disable the placement of tiles while active.
+	x Loop now uses the mouse object.
+	x Snap box opening to absolute grid.
 
+	TileSelector
+		x Holds tile data for placement.
+			 x Tiles should be held in an [x][y] format.
+		
+		x Tile being used is highlighted on the list.
+			x Cursor is moved.
+			x Tile is selected.
+		x Tile being used is placed by LevelEditor.
 
-----
-0.0.1 - Level Loading
-Added Level class.
+	Make A.
 
-Window changes:
-	x Changed video size.
-		x Scale-up all of the graphics.
-
-x Load levels from a file.
-	x Load a text file's content.
-	x Change level in to [x][y] format.
-	x List positions are positions in the grid
-	add_filler for starting and editing
+	B
+	-
+	Make a review of the hierachy between Level, LevelEditor and TileSelector.
+	Clean-up test1, LevelEditor and TileSelector.
