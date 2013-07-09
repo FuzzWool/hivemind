@@ -25,21 +25,24 @@ class LevelEditor:
 
 	#External classes.
 	Mouse = None
+	Camera = None
 	Level = None
 
 	#Sprites
 	mouse_tex = mo.texture("img/level_editor/cursor.png")
 	mouse = mo.MySprite(mouse_tex)
 
-	def __init__(self, Mouse, Level):
+	def __init__(self, Mouse, Camera, Level):
 		self.Mouse = Mouse
+		self.Camera = Camera
 		self.Level = Level
+		#Subclasses
 		self.TileSelector = TileSelector(self)
 
 	def place_tile(self, tile_data=None):
 	#Changes a tile within the level.
 	#Level, Mouse, TileSelector
-		x, y = self.Mouse.grid_position()
+		x, y = self.Mouse.grid_position(self.Camera)
 		#
 		if self.TileSelector.visible == False:
 			if tile_data == None:
@@ -58,7 +61,7 @@ class LevelEditor:
 
 	def _move_cursor(self):
 	#Mouse
-		x, y = self.Mouse.grid_position()
+		x, y = self.Mouse.grid_position(self.Camera)
 		x *= mo.GRID; y *= mo.GRID
 		self.mouse.goto = x, y
 
@@ -123,7 +126,7 @@ class TileSelector:
 		if visible == None: visible = not self.visible
 		self.visible = visible
 		#Moves the tiles.
-		x, y = self._.Mouse.grid_position()
+		x, y = self._.Mouse.grid_position(self._.Camera)
 		x *= mo.GRID; y *= mo.GRID
 		self.b_sprite.box.center = x, y
 		self.b_sprite.center = x, y
@@ -137,7 +140,8 @@ class TileSelector:
 		if self.visible:
 
 			def grid_relative():
-				x, y = self._.Mouse.grid_position()
+				x, y = self._.Mouse.grid_position\
+					(self._.Camera)
 				x -= self.tiles[0][0].x/mo.GRID
 				y -= self.tiles[0][0].y/mo.GRID
 				return x, y

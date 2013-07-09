@@ -3,7 +3,6 @@ import modules.pysfml_game.key as key
 import modules.level_editor as le
 
 mouse = le.EditMouse()
-Camera = mo.Camera
 
 Level = mo.Level("full")
 grid = le.make_grid()
@@ -24,12 +23,6 @@ while running:
 		#Open Tile Selector menu
 		if mouse.left.pressed():
 			LevelEditor.TileSelector.open()
-
-		#Zoom Camera
-		if key.ADD.pressed():
-			Camera.zoom *= 2
-		if key.SUBTRACT.pressed():
-			Camera.zoom /= 2
 			
 	else:
 		#Select Tiles
@@ -41,14 +34,6 @@ while running:
 			LevelEditor.TileSelector.select()
 		if mouse.left.released():
 			LevelEditor.TileSelector.close()
-
-		#Move Camera
-		if key.RETURN.pressed():
-			print mo.Camera.x, mo.Camera.y
-		if key.A.held(): mo.Camera.x -= mo.GRID
-		if key.D.held(): mo.Camera.x += mo.GRID
-		if key.W.held(): mo.Camera.y -= mo.GRID
-		if key.S.held(): mo.Camera.y += mo.GRID
 
 	#Animation
 	#

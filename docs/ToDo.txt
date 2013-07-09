@@ -9,47 +9,38 @@ Gradually load and de-load levels during exploration.
 Append levels based on a world file's data.
 
 
-0.0.5
+0.0.5 - Edited level files widen and shrink.
 Goals:
+	CTRL + WASD snaps to nearest 'room'.
 	Level de-loads any unnecessary space.
 	Level adds filler to -x and -y, moving the level.
 
----
 
-0.0.4 - Editor Movement
-Goals:
-	x Camera moves in all four directions.
-	x Mouse scroller zooms the camera in and out.
+x Create a new MyCamera class which inherits from sf.View
+	x Test inheritance from Camera to Camera
+		x When window becomes Camera B from A
+			x Camera window snaps to Camera B's x/y x
+			x Camera window snaps to Camera B's zoom x
 
-x Camera moves in all four directions.
-	x Using WASD.
-	x Save the offset of the view.
-		x get/set x
-		x get/set y
+x Add the new MyCamera to the current code.
 
-x MyCamera, seperate module.
-*LevelEditor's window recalls it.
-x Fix MyMouse being affected by camera offset.
+Fix MyMouse screwing up with the new Camera.
+	window.view refuses to become Camera. Fix.
 
-x Make a 'key' module with all the KeyTrackers defined already.
-	x Add to it's own module with everything working.
+CTRL + WASD snaps to nearest 'room'.
+	Make an EditorCamera which accomplishes this.
+		EditorCamera must replace the current Camera instance
 
-x Zooming in with Ctrl+ and Ctrl-.
-	x Fix MyMouse being messed up by Zoom.
-	Zooms cannot go further than 1:1.
-	x Default is 2:1. (For level_editor)
+		Rounds up to find the nearest room to snap to.
+		Snap to Render w and h
 
 -
 
-+ Editor may now move with the WASD keys.
-+ Editor may now zoom in and out with Ctrl + and -.
+! There is no longer a global Camera instance.
+  Now, Views should be applied over with Cameras.
 
-+ class MyCamera (+ global Camera)
-global Camera holds the current window view.
-! MyCamera has not been tested for Camera swapping.
-
-+ All KeyTracker instances are defined in advance.
-	Using the same names as their sf.Keyboard counterparts.
-~ KeyTracker is now located in pysfml_game/key.py
-
-! SCALE is now redundant, because Camera holds zoom.
+~ MyCamera now inherits directly from sf.View
++ EditMouse (~ EditMouse)
+	Can be forwarded a MyCamera to Position
+*LevelEditor
+	Now requires a MyCamera for it's Mouse positioning.

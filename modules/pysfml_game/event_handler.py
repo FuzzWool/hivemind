@@ -1,6 +1,6 @@
 import sfml as sf
 import window as wi
-from mycamera import Camera
+# from mycamera import Camera
 import new
 
 #Quit the app.
@@ -42,13 +42,15 @@ class MyMouse:
 		self.middle.held = \
 		 new.instancemethod(middle_held, self.middle, None)
 
-	def position(self):
-	#Camera offset and zoom don't impact it.
+	def position(self, Camera=None):
+	#Takes offsets from the Camera in to account.
 		pos = sf.Mouse.get_position(wi.window)
-		x = int(pos[0]+(Camera.x*Camera.zoom))
-		x = int(x/Camera.zoom)
-		y = int(pos[1]+(Camera.y*Camera.zoom))
-		y = int(y/Camera.zoom)
+		x, y = pos
+		if Camera != None:
+			x = int(pos[0]+(Camera.x*Camera.zoom))
+			x = int(x/Camera.zoom)
+			y = int(pos[1]+(Camera.y*Camera.zoom))
+			y = int(y/Camera.zoom)
 		return x, y
 
 class Button:

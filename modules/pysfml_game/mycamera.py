@@ -1,33 +1,38 @@
-from window import window
-from window import RENDER_WIDTH, RENDER_HEIGHT
+from window import sf
+from window import window as the_window
 from window import SCREEN_HEIGHT, SCREEN_WIDTH
-from window import SCALE
 
-class MyCamera(object):
-#Simplication of mo.window.view
-	_ = window.view
-	_zoom = SCALE
+class MyCamera(sf.View):
+	_zoom = float(1)
+
+	#Default settings.
+	#2:1 scale
+	def __init__(self):
+		sf.View.__init__(self)
+		self.zoom = float(2)
+		self.center = the_window.view.center
 
 	@property
 	def x(self):
-		cx = self._.center[0]
-		w = self._.width
+		cx = self.center[0]
+		w = self.width
 		return cx - (w/2)
 	@x.setter
 	def x(self, arg):
 		x = self.x
-		self._.move(arg-x, 0)
+		self.move(arg-x, 0)
 
 	@property
 	def y(self):
-		cy = self._.center[1]
-		h = self._.height
+		cy = self.center[1]
+		h = self.height
 		return cy - (h/2)
 	@y.setter
 	def y(self, arg):
 		y = self.y
-		self._.move(0, arg-y)
+		self.move(0, arg-y)
 
+	#How zoomed in the level the camera is.
 	@property
 	def zoom(self): return self._zoom
 	@zoom.setter
@@ -36,6 +41,6 @@ class MyCamera(object):
 		#
 		w, h = SCREEN_WIDTH, SCREEN_HEIGHT
 		w /= ratio; h /= ratio
-		self._.size = w, h
+		self.size = w, h
 
-Camera = MyCamera()
+the_window.view = MyCamera()

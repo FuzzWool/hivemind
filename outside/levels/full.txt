@@ -1,22 +1,22 @@
-ba    ba                  baba                                          
-ba    ba                  baba                                          
-ba    ba                  baba                                          
-ba    ba                  baba                                          
-babababa  bababa  ba  ba  baba                                          
-ba    ba  ba      ba  ba  baba                                          
-ba    ba  bababa    ba                                                  
-ba    ba  ba        ba    baba                                          
-ba    ba  bababa    ba    baba                                          
-                                                                        
-                                      aaaaaa    aa      aa              
-                                      aaaaaa    aa    aa  aa            
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                                        
+aa                            aa                                        
+aa                            aa                                        
+aa      cececececececece      aa                                        
+aa      ceccccccccccccce      aa                                        
+aa      ce            ce      aa                                        
+aa      ce            ce      aa                                        
+aa      ceccccccccccccce      aa                                        
+aa      cececececececece      aa                                        
+aa                            aa                                        
+aa                            aa      aaaaaa  aaaaaa  aaaaaa            
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa      aaaaaa  aaaaaa  aaaaaa            
                                       bdbdbd  bdbd    bdbdbd            
                                       bdbdbd  bdbd        bd            
                                       bd  bd    bd    bdbdbd            
                                       bd  bd    bd    bd                
                                       bdbdbd  bdbdbd  bdbdbd            
-                                                                        
-                                                                        
+                                      aaaaaa  aaaaaa  aaaaaa            
+                                      aaaaaa  aaaaaa  aaaaaa            
                                                                         
                                                                         
                                                                         
