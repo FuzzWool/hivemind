@@ -11,36 +11,23 @@ Append levels based on a world file's data.
 
 0.0.5 - Edited level files widen and shrink.
 Goals:
-	CTRL + WASD snaps to nearest 'room'.
+	x CTRL + WASD snaps to nearest 'room'.
 	Level de-loads any unnecessary space.
 	Level adds filler to -x and -y, moving the level.
+	Make grid a part of LevelEditor.
 
-
-x Create a new MyCamera class which inherits from sf.View
-	x Test inheritance from Camera to Camera
-		x When window becomes Camera B from A
-			x Camera window snaps to Camera B's x/y x
-			x Camera window snaps to Camera B's zoom x
-
-x Add the new MyCamera to the current code.
-
-Fix MyMouse screwing up with the new Camera.
-	window.view refuses to become Camera. Fix.
-
-CTRL + WASD snaps to nearest 'room'.
-	Make an EditorCamera which accomplishes this.
-		EditorCamera must replace the current Camera instance
-
-		Rounds up to find the nearest room to snap to.
-		Snap to Render w and h
+x SHIFT + WASD snaps to nearest 'room'.
+	x Make an EditorCamera which accomplishes this.
+		x get room_x, room_y
+		x set room_x, room_y
+			setting snaps to both room_x and room_y
 
 -
 
-! There is no longer a global Camera instance.
-  Now, Views should be applied over with Cameras.
++ class RoomCamera (inherits from MyCamera)
+	gets/sets room_x and room_y
 
-~ MyCamera now inherits directly from sf.View
-+ EditMouse (~ EditMouse)
-	Can be forwarded a MyCamera to Position
-*LevelEditor
-	Now requires a MyCamera for it's Mouse positioning.
++ LevelEditor may use SHIFT + WASD to snap to a room.
+	(using RoomCamera)
+
+~ LevelEditor is now a seperate file.

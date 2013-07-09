@@ -55,4 +55,6 @@ for i in sf.Keyboard.__dict__:
 		name = i
 		if name == "L_CONTROL":
 			name = "L_CTRL"
+		if name == "R_CONTROL":
+			name = "R_CTRL"
 		vars()[name] = KeyTracker(v)

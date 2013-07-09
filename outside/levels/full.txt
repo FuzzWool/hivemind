@@ -1,7 +1,7 @@
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                                        
-aa                            aa                                        
-aa                            aa                                        
-aa      cececececececece      aa                                        
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabc                                      
+aa                            aabc                                      
+aa                            aabc                                      
+aa      cececececececece      aaba                                      
 aa      ceccccccccccccce      aa                                        
 aa      ce            ce      aa                                        
 aa      ce            ce      aa                                        
@@ -10,14 +10,14 @@ aa      cececececececece      aa
 aa                            aa                                        
 aa                            aa      aaaaaa  aaaaaa  aaaaaa            
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa      aaaaaa  aaaaaa  aaaaaa            
-                                      bdbdbd  bdbd    bdbdbd            
-                                      bdbdbd  bdbd        bd            
-                                      bd  bd    bd    bdbdbd            
-                                      bd  bd    bd    bd                
-                                      bdbdbd  bdbdbd  bdbdbd            
-                                      aaaaaa  aaaaaa  aaaaaa            
-                                      aaaaaa  aaaaaa  aaaaaa            
-                                                                        
+ce                              cc    bdbdbd  bdbd    bdbdbd            
+ce                              cc    bdbdbd  bdbd        bd            
+ce                              cc    bd  bd    bd    bdbdbd            
+ce      aa  aa  aa              cc    bd  bd    bd    bd                
+        aa  aa                        bdbdbd  bdbdbd  bdbdbd            
+        aaaaaa  aa                    aaaaaa  aaaaaa  aaaaaa            
+        aa  aa  aa                    aaaaaa  aaaaaa  aaaaaa            
+        aa  aa  aa                                                      
                                                                         
                                                                         
                                                                         
