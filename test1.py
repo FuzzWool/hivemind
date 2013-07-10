@@ -42,7 +42,7 @@ while running:
 		#Select Tiles
 		if mouse.left.held():
 			LevelEditor.place_tile()
-		if mouse.right.held():
+		if mouse.right.pressed():
 			LevelEditor.remove_tile()
 		if mouse.left.pressed():
 			LevelEditor.TileSelector.select()

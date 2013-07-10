@@ -32,8 +32,44 @@ class Level:
 				i += 2
 			return format
 
-		def initialize_tiles(tiles, level):
+		def room_off_level(level):
+		#The level should be room-sized.
+			def room_w():
+				room = mo.ROOM_WIDTH/mo.GRID
+				w = room
+				while w < len(level):
+					w += room
+				return w
+			def room_h(x):
+				room = mo.ROOM_HEIGHT/mo.GRID
+				h = room
+				while h < len(level[x]):
+					h += room
+				return h
+			#
+			level_w = lambda: len(level)
+			level_h = lambda x: len(level[x])
+
+			#Append pre-existing columns.
+			x = 0
+			while x < room_w():
+
+				#Add new column if needed.
+				if x >= level_w():
+					level.append([])
+
+				y = level_h(x)
+				while y < room_h(x):
+					level[x].append("__")
+					y += 1
+				y = 0
+				x += 1
+
+			return level
+
+		def initialize_tiles(level):
 		#Make empty spaces for tiles using the level size.
+			tiles = []
 			fill = [None for y in level[0]]
 			while len(tiles) < len(level):
 				tiles.append(fill)
@@ -47,12 +83,14 @@ class Level:
 
 		level = get_level(level_dir)
 		level = format_level(level)
-		tiles = []
-		tiles = initialize_tiles(tiles, level)
+		level = room_off_level(level)
 		self.level = level
-		self.tiles = [t[:] for t in tiles]
+
+		tiles = initialize_tiles(self.level)
+		self.tiles = [tile[:] for tile in tiles]
 
 		make_tiles(self.level)
+
 
 	def change_tile(self, pos, clip):
 	#Changes a tile, updates the level and tiles.
@@ -80,11 +118,11 @@ class Level:
 				while len(column) < y:
 				#Any time the level needs extending...
 					for repeat in range(room_h):
-						self.level[ic].append("  ")
+						self.level[ic].append("__")
 						self.tiles[ic].append(None)
 
 			#Then add more rows. x
-			l_filler = ["  " for i in range(y)]
+			l_filler = ["__" for i in range(y)]
 			t_filler = [None for i in range(y)]
 			while len(self.level) < x:
 				for repeat in range(room_w):
@@ -93,7 +131,7 @@ class Level:
 
 		def make_tile(pos=(), clip=()):
 		#Make a new tile. Requires filler to be in place.
-			if clip == "  ":
+			if clip == "__":
 				return None
 			#
 			sprite = mo.MySprite(self.texture)

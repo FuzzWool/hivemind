@@ -31,7 +31,7 @@ class LevelEditor:
 			self.Level.change_tile((x, y), tile_data)
 
 	def remove_tile(self):
-		self.place_tile("  ")
+		self.place_tile("__")
 
 	def draw(self):
 		self._move_cursor()

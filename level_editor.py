@@ -8,7 +8,6 @@ Camera = le.RoomCamera()
 Camera.x, Camera.y = 0, 0
 
 Level = mo.Level("full")
-grid = le.make_grid()
 LevelEditor = le.LevelEditor(mouse, Camera, Level)
 
 #########################################################
@@ -69,8 +68,7 @@ while running:
 	#Video
 	mo.window.clear(mo.sf.Color(128, 128, 128))
 	#
-	for g in grid:
-		g.draw()
+	LevelEditor.Grid.draw()
 	Level.draw()
 	LevelEditor.draw()
 	#

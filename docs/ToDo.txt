@@ -13,20 +13,15 @@ Append levels based on a world file's data.
 Goals:
 	x CTRL + WASD snaps to nearest 'room'.
 	Level de-loads any unnecessary space.
+	Level and tiles draws only what's on-screen.
 	Level adds filler to -x and -y, moving the level.
+	Special tile marking the start of a new room.
 
 (Expansions should be in Rooms to encourage consistent Level design)
 
-x Make a Grid subclass for the Level Editor
-x Grid automatically expands to match the size of the Level
-
-x Level only expands as extra rooms, not individual tiles
-
-Clean-up the system for the initialization of tiles in Level.
+x Loaded levels are always converted in to room sizing.
 
 -
 
-Special tile marking the start of a new room
-
-Grid Tiles only draw as the camera is focused on them
-	Level Tiles too
++ added room_off_level
+~ add_filler is cleaner
