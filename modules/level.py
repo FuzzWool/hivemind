@@ -60,21 +60,36 @@ class Level:
 		def add_filler(x, y):
 		#Adds extra empty spaces in levels and tiles.
 		#So that new data may be added.
-			#Maximum boundary.
+
+			def check_whole_level(x, y):
+				if x < len(self.level):
+					x = len(self.level)
+				if y < len(self.level[0]):
+					y = len(self.level[0])
+				return x, y
+
+			#Boundary to extend to
 			x += 1; y += 1
-			if x < len(self.level): x = len(self.level)
-			if y < len(self.level[0]): y = len(self.level[0])
-			#Make longer. y
-			for ic, row in enumerate(self.level):
-				while len(row) < y:
-					self.level[ic].append("  ")
-					self.tiles[ic].append(None)
-			#Add more. x
+			x, y = check_whole_level(x, y)
+
+			room_h = mo.ROOM_HEIGHT / mo.GRID
+			room_w = mo.ROOM_WIDTH / mo.GRID
+
+			#Make the existing columns longer. y
+			for ic, column in enumerate(self.level):
+				while len(column) < y:
+				#Any time the level needs extending...
+					for repeat in range(room_h):
+						self.level[ic].append("  ")
+						self.tiles[ic].append(None)
+
+			#Then add more rows. x
 			l_filler = ["  " for i in range(y)]
 			t_filler = [None for i in range(y)]
 			while len(self.level) < x:
-				self.level.append(l_filler[:])
-				self.tiles.append(t_filler[:])
+				for repeat in range(room_w):
+					self.level.append(l_filler[:])
+					self.tiles.append(t_filler[:])
 
 		def make_tile(pos=(), clip=()):
 		#Make a new tile. Requires filler to be in place.
@@ -117,7 +132,7 @@ class Level:
 
 	def draw(self):
 		# tiles[x][y]
-		for x in range(len(self.tiles)):
-			for y in range(len(self.tiles[0])):
-				if self.tiles[x][y] != None:
-					self.tiles[x][y].draw()
+		for x in self.tiles:
+			for y in x:
+				if y != None:
+					y.draw()
