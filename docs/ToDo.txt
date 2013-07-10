@@ -16,18 +16,13 @@ Goals:
 	Level adds filler to -x and -y, moving the level.
 	Make grid a part of LevelEditor.
 
-x SHIFT + WASD snaps to nearest 'room'.
-	x Make an EditorCamera which accomplishes this.
-		x get room_x, room_y
-		x set room_x, room_y
-			setting snaps to both room_x and room_y
+(Expansions should be in Rooms to encourage consistent Level design)
 
--
+x Make a Grid subclass for the Level Editor
+x Grid automatically expands to match the size of the Level
 
-+ class RoomCamera (inherits from MyCamera)
-	gets/sets room_x and room_y
+Level only expands as extra rooms, not individual tiles
+Special tile marking the start of a new room
 
-+ LevelEditor may use SHIFT + WASD to snap to a room.
-	(using RoomCamera)
-
-~ LevelEditor is now a seperate file.
+Grid Tiles only draw as the camera is focused on them
+	Level Tiles too

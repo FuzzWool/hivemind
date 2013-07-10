@@ -1,22 +1,5 @@
 import modules as mo
 
-def make_grid():
-#Make a grid sprite for every tile on the screen.
-	grid = []
-	grid_dir = "img/level_editor/grid.png"
-	tex = mo.sf.Texture.load_from_file(grid_dir)
-	x, y = 0, 0
-	while x < mo.RENDER_WIDTH:
-		while y < mo.RENDER_HEIGHT:
-			sprite = mo.MySprite(tex)
-			sprite.goto = x, y
-			grid.append(sprite)
-			y += mo.GRID
-		y = 0
-		x += mo.GRID
-	return grid
-
-
 class LevelEditor:
 #Alters the data of the currently loaded level.
 
@@ -35,6 +18,7 @@ class LevelEditor:
 		self.Level = Level
 		#Subclasses
 		self.TileSelector = TileSelector(self)
+		self.Grid = Grid(self.Level)
 
 	def place_tile(self, tile_data=None):
 	#Changes a tile within the level.
@@ -51,6 +35,8 @@ class LevelEditor:
 
 	def draw(self):
 		self._move_cursor()
+
+		#draw Grid externally
 		self.TileSelector.draw()
 		self.mouse.draw()
 
@@ -178,3 +164,50 @@ class TileSelector:
 					y.draw()
 			#Cursor
 			self.cursor.draw()
+
+class Grid:
+#Simply draws a grid.
+	tiles = []
+	tex = mo.texture("img/level_editor/grid.png")
+
+	def __init__ (self, Level):
+		self.Level = Level
+		self.append_tiles()
+
+	def append_tiles(self):
+	#Adds tiles to match the size of the level.
+		def add_tile(x, y):
+			tile = mo.MySprite(self.tex)
+			tile.x = x * mo.GRID
+			tile.y = y * mo.GRID
+			self.tiles[x].append(tile)
+
+		self_w = len(self.tiles)
+		def self_h(x):
+			if len(self.tiles) < x+1:
+				return 0
+			else:
+				return len(self.tiles[x])
+
+		level_w = len(self.Level.tiles)
+		level_h = lambda x: len(self.Level.tiles[x])
+
+		x = 0
+		y = self_h(x)
+		while x < level_w:
+
+			if x >= self_w:
+				self.tiles.append([])
+
+			while y < level_h(x):
+				add_tile(x, y)
+				y += 1
+			x += 1
+			y = self_h(x)
+
+	def draw(self):
+	#Expand the grid if the level's expanded.
+		self.append_tiles()
+		for x in self.tiles:
+			for y in x:
+				y.draw()

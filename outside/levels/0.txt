@@ -1,3 +1,10 @@
-aaabac
-babbbc
-cacbcc
+aaabac                        
+babbbc                        
+cacbcc                        
+                              
+                              
+                              
+                              
+                              
+                              
+                              
