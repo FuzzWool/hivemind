@@ -16,6 +16,7 @@ class LevelEditor:
 		self.Mouse = Mouse
 		self.Camera = Camera
 		self.Level = Level
+
 		#Subclasses
 		self.TileSelector = TileSelector(self)
 		self.Grid = Grid(self.Level)
@@ -24,7 +25,47 @@ class LevelEditor:
 	#Changes a tile within the level.
 	#Level, Mouse, TileSelector
 		x, y = self.Mouse.grid_position(self.Camera)
-		#
+		
+		minus_x = self.Level.minus_x
+		if x < -minus_x:
+			for loop in range(-x + -minus_x):
+				#Add new columns
+				level = self.Level.level
+				tiles = self.Level.tiles
+				l_fill = ["__" for i in level[0]]
+				t_fill = [None for i in level[0]]
+				level = [l_fill] + level
+				tiles = [t_fill] + tiles
+				self.Level.level = [l[:] for l in level]
+				self.Level.tiles = [t[:] for t in tiles]
+
+				#Extend the grid's lists
+				self.Grid.tiles = [[]] + self.Grid.tiles
+
+				#Acknowledge the change
+				self.Level.minus_x += 1
+
+		minus_y = self.Level.minus_y
+		if y < -minus_y:
+			for loop in range(-y + -minus_y):
+				#Add to columns
+				level = self.Level.level
+				tiles = self.Level.tiles
+				for ic, column in enumerate(level):
+					level[ic] = ["__"] + level[ic]
+				for it, tile in enumerate(tiles):
+					tiles[it] = [None] + tiles[it]
+				self.Level.level = [l[:] for l in level]
+				self.Level.tiles = [t[:] for t in tiles]
+
+				#Append to the grid's columns.
+				self.Grid.tiles = \
+				[[None] + i[:] for i in self.Grid.tiles]
+
+
+				#Acknowledge
+				self.Level.minus_y += 1
+
 		if self.TileSelector.visible == False:
 			if tile_data == None:
 				tile_data = self.TileSelector.select_tile
@@ -43,7 +84,6 @@ class LevelEditor:
 	#
 
 	def _move_cursor(self):
-	#Mouse
 		x, y = self.Mouse.grid_position(self.Camera)
 		x *= mo.GRID; y *= mo.GRID
 		self.mouse.goto = x, y
@@ -172,42 +212,10 @@ class Grid:
 
 	def __init__ (self, Level):
 		self.Level = Level
-		self.append_tiles()
-
-	def append_tiles(self):
-	#Adds tiles to match the size of the level.
-		def add_tile(x, y):
-			tile = mo.MySprite(self.tex)
-			tile.x = x * mo.GRID
-			tile.y = y * mo.GRID
-			self.tiles[x].append(tile)
-
-		self_w = len(self.tiles)
-		def self_h(x):
-			if len(self.tiles) < x+1:
-				return 0
-			else:
-				return len(self.tiles[x])
-
-		level_w = len(self.Level.tiles)
-		level_h = lambda x: len(self.Level.tiles[x])
-
-		x = 0
-		y = self_h(x)
-		while x < level_w:
-
-			if x >= self_w:
-				self.tiles.append([])
-
-			while y < level_h(x):
-				add_tile(x, y)
-				y += 1
-			x += 1
-			y = self_h(x)
 
 	def draw(self):
 	#Expand the grid if the level's expanded.
-		self.append_tiles()
 		for x in self.tiles:
 			for y in x:
-				y.draw()
+				if y != None:
+					y.draw()

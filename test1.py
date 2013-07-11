@@ -8,7 +8,7 @@ Camera = le.RoomCamera()
 Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
-Level = mo.Level("0")
+Level = le.ELevel("0")
 LevelEditor = le.LevelEditor(mouse, Camera, Level)
 
 #########################################################
@@ -42,7 +42,7 @@ while running:
 		#Select Tiles
 		if mouse.left.held():
 			LevelEditor.place_tile()
-		if mouse.right.pressed():
+		if mouse.right.held():
 			LevelEditor.remove_tile()
 		if mouse.left.pressed():
 			LevelEditor.TileSelector.select()

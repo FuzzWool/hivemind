@@ -7,7 +7,10 @@ class Level:
 	alphabet = ["a","b","c","d","e","f","g",\
 	 "h","i","j","k","l","m","n","o","p","q",\
 	 "q","r","s","t","u","v","w","x","y","z"]
-	texture = mo.texture("img/test/level.png") 
+	texture = mo.texture("img/test/level.png")
+
+	#Level Editor
+	minus_x, minus_y = 0, 0
 
 	def __call__(self): return self.level
 	
@@ -143,6 +146,7 @@ class Level:
 			return sprite
 
 		x, y = pos[0], pos[1]
+		x += self.minus_x; y += self.minus_y
 		add_filler(x, y)
 
 		tile = make_tile(pos, clip)

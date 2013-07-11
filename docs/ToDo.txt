@@ -12,16 +12,32 @@ Append levels based on a world file's data.
 0.0.5 - Edited level files widen and shrink.
 Goals:
 	x CTRL + WASD snaps to nearest 'room'.
+	Level adds filler to -x and -y, moving the level.
 	Level de-loads any unnecessary space.
 	Level and tiles draws only what's on-screen.
-	Level adds filler to -x and -y, moving the level.
 	Special tile marking the start of a new room.
 
 (Expansions should be in Rooms to encourage consistent Level design)
 
 x Loaded levels are always converted in to room sizing.
+x Grid updates tiles in the correct direction.
+	x Also has to acknowledge the Level's offset.
 
+x Add y, as well.
+
+Make an ELevel subclass.
+	- Applies the filler upon a tile change.
+	- minus_x, minus_y
+	- has it's own grid tiles
+
+Grid.tile is changed alongside Level and Tile.
+
+Consider ways to clean up.
+
+Make a seperate ELevel with the offset-tracking.
 -
 
-+ added room_off_level
-~ add_filler is cleaner
+*LevelEditor depends on Level minus_x and minus_y
+for tracking the offsets of level expansion.
+
+*Grid also depends on minus_x and minus_y
