@@ -62,7 +62,7 @@ class ELevel(Level):
 			if select_y < level_y(0):
 				select_y = level_y(0)
 
-			#Size should be room-sized increments.
+			# Size should be room-sized increments.
 			room_width = 0
 			while room_width < select_x:
 				room_width += ROOM_WIDTH / GRID

@@ -26,9 +26,7 @@ x Make an ELevel subclass.
 		x updates
 	x Top and Left
 
-Make the level fill in room increments.
-	Works for dr, but not ul.
-	Make it work for ul, and not mess with dr.
+x Make the level fill space in room-sized increments.
 
 Consider ways to clean up.
 

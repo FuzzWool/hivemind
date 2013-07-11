@@ -1,4 +1,6 @@
 import modules as mo
+from modules.pysfml_game import ROOM_HEIGHT, ROOM_WIDTH
+from modules.pysfml_game import GRID
 
 class LevelEditor:
 #Alters the data of the currently loaded level.
@@ -27,7 +29,16 @@ class LevelEditor:
 		
 		offset_x = self.Level.offset_x
 		if x < -offset_x:
-			for loop in range(-x + -offset_x):
+			
+			#Room-sized increments.
+			loop_amt = -x + -offset_x
+			room_width = 0
+			while room_width < loop_amt:
+				room_width += ROOM_WIDTH / GRID
+			loop_amt = room_width
+
+
+			for loop in range(room_width):
 				#Add new columns
 				level = self.Level.level
 				tiles = self.Level.tiles
@@ -47,7 +58,15 @@ class LevelEditor:
 
 		offset_y = self.Level.offset_y
 		if y < -offset_y:
-			for loop in range(-y + -offset_y):
+
+			#Room-sized increments.
+			loop_amt = -y + -offset_y
+			room_height = 0
+			while room_height < loop_amt:
+				room_height += ROOM_HEIGHT / GRID
+			loop_amt = room_height
+
+			for loop in range(room_height):
 				#Add to columns
 				level = self.Level.level
 				tiles = self.Level.tiles
