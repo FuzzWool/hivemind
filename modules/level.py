@@ -9,9 +9,6 @@ class Level(object):
 	 "q","r","s","t","u","v","w","x","y","z"]
 	texture = mo.texture("img/test/level.png")
 
-	#Level Editor
-	minus_x, minus_y = 0, 0
-
 	def __call__(self): return self.level
 	
 	def __init__ (self, level_dir):
@@ -46,7 +43,7 @@ class Level(object):
 			def room_h(x):
 				room = mo.ROOM_HEIGHT/mo.GRID
 				h = room
-				while h < len(level[x]):
+				while h < len(level[0]):
 					h += room
 				return h
 			#
@@ -112,10 +109,7 @@ class Level(object):
 			return sprite
 
 		x, y = pos[0], pos[1]
-		# x += self.minus_x; y += self.minus_y
-
 		tile = make_tile(pos, clip)
-
 		self.tiles[x][y] = tile
 		self.level[x][y] = clip
 		

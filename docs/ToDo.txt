@@ -7,12 +7,13 @@ x Load levels from a file.
 Append a level to another level from two level files.
 Gradually load and de-load levels during exploration.
 Append levels based on a world file's data.
+A mini world map may determine which 'block' the player is in
 
 
 0.0.5 - Edited level files widen and shrink.
 Goals:
 	x CTRL + WASD snaps to nearest 'room'.
-	Level adds filler to -x and -y, moving the level.
+	x Level adds filler to -x and -y, moving the level.
 	Level de-loads any unnecessary space.
 	Level and tiles draws only what's on-screen.
 	Special tile marking the start of a new room.
@@ -23,13 +24,16 @@ x Make an ELevel subclass.
 	x has it's own grid tiles
 		x initializes
 		x updates
-	minus_x, minus_y
+	x Top and Left
 
-*Grid tiles update
-Whenether filler is appended, the grid is also appended to.
+Make the level fill in room increments.
+	Works for dr, but not ul.
+	Make it work for ul, and not mess with dr.
 
 Consider ways to clean up.
+
 -
 
-+ class ELevel has been added
-~ add_filler has been cleaned up nicely
++ Rooms may be expanded from the left and top again.
+
+- Removed Grid from LevelEditor. Should've been done last update. Whoops!

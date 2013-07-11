@@ -8,7 +8,7 @@ Camera = le.RoomCamera()
 Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
-Level = le.ELevel("0")
+Level = le.ELevel("1")
 LevelEditor = le.LevelEditor(mouse, Camera, Level)
 #########################################################
 running = True
@@ -56,8 +56,7 @@ while running:
 
 		#Test
 		if key.RETURN.pressed():
-			print Camera.x, mo.ROOM_WIDTH
-			print Camera.room_x
+			Level.test()
 
 	mo.window.view = Camera
 	LevelEditor.Camera = Camera
@@ -68,7 +67,6 @@ while running:
 	#Video
 	mo.window.clear(mo.sf.Color(128, 128, 128))
 	#
-	LevelEditor.Grid.draw()
 	Level.draw()
 	LevelEditor.draw()
 	#

@@ -19,16 +19,15 @@ class LevelEditor:
 
 		#Subclasses
 		self.TileSelector = TileSelector(self)
-		self.Grid = Grid(self.Level)
 
 	def place_tile(self, tile_data=None):
 	#Changes a tile within the level.
 	#Level, Mouse, TileSelector
 		x, y = self.Mouse.grid_position(self.Camera)
 		
-		minus_x = self.Level.minus_x
-		if x < -minus_x:
-			for loop in range(-x + -minus_x):
+		offset_x = self.Level.offset_x
+		if x < -offset_x:
+			for loop in range(-x + -offset_x):
 				#Add new columns
 				level = self.Level.level
 				tiles = self.Level.tiles
@@ -40,14 +39,15 @@ class LevelEditor:
 				self.Level.tiles = [t[:] for t in tiles]
 
 				#Extend the grid's lists
-				self.Grid.tiles = [[]] + self.Grid.tiles
+				g_fill = [None for i in level[0]]
+				self.Level.grid = [g_fill] + self.Level.grid
 
 				#Acknowledge the change
-				self.Level.minus_x += 1
+				self.Level.offset_x += 1
 
-		minus_y = self.Level.minus_y
-		if y < -minus_y:
-			for loop in range(-y + -minus_y):
+		offset_y = self.Level.offset_y
+		if y < -offset_y:
+			for loop in range(-y + -offset_y):
 				#Add to columns
 				level = self.Level.level
 				tiles = self.Level.tiles
@@ -59,13 +59,13 @@ class LevelEditor:
 				self.Level.tiles = [t[:] for t in tiles]
 
 				#Append to the grid's columns.
-				self.Grid.tiles = \
-				[[None] + i[:] for i in self.Grid.tiles]
-
+				self.Level.grid = \
+				[[None] + i[:] for i in self.Level.grid]
 
 				#Acknowledge
-				self.Level.minus_y += 1
+				self.Level.offset_y += 1
 
+		x, y = self.Mouse.grid_position(self.Camera)
 		if self.TileSelector.visible == False:
 			if tile_data == None:
 				tile_data = self.TileSelector.select_tile
@@ -204,18 +204,3 @@ class TileSelector:
 					y.draw()
 			#Cursor
 			self.cursor.draw()
-
-class Grid:
-#Simply draws a grid.
-	tiles = []
-	tex = mo.texture("img/level_editor/grid.png")
-
-	def __init__ (self, Level):
-		self.Level = Level
-
-	def draw(self):
-	#Expand the grid if the level's expanded.
-		for x in self.tiles:
-			for y in x:
-				if y != None:
-					y.draw()
