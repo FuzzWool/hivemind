@@ -1,6 +1,6 @@
 import modules as mo
 
-class Level:
+class Level(object):
 	level = []
 	tiles = []
 	level_dir = ""
@@ -98,40 +98,6 @@ class Level:
 	def change_tile(self, pos, clip):
 	#Changes a tile, updates the level and tiles.
 
-		def add_filler(x, y):
-		#Adds extra empty spaces in levels and tiles.
-		#So that new data may be added.
-
-			def check_whole_level(x, y):
-				if x < len(self.level):
-					x = len(self.level)
-				if y < len(self.level[0]):
-					y = len(self.level[0])
-				return x, y
-
-			#Boundary to extend to
-			x += 1; y += 1
-			x, y = check_whole_level(x, y)
-
-			room_h = mo.ROOM_HEIGHT / mo.GRID
-			room_w = mo.ROOM_WIDTH / mo.GRID
-
-			#Make the existing columns longer. y
-			for ic, column in enumerate(self.level):
-				while len(column) < y:
-				#Any time the level needs extending...
-					for repeat in range(room_h):
-						self.level[ic].append("__")
-						self.tiles[ic].append(None)
-
-			#Then add more rows. x
-			l_filler = ["__" for i in range(y)]
-			t_filler = [None for i in range(y)]
-			while len(self.level) < x:
-				for repeat in range(room_w):
-					self.level.append(l_filler[:])
-					self.tiles.append(t_filler[:])
-
 		def make_tile(pos=(), clip=()):
 		#Make a new tile. Requires filler to be in place.
 			if clip == "__":
@@ -146,30 +112,12 @@ class Level:
 			return sprite
 
 		x, y = pos[0], pos[1]
-		x += self.minus_x; y += self.minus_y
-		add_filler(x, y)
+		# x += self.minus_x; y += self.minus_y
 
 		tile = make_tile(pos, clip)
 
 		self.tiles[x][y] = tile
 		self.level[x][y] = clip
-
-	def save(self):
-	#Saves the level back in to the file it originated.
-		#Grab the data.
-		text = ""
-		for iy, y in enumerate(self.level[0]):
-			for ix, x in enumerate(self.level):
-				text += str(self.level[ix][iy])		
-			text += "\n"
-		text = text[:-1]
-
-		#Save it to the original file.
-		f = open("outside/levels/"+self.level_dir+".txt", "r+")
-		f.write(text)
-		f.close()
-
-		print "Saved level '%s'!" % self.level_dir
 		
 
 	def draw(self):

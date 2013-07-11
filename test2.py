@@ -1,8 +1,8 @@
-foo = [range(3) for i in range(3)]
+#List property/override
+#Whenether _lst updates, so does lst2
 
-print foo
+#Context:
+#All updates made to Level tiles will affect Grid tiles.
 
-for fi, f in enumerate(foo):
-	foo[fi] = [None] + foo[fi]
-
-print foo
+class lst(list):
+	pass

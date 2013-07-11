@@ -17,27 +17,19 @@ Goals:
 	Level and tiles draws only what's on-screen.
 	Special tile marking the start of a new room.
 
-(Expansions should be in Rooms to encourage consistent Level design)
 
-x Loaded levels are always converted in to room sizing.
-x Grid updates tiles in the correct direction.
-	x Also has to acknowledge the Level's offset.
+x Make an ELevel subclass.
+	x Applies the filler upon a tile change.
+	x has it's own grid tiles
+		x initializes
+		x updates
+	minus_x, minus_y
 
-x Add y, as well.
-
-Make an ELevel subclass.
-	- Applies the filler upon a tile change.
-	- minus_x, minus_y
-	- has it's own grid tiles
-
-Grid.tile is changed alongside Level and Tile.
+*Grid tiles update
+Whenether filler is appended, the grid is also appended to.
 
 Consider ways to clean up.
-
-Make a seperate ELevel with the offset-tracking.
 -
 
-*LevelEditor depends on Level minus_x and minus_y
-for tracking the offsets of level expansion.
-
-*Grid also depends on minus_x and minus_y
++ class ELevel has been added
+~ add_filler has been cleaned up nicely

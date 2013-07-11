@@ -2,6 +2,7 @@ from window import sf, window
 from geometry import Rectangle
 
 texture = sf.Texture.load_from_file
+MyTexture = sf.Texture.load_from_file
 
 class MySprite(sf.Sprite, Rectangle):
 #Provides additional functionality for sf.Sprite.

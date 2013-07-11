@@ -10,7 +10,6 @@ Camera.x, Camera.y = 0, 0
 
 Level = le.ELevel("0")
 LevelEditor = le.LevelEditor(mouse, Camera, Level)
-
 #########################################################
 running = True
 while running:
