@@ -15,14 +15,6 @@ class ELevel(Level):
 	#Grid is initialized to match the Level's size.
 		super(ELevel, self).__init__(level_dir)
 
-		def new_grid(x, y):
-			grid = MySprite(self.grid_tex)
-			grid.clip.set(25, 25)
-			grid.clip.use(0, 0)
-			grid.x = x * GRID
-			grid.y = y * GRID
-			return grid
-
 		for ix, x in enumerate(self.level):
 			if ix >= len(self.grid):
 				self.grid.append([])
@@ -31,7 +23,7 @@ class ELevel(Level):
 				if iy >= len(self.grid[ix]):
 					self.grid[ix].append(None)
 
-				self.grid[ix][iy] = new_grid(ix, iy)
+				self.grid[ix][iy] = self.make_grid(ix, iy)
 
 	def change_tile(self, pos=(), clip=()):
 	#When tiles are changed out-of-bounds, add filler.
@@ -44,8 +36,8 @@ class ELevel(Level):
 		self.expand_left(x)
 		self.expand_top(y)
 		x, y = refresh()
-		self.expand_right(x)
 		self.expand_bottom(y)
+		self.expand_right(x)
 
 		def make_tile(pos=(), clip=()):
 		#Make a new tile. Requires filler to be in place.
@@ -130,6 +122,9 @@ class ELevel(Level):
 				#Extend the grid's lists
 				g_fill = [None for i in level[0]]
 				self.grid = [g_fill] + self.grid
+				for iy, y in enumerate(self.grid[0]):
+					self.grid[0][iy] = \
+					self.make_grid(-1, iy)
 
 				#Acknowledge the change
 				self.offset_x += 1
@@ -156,9 +151,12 @@ class ELevel(Level):
 				self.level = [l[:] for l in level]
 				self.tiles = [t[:] for t in tiles]
 
-				#Append to the grid's columns.
+				#Add the new grid tiles to the columns.
 				self.grid = \
 				[[None] + i[:] for i in self.grid]
+				for ix, x in enumerate(self.grid):
+					self.grid[ix][0] = \
+					 self.make_grid(ix, -1)
 
 				#Acknowledge
 				self.offset_y += 1
@@ -170,17 +168,27 @@ class ELevel(Level):
 
 		#Variables
 		level_w = lambda: len(self.level)
-		
+
 		l_column = ["__" for i in self.level[0]]
 		t_column = [None for i in self.level[0]]
 		g_column = [None for i in self.level[0]]
-		
-		#Processing
-		while level_w() <= x:
-			self.level.append(l_column)
-			self.tiles.append(t_column)
-			self.grid.append(g_column)
 
+		#Processing
+		expand_to = x+1
+		if expand_to < level_w(): expand_to = level_w()
+		
+		x = level_w()
+		while x < expand_to:
+
+			self.level.append(l_column[:])
+			self.tiles.append(t_column[:])
+			self.grid.append(g_column[:])
+
+			for iy, y in enumerate(self.grid[0]):
+				g = self.make_grid(x, iy)
+				self.grid[x][iy] = g
+
+			x += 1
 
 	def expand_bottom(self, y):
 	#Add filler tiles to the bottom.
@@ -195,6 +203,17 @@ class ELevel(Level):
 			while level_h(x) <= y:
 				self.level[x].append("__")
 				self.tiles[x].append(None)
-				self.grid[x].append(None)
+
+				g = self.make_grid(x, level_h(x)-1)
+				self.grid[x].append(g)
 			x += 1
 	#
+
+	def make_grid(self, x, y):
+	#Makes a new grid tile.
+		grid = MySprite(self.grid_tex)
+		grid.clip.set(25, 25)
+		grid.clip.use(0, 0)
+		grid.x = (x - self.offset_x) * GRID
+		grid.y = (y - self.offset_y) * GRID
+		return grid

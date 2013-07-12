@@ -23,6 +23,10 @@ Consider ways to clean up.
 x expand_left for ELevel
 x expand_top for ELevel
 x expand_right
-x expand_down
+x expand_bottom
 
-Insert the grid in any re-position.
+Plant down the grid for any level expansions.
+	x expand_left
+	x expand_top
+	x expand_right
+	x expand_bottom
