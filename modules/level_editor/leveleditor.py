@@ -1,6 +1,4 @@
 import modules as mo
-from modules.pysfml_game import ROOM_HEIGHT, ROOM_WIDTH
-from modules.pysfml_game import GRID
 
 class LevelEditor:
 #Alters the data of the currently loaded level.
@@ -25,65 +23,6 @@ class LevelEditor:
 	def place_tile(self, tile_data=None):
 	#Changes a tile within the level.
 	#Level, Mouse, TileSelector
-		x, y = self.Mouse.grid_position(self.Camera)
-		
-		offset_x = self.Level.offset_x
-		if x < -offset_x:
-			
-			#Room-sized increments.
-			loop_amt = -x + -offset_x
-			room_width = 0
-			while room_width < loop_amt:
-				room_width += ROOM_WIDTH / GRID
-			loop_amt = room_width
-
-
-			for loop in range(room_width):
-				#Add new columns
-				level = self.Level.level
-				tiles = self.Level.tiles
-				l_fill = ["__" for i in level[0]]
-				t_fill = [None for i in level[0]]
-				level = [l_fill] + level
-				tiles = [t_fill] + tiles
-				self.Level.level = [l[:] for l in level]
-				self.Level.tiles = [t[:] for t in tiles]
-
-				#Extend the grid's lists
-				g_fill = [None for i in level[0]]
-				self.Level.grid = [g_fill] + self.Level.grid
-
-				#Acknowledge the change
-				self.Level.offset_x += 1
-
-		offset_y = self.Level.offset_y
-		if y < -offset_y:
-
-			#Room-sized increments.
-			loop_amt = -y + -offset_y
-			room_height = 0
-			while room_height < loop_amt:
-				room_height += ROOM_HEIGHT / GRID
-			loop_amt = room_height
-
-			for loop in range(room_height):
-				#Add to columns
-				level = self.Level.level
-				tiles = self.Level.tiles
-				for ic, column in enumerate(level):
-					level[ic] = ["__"] + level[ic]
-				for it, tile in enumerate(tiles):
-					tiles[it] = [None] + tiles[it]
-				self.Level.level = [l[:] for l in level]
-				self.Level.tiles = [t[:] for t in tiles]
-
-				#Append to the grid's columns.
-				self.Level.grid = \
-				[[None] + i[:] for i in self.Level.grid]
-
-				#Acknowledge
-				self.Level.offset_y += 1
-
 		x, y = self.Mouse.grid_position(self.Camera)
 		if self.TileSelector.visible == False:
 			if tile_data == None:

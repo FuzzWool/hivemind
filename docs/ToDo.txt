@@ -10,7 +10,7 @@ Append levels based on a world file's data.
 A mini world map may determine which 'block' the player is in
 
 
-0.0.5 - Edited level files widen and shrink.
+0.0.6 - Edited level files shrink.
 Goals:
 	x CTRL + WASD snaps to nearest 'room'.
 	x Level adds filler to -x and -y, moving the level.
@@ -18,20 +18,11 @@ Goals:
 	Level and tiles draws only what's on-screen.
 	Special tile marking the start of a new room.
 
-
-x Make an ELevel subclass.
-	x Applies the filler upon a tile change.
-	x has it's own grid tiles
-		x initializes
-		x updates
-	x Top and Left
-
-x Make the level fill space in room-sized increments.
-
 Consider ways to clean up.
 
--
+x expand_left for ELevel
+x expand_top for ELevel
+x expand_right
+x expand_down
 
-+ Rooms may be expanded from the left and top again.
-
-- Removed Grid from LevelEditor. Should've been done last update. Whoops!
+Insert the grid in any re-position.
