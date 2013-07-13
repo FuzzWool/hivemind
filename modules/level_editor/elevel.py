@@ -11,6 +11,7 @@ class ELevel(Level):
 	#How much the level has been pushed.
 	offset_x, offset_y = 0, 0
 
+
 	def __init__ (self, level_dir):
 	#Grid is initialized to match the Level's size.
 		super(ELevel, self).__init__(level_dir)
@@ -25,6 +26,7 @@ class ELevel(Level):
 
 				self.grid[ix][iy] = self.make_grid(ix, iy)
 
+
 	def change_tile(self, pos=(), clip=()):
 	#When tiles are changed out-of-bounds, add filler.
 		def refresh():
@@ -32,12 +34,19 @@ class ELevel(Level):
 			x += self.offset_x; y += self.offset_y
 			return x, y
 
-		x, y = pos[0], pos[1]
-		self.expand_left(x)
-		self.expand_top(y)
+		#No going out of bounds.
 		x, y = refresh()
-		self.expand_bottom(y)
-		self.expand_right(x)
+		if x < 0 or y < 0: return
+		if x > len(self.level)-1: return
+		if y > len(self.level[0])-1: return
+
+
+		x, y = pos[0], pos[1]
+		# self.expand_left(x)
+		# self.expand_top(y)
+		# x, y = refresh()
+		# self.expand_bottom(y)
+		# self.expand_right(x)
 
 		def make_tile(pos=(), clip=()):
 		#Make a new tile. Requires filler to be in place.
@@ -93,7 +102,7 @@ class ELevel(Level):
 		super(ELevel, self).draw()
 
 
-
+#
 
 	#For expanding the level's boundaries.
 	def expand_left(self, x):

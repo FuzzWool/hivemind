@@ -2,31 +2,49 @@ Let there be Levels
 ===========
 Seamless loading from level to level. No transitions.
 
+MAJOR Goals:
+* Append a level to another level from two level files.
+* Gradually load and de-load levels during exploration.
+* Append levels based on a world file's data.
+* A mini world map may determine which 'block' the player is in
+
+
+0.0.6 - Toolbox
 Goals:
-x Load levels from a file.
-Append a level to another level from two level files.
-Gradually load and de-load levels during exploration.
-Append levels based on a world file's data.
-A mini world map may determine which 'block' the player is in
+* Add a toolbox menu with multiple, fillable slots.
+* Create two tools: cursor and tile.
+	Cursor doesn't do anything.
+	Tile places down tiles.
+
+x Don't let tiles be placed out-of-bounds.
+
+Expand window to be 3x width and 2x height.
+	Mouse positioning messes up when altered.
+
+Expand window to be full-screen.
+Create toolbox menu on the left.
 
 
-0.0.6 - Edited level files shrink.
+
+
+
+
+
+
+========
+0.0.7 - Level Properties
 Goals:
-	x CTRL + WASD snaps to nearest 'room'.
-	x Level adds filler to -x and -y, moving the level.
-	Level de-loads any unnecessary space.
-	Level and tiles draws only what's on-screen.
-	Special tile marking the start of a new room.
+	* GUI feature: the top-left of a level contains properties.
+	Properties may:
+		Manually define the x/y and w/h of the level
+		(in tiles AND rooms)
 
-Consider ways to clean up.
+	* Draw only tiles (and grids) which're on-screen.
+	* Special tile marking the start of a new room.
 
-x expand_left for ELevel
-x expand_top for ELevel
-x expand_right
-x expand_bottom
-
-Plant down the grid for any level expansions.
-	x expand_left
-	x expand_top
-	x expand_right
-	x expand_bottom
+=
+0.0.8 - Level tool
+Goals:
+* Cursor should have coordinates binded to an ELevel.
+* Tool may plant down ELevels.
+* ELevels may be altered individually.
