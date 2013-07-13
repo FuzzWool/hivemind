@@ -2,6 +2,7 @@ from window import sf
 from window import window as the_window
 from window import SCREEN_HEIGHT, SCREEN_WIDTH
 
+
 class MyCamera(sf.View):
 	_zoom = float(1)
 

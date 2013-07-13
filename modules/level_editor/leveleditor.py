@@ -1,4 +1,5 @@
 import modules as mo
+from toolbox import ToolBox
 
 class LevelEditor:
 #Alters the data of the currently loaded level.
@@ -7,6 +8,9 @@ class LevelEditor:
 	Mouse = None
 	Camera = None
 	Level = None
+
+	#Internal classes.
+	ToolBox = ToolBox()
 
 	#Sprites
 	mouse_tex = mo.texture("img/level_editor/cursor.png")
@@ -33,7 +37,10 @@ class LevelEditor:
 		self.place_tile("__")
 
 	def draw(self):
-		self._move_cursor()
+		#Move the cursor.
+		x, y = self.Mouse.grid_position(self.Camera)
+		x *= mo.GRID; y *= mo.GRID
+		self.mouse.goto = x, y
 
 		#draw Grid externally
 		self.TileSelector.draw()
@@ -41,10 +48,34 @@ class LevelEditor:
 
 	#
 
-	def _move_cursor(self):
-		x, y = self.Mouse.grid_position(self.Camera)
-		x *= mo.GRID; y *= mo.GRID
-		self.mouse.goto = x, y
+	def handle_controls(self, key, mouse):
+	#Handles controls specific to the LevelEditor.
+	#Uses ToolBox to determine context.
+		tool = self.ToolBox.selected_tool
+		hovering_toolbox = bool(mouse.x < self.ToolBox.w)
+
+		if tool == "pointer":
+			pass
+
+		if tool == "tile":
+			if not hovering_toolbox:
+
+				if key.L_CTRL.held():
+					if mouse.left.pressed():
+						self.TileSelector.open()
+				else:
+					if mouse.left.held():
+						self.place_tile()
+					if mouse.right.held():
+						self.remove_tile()
+					if mouse.left.pressed():
+						self.TileSelector.select()
+					if mouse.left.released():
+						self.TileSelector.close()
+
+		if hovering_toolbox:
+			if mouse.left.pressed():
+				self.ToolBox.select_tool(mouse)
 
 
 class TileSelector:
@@ -154,11 +185,9 @@ class TileSelector:
 
 
 	def draw(self):
-		#Box and Tiles
 		if self.visible == True:
 			self.b_sprite.box.draw()
 			for x in self.tiles:
 				for y in x:
 					y.draw()
-			#Cursor
 			self.cursor.draw()

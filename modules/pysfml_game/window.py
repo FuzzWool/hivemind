@@ -1,18 +1,17 @@
 import sfml as sf
 
-SCALE = 2
+scale = 2
 GRID = 25
 
-SCREEN_WIDTH = 400 * SCALE
-SCREEN_HEIGHT = 300 * SCALE
-RENDER_WIDTH = SCREEN_WIDTH / SCALE
-RENDER_HEIGHT = SCREEN_HEIGHT / SCALE
+RENDER_WIDTH = 600
+RENDER_HEIGHT = 300
+SCREEN_WIDTH = RENDER_WIDTH * scale
+SCREEN_HEIGHT = RENDER_HEIGHT * scale 
 
 ROOM_SIZE = [RENDER_WIDTH, RENDER_HEIGHT]
 ROOM_WIDTH = ROOM_SIZE[0]
 ROOM_HEIGHT = ROOM_SIZE[1]
 
-#
 
 window = \
 	sf.RenderWindow(\
@@ -21,6 +20,4 @@ window = \
 window.framerate_limit = 60
 window.vertical_sync_enabled = True
 
-view = sf.View.from_rect(\
-	sf.FloatRect(0, 0, SCREEN_WIDTH/SCALE, SCREEN_HEIGHT/SCALE))
-window.view = view
+del scale

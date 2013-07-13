@@ -1,6 +1,7 @@
 from leveleditor import *
-from window import *
-from mouse import *
-from roomcamera import *
+from toolbox import * #used in leveleditor.
 
-from elevel import *
+from mouse import * #external
+from roomcamera import * #external
+
+from elevel import * #external + used in leveleditor

@@ -42,6 +42,12 @@ class MyMouse:
 		self.middle.held = \
 		 new.instancemethod(middle_held, self.middle, None)
 
+	@property
+	def x(self): return self.position()[0]
+
+	@property
+	def y(self): return self.position()[1]
+
 	def position(self, Camera=None):
 	#Takes offsets from the Camera in to account.
 		pos = sf.Mouse.get_position(wi.window)

@@ -16,20 +16,18 @@ Goals:
 	Cursor doesn't do anything.
 	Tile places down tiles.
 
-x Don't let tiles be placed out-of-bounds.
+x Create toolbox menu on the left.
+	x Create toolbox class.
+	x Render a box.
+	x Render the empty tool slots.
+	x Create Pen and Tile tool.
+	Dullen out the unselected tools.
 
-Expand window to be 3x width and 2x height.
-	Mouse positioning messes up when altered.
++ ToolBox is now a LevelEditor class.
+~ LevelEditor now handles Tool-specific controls.
 
-Expand window to be full-screen.
-Create toolbox menu on the left.
-
-
-
-
-
-
-
+~ Changed game resolution to be widescreen.
+- LevelEditor no longer has it's own Window module.
 
 ========
 0.0.7 - Level Properties
@@ -41,6 +39,8 @@ Goals:
 
 	* Draw only tiles (and grids) which're on-screen.
 	* Special tile marking the start of a new room.
+
+Cleanup LevelEditor.
 
 =
 0.0.8 - Level tool

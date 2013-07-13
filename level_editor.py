@@ -5,11 +5,11 @@ import modules.level_editor as le
 mouse = le.EditMouse()
 
 Camera = le.RoomCamera()
+Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
-Level = mo.Level("full")
+Level = le.ELevel("0")
 LevelEditor = le.LevelEditor(mouse, Camera, Level)
-
 #########################################################
 running = True
 while running:
@@ -41,7 +41,7 @@ while running:
 		#Select Tiles
 		if mouse.left.held():
 			LevelEditor.place_tile()
-		if mouse.right.pressed():
+		if mouse.right.held():
 			LevelEditor.remove_tile()
 		if mouse.left.pressed():
 			LevelEditor.TileSelector.select()
@@ -56,8 +56,7 @@ while running:
 
 		#Test
 		if key.RETURN.pressed():
-			print Camera.x, mo.ROOM_WIDTH
-			print Camera.room_x
+			print Level.test()
 
 	mo.window.view = Camera
 	LevelEditor.Camera = Camera
@@ -68,7 +67,6 @@ while running:
 	#Video
 	mo.window.clear(mo.sf.Color(128, 128, 128))
 	#
-	LevelEditor.Grid.draw()
 	Level.draw()
 	LevelEditor.draw()
 	#
