@@ -5,3 +5,5 @@ from mouse import * #external
 from roomcamera import * #external
 
 from elevel import * #external + used in leveleditor
+
+from level_properties import *

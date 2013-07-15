@@ -5,7 +5,6 @@ class LevelEditor:
 #Alters the data of the currently loaded level.
 
 	#External classes.
-	Mouse = None
 	Camera = None
 	Level = None
 
@@ -16,29 +15,28 @@ class LevelEditor:
 	mouse_tex = mo.texture("img/level_editor/cursor.png")
 	mouse = mo.MySprite(mouse_tex)
 
-	def __init__(self, Mouse, Camera, Level):
-		self.Mouse = Mouse
+	def __init__(self, Camera, Level):
 		self.Camera = Camera
 		self.Level = Level
 
 		#Subclasses
 		self.TileSelector = TileSelector(self)
 
-	def place_tile(self, tile_data=None):
+	def place_tile(self, mouse, tile_data=None):
 	#Changes a tile within the level.
 	#Level, Mouse, TileSelector
-		x, y = self.Mouse.grid_position(self.Camera)
+		x, y = mouse.grid_position(self.Camera)
 		if self.TileSelector.visible == False:
 			if tile_data == None:
 				tile_data = self.TileSelector.select_tile
 			self.Level.change_tile((x, y), tile_data)
 
-	def remove_tile(self):
-		self.place_tile("__")
+	def remove_tile(self, mouse):
+		self.place_tile(mouse, "__")
 
-	def draw(self):
+	def draw(self, mouse):
 		#Move the cursor.
-		x, y = self.Mouse.grid_position(self.Camera)
+		x, y = mouse.grid_position(self.Camera)
 		x *= mo.GRID; y *= mo.GRID
 		self.mouse.goto = x, y
 
@@ -62,16 +60,16 @@ class LevelEditor:
 
 				if key.L_CTRL.held():
 					if mouse.left.pressed():
-						self.TileSelector.open()
+						self.TileSelector.open(mouse)
 				else:
 					if mouse.left.held():
-						self.place_tile()
+						self.place_tile(mouse)
 					if mouse.right.held():
-						self.remove_tile()
+						self.remove_tile(mouse)
 					if mouse.left.pressed():
-						self.TileSelector.select()
+						self.TileSelector.select(mouse)
 					if mouse.left.released():
-						self.TileSelector.close()
+						self.TileSelector.close(mouse)
 
 		if hovering_toolbox:
 			if mouse.left.pressed():
@@ -133,26 +131,26 @@ class TileSelector:
 		make_cursor()
 
 
-	def toggle(self, visible=None):
+	def toggle(self, Mouse, visible=None):
 	#Opens/closes the TileSelector.
 		if visible == None: visible = not self.visible
 		self.visible = visible
 		#Moves the tiles.
-		x, y = self._.Mouse.grid_position(self._.Camera)
+		x, y = Mouse.grid_position(self._.Camera)
 		x *= mo.GRID; y *= mo.GRID
 		self.b_sprite.box.center = x, y
 		self.b_sprite.center = x, y
 
-	def open(self): self.toggle(True)
-	def close(self): self.toggle(False)
+	def open(self, mouse): self.toggle(mouse, True)
+	def close(self, mouse): self.toggle(mouse, False)
 
 
-	def select(self):
+	def select(self, mouse):
 	#Select a tile. Change selected tile, move the cursor.
 		if self.visible:
 
-			def grid_relative():
-				x, y = self._.Mouse.grid_position\
+			def grid_relative(mouse):
+				x, y = mouse.grid_position\
 					(self._.Camera)
 				x -= self.tiles[0][0].x/mo.GRID
 				y -= self.tiles[0][0].y/mo.GRID
@@ -177,7 +175,7 @@ class TileSelector:
 				x *= mo.GRID; y *= mo.GRID
 				self.cursor.move(x, y)
 			
-			x, y = grid_relative()
+			x, y = grid_relative(mouse)
 			if not in_bounds(x, y):
 				return
 			change_select(x, y)

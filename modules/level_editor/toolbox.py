@@ -10,7 +10,7 @@ class ToolBox:
 	b_sprite = None
 	tex = MyTexture("img/level_editor/toolbox.png")
 
-	_selected_tool = (0, 0)
+	_selected_tool = (1, 0)
 	tools = []
 	tools_sprites = []
 
@@ -54,6 +54,8 @@ class ToolBox:
 
 		self.tools_sprites[1][0].clip.use(2, 0)
 		self.tools[1][0] = "tile"
+		self.tools_sprites[1][0].color \
+		= sf.Color(255,255,255,255)
 
 	def draw(self):
 		self.b_sprite.box.draw()

@@ -8,39 +8,35 @@ MAJOR Goals:
 * Append levels based on a world file's data.
 * A mini world map may determine which 'block' the player is in
 
-
-0.0.6 - Toolbox
-Goals:
-* Add a toolbox menu with multiple, fillable slots.
-* Create two tools: cursor and tile.
-	Cursor doesn't do anything.
-	Tile places down tiles.
-
-x Create toolbox menu on the left.
-	x Create toolbox class.
-	x Render a box.
-	x Render the empty tool slots.
-	x Create Pen and Tile tool.
-	Dullen out the unselected tools.
-
-+ ToolBox is now a LevelEditor class.
-~ LevelEditor now handles Tool-specific controls.
-
-~ Changed game resolution to be widescreen.
-- LevelEditor no longer has it's own Window module.
-
-========
 0.0.7 - Level Properties
 Goals:
 	* GUI feature: the top-left of a level contains properties.
 	Properties may:
 		Manually define the x/y and w/h of the level
-		(in tiles AND rooms)
+		(in tiles AND rooms)*
+
+	*Requires a custom window to be built which accepts text input.
 
 	* Draw only tiles (and grids) which're on-screen.
 	* Special tile marking the start of a new room.
 
-Cleanup LevelEditor.
+=
+
+x Make a GUI with x, y, w and h.
+x Upon closing the window, print the new values.
+Open in the Level Editor.
+	x Keep running the LevelEditor when there is no window.
+
+Wrap code in it's own module.
+
+The values given to the properties match the Level's size.
+Saved values modify the level's size.
+
+
+
+- LevelEditor no longer stores Mouse.
++ Added class LevelProperties.
+! Requires special and messy Tkinter handling. 
 
 =
 0.0.8 - Level tool

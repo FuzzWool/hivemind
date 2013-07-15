@@ -22,10 +22,6 @@ while running:
 		if key.S.pressed():
 			Level.save()
 
-		#Open Tile Selector menu
-		if mouse.left.pressed():
-			LevelEditor.TileSelector.open()
-
 		#Zoom Camera
 		if key.ADD.pressed(): Camera.zoom *= 2
 		if key.SUBTRACT.pressed(): Camera.zoom /= 2
@@ -38,25 +34,13 @@ while running:
 		if key.S.pressed(): Camera.room_y += 1
 
 	else:
-		#Select Tiles
-		if mouse.left.held():
-			LevelEditor.place_tile()
-		if mouse.right.held():
-			LevelEditor.remove_tile()
-		if mouse.left.pressed():
-			LevelEditor.TileSelector.select()
-		if mouse.left.released():
-			LevelEditor.TileSelector.close()
-
 		#Move Camera
 		if key.A.held(): Camera.x -= mo.GRID
 		if key.D.held(): Camera.x += mo.GRID
 		if key.W.held(): Camera.y -= mo.GRID
 		if key.S.held(): Camera.y += mo.GRID
 
-		#Test
-		if key.RETURN.pressed():
-			print Level.test()
+	LevelEditor.handle_controls(key, mouse)
 
 	mo.window.view = Camera
 	LevelEditor.Camera = Camera
@@ -69,5 +53,7 @@ while running:
 	#
 	Level.draw()
 	LevelEditor.draw()
+	mo.window.view = mo.window.default_view
+	LevelEditor.ToolBox.draw()
 	#
 	mo.window.display()

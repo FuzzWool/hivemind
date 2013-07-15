@@ -2,6 +2,8 @@ import modules as mo
 import modules.pysfml_game.key as key
 import modules.level_editor as le
 
+LevelProperties = le.LevelProperties()####
+
 mouse = le.EditMouse()
 
 Camera = le.RoomCamera()
@@ -9,7 +11,7 @@ Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
 Level = le.ELevel("0")
-LevelEditor = le.LevelEditor(mouse, Camera, Level)
+LevelEditor = le.LevelEditor(Camera, Level)
 #########################################################
 running = True
 while running:
@@ -40,6 +42,11 @@ while running:
 		if key.W.held(): Camera.y -= mo.GRID
 		if key.S.held(): Camera.y += mo.GRID
 
+	#WIP
+	if key.RETURN.pressed():
+		LevelProperties.open()
+
+	LevelProperties.handle_events()####
 	LevelEditor.handle_controls(key, mouse)
 
 	mo.window.view = Camera
@@ -52,7 +59,7 @@ while running:
 	mo.window.clear(mo.sf.Color(128, 128, 128))
 	#
 	Level.draw()
-	LevelEditor.draw()
+	LevelEditor.draw(mouse)
 	mo.window.view = mo.window.default_view
 	LevelEditor.ToolBox.draw()
 	#
