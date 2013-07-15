@@ -1,3 +1,12 @@
+
+class Pointer:
+#A tool designed for examining and altering other objects'
+#properties.
+	
+	def __init__(self):
+		self.LevelProperties = _LevelProperties()
+
+
 from Tkinter import Tk, Frame, Button
 from Tkinter import BOTH
 
@@ -5,13 +14,16 @@ from Tkinter import Entry, Label
 from Tkinter import N, E, S, W
 from Tkinter import INSERT
 
-class LevelProperties:
-#Handles a Tkinter window.
+class _LevelProperties:
+#Opens and alters the properties of a level,
+#with a windows form.
 	root = None
 
-	def open(self):
+	def open(self, Level):
+	#Opens the properties window.
+	#Passes over the values.
 		self.root = Tk()
-		self.app = self._frame(self.root)
+		self.app = self._frame(self.root, Level)
 		self.app.focus_force()
 
 	def handle_events(self):
@@ -31,19 +43,22 @@ class LevelProperties:
 	#
 
 	class _frame(Frame):
+	#All the tkinter design settings.
 
-		def __init__(self, parent):
+		def __init__(self, parent, Level):
 			Frame.__init__(self, parent)   
 			 
 			self.parent = parent        
-			self.initUI()
+			self.initUI(Level)
 			
-		def initUI(self):
+		def initUI(self, Level):
 
 			self.parent.title("Level Properties")
 			self.pack(fill=BOTH, expand=1)
 
-			x, y, w, h = 1, 2, 3, 4
+			x, y = 1, 2
+			w, h = 0, 0 
+			# w, h = Level.room_pos[0], Level.room_pos[1]
 
 			pad = 10
 			for ix in range(4):

@@ -5,11 +5,10 @@ from modules.pysfml_game import MyTexture, MySprite
 
 class ELevel(Level):
 #A level-editor specific version of Level.
+#Designed to be altered.
+
 	grid = []
 	grid_tex = MyTexture("img/level_editor/grid.png")
-
-	#How much the level has been pushed.
-	offset_x, offset_y = 0, 0
 
 
 	def __init__ (self, level_dir):
@@ -27,11 +26,40 @@ class ELevel(Level):
 				self.grid[ix][iy] = self.make_grid(ix, iy)
 
 
+	#Properties (size, position)
+	@property
+	def w(self): return len(self.level)
+	@w.setter
+	def w(self, arg):
+		change = arg - self.w
+		if change >= +1: self.expand_right(arg)
+		if change <= -1: self.shrink_right(arg)
+
+	@property
+	def h(self): return len(self.level[0])
+	@h.setter
+	def h(self, arg):
+		change = arg - self.h
+		if change >= +1: self.expand_bottom(arg)
+		if change <= -1: self.shrink_bottom(arg)
+
+	@property
+	def room_w(self): return int(self.w*GRID / ROOM_WIDTH)
+	@room_w.setter
+	def room_w(self, arg): self.w = arg*(ROOM_WIDTH/GRID)
+
+	@property
+	def room_h(self): return int(self.h*GRID / ROOM_HEIGHT)
+	@room_h.setter
+	def room_h(self, arg): self.h = arg*(ROOM_HEIGHT/GRID)
+	#
+
+
 	def change_tile(self, pos=(), clip=()):
 	#When tiles are changed out-of-bounds, add filler.
 		def refresh():
 			x, y = pos[0], pos[1]
-			x += self.offset_x; y += self.offset_y
+			# x += self.offset_x; y += self.offset_y
 			return x, y
 
 		#No going out of bounds.
@@ -58,8 +86,10 @@ class ELevel(Level):
 			cx = self.alphabet.index(clip[0])
 			cy = self.alphabet.index(clip[1])
 			sprite.clip.use(cy, cx)
-			x = (pos[0] - self.offset_x) * GRID
-			y = (pos[1] - self.offset_y) * GRID
+			#x = (pos[0] - self.offset_x) * GRID
+			#y = (pos[1] - self.offset_y) * GRID
+			x = pos[0]*GRID
+			y = pos[1]*GRID
 			sprite.goto = x, y
 			return sprite
 
@@ -85,15 +115,6 @@ class ELevel(Level):
 
 		print "Saved level '%s'!" % self.level_dir
 
-	def test(self):
-		text = ""
-		for iy, y in enumerate(self.level[0]):
-			for ix, x in enumerate(self.level):
-				text += str(self.level[ix][iy])		
-			text += "\n"
-		text = text[:-1]
-		return text
-
 	def draw(self):
 		for x in self.grid:
 			for y in x:
@@ -101,74 +122,7 @@ class ELevel(Level):
 					y.draw()
 		super(ELevel, self).draw()
 
-
 #
-
-	#For expanding the level's boundaries.
-	def expand_left(self, x):
-		offset_x = self.offset_x
-		if x < -offset_x:
-			
-			#Room-sized increments.
-			loop_amt = -x + -offset_x
-			# room_width = 0
-			# while room_width < loop_amt:
-			# 	room_width += ROOM_WIDTH / GRID
-			# loop_amt = room_width
-
-
-			for loop in range(loop_amt):
-				#Add new columns
-				level = self.level
-				tiles = self.tiles
-				l_fill = ["__" for i in level[0]]
-				t_fill = [None for i in level[0]]
-				level = [l_fill] + level
-				tiles = [t_fill] + tiles
-				self.level = [l[:] for l in level]
-				self.tiles = [t[:] for t in tiles]
-
-				#Extend the grid's lists
-				g_fill = [None for i in level[0]]
-				self.grid = [g_fill] + self.grid
-				for iy, y in enumerate(self.grid[0]):
-					self.grid[0][iy] = \
-					self.make_grid(-1, iy)
-
-				#Acknowledge the change
-				self.offset_x += 1
-
-	def expand_top(self, y):
-		offset_y = self.offset_y
-		if y < -offset_y:
-
-			#Room-sized increments.
-			loop_amt = -y + -offset_y
-			# room_height = 0
-			# while room_height < loop_amt:
-			# 	room_height += ROOM_HEIGHT / GRID
-			# loop_amt = room_height
-
-			for loop in range(loop_amt):
-				#Add to columns
-				level = self.level
-				tiles = self.tiles
-				for ic, column in enumerate(level):
-					level[ic] = ["__"] + level[ic]
-				for it, tile in enumerate(tiles):
-					tiles[it] = [None] + tiles[it]
-				self.level = [l[:] for l in level]
-				self.tiles = [t[:] for t in tiles]
-
-				#Add the new grid tiles to the columns.
-				self.grid = \
-				[[None] + i[:] for i in self.grid]
-				for ix, x in enumerate(self.grid):
-					self.grid[ix][0] = \
-					 self.make_grid(ix, -1)
-
-				#Acknowledge
-				self.offset_y += 1
 
 
 	def expand_right(self, x):
@@ -199,6 +153,13 @@ class ELevel(Level):
 
 			x += 1
 
+	def shrink_right(self, arg):
+	#Remove tiles from the right.
+		while arg < self.w:
+			del self.level[-1]
+			del self.tiles[-1]
+			del self.grid[-1]
+
 	def expand_bottom(self, y):
 	#Add filler tiles to the bottom.
 
@@ -209,20 +170,31 @@ class ELevel(Level):
 		#Processing
 		x = 0
 		while x < level_w():
-			while level_h(x) <= y:
+			while level_h(x) < y:
 				self.level[x].append("__")
 				self.tiles[x].append(None)
 
 				g = self.make_grid(x, level_h(x)-1)
 				self.grid[x].append(g)
 			x += 1
-	#
+
+	def shrink_bottom(self, arg):
+		while arg < self.h:
+			for ix, x in enumerate(self.level):
+				del self.level[ix][-1]
+				del self.tiles[ix][-1]
+				del self.grid[ix][-1]
+
+
+#
 
 	def make_grid(self, x, y):
 	#Makes a new grid tile.
 		grid = MySprite(self.grid_tex)
 		grid.clip.set(25, 25)
 		grid.clip.use(0, 0)
-		grid.x = (x - self.offset_x) * GRID
-		grid.y = (y - self.offset_y) * GRID
+		# grid.x = (x - self.offset_x) * GRID
+		# grid.y = (y - self.offset_y) * GRID
+		grid.x = x * GRID
+		grid.y = y * GRID
 		return grid

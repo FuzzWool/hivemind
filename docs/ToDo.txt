@@ -20,26 +20,21 @@ Goals:
 	* Draw only tiles (and grids) which're on-screen.
 	* Special tile marking the start of a new room.
 
-=
 
-Clean-up code, abiding by new hierachy:
-	LevelEditor
-	 >ToolBox
-	  >>Pointer
-	  >>Tile
+x get ELevel room_w, room_h.
+set ELevel room_w, room_h.
+	The level may grow or shrink to meet the size.
 
--
-
+	room_w grow
+	room_w shrink
+	room_h grow
+	room_h shrink
 
 The values given to the properties match the Level's size.
 Saved values modify the level's size.
 
++ Added Pointer tool.
 
-=
-
-- LevelEditor no longer stores Mouse.
-+ Added class LevelProperties.
-! Requires special and messy Tkinter handling. 
 
 =
 0.0.8 - Level tool

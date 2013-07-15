@@ -1,6 +1,5 @@
 import modules as mo
 from toolbox import ToolBox
-from level_properties import LevelProperties
 
 class LevelEditor:
 #Alters the data of the currently loaded level.
@@ -22,17 +21,6 @@ class LevelEditor:
 		self.Level = Level
 		self.ToolBox = ToolBox(Level, self.cursor_tex)
 
-		#Subclasses
-		#Tkinter Menu
-		self.LevelProperties = LevelProperties()
-
-
-	#Pointer Tool###
-	def open_LevelProperties(self):
-	#Pass the Level's size to the properties
-		self.LevelProperties.open()
-	###
-
 	def draw(self, mouse):
 		#Move the cursor.
 		x, y = mouse.grid_position(self.Camera)
@@ -50,4 +38,3 @@ class LevelEditor:
 	#Uses ToolBox to determine context.
 		self.ToolBox.handle_controls\
 			(key, mouse, self.Camera, self.Level)
-		self.LevelProperties.handle_events()

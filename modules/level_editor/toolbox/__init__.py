@@ -4,15 +4,18 @@ from modules.pysfml_game import GRID
 from modules.pysfml_game import sf
 
 from tile import Tile
+from pointer import Pointer
 
 class ToolBox:
 #Event handling for all of the tools.
 	def __init__(self, Level, cursor_tex):
 		self.UI = _ui()
+		
+		self.Pointer = Pointer()
 		self.Tile = \
 			Tile(Level, cursor_tex)
 
-	#UI is drawn externally so that it may be static.
+	#UI is drawn externally so that it stays in place.
 	def draw(self):
 		self.Tile.draw()
 
@@ -45,6 +48,8 @@ class ToolBox:
 		if hovering_toolbox:
 			if mouse.left.pressed():
 				self.UI.select_tool(mouse)
+
+		self.Pointer.LevelProperties.handle_events()
 
 class _ui:
 #The side panel for selecting tools.
