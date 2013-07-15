@@ -51,25 +51,25 @@ class LevelProperties:
 			for iy in range(3):
 				self.rowconfigure(iy, pad=pad*2)
 
-			Lx = Label(self, text="x")
+			Lx = Label(self, text="room x")
 			Lx.grid(row=0, column=0)
 			Ex = Entry(self, width=10)
 			Ex.insert(INSERT, x)
 			Ex.grid(row=0, column=1)
 
-			Ly = Label(self, text="y")
+			Ly = Label(self, text="room y")
 			Ly.grid(row=0, column=2)
 			Ey = Entry(self, width=10)
 			Ey.insert(INSERT, y)
 			Ey.grid(row=0, column=3)
 
-			Lw = Label(self, text="w")
+			Lw = Label(self, text="room w")
 			Lw.grid(row=1, column=0)
 			Ew = Entry(self, width=10)
 			Ew.insert(INSERT, w)
 			Ew.grid(row=1, column=1)
 
-			Lh = Label(self, text="h")
+			Lh = Label(self, text="room h")
 			Lh.grid(row=1, column=2)
 			Eh = Entry(self, width=10)
 			Eh.insert(INSERT, h)

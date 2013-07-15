@@ -22,17 +22,20 @@ Goals:
 
 =
 
-x Make a GUI with x, y, w and h.
-x Upon closing the window, print the new values.
-Open in the Level Editor.
-	x Keep running the LevelEditor when there is no window.
+Clean-up code, abiding by new hierachy:
+	LevelEditor
+	 >ToolBox
+	  >>Pointer
+	  >>Tile
 
-Wrap code in it's own module.
+-
+
 
 The values given to the properties match the Level's size.
 Saved values modify the level's size.
 
 
+=
 
 - LevelEditor no longer stores Mouse.
 + Added class LevelProperties.
