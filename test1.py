@@ -9,7 +9,7 @@ Camera.zoom = 1
 Camera.x, Camera.y = -50, 0
 
 LevelEditor = le.LevelEditor(Camera)
-LevelEditor.load_WorldMap()
+LevelEditor.WorldMap.load()
 #########################################################
 running = True
 while running:
@@ -40,7 +40,7 @@ while running:
 		if key.W.held(): Camera.y -= mo.GRID
 		if key.S.held(): Camera.y += mo.GRID
 
-	LevelEditor.handle_controls(key, mouse)
+	LevelEditor.handle_controls(key, mouse, Camera)
 
 	mo.window.view = Camera
 	LevelEditor.Camera = Camera

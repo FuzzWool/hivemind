@@ -3,7 +3,7 @@ import modules as mo
 class Level(object):
 	level = []
 	tiles = []
-	level_dir = ""
+	name = ""
 	alphabet = ["a","b","c","d","e","f","g",\
 	 "h","i","j","k","l","m","n","o","p","q",\
 	 "q","r","s","t","u","v","w","x","y","z"]
@@ -16,7 +16,7 @@ class Level(object):
 
 		def get_level(level_dir):
 		#Grab level data from text file.
-			self.level_dir = level_dir
+			self.name = level_dir
 			f = open("outside/levels/"+level_dir+".txt")
 			level = f.read()
 			f.close()
