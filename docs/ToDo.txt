@@ -10,31 +10,19 @@ MAJOR Goals:
 
 0.0.7 - Level Properties
 Goals:
-	* GUI feature: the top-left of a level contains properties.
+	xGUI feature: the top-left of a level contains properties
 	Properties may:
 		Manually define the x/y and w/h of the level
 		(in tiles AND rooms)*
 
-	*Requires a custom window to be built which accepts text input.
+	xRequires a custom window to be built which accepts text input.
 
-	* Draw only tiles (and grids) which're on-screen.
-	* Special tile marking the start of a new room.
+	x Special tile marking the start of a new room.
 
 
-x get ELevel room_w, room_h.
-set ELevel room_w, room_h.
-	The level may grow or shrink to meet the size.
-
-	room_w grow
-	room_w shrink
-	room_h grow
-	room_h shrink
-
-The values given to the properties match the Level's size.
-Saved values modify the level's size.
-
-+ Added Pointer tool.
-
++ Special grid marking for a new room.
++ Double-click a level to open up it's Properties.
+	+ Mouse double-clicking.
 
 =
 0.0.8 - Level tool
@@ -42,3 +30,4 @@ Goals:
 * Cursor should have coordinates binded to an ELevel.
 * Tool may plant down ELevels.
 * ELevels may be altered individually.
+* Draw only tiles (and grids) which're on-screen.

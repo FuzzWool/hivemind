@@ -77,6 +77,8 @@ class Button:
 		self.old_held = self.held()
 		return press
 
+	def clicked(self): return self.pressed()
+
 	def released(self):
 		release = False
 		if self.old_held2 == True:
@@ -84,3 +86,25 @@ class Button:
 				release = True
 		self.old_held2 = self.held()
 		return release
+
+	#
+
+	first_press = False
+	clock = sf.Clock()
+
+	def double_pressed(self, secs=0.3):
+		#If unpressed, check to see if pressed again.
+		if self.first_press == False:
+			self.first_press = self.pressed()
+			self.clock.restart()
+
+		#If time runs out, the first press is falsed.
+		if self.first_press\
+		 and self.clock.elapsed_time.as_seconds() >= secs:
+		 	self.first_press = False
+		 	self.clock.restart()
+
+		return self.pressed() and self.first_press
+
+	def double_clicked(self, secs=0.3):
+		return self.double_pressed(secs)

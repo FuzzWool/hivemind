@@ -56,9 +56,9 @@ class _LevelProperties:
 			self.parent.title("Level Properties")
 			self.pack(fill=BOTH, expand=1)
 
-			x, y = 1, 2
-			w, h = 0, 0 
-			# w, h = Level.room_pos[0], Level.room_pos[1]
+			x, y = 0, 0
+			w, h = Level.room_w, Level.room_h
+			self.Level = Level
 
 			pad = 10
 			for ix in range(4):
@@ -103,6 +103,9 @@ class _LevelProperties:
 			self.w = Ew; self.h = Eh
 
 		def print_results(self):
-			print self.x.get(), self.y.get(),\
-					self.w.get(), self.h.get()
+			self.Level.room_w = int(self.w.get())
+			self.Level.room_h = int(self.h.get())
+			# print self.x.get(), self.y.get(),\
+			# 		self.w.get(), self.h.get()
+			self.grid_forget()
 			self.parent.destroy()

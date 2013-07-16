@@ -28,6 +28,12 @@ class ELevel(Level):
 
 	#Properties (size, position)
 	@property
+	def x(self): return 0
+
+	@property
+	def y(self): return 0
+
+	@property
 	def w(self): return len(self.level)
 	@w.setter
 	def w(self, arg):
@@ -192,7 +198,11 @@ class ELevel(Level):
 	#Makes a new grid tile.
 		grid = MySprite(self.grid_tex)
 		grid.clip.set(25, 25)
-		grid.clip.use(0, 0)
+		if not x % (ROOM_WIDTH/GRID)\
+		and not y % (ROOM_HEIGHT/GRID):
+			grid.clip.use(1, 0)
+		else:
+			grid.clip.use(0, 0)
 		# grid.x = (x - self.offset_x) * GRID
 		# grid.y = (y - self.offset_y) * GRID
 		grid.x = x * GRID

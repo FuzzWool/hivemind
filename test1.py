@@ -42,11 +42,8 @@ while running:
 
 	#WIP
 	if key.RETURN.pressed():
-		pass
-		# LevelEditor.ToolBox.Pointer.LevelProperties.open(0)
-		#get
-		# print Level.w, Level.h
-		# print Level.room_w, Level.room_h
+		LevelEditor.ToolBox.Pointer.\
+		LevelProperties.open(Level)
 
 	LevelEditor.handle_controls(key, mouse)
 

@@ -24,8 +24,16 @@ class ToolBox:
 		tool = self.UI.selected_tool
 		hovering_toolbox = bool(mouse.x < self.UI.w)
 
+		hovering_level = False
+		x, y = mouse.position(camera)
+		if (Level.x*GRID < x < Level.w*GRID)\
+		and (Level.y*GRID < y < Level.h*GRID):
+			hovering_level = True
+
 		if tool == "pointer":
-			pass
+			if hovering_level:
+				if mouse.left.double_clicked():
+					self.Pointer.LevelProperties.open(Level)
 
 		if tool == "tile":
 			grid_pos = mouse.grid_position(camera)

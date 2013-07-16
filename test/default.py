@@ -1,21 +1,21 @@
-import modules as mo
-rtrn = mo.KeyTracker(mo.sf.Keyboard.RETURN)
+import modules.pysfml_game.key as key
+from modules.pysfml_game import quit, window, sf
 
 #########################################################
 
 running = True
 while running:
 	#Logic
-	if mo.quit(): running = False
-	if rtrn.pressed():
+	if quit(): running = False
+	if key.RETURN.pressed():
 		pass
 
 	#Animation
 	#
 
 	#Video
-	mo.window.clear(mo.sf.Color.WHITE)
+	window.clear(sf.Color.WHITE)
 	#
 
 	#
-	mo.window.display()
+	window.display()
