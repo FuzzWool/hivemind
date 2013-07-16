@@ -92,19 +92,13 @@ class ELevel(Level):
 
 	def change_tile(self, pos=(), clip=()):
 	#When tiles are changed out-of-bounds, add filler.
-		def refresh():
-			x, y = pos[0], pos[1]
-			# x += self.offset_x; y += self.offset_y
-			return x, y
 
 		#No going out of bounds.
-		x, y = refresh()
+		x, y = pos[0], pos[1]
+		x -= self.x; y -= self.y
 		if x < 0 or y < 0: return
 		if x > len(self.level)-1: return
 		if y > len(self.level[0])-1: return
-
-
-		x, y = pos[0], pos[1]
 
 		def make_tile(pos=(), clip=()):
 		#Make a new tile. Requires filler to be in place.
@@ -116,13 +110,13 @@ class ELevel(Level):
 			cx = self.alphabet.index(clip[0])
 			cy = self.alphabet.index(clip[1])
 			sprite.clip.use(cy, cx)
-			x = (pos[0] + self.x)*GRID
-			y = (pos[1] + self.y)*GRID
+			x = (pos[0])*GRID
+			y = (pos[1])*GRID
 			sprite.goto = x, y
 			return sprite
 
-		x, y = refresh()
 		tile = make_tile((x, y), clip)
+
 		self.tiles[x][y] = tile
 
 		if self.render_texture != None:
@@ -131,6 +125,7 @@ class ELevel(Level):
 			if tile == None:
 				self.render_texture.draw(self.grid[x][y])
 			self.render_sprite = MySprite(self.render_texture.texture)
+			self.render_sprite.goto = self.x*GRID, self.y*GRID
 
 		self.level[x][y] = clip
 
@@ -226,8 +221,6 @@ class ELevel(Level):
 			grid.clip.use(1, 0)
 		else:
 			grid.clip.use(0, 0)
-		# grid.x = (x - self.offset_x) * GRID
-		# grid.y = (y - self.offset_y) * GRID
 		grid.x = x * GRID
 		grid.y = y * GRID
 		return grid
@@ -250,7 +243,7 @@ class ELevel(Level):
 		self.render_texture = render
 		self.render_texture.display()
 		self.render_sprite = MySprite(self.render_texture.texture)
-
+		self.render_sprite.goto = self.x*GRID, self.y*GRID
 
 	def draw(self):
 		if self.render_sprite != None:

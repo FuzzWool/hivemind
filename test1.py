@@ -10,7 +10,7 @@ Camera.x, Camera.y = -50, 0
 
 Level = le.ELevel("0")
 Level2 = le.ELevel("1")
-Level.room_x -= 1
+Level.x -= 1
 LevelEditor = le.LevelEditor(Camera, Level)
 #########################################################
 running = True
@@ -41,6 +41,9 @@ while running:
 		if key.D.held(): Camera.x += mo.GRID
 		if key.W.held(): Camera.y -= mo.GRID
 		if key.S.held(): Camera.y += mo.GRID
+
+	if key.RETURN.pressed():
+		print Level.x*mo.GRID, Level.w*mo.GRID
 
 	LevelEditor.handle_controls(key, mouse)
 

@@ -56,7 +56,7 @@ class _LevelProperties:
 			self.parent.title("Level Properties")
 			self.pack(fill=BOTH, expand=1)
 
-			x, y = 0, 0
+			x, y = Level.room_x, Level.room_y
 			w, h = Level.room_w, Level.room_h
 			self.Level = Level
 
@@ -103,9 +103,10 @@ class _LevelProperties:
 			self.w = Ew; self.h = Eh
 
 		def print_results(self):
+			self.Level.room_x = int(self.x.get())
+			self.Level.room_y = int(self.y.get())
 			self.Level.room_w = int(self.w.get())
 			self.Level.room_h = int(self.h.get())
-			# print self.x.get(), self.y.get(),\
-			# 		self.w.get(), self.h.get()
+
 			self.grid_forget()
 			self.parent.destroy()

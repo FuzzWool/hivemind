@@ -26,8 +26,10 @@ class ToolBox:
 
 		hovering_level = False
 		x, y = mouse.position(camera)
-		if (Level.x*GRID < x < Level.w*GRID)\
-		and (Level.y*GRID < y < Level.h*GRID):
+		lx = Level.x*GRID; lw = lx + Level.w*GRID
+		ly = Level.y*GRID; lh = ly + Level.h*GRID
+		if (lx < x < lw)\
+		and (ly < y < lh):
 			hovering_level = True
 
 		if tool == "pointer":

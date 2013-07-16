@@ -25,3 +25,6 @@ x Make two levels.
 x Make them position themselves differently.
 Make a WorldMap save/load the positionings.
 	WorldMap is inside of LevelEditor.
+
+
+x Update LevelProperties with room_x and room_y
