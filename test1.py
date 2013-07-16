@@ -6,9 +6,11 @@ mouse = le.EditMouse()
 
 Camera = le.RoomCamera()
 Camera.zoom = 1
-Camera.x, Camera.y = 0, 0
+Camera.x, Camera.y = -50, 0
 
 Level = le.ELevel("0")
+Level2 = le.ELevel("1")
+Level.room_x -= 1
 LevelEditor = le.LevelEditor(Camera, Level)
 #########################################################
 running = True
@@ -52,6 +54,7 @@ while running:
 	mo.window.clear(mo.sf.Color(128, 128, 128))
 	#
 	Level.draw()
+	#Level2.draw()
 	LevelEditor.draw(mouse)
 	mo.window.view = mo.window.default_view
 	LevelEditor.ToolBox.UI.draw()

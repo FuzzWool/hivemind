@@ -22,10 +22,6 @@ Goals:
 -
 
 x Make two levels.
-Make them position themselves differently.
-
-To move the level's tiles en mass, they should be saved to a single image.
-
-ELevel
-x For any tile changes, redraw on the render_texture.
-x For any level expansions/shrinks, remake the render_texture
+x Make them position themselves differently.
+Make a WorldMap save/load the positionings.
+	WorldMap is inside of LevelEditor.

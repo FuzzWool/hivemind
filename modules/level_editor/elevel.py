@@ -36,9 +36,19 @@ class ELevel(Level):
 
 	@property
 	def x(self): return self._x
+	@x.setter
+	def x(self, arg):
+		self._x = arg
+		if self.render_sprite != None:
+			self.render_sprite.x = arg*GRID
 
 	@property
 	def y(self): return self._y
+	@y.setter
+	def y(self, arg):
+		self._y = arg
+		if self.render_sprite != None:
+			self.render_sprite.y = arg*GRID
 
 	@property
 	def w(self): return len(self.level)
@@ -57,6 +67,16 @@ class ELevel(Level):
 		if change >= +1: self.expand_bottom(arg)
 		if change <= -1: self.shrink_bottom(arg)
 		self.make_render()
+
+	@property
+	def room_x(self): return int(self.x*GRID / ROOM_WIDTH)
+	@room_x.setter
+	def room_x(self, arg): self.x = arg*(ROOM_WIDTH/GRID)
+
+	@property
+	def room_y(self): return int(self.y*GRID / ROOM_HEIGHT)
+	@room_y.setter
+	def room_y(self, arg): self.y = arg*(ROOM_HEIGHT/GRID)
 
 	@property
 	def room_w(self): return int(self.w*GRID / ROOM_WIDTH)
@@ -96,8 +116,8 @@ class ELevel(Level):
 			cx = self.alphabet.index(clip[0])
 			cy = self.alphabet.index(clip[1])
 			sprite.clip.use(cy, cx)
-			x = pos[0]*GRID
-			y = pos[1]*GRID
+			x = (pos[0] + self.x)*GRID
+			y = (pos[1] + self.y)*GRID
 			sprite.goto = x, y
 			return sprite
 
