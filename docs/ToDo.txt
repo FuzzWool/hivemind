@@ -23,8 +23,11 @@ Goals:
 
 x Make two levels.
 x Make them position themselves differently.
-Make a WorldMap save/load the positionings.
-	WorldMap is inside of LevelEditor.
 
+x load WorldMap.
 
-x Update LevelProperties with room_x and room_y
+Make WorldMap in to a seperate class.
+Add Pointer and Tile editing functionality back in.
+
+save WorldMap.
+Add WorldMap functionality to the main game.

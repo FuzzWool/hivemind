@@ -8,10 +8,8 @@ Camera = le.RoomCamera()
 Camera.zoom = 1
 Camera.x, Camera.y = -50, 0
 
-Level = le.ELevel("0")
-Level2 = le.ELevel("1")
-Level.x -= 1
-LevelEditor = le.LevelEditor(Camera, Level)
+LevelEditor = le.LevelEditor(Camera)
+LevelEditor.load_WorldMap()
 #########################################################
 running = True
 while running:
@@ -21,8 +19,8 @@ while running:
 
 	if key.L_CTRL.held():
 		#Save Level
-		if key.S.pressed():
-			Level.save()
+		# if key.S.pressed():
+		# 	Level.save()
 
 		#Zoom Camera
 		if key.ADD.pressed(): Camera.zoom *= 2
@@ -42,9 +40,6 @@ while running:
 		if key.W.held(): Camera.y -= mo.GRID
 		if key.S.held(): Camera.y += mo.GRID
 
-	if key.RETURN.pressed():
-		print Level.x*mo.GRID, Level.w*mo.GRID
-
 	LevelEditor.handle_controls(key, mouse)
 
 	mo.window.view = Camera
@@ -56,10 +51,9 @@ while running:
 	#Video
 	mo.window.clear(mo.sf.Color(128, 128, 128))
 	#
-	Level.draw()
-	#Level2.draw()
+	# Level.draw()
 	LevelEditor.draw(mouse)
 	mo.window.view = mo.window.default_view
-	LevelEditor.ToolBox.UI.draw()
+	# LevelEditor.ToolBox.UI.draw()
 	#
 	mo.window.display()
