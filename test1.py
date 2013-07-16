@@ -40,11 +40,6 @@ while running:
 		if key.W.held(): Camera.y -= mo.GRID
 		if key.S.held(): Camera.y += mo.GRID
 
-	#WIP
-	if key.RETURN.pressed():
-		LevelEditor.ToolBox.Pointer.\
-		LevelProperties.open(Level)
-
 	LevelEditor.handle_controls(key, mouse)
 
 	mo.window.view = Camera

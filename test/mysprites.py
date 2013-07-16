@@ -1,35 +1,43 @@
-import modules as mo
-rtrn = mo.KeyTracker(mo.sf.Keyboard.RETURN)
+import modules.pysfml_game.key as key
+from modules.pysfml_game import quit, window, sf
+from modules.pysfml_game import MySprite, MyTexture
+from modules.pysfml_game import MyCamera
 
-tex = mo.sf.Texture.load_from_file("img/test/test.png")
+Camera = MyCamera()
+Camera.zoom = 1
+Camera.x, Camera.y = 0, 0
+
 sprites = []
-def make_sprite():
-	i = len(sprites)
-	sprite = mo.MySprite(tex)
-	sprite.clip.set(25, 25)
-	sprite.clip.use(i, 0)
-	sprite.position = 100 + (i * 50), 100
-	sprites.append(sprite)
-
-for i in range(5):
-	make_sprite()
+texture = MyTexture("img/test/level.png")
+for x in range(10):
+	sprites.append([])
+	for y in range(20):
+		sprite = MySprite(texture)
+		sprite.clip.set(25, 25)
+		sprite.clip.use(0, 0)
+		sprite.goto = x*25, y*25
+		sprites[x].append(sprite)
 
 #########################################################
+
 running = True
 while running:
-	
 	#Logic
-	if mo.quit(): running = False
-	if rtrn.pressed():
+	if quit(): running = False
+	if key.RETURN.pressed():
 		pass
 
 	#Animation
 	#
 
 	#Video
-	mo.window.clear(mo.sf.Color.WHITE)
+	window.clear(sf.Color.WHITE)
 	#
-	for s in sprites:
-		s.draw()
+
+	for x in sprites:
+		for y in x:
+			y.draw()
+
 	#
-	mo.window.display()
+	window.view = Camera
+	window.display()

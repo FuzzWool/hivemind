@@ -8,26 +8,24 @@ MAJOR Goals:
 * Append levels based on a world file's data.
 * A mini world map may determine which 'block' the player is in
 
-0.0.7 - Level Properties
-Goals:
-	xGUI feature: the top-left of a level contains properties
-	Properties may:
-		Manually define the x/y and w/h of the level
-		(in tiles AND rooms)*
-
-	xRequires a custom window to be built which accepts text input.
-
-	x Special tile marking the start of a new room.
-
-
-+ Special grid marking for a new room.
-+ Double-click a level to open up it's Properties.
-	+ Mouse double-clicking.
-
 =
-0.0.8 - Level tool
+0.0.8 - Multiple levels
 Goals:
+* Ctrl+O opens a new Level.
+* A WorldMap saves the positioning of all these levels.
+
 * Cursor should have coordinates binded to an ELevel.
-* Tool may plant down ELevels.
 * ELevels may be altered individually.
+
 * Draw only tiles (and grids) which're on-screen.
+
+-
+
+x Make two levels.
+Make them position themselves differently.
+
+To move the level's tiles en mass, they should be saved to a single image.
+
+ELevel
+x For any tile changes, redraw on the render_texture.
+x For any level expansions/shrinks, remake the render_texture

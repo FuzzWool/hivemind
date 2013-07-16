@@ -7,22 +7,15 @@ Camera = MyCamera()
 Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
-def new_sprite(x, y, use=0):
-	sprite = MySprite(texture)
-	sprite.clip.set(25, 25)
-	sprite.clip.use(use, use)
-	sprite.goto = x*25, y*25
-	#
-	return sprite
-
 sprites = []
 texture = MyTexture("img/test/level.png")
 for x in range(10):
 	sprites.append([])
 	for y in range(20):
-		if y == 0: i = 1
-		else: i = 0 
-		sprite = new_sprite(x, y, i)
+		sprite = MySprite(texture)
+		sprite.clip.set(25, 25)
+		sprite.clip.use(0, 0)
+		sprite.goto = x*25, y*25
 		sprites[x].append(sprite)
 
 ###
@@ -39,22 +32,17 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		Camera.x -= 10
+		pass
 
 	#Animation
 	#
 
 	#Video
+	window.clear(sf.Color.WHITE)
 	#
 
-	window.clear(sf.Color.WHITE)
-	# for x in sprites:
-	# 	for y in x:
-	# 		y.draw()
-
-	window.view = Camera
-	render_texture.display()
 	sprite.draw()
 
 	#
+	window.view = Camera
 	window.display()

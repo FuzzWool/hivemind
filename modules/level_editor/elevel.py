@@ -2,6 +2,7 @@ from modules.level import Level
 from modules.pysfml_game import ROOM_HEIGHT, ROOM_WIDTH
 from modules.pysfml_game import GRID
 from modules.pysfml_game import MyTexture, MySprite
+from modules.pysfml_game import sf
 
 class ELevel(Level):
 #A level-editor specific version of Level.
@@ -9,6 +10,10 @@ class ELevel(Level):
 
 	grid = []
 	grid_tex = MyTexture("img/level_editor/grid.png")
+
+	#For moving the level as a whole.
+	render_sprite = None
+	render_texture = None
 
 
 	def __init__ (self, level_dir):
@@ -24,14 +29,16 @@ class ELevel(Level):
 					self.grid[ix].append(None)
 
 				self.grid[ix][iy] = self.make_grid(ix, iy)
-
+		self.make_render()
 
 	#Properties (size, position)
-	@property
-	def x(self): return 0
+	_x, _y = 0, 0
 
 	@property
-	def y(self): return 0
+	def x(self): return self._x
+
+	@property
+	def y(self): return self._y
 
 	@property
 	def w(self): return len(self.level)
@@ -40,6 +47,7 @@ class ELevel(Level):
 		change = arg - self.w
 		if change >= +1: self.expand_right(arg)
 		if change <= -1: self.shrink_right(arg)
+		self.make_render()
 
 	@property
 	def h(self): return len(self.level[0])
@@ -48,6 +56,7 @@ class ELevel(Level):
 		change = arg - self.h
 		if change >= +1: self.expand_bottom(arg)
 		if change <= -1: self.shrink_bottom(arg)
+		self.make_render()
 
 	@property
 	def room_w(self): return int(self.w*GRID / ROOM_WIDTH)
@@ -76,11 +85,6 @@ class ELevel(Level):
 
 
 		x, y = pos[0], pos[1]
-		# self.expand_left(x)
-		# self.expand_top(y)
-		# x, y = refresh()
-		# self.expand_bottom(y)
-		# self.expand_right(x)
 
 		def make_tile(pos=(), clip=()):
 		#Make a new tile. Requires filler to be in place.
@@ -92,8 +96,6 @@ class ELevel(Level):
 			cx = self.alphabet.index(clip[0])
 			cy = self.alphabet.index(clip[1])
 			sprite.clip.use(cy, cx)
-			#x = (pos[0] - self.offset_x) * GRID
-			#y = (pos[1] - self.offset_y) * GRID
 			x = pos[0]*GRID
 			y = pos[1]*GRID
 			sprite.goto = x, y
@@ -102,6 +104,14 @@ class ELevel(Level):
 		x, y = refresh()
 		tile = make_tile((x, y), clip)
 		self.tiles[x][y] = tile
+
+		if self.render_texture != None:
+			if tile != None:
+				self.render_texture.draw(self.tiles[x][y])
+			if tile == None:
+				self.render_texture.draw(self.grid[x][y])
+			self.render_sprite = MySprite(self.render_texture.texture)
+
 		self.level[x][y] = clip
 
 	def save(self):
@@ -120,13 +130,6 @@ class ELevel(Level):
 		f.close()
 
 		print "Saved level '%s'!" % self.level_dir
-
-	def draw(self):
-		for x in self.grid:
-			for y in x:
-				if y != None:
-					y.draw()
-		super(ELevel, self).draw()
 
 #
 
@@ -208,3 +211,27 @@ class ELevel(Level):
 		grid.x = x * GRID
 		grid.y = y * GRID
 		return grid
+
+#
+
+	def make_render(self):
+	#Remake the render texture, and then the sprite.
+	#For any instances in which the graphics may change.
+		render \
+		= sf.RenderTexture(self.w*GRID, self.h*GRID)
+
+		for ix, x in enumerate(self.tiles):
+			for iy, y in enumerate(x):
+				if self.tiles[ix][iy] != None:
+					render.draw(self.tiles[ix][iy])
+				else:
+					render.draw(self.grid[ix][iy])
+
+		self.render_texture = render
+		self.render_texture.display()
+		self.render_sprite = MySprite(self.render_texture.texture)
+
+
+	def draw(self):
+		if self.render_sprite != None:
+			self.render_sprite.draw()
