@@ -15,23 +15,22 @@ Goals:
 * A WorldMap saves the positioning of all these levels.
 
 * Cursor should have coordinates binded to an ELevel.
-* ELevels may be altered individually.
+x ELevels may be altered individually.
 
 * Draw only tiles (and grids) which're on-screen.
 
 -
-===
-x Make WorldMap in to a seperate class.
-x Tools only affect Levels being highlighted.
-===Just before sleeping
 
 Add editing functionality back in for:
 
-	Pointer
+	x ToolBox
 
-	Tile
+	x Pointer
+
+	x Tile
+	Tile should load different tilesets.
 	
-	Saving
+	x Saving
 
 save WorldMap.
 Add WorldMap functionality to the main game.

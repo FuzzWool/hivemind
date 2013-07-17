@@ -18,10 +18,6 @@ while running:
 	if mo.quit(): running = False
 
 	if key.L_CTRL.held():
-		#Save Level
-		# if key.S.pressed():
-		# 	Level.save()
-
 		#Zoom Camera
 		if key.ADD.pressed(): Camera.zoom *= 2
 		if key.SUBTRACT.pressed(): Camera.zoom /= 2
@@ -54,6 +50,6 @@ while running:
 	# Level.draw()
 	LevelEditor.draw(mouse)
 	mo.window.view = mo.window.default_view
-	# LevelEditor.ToolBox.UI.draw()
+	LevelEditor.ToolBox.UI.draw()
 	#
 	mo.window.display()

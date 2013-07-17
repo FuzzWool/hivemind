@@ -5,8 +5,8 @@ from modules.pysfml_game import GRID
 class Tile:
 #A tool for changing and removing tiles.
 
-	def __init__(self, Level, cursor_texture):
-		self.Selector = _Selector(Level, cursor_texture)
+	def __init__(self, cursor_tex):
+		self.Selector = _Selector(cursor_tex)
 
 	def place(self, Level, grid_pos, tile_data=None):
 	#Changes a tile within the level.
@@ -32,64 +32,29 @@ class _Selector:
 
 	#Graphics
 	b_sprite = None; tiles = []
-	cursor = None
+	cursor = None; cursor_tex = None
 
-	def __init__ (self, Level, mouse_tex):
-	#Create the graphics.
+	def __init__(self, cursor_tex):
+	#Steal the cursor texture.
+		self.cursor_tex = cursor_tex
 
-		def make_box(texture, w, h):
-			b_sprite = MySprite(texture)
-			b_sprite.clip.set(25, 25)
-			b_sprite.goto = 500, 200
-
-			b_sprite.box.size = w, h
-			b_sprite.box.center = b_sprite.center
-			self.b_sprite = b_sprite
-
-		def make_tiles(texture, w, h):
-			literal_w, literal_h = w, h
-			grid_w = literal_w/GRID
-			grid_h = literal_h/GRID
-
-			#They are binded as children to the box.
-			for x in range(grid_w):
-				self.tiles.append([])
-				for y in range(grid_h):
-					tile = MySprite(texture)
-					tile.clip.set(25, 25)
-					tile.clip.use(x, y)
-					tile.goto = self.b_sprite.box.goto
-					tile.move(x*GRID, y*GRID)
-					self.b_sprite.children.append(tile)
-					self.tiles[-1].append(tile)
-
-		def make_cursor(mouse_tex):
-			tex = mouse_tex
-			cursor = MySprite(tex)
-			cursor.clip.set(25, 25)
-			cursor.goto = self.tiles[0][0].goto
-			self.cursor = cursor
-			self.b_sprite.children.append(self.cursor)
-
-		texture = Level.texture
-		w, h = 300, 300
-		make_box(texture, w, h)
-		make_tiles(texture, w, h)
-		make_cursor(mouse_tex)
-
-
-	def toggle(self, grid_pos, visible=None):
-	#Opens/closes the TileSelector.
-		if visible == None: visible = not self.visible
-		self.visible = visible
-		#Moves the tiles.
+	
+	def open(self, Level, grid_pos):
+	#Open the menu, redraw all the tiles.
+		self._create_graphics(Level)
+		
+		#Move the tiles.
 		x, y = grid_pos
 		x *= GRID; y *= GRID
 		self.b_sprite.box.center = x, y
 		self.b_sprite.center = x, y
 
-	def open(self, grid_pos): self.toggle(grid_pos, True)
-	def close(self, grid_pos): self.toggle(grid_pos, False)
+		self.visible = True
+
+	def close(self):
+	#Close the menu.
+		self.visible = False
+
 
 	def select(self, Level, grid_pos):
 	#Select a tile. Change selected tile, move the cursor.
@@ -134,3 +99,52 @@ class _Selector:
 				for y in x:
 					y.draw()
 			self.cursor.draw()
+
+	#
+
+	def _create_graphics(self, Level):
+	#Create the box, tiles and cursor.
+
+		self.b_sprite = None
+		self.tiles = []
+		self.cursor = None
+
+		def make_box(texture, w, h):
+			b_sprite = MySprite(texture)
+			b_sprite.clip.set(25, 25)
+			b_sprite.goto = 500, 200
+
+			b_sprite.box.size = w, h
+			b_sprite.box.center = b_sprite.center
+			self.b_sprite = b_sprite
+
+		def make_tiles(texture, w, h):
+			literal_w, literal_h = w, h
+			grid_w = literal_w/GRID
+			grid_h = literal_h/GRID
+
+			#They are binded as children to the box.
+			for x in range(grid_w):
+				self.tiles.append([])
+				for y in range(grid_h):
+					tile = MySprite(texture)
+					tile.clip.set(25, 25)
+					tile.clip.use(x, y)
+					tile.goto = self.b_sprite.box.goto
+					tile.move(x*GRID, y*GRID)
+					self.b_sprite.children.append(tile)
+					self.tiles[-1].append(tile)
+
+		def make_cursor():
+			tex = self.cursor_tex
+			cursor = MySprite(tex)
+			cursor.clip.set(25, 25)
+			cursor.goto = self.tiles[0][0].goto
+			self.cursor = cursor
+			self.b_sprite.children.append(self.cursor)
+
+		texture = Level.texture
+		w, h = 300, 300
+		make_box(texture, w, h)
+		make_tiles(texture, w, h)
+		make_cursor()

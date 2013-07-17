@@ -140,11 +140,11 @@ class ELevel(Level):
 		text = text[:-1]
 
 		#Save it to the original file.
-		f = open("outside/levels/"+self.level_dir+".txt", "r+")
+		f = open("outside/levels/"+self.name+".txt", "r+")
 		f.write(text)
 		f.close()
 
-		print "Saved level '%s'!" % self.level_dir
+		print "Saved level '%s'!" % self.name
 
 #
 

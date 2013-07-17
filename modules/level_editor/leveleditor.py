@@ -23,8 +23,7 @@ class LevelEditor:
 	def __init__(self, Camera):
 		self.Camera = Camera
 		self.WorldMap = WorldMap()
-		# self.Level = Level
-		# self.ToolBox = ToolBox(self.cursor_tex)
+		self.ToolBox = ToolBox(self.cursor_tex)
 
 	def draw(self, mouse):
 
@@ -36,7 +35,7 @@ class LevelEditor:
 		self.cursor.goto = x, y
 
 		self.cursor.draw()
-		# self.ToolBox.draw()
+		self.ToolBox.draw()
 
 		#
 
@@ -47,21 +46,25 @@ class LevelEditor:
 	#Selects the level based on what is currently
 	#being highlighted.
 
+		self.ToolBox.ui_controls(mouse)
+
 		#Check all Levels to see if the mouse is
 		#overlapping any of them.
 		mouse_x, mouse_y = mouse.position(camera)
-		
+
 		for Level in self.WorldMap.Levels:
 			x1, y1 = Level.x*GRID, Level.y*GRID
 			x2, y2 = x1 + Level.w*GRID, y1 + Level.h*GRID
 
 			if (x1 < mouse_x < x2)\
 			and (y1 < mouse_y < y2):
-				print Level.name
-				# self.ToolBox.handle_controls\
-				# 	(key, mouse, self.Camera, Level)
+				self.ToolBox.level_controls\
+					(key, mouse, self.Camera, Level)
 
-		# self.ToolBox.handle_controls\
-		# 	(key, mouse, self.Camera, self.Level)
+				#Save the level.
+				if key.L_CTRL.held():
+					if key.S.pressed():
+						Level.save()
+
 
 	#

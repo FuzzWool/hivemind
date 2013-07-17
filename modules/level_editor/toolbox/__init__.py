@@ -8,19 +8,31 @@ from pointer import Pointer
 
 class ToolBox:
 #Event handling for all of the tools.
-	def __init__(self, Level, cursor_tex):
+	def __init__(self, cursor_tex):
 		self.UI = _ui()
 		
 		self.Pointer = Pointer()
-		self.Tile = \
-			Tile(Level, cursor_tex)
+		self.Tile = Tile(cursor_tex)
 
 	#UI is drawn externally so that it stays in place.
 	def draw(self):
 		self.Tile.draw()
 
-	def handle_controls(self, key, mouse, camera, Level):
-	#Handles events for all of it's tools.
+
+	def ui_controls(self, mouse):
+	#Checked constantly.
+		hovering_toolbox = bool(mouse.x < self.UI.w)
+
+		if hovering_toolbox:
+			if mouse.left.pressed():
+				self.UI.select_tool(mouse)
+
+		self.Pointer.LevelProperties.handle_events()
+
+
+	def level_controls(self, key, mouse, camera, Level):
+	#Only checked when a level is highlighted.
+	#Level-specific tools.
 		tool = self.UI.selected_tool
 		hovering_toolbox = bool(mouse.x < self.UI.w)
 
@@ -43,7 +55,8 @@ class ToolBox:
 
 				if key.L_CTRL.held():
 					if mouse.left.pressed():
-						self.Tile.Selector.open(grid_pos)
+						self.Tile.Selector.open\
+						(Level, grid_pos)
 				else:
 					if mouse.left.held():
 						self.Tile.place(Level, grid_pos)
@@ -53,13 +66,7 @@ class ToolBox:
 						self.Tile.Selector.select\
 						(Level, grid_pos)
 					if mouse.left.released():
-						self.Tile.Selector.close(grid_pos)
-
-		if hovering_toolbox:
-			if mouse.left.pressed():
-				self.UI.select_tool(mouse)
-
-		self.Pointer.LevelProperties.handle_events()
+						self.Tile.Selector.close()
 
 class _ui:
 #The side panel for selecting tools.
@@ -128,13 +135,15 @@ class _ui:
 
 	def select_tool(self, Mouse):
 	#Select the tool which's been clicked.
-		#Dull the old one.
-		x, y = self._selected_tool
-		self.tools_sprites[x][y].color \
-		= sf.Color(255,255,255,125)
 
 		x, y = Mouse.x / GRID, Mouse.y / GRID
 		if self.tools[x][y] != None:
+			#Dull the old one.
+			x, y = self._selected_tool
+			self.tools_sprites[x][y].color \
+			= sf.Color(255,255,255,125)
+
+			x, y = Mouse.x / GRID, Mouse.y / GRID
 			self._selected_tool = (x, y)
 
 			#Brighten the new one.

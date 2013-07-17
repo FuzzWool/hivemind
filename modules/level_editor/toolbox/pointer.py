@@ -53,7 +53,8 @@ class _LevelProperties:
 			
 		def initUI(self, Level):
 
-			self.parent.title("Level Properties")
+			title = "'%s' Properties" % Level.name
+			self.parent.title(title)
 			self.pack(fill=BOTH, expand=1)
 
 			x, y = Level.room_x, Level.room_y
