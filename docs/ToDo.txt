@@ -20,18 +20,15 @@ x ELevels may be altered individually.
 
 -
 
-x TileSelections load different palettes from level to level.
-x The palette is stored at the top of a level file.
-	x Add saving.
+x Make a new Tkinter window.
+x Re-add x, y, w, h
+* Rename Texture in Level to Tileset.
 
-x Properties: changing palette on the go.
-Make a new Tkinter window.
+! Fix TileSelections being limited to a level highlight.
 
-Fix TileSelections being limited to a level highlight.
-
-save WorldMap.
+! save WorldMap.
 
 Main game:
-Test ordinary Levels. (Implement RenderTextures)
-	Cleanup and affirm differences between ELevel and Level.
+! Test ordinary Levels. (Implement RenderTextures)
+	Cleanup and affirm differences between ELevel and Level
 Add the WorldMap loading.
