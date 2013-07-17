@@ -1,13 +1,13 @@
 import modules as mo
 
 class Level(object):
-	level = []
-	tiles = []
 	name = ""
+	texture_name = ""
+	texture = "loaded from the first level file line"
+	level = []; tiles = []
 	alphabet = ["a","b","c","d","e","f","g",\
 	 "h","i","j","k","l","m","n","o","p","q",\
 	 "q","r","s","t","u","v","w","x","y","z"]
-	texture = mo.texture("img/test/level.png")
 
 	def __call__(self): return self.level
 	
@@ -21,6 +21,18 @@ class Level(object):
 			level = f.read()
 			f.close()
 			return level
+
+		def grab_texture(level):
+		#Load the texture from the first level data line.
+			#Grab and remove the texture line.
+			self.texture_name = level.split("\n")[0]
+			self.texture = mo.texture(self.texture_name)
+
+			lvl = ""
+			for line in level.split("\n")[1:]:
+				lvl += str(line) + "\n"
+
+			return lvl[:-1]
 
 		def format_level(level):
 		#The level is now in an [x][y] format.
@@ -82,6 +94,7 @@ class Level(object):
 					self.change_tile((ix, iy), y)
 
 		level = get_level(level_dir)
+		level = grab_texture(level)
 		level = format_level(level)
 		level = room_off_level(level)
 		self.level = level

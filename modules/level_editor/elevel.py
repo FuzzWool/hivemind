@@ -133,6 +133,7 @@ class ELevel(Level):
 	#Saves the level back in to the file it originated.
 		#Grab the data.
 		text = ""
+		text += self.texture_name+"\n"
 		for iy, y in enumerate(self.level[0]):
 			for ix, x in enumerate(self.level):
 				text += str(self.level[ix][iy])		

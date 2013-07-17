@@ -1,7 +1,7 @@
 import modules as mo
 rtrn = mo.KeyTracker(mo.sf.Keyboard.RETURN)
 
-Level = mo.Level("full")
+Level = mo.Level("zero")
 #########################################################
 
 running = True
