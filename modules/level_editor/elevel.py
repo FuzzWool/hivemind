@@ -249,3 +249,19 @@ class ELevel(Level):
 	def draw(self):
 		if self.render_sprite != None:
 			self.render_sprite.draw()
+
+#
+#Property Texture
+
+	def change_texture(self, texture_name):
+		self.texture_name = texture_name
+		self.texture = MyTexture(self.texture_name)
+
+		#Update all of the tiles' textures.
+		for x in self.tiles:
+			for y in x:
+				if y != None:
+					y.texture = self.texture
+
+		#Re-render.
+		self.make_render()

@@ -16,7 +16,7 @@ Goals:
 * Cursor should have coordinates binded to an ELevel.
 
 x ELevels may be altered individually.
-x A WorldMap saves the positioning of all these levels.
+* A WorldMap saves the positioning of all these levels.
 
 -
 
@@ -24,7 +24,8 @@ x TileSelections load different palettes from level to level.
 x The palette is stored at the top of a level file.
 	x Add saving.
 
-Properties: changing palette on the go.
+x Properties: changing palette on the go.
+Make a new Tkinter window.
 
 Fix TileSelections being limited to a level highlight.
 
@@ -32,4 +33,5 @@ save WorldMap.
 
 Main game:
 Test ordinary Levels. (Implement RenderTextures)
+	Cleanup and affirm differences between ELevel and Level.
 Add the WorldMap loading.

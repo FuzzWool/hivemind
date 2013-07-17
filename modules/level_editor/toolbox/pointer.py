@@ -64,9 +64,10 @@ class _LevelProperties:
 			pad = 10
 			for ix in range(4):
 				self.columnconfigure(ix, pad=pad/2)
-			for iy in range(3):
+			for iy in range(4):
 				self.rowconfigure(iy, pad=pad*2)
 
+			#Room Position/Size Entry
 			Lx = Label(self, text="room x")
 			Lx.grid(row=0, column=0)
 			Ex = Entry(self, width=10)
@@ -90,24 +91,40 @@ class _LevelProperties:
 			Eh = Entry(self, width=10)
 			Eh.insert(INSERT, h)
 			Eh.grid(row=1, column=3)
+			#
 
+			#Confirmation Buttons
 			ok = Button(self, text="Okay!", \
-				command=self.print_results)
+				command=self.save_results)
 			ok.grid(sticky=N+E+S+W, row=2, column=2)
 
 			no = Button(self, text="NO.",\
 				command=self.parent.destroy)
 			no.grid(sticky=N+E+S+W, row=2, column=3)
 
+			#Texture changing
+			text = Level.texture_name
+			#
+			Ltex = Label(self, text="Texture")
+			Ltex.grid(row=3, column=1)
+			Etex = Entry(self, width=20)
+			Etex.insert(INSERT, text)
+			Etex.grid(row=3, column=2)
+
+
 			self.pack
 			self.x = Ex; self.y = Ey
 			self.w = Ew; self.h = Eh
+			#
+			self.tex = Etex
 
-		def print_results(self):
+		def save_results(self):
 			self.Level.room_x = int(self.x.get())
 			self.Level.room_y = int(self.y.get())
 			self.Level.room_w = int(self.w.get())
 			self.Level.room_h = int(self.h.get())
+			#
+			self.Level.change_texture(self.tex.get())
 
 			self.grid_forget()
 			self.parent.destroy()
