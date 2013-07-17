@@ -37,9 +37,14 @@ class _LevelProperties:
 			w = int(self.lp2.w.get())
 			h = int(self.lp2.h.get())
 
-			####
+			if name != "WorldMap":
+				Level.name = name
+			else:
+				print "Cannot name file 'WorldMap'."
+			Level.change_texture(tileset)
 			Level.room_x = x; Level.room_y = y
 			Level.room_w = w; Level.room_h = h
+
 			self.root.destroy()
 
 		self.butt = self.ConfirmButtons(self.root, save)

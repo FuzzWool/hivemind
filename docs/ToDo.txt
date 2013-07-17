@@ -21,11 +21,12 @@ x ELevels may be altered individually.
 -
 
 x Make a new Tkinter window.
-x Re-add x, y, w, h
-* Rename Texture in Level to Tileset.
+	x Re-add x, y, w, h
+	x Add texture changing
+		x Renaming saves a new version of the level.
+		Levels cannot be named 'WorldMap'.
 
 ! Fix TileSelections being limited to a level highlight.
-
 ! save WorldMap.
 
 Main game:

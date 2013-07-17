@@ -49,13 +49,13 @@ class Level(object):
 			def room_w():
 				room = mo.ROOM_WIDTH/mo.GRID
 				w = room
-				while w < len(level):
+				while w < len(level)-1:
 					w += room
 				return w
 			def room_h(x):
 				room = mo.ROOM_HEIGHT/mo.GRID
 				h = room
-				while h < len(level[0]):
+				while h < len(level[0])-1:
 					h += room
 				return h
 			#

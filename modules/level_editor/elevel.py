@@ -18,6 +18,16 @@ class ELevel(Level):
 
 	def __init__ (self, level_dir):
 	#Grid is initialized to match the Level's size.
+		self.load_file(level_dir)
+
+	def load_file(self, level_dir):
+		#Flush any residue.
+		self.x, self.y = 0, 0
+		self.grid = []
+		self.render_sprite = None
+		self.render_texture = None
+
+		#Load the new level.
 		super(ELevel, self).__init__(level_dir)
 
 		for ix, x in enumerate(self.level):
@@ -141,14 +151,18 @@ class ELevel(Level):
 		text = text[:-1]
 
 		#Save it to the original file.
-		f = open("outside/levels/"+self.name+".txt", "r+")
+		#If it has been renamed, make a new file.
+		file_dir = "outside/levels/%s.txt" % self.name
+		try:
+			f = open(file_dir,"r+")
+		except:
+			f = open(file_dir,"w")
 		f.write(text)
 		f.close()
 
 		print "Saved level '%s'!" % self.name
 
 #
-
 
 	def expand_right(self, x):
 	#Add filler tiles to the right.
