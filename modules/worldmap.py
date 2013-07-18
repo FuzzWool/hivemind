@@ -6,6 +6,9 @@ class WorldMap:
 	Data = [["level"],["x"],["y"]]
 	Levels = [["Level"]]
 
+	def __init__ (self):
+		self.load()
+
 	def load(self):
 	#For each level, Load the...
 	#Filename and x/y Coordinates
@@ -26,14 +29,36 @@ class WorldMap:
 		#Load and position the Levels from data
 		self.Levels = []
 		for entry in self.Data:
-			Level = ELevel(entry[0])
-			Level.room_x = int(entry[1])
-			Level.room_y = int(entry[2])
-			self.Levels.append(Level)
+			name = (entry[0])
+			room_x, room_y = int(entry[1]), int(entry[2])
+			self.load_Level(name, room_x, room_y)
+
+	def load_Level(self, name, room_x, room_y):
+	#Init
+	#New Levels in Level Editor Properties
+		Level = ELevel(name)
+		Level.room_x, Level.room_y = room_x, room_y
+		self.Levels.append(Level)
 
 
 	def save(self):
-		pass
+	#Save the WorldMap and all it's levels.
+		#WorldMap
+		data = ""
+		for Level in self.Levels:
+			new_line = "%s,%s,%s" \
+			% (Level.name, Level.room_x, Level.room_y)
+			data += new_line + "\n"
+
+		f = open("outside/levels/WorldMap.txt", "r+")
+		f.write(data[:-1])
+		f.close()
+
+		#Levels
+		for Level in self.Levels:
+			Level.save()
+
+		print "Saved WorldMap!"
 
 	def draw(self):
 		for Level in self.Levels:

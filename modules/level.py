@@ -17,16 +17,24 @@ class Level(object):
 		def get_level(level_dir):
 		#Grab level data from text file.
 			self.name = level_dir
-			f = open("outside/levels/"+level_dir+".txt")
-			level = f.read()
-			f.close()
+			level_dir = "outside/levels/%s.txt" % level_dir
+			
+			try: #loading the file...
+				f = open(level_dir)
+				level = f.read()
+				f.close()
+			except: #If that fails, use a generic template.
+				level = "_template"
+
 			return level
 
 		def grab_texture(level):
 		#Load the texture from the first level data line.
 			#Grab and remove the texture line.
 			self.texture_name = level.split("\n")[0]
-			self.texture = mo.texture(self.texture_name)
+			tex_dir = "img/tilemaps/%s.png" \
+			% self.texture_name
+			self.texture = mo.texture(tex_dir)
 
 			lvl = ""
 			for line in level.split("\n")[1:]:

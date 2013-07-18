@@ -6,7 +6,6 @@ class Pointer:
 	def __init__(self):
 		self.LevelProperties = _LevelProperties()
 
-
 from Tkinter import Tk, Frame, Button
 from Tkinter import BOTH
 
@@ -37,13 +36,16 @@ class _LevelProperties:
 			w = int(self.lp2.w.get())
 			h = int(self.lp2.h.get())
 
-			if name != "WorldMap":
-				Level.name = name
+
+			if name != Level.name:
+				if name != "WorldMap":
+					Level.load_file(name)
+				else:
+					print "Cannot name file 'WorldMap'."
 			else:
-				print "Cannot name file 'WorldMap'."
-			Level.change_texture(tileset)
+				Level.change_texture(tileset)
+				Level.room_w = w; Level.room_h = h
 			Level.room_x = x; Level.room_y = y
-			Level.room_w = w; Level.room_h = h
 
 			self.root.destroy()
 

@@ -17,10 +17,10 @@ class ELevel(Level):
 
 
 	def __init__ (self, level_dir):
-	#Grid is initialized to match the Level's size.
 		self.load_file(level_dir)
 
 	def load_file(self, level_dir):
+		
 		#Flush any residue.
 		self.x, self.y = 0, 0
 		self.grid = []
@@ -30,6 +30,7 @@ class ELevel(Level):
 		#Load the new level.
 		super(ELevel, self).__init__(level_dir)
 
+		#Grid is initialized to match the Level's size.
 		for ix, x in enumerate(self.level):
 			if ix >= len(self.grid):
 				self.grid.append([])
@@ -39,6 +40,8 @@ class ELevel(Level):
 					self.grid[ix].append(None)
 
 				self.grid[ix][iy] = self.make_grid(ix, iy)
+
+		#Level is rendered.
 		self.make_render()
 
 	#Properties (size, position)
@@ -269,7 +272,8 @@ class ELevel(Level):
 
 	def change_texture(self, texture_name):
 		self.texture_name = texture_name
-		self.texture = MyTexture(self.texture_name)
+		tex_dir = "img/tilemaps/%s.png" % texture_name
+		self.texture = MyTexture(tex_dir)
 
 		#Update all of the tiles' textures.
 		for x in self.tiles:

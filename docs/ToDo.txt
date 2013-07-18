@@ -20,16 +20,18 @@ x ELevels may be altered individually.
 
 -
 
-x Make a new Tkinter window.
-	x Re-add x, y, w, h
-	x Add texture changing
-		x Renaming saves a new version of the level.
-		Levels cannot be named 'WorldMap'.
+x Make new Levels.
+	! Double-click an empty space to make a new level.
 
-! Fix TileSelections being limited to a level highlight.
-! save WorldMap.
+! WorldMap duplicates.
+	Duplicates of a level cannot be loaded.
+
 
 Main game:
 ! Test ordinary Levels. (Implement RenderTextures)
 	Cleanup and affirm differences between ELevel and Level
 Add the WorldMap loading.
+
+
+! Fix TileSelections being limited to a level highlight.
+! Fix Levels resizing improperly (on start-up or being saved)

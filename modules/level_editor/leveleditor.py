@@ -66,5 +66,12 @@ class LevelEditor:
 					if key.S.pressed():
 						Level.save()
 
+		#Save the WorldMap and all the levels.
+		if key.L_SHIFT.held():
+			if key.L_CTRL.held():
+				if key.S.pressed():
+					self.WorldMap.save()
+
+
 
 	#

@@ -9,7 +9,6 @@ Camera.zoom = 1
 Camera.x, Camera.y = -50, 0
 
 LevelEditor = le.LevelEditor(Camera)
-LevelEditor.WorldMap.load()
 #########################################################
 running = True
 while running:
