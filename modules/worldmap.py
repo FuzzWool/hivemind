@@ -63,3 +63,9 @@ class WorldMap:
 	def draw(self):
 		for Level in self.Levels:
 			Level.draw()
+
+#
+	#LevelEditor room removal
+	def find_Level(self, room_x, room_y):
+	#Find a room based on which area it is locating.
+		print room_x, room_y

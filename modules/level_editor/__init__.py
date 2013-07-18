@@ -66,27 +66,27 @@ class LevelEditor:
 				break
 
 		#Events
+
+		#Save the WorldMap and all the levels.
+		if key.L_CTRL.held():
+			if key.S.pressed():
+				self.WorldMap.save()
+
 		#If a Level's been selected...
 		if level_selected != None:
-			
+
 			self.ToolBox.level_controls\
 				(key, mouse, self.Camera, level_selected)
 
-			#Save the level.
-			if key.L_CTRL.held():
-				if key.S.pressed():
-					Level.save()
+			if mouse.right.double_clicked():
+				#Find the Level.
+				
+				print "remove level"
 
 		#Double-clicking an empty space makes a new level.
 		else:
 			if mouse.left.double_clicked():
 				x, y = mouse.room_position(camera)
 				self.WorldMap.load_Level("new", x, y)
-
-		#Save the WorldMap and all the levels.
-		if key.L_SHIFT.held():
-			if key.L_CTRL.held():
-				if key.S.pressed():
-					self.WorldMap.save()
 
 	#

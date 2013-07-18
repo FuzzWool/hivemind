@@ -11,16 +11,20 @@ MAJOR Goals:
 =
 0.0.8 - Multiple levels
 Goals:
-* Ctrl+O opens a new Level. (+ Double-click empty space)
 
+* Right-click to remove pre-existing levels.
 * Cursor should have coordinates binded to an ELevel.
+* Different WorldMaps should be binded to individual folders.
 
+x Double-click an empty space to make new levels.
 x ELevels may be altered individually.
-* A WorldMap saves the positioning of all these levels.
+x A WorldMap saves the positioning of all these levels.
 
 -
 
-! To Add... Double-right-click to remove a Level.
+! Double-right-click to remove a level.
+
+! New WorldMap format for easy level searching.
 
 ! WorldMap duplicates.
 	Duplicates of a level cannot be loaded.
