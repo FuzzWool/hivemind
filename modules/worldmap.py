@@ -1,4 +1,4 @@
-from modules.level_editor import ELevel
+from modules.level_editor import Level
 
 class WorldMap:
 #Glues the individual rooms together.
@@ -33,22 +33,9 @@ class WorldMap:
 			for y in range(self.h):
 				a1 = self.alphabet[x]
 				a2 = self.alphabet[y]
-				new_Room = ELevel(a1+a2)
+				new_Room = Level(a1+a2)
 				new_Room.room_x = x; new_Room.room_y = y
 				self.Rooms[-1].append(new_Room)
-
-
-	def save(self):
-	#Save the WorldMap and all it's rooms.
-		#WorldMap
-		f = open("outside/levels/WorldMap.txt", "w")
-		data = "%s,%s" % (self.w, self.h)
-		f.write(data)
-		f.close()
-		
-		for x in self.Rooms:
-			for y in x:
-				y.save()
 
 	def draw(self):
 	#Draw all the Rooms.

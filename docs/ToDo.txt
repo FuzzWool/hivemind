@@ -3,10 +3,10 @@ Let there be Levels
 Seamless loading from level to level. No transitions.
 
 MAJOR Goals:
-* Append a level to another level from two level files.
+x Append a level to another level from two level files.
 * Gradually load and de-load levels during exploration.
-* Append levels based on a world file's data.
-* A mini world map may determine which 'block' the player is in
+x Append levels based on a world file's data.
+x A mini world map may determine which 'block' the player is in
 
 =
 0.0.8 - Multiple levels
@@ -20,11 +20,7 @@ x A WorldMap saves the positioning of all these levels.
 
 -
 
-Main game:
-! Test ordinary Levels. (Implement RenderTextures)
-	Cleanup and affirm differences between ELevel and Level
-Add the WorldMap loading.
-
-
 ! Fix TileSelections being limited to a level highlight.
-! Fix Levels resizing improperly (on start-up or being saved)
+
+* Gradually load and de-load levels during exploration.
+Move the camera, loading the room inside and the 8 around it. 

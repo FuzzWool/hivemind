@@ -1,4 +1,8 @@
 import modules as mo
+from modules.pysfml_game import MySprite
+from modules.pysfml_game import GRID
+from modules.pysfml_game import sf
+from modules.pysfml_game import ROOM_WIDTH, ROOM_HEIGHT
 
 class Level(object):
 	name = ""
@@ -8,6 +12,64 @@ class Level(object):
 	alphabet = ["a","b","c","d","e","f","g",\
 	 "h","i","j","k","l","m","n","o","p","q",\
 	 "q","r","s","t","u","v","w","x","y","z"]
+
+ 	#Properties (size, position)
+	_x, _y = 0, 0
+
+	@property
+	def x(self): return self._x
+	@x.setter
+	def x(self, arg):
+		self._x = arg
+		if self.render_sprite != None:
+			self.render_sprite.x = arg*GRID
+
+	@property
+	def y(self): return self._y
+	@y.setter
+	def y(self, arg):
+		self._y = arg
+		if self.render_sprite != None:
+			self.render_sprite.y = arg*GRID
+
+	@property
+	def w(self): return len(self.level)
+	@w.setter
+	def w(self, arg):
+		change = arg - self.w
+		if change >= +1: self.expand_right(arg)
+		if change <= -1: self.shrink_right(arg)
+		self.make_render()
+
+	@property
+	def h(self): return len(self.level[0])
+	@h.setter
+	def h(self, arg):
+		change = arg - self.h
+		if change >= +1: self.expand_bottom(arg)
+		if change <= -1: self.shrink_bottom(arg)
+		self.make_render()
+
+	@property
+	def room_x(self): return int(self.x*GRID / ROOM_WIDTH)
+	@room_x.setter
+	def room_x(self, arg): self.x = arg*(ROOM_WIDTH/GRID)
+
+	@property
+	def room_y(self): return int(self.y*GRID / ROOM_HEIGHT)
+	@room_y.setter
+	def room_y(self, arg): self.y = arg*(ROOM_HEIGHT/GRID)
+
+	@property
+	def room_w(self): return int(self.w*GRID / ROOM_WIDTH)
+	@room_w.setter
+	def room_w(self, arg): self.w = arg*(ROOM_WIDTH/GRID)
+
+	@property
+	def room_h(self): return int(self.h*GRID / ROOM_HEIGHT)
+	@room_h.setter
+	def room_h(self, arg): self.h = arg*(ROOM_HEIGHT/GRID)
+	#
 
 	def __call__(self): return self.level
 	
@@ -112,6 +174,8 @@ class Level(object):
 
 		make_tiles(self.level)
 
+		self.make_render()
+
 
 	def change_tile(self, pos, clip):
 	#Changes a tile, updates the level and tiles.
@@ -133,11 +197,34 @@ class Level(object):
 		tile = make_tile(pos, clip)
 		self.tiles[x][y] = tile
 		self.level[x][y] = clip
-		
+
+
+	#RENDERING
+	#For moving the level as a whole.
+	render_sprite = None
+	render_texture = None
+
+	def make_render(self):
+	#Remake the render texture, and then the sprite.
+	#For any instances in which the graphics may change.
+		render \
+		= sf.RenderTexture(self.w*GRID, self.h*GRID)
+
+		for ix, x in enumerate(self.tiles):
+			for iy, y in enumerate(x):
+				if self.tiles[ix][iy] != None:
+					render.draw(self.tiles[ix][iy])
+				else:
+					try:
+						render.draw(self.grid[ix][iy])
+					except:
+						pass
+
+		self.render_texture = render
+		self.render_texture.display()
+		self.render_sprite = MySprite(self.render_texture.texture)
+		self.render_sprite.goto = self.x*GRID, self.y*GRID
 
 	def draw(self):
-		# tiles[x][y]
-		for x in self.tiles:
-			for y in x:
-				if y != None:
-					y.draw()
+		if self.render_sprite != None:
+			self.render_sprite.draw()

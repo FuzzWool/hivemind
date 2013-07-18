@@ -1,22 +1,17 @@
 #init
 from elevel import *
+from eworldmap import EWorldMap
 from toolbox import *
 #####
 
 import modules as mo
 from toolbox import ToolBox
-from modules.worldmap import WorldMap
 from modules.pysfml_game import GRID
 
 class LevelEditor:
-#Alters the data of the currently loaded level.
-#Will eventually hold and alter levels en mass.
+#Alters the data of the WorldMap and all of it's Levels.
+#Handles main controls.
 
-	#External classes.
-	Camera = None
-	Level = None
-
-	#Internal classes.
 	ToolBox = None
 	WorldMap = None
 
@@ -25,16 +20,15 @@ class LevelEditor:
 	cursor = mo.MySprite(cursor_tex)
 
 	def __init__(self, Camera):
-		self.Camera = Camera
-		self.WorldMap = WorldMap()
+		self.WorldMap = EWorldMap()
 		self.ToolBox = ToolBox(self.cursor_tex)
 
-	def draw(self, mouse):
+	def draw(self, mouse, camera):
 
 		self.WorldMap.draw()
 
 		#Move the cursor.
-		x, y = mouse.grid_position(self.Camera)
+		x, y = mouse.grid_position(camera)
 		x *= mo.GRID; y *= mo.GRID
 		self.cursor.goto = x, y
 
@@ -44,6 +38,27 @@ class LevelEditor:
 		#
 
 	#
+
+	#CONTROLS
+	def camera_controls(self, key, Camera):
+		if key.L_CTRL.held():
+			#Zoom Camera
+			if key.ADD.pressed(): Camera.zoom *= 2
+			if key.SUBTRACT.pressed(): Camera.zoom /= 2
+	
+		elif key.L_SHIFT.held():
+			#Move Camera - Snap to Room
+			if key.A.pressed(): Camera.room_x -= 1
+			if key.D.pressed(): Camera.room_x += 1
+			if key.W.pressed(): Camera.room_y -= 1
+			if key.S.pressed(): Camera.room_y += 1
+
+		else:
+			#Move Camera
+			if key.A.held(): Camera.x -= mo.GRID
+			if key.D.held(): Camera.x += mo.GRID
+			if key.W.held(): Camera.y -= mo.GRID
+			if key.S.held(): Camera.y += mo.GRID
 
 	def handle_controls(self, key, mouse, camera):
 	#Forwards a level for editing to the ToolBox.
@@ -77,7 +92,7 @@ class LevelEditor:
 		if level_selected != None:
 
 			self.ToolBox.level_controls\
-				(key, mouse, self.Camera, level_selected)
+				(key, mouse, camera, level_selected)
 
 			if mouse.right.double_clicked():
 				#Find the Level.
