@@ -12,23 +12,13 @@ MAJOR Goals:
 0.0.8 - Multiple levels
 Goals:
 
-* Right-click to remove pre-existing levels.
-* Cursor should have coordinates binded to an ELevel.
+* Cursor should have coordinates binded to an ELevel. eg: aa
 * Different WorldMaps should be binded to individual folders.
 
-x Double-click an empty space to make new levels.
 x ELevels may be altered individually.
 x A WorldMap saves the positioning of all these levels.
 
 -
-
-! Double-right-click to remove a level.
-
-! New WorldMap format for easy level searching.
-
-! WorldMap duplicates.
-	Duplicates of a level cannot be loaded.
-
 
 Main game:
 ! Test ordinary Levels. (Implement RenderTextures)

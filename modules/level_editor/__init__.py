@@ -56,14 +56,15 @@ class LevelEditor:
 		level_selected = None
 
 		mouse_x, mouse_y = mouse.position(camera)
-		for Level in self.WorldMap.Levels:
-			x1, y1 = Level.x*GRID, Level.y*GRID
-			x2, y2 = x1 + Level.w*GRID, y1 + Level.h*GRID
+		for x in self.WorldMap.Rooms:
+			for Room in x:
+				x1, y1 = Room.x*GRID, Room.y*GRID
+				x2, y2 = x1 + Room.w*GRID, y1 + Room.h*GRID
 
-			if (x1 < mouse_x < x2)\
-			and (y1 < mouse_y < y2):
-				level_selected = Level
-				break
+				if (x1 < mouse_x < x2)\
+				and (y1 < mouse_y < y2):
+					level_selected = Room
+					break
 
 		#Events
 
@@ -82,11 +83,5 @@ class LevelEditor:
 				#Find the Level.
 				
 				print "remove level"
-
-		#Double-clicking an empty space makes a new level.
-		else:
-			if mouse.left.double_clicked():
-				x, y = mouse.room_position(camera)
-				self.WorldMap.load_Level("new", x, y)
 
 	#

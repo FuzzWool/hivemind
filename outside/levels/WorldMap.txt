@@ -1,4 +1,1 @@
-zero,-1,0
-two,1,0
-one,0,0
-negative,-2,0
+3,2

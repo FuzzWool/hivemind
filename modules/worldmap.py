@@ -1,71 +1,57 @@
 from modules.level_editor import ELevel
 
 class WorldMap:
-#Handles glueing the individual levels together.
+#Glues the individual rooms together.
+#WorldMap file simply contains coordinates for w, h.
 
-	Data = [["level"],["x"],["y"]]
-	Levels = [["Level"]]
+	w, h = 0, 0
+	Rooms = [['Room']]
+
+	alphabet = ["a","b","c","d","e","f","g",\
+	 "h","i","j","k","l","m","n","o","p","q",\
+	 "q","r","s","t","u","v","w","x","y","z"]
 
 	def __init__ (self):
 		self.load()
 
 	def load(self):
-	#For each level, Load the...
-	#Filename and x/y Coordinates
+	#All of the levels in the map.
+		self.w, self.h = 0, 0
+		self.Rooms = []
 
-		#Load text data
+		#Load WorldMap boundary
 		f = open("outside/levels/WorldMap.txt")
 		WorldMap = f.read()
 		f.close()
+		WorldMap = WorldMap.split(",")
+		self.w = int(WorldMap[0])
+		self.h = int(WorldMap[1])
 
-		#Format data to [[level][x][y]]
-		WorldMap = WorldMap.split("\n")
-		wm = []
-		for entry in WorldMap:
-			formatted_entry = entry.split(",")
-			wm.append(formatted_entry)
-		self.Data = [entry[:] for entry in wm]
-
-		#Load and position the Levels from data
-		self.Levels = []
-		for entry in self.Data:
-			name = (entry[0])
-			room_x, room_y = int(entry[1]), int(entry[2])
-			self.load_Level(name, room_x, room_y)
-
-	def load_Level(self, name, room_x, room_y):
-	#Init
-	#New Levels in Level Editor Properties
-		Level = ELevel(name)
-		Level.room_x, Level.room_y = room_x, room_y
-		self.Levels.append(Level)
+		#Load and position the Rooms from data
+		for x in range(self.w):
+			self.Rooms.append([])
+			for y in range(self.h):
+				a1 = self.alphabet[x]
+				a2 = self.alphabet[y]
+				new_Room = ELevel(a1+a2)
+				new_Room.room_x = x; new_Room.room_y = y
+				self.Rooms[-1].append(new_Room)
 
 
 	def save(self):
-	#Save the WorldMap and all it's levels.
+	#Save the WorldMap and all it's rooms.
 		#WorldMap
-		data = ""
-		for Level in self.Levels:
-			new_line = "%s,%s,%s" \
-			% (Level.name, Level.room_x, Level.room_y)
-			data += new_line + "\n"
-
-		f = open("outside/levels/WorldMap.txt", "r+")
-		f.write(data[:-1])
+		f = open("outside/levels/WorldMap.txt", "w")
+		data = "%s,%s" % (self.w, self.h)
+		f.write(data)
 		f.close()
-
-		#Levels
-		for Level in self.Levels:
-			Level.save()
-
-		print "Saved WorldMap!"
+		
+		for x in self.Rooms:
+			for y in x:
+				y.save()
 
 	def draw(self):
-		for Level in self.Levels:
-			Level.draw()
-
-#
-	#LevelEditor room removal
-	def find_Level(self, room_x, room_y):
-	#Find a room based on which area it is locating.
-		print room_x, room_y
+	#Draw all the Rooms.
+		for x in self.Rooms:
+			for y in x:
+				y.draw()

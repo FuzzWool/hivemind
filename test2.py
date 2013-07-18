@@ -1,21 +1,53 @@
-#Look for a text document by name.
-#If it doesn't exist, make a new one.
+from modules.level_editor import ELevel
 
-#Try making a new text document from scratch.
+class WorldMap:
+#Glues the individual rooms together.
+#WorldMap file simply contains coordinates for w, h.
 
-# f = open("outside/levels/"+level_dir+".txt")
-# level = f.read()
-# f.close()
+	w, h = 0, 0
+	Rooms = [['Room']]
 
-# #Save it to the original file.
-# f = open("outside/levels/"+self.name+".txt", "r+")
-# f.write(text)
-# f.close()
+	alphabet = ["a","b","c","d","e","f","g",\
+	 "h","i","j","k","l","m","n","o","p","q",\
+	 "q","r","s","t","u","v","w","x","y","z"]
 
-level_dir = "outside/levels/three.txt"
-try:
-	level = open(level_dir)
-	print "Loaded."
-except:
-	print "Didn't load. Made a new file."
-	level = open(level_dir, "w")
+	def __init__ (self):
+		self.load()
+
+	def load(self):
+	#All of the levels in the map.
+		self.w, self.h = 0, 0
+		self.Rooms = []
+
+		#Load WorldMap boundary
+		f = open("outside/levels/WorldMap.txt")
+		WorldMap = f.read()
+		f.close()
+		self.w, self.h = \
+		 [int(i) for i in WorldMap.split(",")]
+
+		#Load and position the Rooms from data
+		for x in range(self.w):
+			self.Rooms.append([])
+			for y in range(self.h):
+				a1 = self.alphabet[x]
+				a2 = self.alphabet[y]
+				self.Rooms[x].append(ELevel(a1+a2))
+
+
+	def save(self):
+	#Save the WorldMap and all it's rooms.
+		#WorldMap
+		f = open("outside/levels/WorldMap.txt", "w")
+		f.write("%s,%s") % (self.w, self.h)
+		f.close()
+
+		for x in self.Rooms:
+			for y in x:
+				y.save()
+
+	def draw(self):
+	#Draw all the Rooms.
+		for x in self.Rooms:
+			for y in x:
+				y.draw()
