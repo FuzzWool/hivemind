@@ -20,8 +20,7 @@ x ELevels may be altered individually.
 
 -
 
-x Make new Levels.
-	! Double-click an empty space to make a new level.
+! To Add... Double-right-click to remove a Level.
 
 ! WorldMap duplicates.
 	Duplicates of a level cannot be loaded.

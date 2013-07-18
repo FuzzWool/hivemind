@@ -2,6 +2,8 @@ from window import sf
 from window import window as the_window
 from window import SCREEN_HEIGHT, SCREEN_WIDTH
 
+from window import ROOM_WIDTH, ROOM_HEIGHT
+
 
 class MyCamera(sf.View):
 	_zoom = float(1)
@@ -43,5 +45,23 @@ class MyCamera(sf.View):
 		w, h = SCREEN_WIDTH, SCREEN_HEIGHT
 		w /= ratio; h /= ratio
 		self.size = w, h
+
+	#
+
+	@property
+	def room_x(self):
+		return int(self.x/ROOM_WIDTH)
+	@room_x.setter
+	def room_x(self, arg):
+		self.x = arg * ROOM_WIDTH
+		self.y = int(self.y/ROOM_HEIGHT) * ROOM_HEIGHT
+
+	@property
+	def room_y(self):
+		return int(self.y/ROOM_HEIGHT)
+	@room_y.setter
+	def room_y(self, arg):
+		self.x = int(self.x/ROOM_WIDTH) * ROOM_WIDTH
+		self.y = arg * ROOM_HEIGHT
 
 the_window.view = MyCamera()

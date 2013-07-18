@@ -16,6 +16,9 @@ def quit():
 
 #
 
+from modules.pysfml_game import GRID
+from modules.pysfml_game import ROOM_WIDTH, ROOM_HEIGHT
+
 class MyMouse:
 	def __init__(self):
 		def left_held(self):
@@ -58,6 +61,23 @@ class MyMouse:
 			y = int(pos[1]+(Camera.y*Camera.zoom))
 			y = int(y/Camera.zoom)
 		return x, y
+
+	#
+
+	def grid_position(self, Camera=None):
+	#Return the mouse position as small grid coordinates.
+		x, y = self.position(Camera)
+		x /= GRID
+		y /= GRID
+		return x, y
+
+	def room_position(self, Camera=None):
+	#Return the mouse as tiny room coordinates.
+		x, y = self.position(Camera)
+		x = int(x/ROOM_WIDTH)
+		y = int(y/ROOM_HEIGHT)
+		return x, y
+
 
 class Button:
 #Instance designed to be overriden.

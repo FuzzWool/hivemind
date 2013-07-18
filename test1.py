@@ -2,9 +2,9 @@ import modules as mo
 import modules.pysfml_game.key as key
 import modules.level_editor as le
 
-mouse = le.EditMouse()
+mouse = mo.MyMouse()
 
-Camera = le.RoomCamera()
+Camera = mo.MyCamera()
 Camera.zoom = 1
 Camera.x, Camera.y = -50, 0
 
