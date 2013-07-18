@@ -44,7 +44,6 @@ class WorldMap:
 
 	#
 
-	last_room = None
 	def load_around(self, x1, y1, x2, y2):
 	#Load only the rooms within a certain position.
 
@@ -61,6 +60,7 @@ class WorldMap:
 
 		#Load any rooms within the range, if they're empty
 		#Void any rooms not within the range
+		tol = 2
 		for x in range(self.w):
 			for y in range(self.h):
 
@@ -73,7 +73,9 @@ class WorldMap:
 						# new_Room.room_x = x
 						# new_Room.room_y = y
 						self.Rooms[x][y] = new_Room
-				else:
+				
+				elif (x not in range(x1-tol, x2+1+tol))\
+				or (y not in range(y1-tol, y2+1+tol)):
 					self.Rooms[x][y] = None
 
 	def load_all(self):

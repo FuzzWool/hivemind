@@ -21,10 +21,12 @@ class LevelEditor:
 
 	def __init__(self, Camera):
 		self.WorldMap = EWorldMap()
+		# self.WorldMap.load_all()
 		self.ToolBox = ToolBox(self.cursor_tex)
 
 	def draw(self, mouse, camera):
 
+		self.WorldMap.load_around(*camera.room_points)
 		self.WorldMap.draw()
 
 		#Move the cursor.

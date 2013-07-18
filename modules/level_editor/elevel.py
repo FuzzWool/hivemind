@@ -13,18 +13,20 @@ class ELevel(Level):
 
 
 	def __init__ (self, level_dir, room_x, room_y):
-		self.load_file(level_dir)
+		self.load_file(level_dir, room_x, room_y)
 
 	def load_file(self, level_dir, room_x, room_y):
 		
+		#Load the new level.
+		super(ELevel, self)\
+		.__init__(level_dir, room_x, room_y)
+
 		#Flush any residue.
-		self.x, self.y = room_x, room_y
+		# self.room_x, self.room_y = room_x, room_y
 		self.grid = []
 		self.render_sprite = None
 		self.render_texture = None
 
-		#Load the new level.
-		super(ELevel, self).__init__(level_dir, room_x, room_y)
 
 		#Grid is initialized to match the Level's size.
 		for ix, x in enumerate(self.level):
@@ -38,47 +40,12 @@ class ELevel(Level):
 				self.grid[ix][iy] = self.make_grid(ix, iy)
 
 		#Level is rendered.
-		self.make_render()
+		# self.make_render()
 
 
-	def change_tile(self, pos=(), clip=()):
-	#When tiles are changed out-of-bounds, add filler.
+	# def change_tile(self, pos=(), clip=()):
+	# 	Level.change_tile(self, pos, clip)
 
-		#No going out of bounds.
-		x, y = pos[0], pos[1]
-		x -= self.x; y -= self.y
-		if x < 0 or y < 0: return
-		if x > len(self.level)-1: return
-		if y > len(self.level[0])-1: return
-
-		def make_tile(pos=(), clip=()):
-		#Make a new tile. Requires filler to be in place.
-			if clip == "__":
-				return None
-			#
-			sprite = MySprite(self.texture)
-			sprite.clip.set(GRID, GRID)
-			cx = self.alphabet.index(clip[0])
-			cy = self.alphabet.index(clip[1])
-			sprite.clip.use(cy, cx)
-			x = (pos[0])*GRID
-			y = (pos[1])*GRID
-			sprite.goto = x, y
-			return sprite
-
-		tile = make_tile((x, y), clip)
-		self.tiles[x][y] = tile
-
-		#Draw the new tile onto the Render Texture.
-		if self.render_texture != None:
-			if tile != None:
-				self.render_texture.draw(self.tiles[x][y])
-			if tile == None:
-				self.render_texture.draw(self.grid[x][y])
-			self.render_sprite = MySprite(self.render_texture.texture)
-			self.render_sprite.goto = self.x*GRID, self.y*GRID
-
-		self.level[x][y] = clip
 
 	def save(self):
 	#Saves the level back in to the file it originated.
@@ -177,8 +144,8 @@ class ELevel(Level):
 			grid.clip.use(1, 0)
 		else:
 			grid.clip.use(0, 0)
-		grid.x = x * GRID
-		grid.y = y * GRID
+		grid.x = (x + self.x) * GRID
+		grid.y = (y + self.y) * GRID
 		return grid
 
 #
@@ -195,4 +162,12 @@ class ELevel(Level):
 					y.texture = self.texture
 
 		#Re-render.
-		self.make_render()
+		# self.make_render()
+
+#
+	def draw(self):
+		for x in self.grid:
+			for y in x:
+				if y != None:
+					y.draw()
+		Level.draw(self)

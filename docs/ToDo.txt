@@ -4,7 +4,7 @@ Seamless loading from level to level. No transitions.
 
 MAJOR Goals:
 x Append a level to another level from two level files.
-* Gradually load and de-load levels during exploration.
+x Gradually load and de-load levels during exploration.
 x Append levels based on a world file's data.
 x A mini world map may determine which 'block' the player is in
 
@@ -22,12 +22,18 @@ x A WorldMap saves the positioning of all these levels.
 
 ! Fix TileSelections being limited to a level highlight.
  
-+ Sped up tile loading.
-Loading the tiles without rendering speeds it up a lot.
 
-+ De-loading for when tiles are off-screen.
-Nones all of the other levels.
++ Increased the tolerance of de-loading. (Adjustable)
 
-Increase the tolerance of de-loading.
+~ Level Editor is no longer glitched.
+Doesn't draw any levels.
 
-! Level Editor is glitched.
+	~ EWorldMap now uses load_all with ELevel.
+	~ ELevel no longer renders textures.
+	Draws individual tiles and grids instead.
+
+	~ LevelEditor now calls load_around instead of load_all.
+
+	- Removed change_tile from ELevel.
+
+! LevelEditor stutters from moving room to room.
