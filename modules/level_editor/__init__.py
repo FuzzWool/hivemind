@@ -73,13 +73,15 @@ class LevelEditor:
 		mouse_x, mouse_y = mouse.position(camera)
 		for x in self.WorldMap.Rooms:
 			for Room in x:
-				x1, y1 = Room.x*GRID, Room.y*GRID
-				x2, y2 = x1 + Room.w*GRID, y1 + Room.h*GRID
+				if Room != None:
+					x1, y1 = Room.x*GRID, Room.y*GRID
+					x2 = x1 + Room.w*GRID
+					y2 = y1 + Room.h*GRID
 
-				if (x1 < mouse_x < x2)\
-				and (y1 < mouse_y < y2):
-					level_selected = Room
-					break
+					if (x1 < mouse_x < x2)\
+					and (y1 < mouse_y < y2):
+						level_selected = Room
+						break
 
 		#Events
 

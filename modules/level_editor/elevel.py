@@ -12,19 +12,19 @@ class ELevel(Level):
 	grid_tex = MyTexture("img/level_editor/grid.png")
 
 
-	def __init__ (self, level_dir):
+	def __init__ (self, level_dir, room_x, room_y):
 		self.load_file(level_dir)
 
-	def load_file(self, level_dir):
+	def load_file(self, level_dir, room_x, room_y):
 		
 		#Flush any residue.
-		self.x, self.y = 0, 0
+		self.x, self.y = room_x, room_y
 		self.grid = []
 		self.render_sprite = None
 		self.render_texture = None
 
 		#Load the new level.
-		super(ELevel, self).__init__(level_dir)
+		super(ELevel, self).__init__(level_dir, room_x, room_y)
 
 		#Grid is initialized to match the Level's size.
 		for ix, x in enumerate(self.level):

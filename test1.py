@@ -4,9 +4,10 @@ from modules.pysfml_game import quit
 from modules.pysfml_game import window, sf
 from modules.pysfml_game import key
 from modules.pysfml_game import MyCamera
+from modules.pysfml_game import MySprite
 
 Camera = MyCamera()
-Camera.zoom = 2
+Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
 #
@@ -32,6 +33,10 @@ def camera_controls():
 
 #
 
+b_sprite = MySprite(None)
+b_sprite.box.boundary = 0, 0, 100, 100
+#
+
 from modules.worldmap import WorldMap
 worldmap = WorldMap()
 #########################################################
@@ -45,12 +50,20 @@ while running:
 		pass
 
 	camera_controls()
-	worldmap.load_around(*Camera.room_points)
+	#
+	b_sprite.box.position = Camera.center
+	b_sprite.box.size = ROOM_WIDTH, ROOM_HEIGHT
+	#
+	x1, y1 = Camera.room_center
+	x2, y2 = x1+1, y1
+	# print x1, y1, x2, y2
+	worldmap.load_around(x1, y1, x2, y2)
 
 	#Video
 	window.view = Camera
-	window.clear(sf.Color(255, 0, 255))
+	window.clear()
 	#
+	b_sprite.box.draw()
 	worldmap.draw()
 	#
 	window.display()

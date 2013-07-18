@@ -73,8 +73,9 @@ class Level(object):
 
 	def __call__(self): return self.level
 	
-	def __init__ (self, level_dir):
+	def __init__ (self, level_dir, room_x=0, room_y=0):
 	#Grabs level data and creates tiles.
+		self.room_x, self.room_y = room_x, room_y
 
 		def get_level(level_dir):
 		#Grab level data from text file.
@@ -174,7 +175,7 @@ class Level(object):
 
 		make_tiles(self.level)
 
-		self.make_render()
+		# self.make_render()
 
 
 	def change_tile(self, pos, clip):
@@ -190,7 +191,10 @@ class Level(object):
 			cx = self.alphabet.index(clip[0])
 			cy = self.alphabet.index(clip[1])
 			sprite.clip.use(cy, cx)
-			sprite.goto = pos[0]*mo.GRID, pos[1]*mo.GRID
+			x, y = pos[0]*mo.GRID, pos[1]*mo.GRID
+			# print self.room_x, self.room_y
+			x += self.x*GRID; y += self.y*GRID
+			sprite.goto = x, y
 			return sprite
 
 		x, y = pos[0], pos[1]
@@ -226,5 +230,10 @@ class Level(object):
 		self.render_sprite.goto = self.x*GRID, self.y*GRID
 
 	def draw(self):
-		if self.render_sprite != None:
-			self.render_sprite.draw()
+		# if self.render_sprite != None:
+		# 	self.render_sprite.draw()
+
+		for x in self.tiles:
+			for y in x:
+				if y != None:
+					y.draw()

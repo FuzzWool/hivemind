@@ -22,4 +22,12 @@ x A WorldMap saves the positioning of all these levels.
 
 ! Fix TileSelections being limited to a level highlight.
  
-+ WorldMap may now only load rooms within the camera.
++ Sped up tile loading.
+Loading the tiles without rendering speeds it up a lot.
+
++ De-loading for when tiles are off-screen.
+Nones all of the other levels.
+
+Increase the tolerance of de-loading.
+
+! Level Editor is glitched.

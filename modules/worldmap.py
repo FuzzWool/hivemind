@@ -59,16 +59,22 @@ class WorldMap:
 		x1, y1 = keep_in_bounds(x1, y1)
 		x2, y2 = keep_in_bounds(x2, y2)
 
-		for x in range(x1, x2+1):
-			for y in range(y1, y2+1):
-				#Load a room only if previously empty.
-				if self.Rooms[x][y] == None:
-					a1 = self.alphabet[x]
-					a2 = self.alphabet[y]
-					new_Room = Level(a1+a2)
-					new_Room.room_x = x
-					new_Room.room_y = y
-					self.Rooms[x][y] = new_Room
+		#Load any rooms within the range, if they're empty
+		#Void any rooms not within the range
+		for x in range(self.w):
+			for y in range(self.h):
+
+				if (x in range(x1, x2+1))\
+				and (y in range(y1, y2+1)):
+					if self.Rooms[x][y] == None:
+						a1 = self.alphabet[x]
+						a2 = self.alphabet[y]
+						new_Room = Level(a1+a2, x, y)
+						# new_Room.room_x = x
+						# new_Room.room_y = y
+						self.Rooms[x][y] = new_Room
+				else:
+					self.Rooms[x][y] = None
 
 	def load_all(self):
 	#All of the levels in the map.
@@ -79,6 +85,6 @@ class WorldMap:
 			for y in range(self.h):
 				a1 = self.alphabet[x]
 				a2 = self.alphabet[y]
-				new_Room = Level(a1+a2)
-				new_Room.room_x = x; new_Room.room_y = y
+				new_Room = Level(a1+a2, x, y)
+				# new_Room.room_x = x; new_Room.room_y = y
 				self.Rooms[-1].append(new_Room)
