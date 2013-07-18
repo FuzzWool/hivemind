@@ -21,6 +21,5 @@ x A WorldMap saves the positioning of all these levels.
 -
 
 ! Fix TileSelections being limited to a level highlight.
-
-* Gradually load and de-load levels during exploration.
-Move the camera, loading the room inside and the 8 around it. 
+ 
++ WorldMap may now only load rooms within the camera.

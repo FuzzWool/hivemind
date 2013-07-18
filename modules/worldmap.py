@@ -12,10 +12,12 @@ class WorldMap:
 	 "q","r","s","t","u","v","w","x","y","z"]
 
 	def __init__ (self):
-		self.load()
+		self.init_slots()
+		# self.load_all()
 
-	def load(self):
-	#All of the levels in the map.
+
+	def init_slots(self):
+	#Make only the slots needed for loading the levels.
 		self.w, self.h = 0, 0
 		self.Rooms = []
 
@@ -27,6 +29,50 @@ class WorldMap:
 		self.w = int(WorldMap[0])
 		self.h = int(WorldMap[1])
 
+		#Make Rooms slots.
+		for x in range(self.w):
+			self.Rooms.append([])
+			for y in range(self.h):
+				self.Rooms[-1].append(None)
+
+	def draw(self):
+	#Draw all the Rooms.
+		for x in self.Rooms:
+			for y in x:
+				if y != None:
+					y.draw()
+
+	#
+
+	last_room = None
+	def load_around(self, x1, y1, x2, y2):
+	#Load only the rooms within a certain position.
+
+		def keep_in_bounds(x=0, y=0):
+			logic_w, logic_h = self.w-1, self.h-1
+			if logic_w < x: x = logic_w
+			if logic_h < y: y = logic_h
+			if x < 0: x = 0
+			if y < 0: y = 0
+			return x, y
+
+		x1, y1 = keep_in_bounds(x1, y1)
+		x2, y2 = keep_in_bounds(x2, y2)
+
+		for x in range(x1, x2+1):
+			for y in range(y1, y2+1):
+				#Load a room only if previously empty.
+				if self.Rooms[x][y] == None:
+					a1 = self.alphabet[x]
+					a2 = self.alphabet[y]
+					new_Room = Level(a1+a2)
+					new_Room.room_x = x
+					new_Room.room_y = y
+					self.Rooms[x][y] = new_Room
+
+	def load_all(self):
+	#All of the levels in the map.
+
 		#Load and position the Rooms from data
 		for x in range(self.w):
 			self.Rooms.append([])
@@ -36,9 +82,3 @@ class WorldMap:
 				new_Room = Level(a1+a2)
 				new_Room.room_x = x; new_Room.room_y = y
 				self.Rooms[-1].append(new_Room)
-
-	def draw(self):
-	#Draw all the Rooms.
-		for x in self.Rooms:
-			for y in x:
-				y.draw()
