@@ -33,10 +33,6 @@ def camera_controls():
 
 #
 
-b_sprite = MySprite(None)
-b_sprite.box.boundary = 0, 0, 100, 100
-#
-
 from modules.worldmap import WorldMap
 worldmap = WorldMap()
 #########################################################
@@ -50,20 +46,12 @@ while running:
 		pass
 
 	camera_controls()
-	#
-	b_sprite.box.position = Camera.center
-	b_sprite.box.size = ROOM_WIDTH, ROOM_HEIGHT
-	#
-	x1, y1 = Camera.room_center
-	x2, y2 = x1+1, y1
-	# print x1, y1, x2, y2
-	worldmap.load_around(x1, y1, x2, y2)
+	worldmap.load_around(*Camera.room_points)
 
 	#Video
 	window.view = Camera
 	window.clear()
 	#
-	b_sprite.box.draw()
 	worldmap.draw()
 	#
 	window.display()

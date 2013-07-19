@@ -22,18 +22,6 @@ x A WorldMap saves the positioning of all these levels.
 
 ! Fix TileSelections being limited to a level highlight.
  
-
-+ Increased the tolerance of de-loading. (Adjustable)
-
-~ Level Editor is no longer glitched.
-Doesn't draw any levels.
-
-	~ EWorldMap now uses load_all with ELevel.
-	~ ELevel no longer renders textures.
-	Draws individual tiles and grids instead.
-
-	~ LevelEditor now calls load_around instead of load_all.
-
-	- Removed change_tile from ELevel.
-
 ! LevelEditor stutters from moving room to room.
+
+! LevelEditor crashes on trying to put tiles in another room.
