@@ -26,7 +26,8 @@ class LevelEditor:
 
 	def draw(self, mouse, camera):
 
-		self.WorldMap.load_around(*camera.room_points)
+		self.WorldMap.load_around\
+		(camera.room_points, camera.tile_points)
 		self.WorldMap.draw()
 
 		#Move the cursor.

@@ -12,17 +12,12 @@ x A mini world map may determine which 'block' the player is in
 0.0.8 - Multiple levels
 Goals:
 
-* Cursor should have coordinates binded to an ELevel. eg: aa
-* Different WorldMaps should be binded to individual folders.
-
 x ELevels may be altered individually.
 x A WorldMap saves the positioning of all these levels.
 
 -
 
-! Fix TileSelections being limited to a level highlight.
- 
-! LevelEditor stutters from moving room to room.
+- Removed tiles from showing, as they caused unecessary lag.
 
-
-+ Load around Level tiles for WorldMap.
++ Fixed LevelEditor not displaying tiles.
+(EWorldMap dependant on it's own load_around)

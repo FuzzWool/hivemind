@@ -16,6 +16,9 @@ while running:
 	#Logic
 	if mo.quit(): running = False
 
+	if key.RETURN.pressed():
+		LevelEditor.WorldMap.say_Rooms()
+
 	LevelEditor.camera_controls(key, Camera)
 	LevelEditor.handle_controls(key, mouse, Camera)
 

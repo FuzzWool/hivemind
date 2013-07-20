@@ -28,47 +28,16 @@ class ELevel(Level):
 		self.render_texture = None
 
 
-		#Grid is initialized to match the Level's size.
-		for ix, x in enumerate(self.level):
-			if ix >= len(self.grid):
-				self.grid.append([])
+		# #Grid is initialized to match the Level's size.
+		# for ix, x in enumerate(self.level):
+		# 	if ix >= len(self.grid):
+		# 		self.grid.append([])
 			
-			for iy, y in enumerate(self.level[ix]):
-				if iy >= len(self.grid[ix]):
-					self.grid[ix].append(None)
+		# 	for iy, y in enumerate(self.level[ix]):
+		# 		if iy >= len(self.grid[ix]):
+		# 			self.grid[ix].append(None)
 
-				self.grid[ix][iy] = self.make_grid(ix, iy)
-
-		#Level is rendered.
-		# self.make_render()
-
-
-	# def change_tile(self, pos=(), clip=()):
-	# 	Level.change_tile(self, pos, clip)
-
-
-	def save(self):
-	#Saves the level back in to the file it originated.
-		#Grab the data.
-		text = ""
-		text += self.texture_name+"\n"
-		for iy, y in enumerate(self.level[0]):
-			for ix, x in enumerate(self.level):
-				text += str(self.level[ix][iy])		
-			text += "\n"
-		text = text[:-1]
-
-		#Save it to the original file.
-		#If it has been renamed, make a new file.
-		file_dir = "outside/levels/%s.txt" % self.name
-		try:
-			f = open(file_dir,"r+")
-		except:
-			f = open(file_dir,"w")
-		f.write(text)
-		f.close()
-
-		print "Saved level '%s'!" % self.name
+		# 		self.grid[ix][iy] = self.make_grid(ix, iy)
 
 #
 
@@ -171,3 +140,29 @@ class ELevel(Level):
 				if y != None:
 					y.draw()
 		Level.draw(self)
+
+
+#	SAVING
+
+	def save(self):
+	#Saves the level back in to the file it originated.
+		#Grab the data.
+		text = ""
+		text += self.texture_name+"\n"
+		for iy, y in enumerate(self.level[0]):
+			for ix, x in enumerate(self.level):
+				text += str(self.level[ix][iy])		
+			text += "\n"
+		text = text[:-1]
+
+		#Save it to the original file.
+		#If it has been renamed, make a new file.
+		file_dir = "outside/levels/%s.txt" % self.name
+		try:
+			f = open(file_dir,"r+")
+		except:
+			f = open(file_dir,"w")
+		f.write(text)
+		f.close()
+
+		# print "Saved level '%s'!" % self.name

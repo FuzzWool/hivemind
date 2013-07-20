@@ -76,7 +76,6 @@ class WorldMap:
 
 		#Load any rooms within the range, if they're empty
 		#Void any rooms not within the range
-		tol = 0
 		for x in range(self.w):
 			for y in range(self.h):
 
@@ -92,8 +91,8 @@ class WorldMap:
 					.load_around(*tile_pos)
 
 				
-				elif (x not in range(x1-tol, x2+1+tol))\
-				or (y not in range(y1-tol, y2+1+tol)):
+				elif (x not in range(x1, x2+1))\
+				or (y not in range(y1, y2+1)):
 					self.Rooms[x][y] = None
 
 #	DEBUG
