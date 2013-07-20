@@ -1,10 +1,9 @@
 #Run WorldMap inside the main app.
 from modules.level_editor import *
 from modules.pysfml_game import quit
-from modules.pysfml_game import window, sf
+from modules.pysfml_game import window
 from modules.pysfml_game import key
 from modules.pysfml_game import MyCamera
-from modules.pysfml_game import MySprite
 
 Camera = MyCamera()
 Camera.zoom = 1

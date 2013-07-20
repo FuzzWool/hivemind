@@ -21,16 +21,12 @@ class Level(object):
 	@x.setter
 	def x(self, arg):
 		self._x = arg
-		if self.render_sprite != None:
-			self.render_sprite.x = arg*GRID
 
 	@property
 	def y(self): return self._y
 	@y.setter
 	def y(self, arg):
 		self._y = arg
-		if self.render_sprite != None:
-			self.render_sprite.y = arg*GRID
 
 	@property
 	def w(self): return len(self.level)
@@ -39,7 +35,6 @@ class Level(object):
 		change = arg - self.w
 		if change >= +1: self.expand_right(arg)
 		if change <= -1: self.shrink_right(arg)
-		self.make_render()
 
 	@property
 	def h(self): return len(self.level[0])
@@ -48,7 +43,6 @@ class Level(object):
 		change = arg - self.h
 		if change >= +1: self.expand_bottom(arg)
 		if change <= -1: self.shrink_bottom(arg)
-		self.make_render()
 
 	@property
 	def room_x(self): return int(self.x*GRID / ROOM_WIDTH)
@@ -75,7 +69,59 @@ class Level(object):
 	
 	def __init__ (self, level_dir, room_x=0, room_y=0):
 	#Grabs level data and creates tiles.
+
+
 		self.room_x, self.room_y = room_x, room_y
+		self.level = self._load_level(level_dir)
+		self.tiles = self._make_tiles(self.level)
+
+		###WIP###
+		#load static Level
+		static_dir = "img/rooms/test.png"
+		static_tex = mo.texture(static_dir)
+		self.static_level = mo.MySprite(static_tex)
+		x, y = self.x*GRID, self.y*GRID
+		self.static_level.goto = x, y
+
+
+	def change_tile(self, pos, clip):
+	#Changes a tile, updates the level and tiles.
+
+		def make_tile(pos=(), clip=()):
+		#Make a new tile. Requires filler to be in place.
+			if clip == "__":
+				return None
+			#
+			sprite = mo.MySprite(self.texture)
+			sprite.clip.set(mo.GRID, mo.GRID)
+			cx = self.alphabet.index(clip[0])
+			cy = self.alphabet.index(clip[1])
+			sprite.clip.use(cy, cx)
+			x, y = pos[0]*mo.GRID, pos[1]*mo.GRID
+			# print self.room_x, self.room_y
+			x += self.x*GRID; y += self.y*GRID
+			sprite.goto = x, y
+			return sprite
+
+		x, y = pos[0], pos[1]
+		tile = make_tile(pos, clip)
+		self.tiles[x][y] = tile
+		self.level[x][y] = clip
+
+	def draw(self):
+		#WIP###
+		self.static_level.draw()
+		#
+
+		for x in self.tiles:
+			for y in x:
+				if y != None:
+					y.draw()
+
+#
+
+	def _load_level(self, level_dir):
+	#Loads and formats the level for usage.
 
 		def get_level(level_dir):
 		#Grab level data from text file.
@@ -150,6 +196,16 @@ class Level(object):
 
 			return level
 
+		level = get_level(level_dir)
+		level = grab_texture(level)
+		level = format_level(level)
+		level = room_off_level(level)
+		return level
+
+	#
+
+	def _make_tiles(self, level):
+
 		def initialize_tiles(level):
 		#Make empty spaces for tiles using the level size.
 			tiles = []
@@ -164,76 +220,7 @@ class Level(object):
 				for iy, y in enumerate(x):
 					self.change_tile((ix, iy), y)
 
-		level = get_level(level_dir)
-		level = grab_texture(level)
-		level = format_level(level)
-		level = room_off_level(level)
-		self.level = level
-
-		tiles = initialize_tiles(self.level)
+		tiles = initialize_tiles(level)
 		self.tiles = [tile[:] for tile in tiles]
-
-		make_tiles(self.level)
-
-		# self.make_render()
-
-
-	def change_tile(self, pos, clip):
-	#Changes a tile, updates the level and tiles.
-
-		def make_tile(pos=(), clip=()):
-		#Make a new tile. Requires filler to be in place.
-			if clip == "__":
-				return None
-			#
-			sprite = mo.MySprite(self.texture)
-			sprite.clip.set(mo.GRID, mo.GRID)
-			cx = self.alphabet.index(clip[0])
-			cy = self.alphabet.index(clip[1])
-			sprite.clip.use(cy, cx)
-			x, y = pos[0]*mo.GRID, pos[1]*mo.GRID
-			# print self.room_x, self.room_y
-			x += self.x*GRID; y += self.y*GRID
-			sprite.goto = x, y
-			return sprite
-
-		x, y = pos[0], pos[1]
-		tile = make_tile(pos, clip)
-		self.tiles[x][y] = tile
-		self.level[x][y] = clip
-
-
-	#RENDERING
-	#For moving the level as a whole.
-	render_sprite = None
-	render_texture = None
-
-	def make_render(self):
-	#Remake the render texture, and then the sprite.
-	#For any instances in which the graphics may change.
-		render \
-		= sf.RenderTexture(self.w*GRID, self.h*GRID)
-
-		for ix, x in enumerate(self.tiles):
-			for iy, y in enumerate(x):
-				if self.tiles[ix][iy] != None:
-					render.draw(self.tiles[ix][iy])
-				else:
-					try:
-						render.draw(self.grid[ix][iy])
-					except:
-						pass
-
-		self.render_texture = render
-		self.render_texture.display()
-		self.render_sprite = MySprite(self.render_texture.texture)
-		self.render_sprite.goto = self.x*GRID, self.y*GRID
-
-	def draw(self):
-		# if self.render_sprite != None:
-		# 	self.render_sprite.draw()
-
-		for x in self.tiles:
-			for y in x:
-				if y != None:
-					y.draw()
+		# make_tiles(level)
+		return self.tiles

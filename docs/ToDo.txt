@@ -23,5 +23,3 @@ x A WorldMap saves the positioning of all these levels.
 ! Fix TileSelections being limited to a level highlight.
  
 ! LevelEditor stutters from moving room to room.
-
-! LevelEditor crashes on trying to put tiles in another room.
