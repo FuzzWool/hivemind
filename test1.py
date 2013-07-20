@@ -37,15 +37,15 @@ worldmap = WorldMap()
 #########################################################
 
 running = True
-# worldmap.load_all()
 while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		pass
+		worldmap.say_Rooms()
 
 	camera_controls()
-	worldmap.load_around(*Camera.room_points)
+	worldmap.load_around\
+	(Camera.room_points, Camera.tile_points)
 
 	#Video
 	window.view = Camera

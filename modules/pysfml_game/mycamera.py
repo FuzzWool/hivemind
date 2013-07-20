@@ -87,6 +87,13 @@ class MyCamera(sf.View):
 		return x1, y1, x2, y2
 
 	@property
+	def tile_points(self):
+		x1, y1, x2, y2 = self.points
+		x1 = int(x1/GRID); y1 = int(y1/GRID)
+		x2 = int(x2/GRID); y2 = int(y2/GRID)
+		return x1, y1, x2, y2
+
+	@property
 	def room_points(self):
 		x1, y1, x2, y2 = self.points
 		x1 = int(x1/ROOM_WIDTH); y1 = int(y1/ROOM_HEIGHT)

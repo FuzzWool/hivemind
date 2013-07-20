@@ -211,6 +211,7 @@ class Level(object):
 				self.change_tile((ix, iy), y)
 		return self.tiles
 
+
 	def load_around(self, x1, y1, x2, y2):
 	#Load only the tiles within a certain AREA.
 		
@@ -222,6 +223,8 @@ class Level(object):
 			if y < 0: y = 0
 			return x, y
 
+		x1 -= self.x; x2 -= self.x
+		y1 -= self.y; y2 -= self.y
 		x1, y1 = keep_in_bounds(x1, y1)
 		x2, y2 = keep_in_bounds(x2, y2)
 
@@ -229,13 +232,32 @@ class Level(object):
 			for y in range(self.h):
 
 				#Make a tile within the area.
-				if  x in range(x1, x2)\
-				and y in range(y1, y2):
+				if  x in range(x1, x2+1)\
+				and y in range(y1, y2+1):
 					if self.tiles[x][y] == None:
 						self.change_tile((x, y),\
 						 self.level[x][y])
 
 				#Remove any tiles outside of the area.
-				if x not in range(x1, x2)\
-				or y not in range(y1, y2):
+				if x not in range(x1, x2+1)\
+				or y not in range(y1, y2+1):
 					self.tiles[x][y] = None
+
+# DEBUGGING
+
+	@property
+	def tiles_loaded(self):
+		loaded = []
+		for x in self.tiles:
+			for y in x:
+				if y != None:
+					loaded.append(y)
+		return loaded
+
+	def say_tiles(self):
+		total = self.w * self.h
+		loaded = len(self.tiles_loaded)
+
+		string = "%s loaded (%s/%s) tiles."\
+		% (self.name, loaded, total)
+		print string
