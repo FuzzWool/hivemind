@@ -8,7 +8,7 @@ Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
 sprites = []
-texture = MyTexture("img/test/level.png")
+texture = MyTexture("img/tilemaps/level.png")
 for x in range(10):
 	sprites.append([])
 	for y in range(20):

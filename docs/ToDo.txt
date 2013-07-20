@@ -23,3 +23,17 @@ x A WorldMap saves the positioning of all these levels.
 ! Fix TileSelections being limited to a level highlight.
  
 ! LevelEditor stutters from moving room to room.
+
+- removed static_level from Level
++ Added load_around for Level.
+
+! Only read the tiles needed.
+Lag from opening texture file? Test this.
+	
+	x Load all the tiles for a level.
+	x Draw only one.
+	Jitters.
+
+	+ Load only what's needed for a level.
+	+ Draw all loaded.
+	No jitter! Initialization is to blame.

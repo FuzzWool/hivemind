@@ -70,18 +70,10 @@ class Level(object):
 	def __init__ (self, level_dir, room_x=0, room_y=0):
 	#Grabs level data and creates tiles.
 
-
 		self.room_x, self.room_y = room_x, room_y
 		self.level = self._load_level(level_dir)
-		self.tiles = self._make_tiles(self.level)
-
-		###WIP###
-		#load static Level
-		static_dir = "img/rooms/test.png"
-		static_tex = mo.texture(static_dir)
-		self.static_level = mo.MySprite(static_tex)
-		x, y = self.x*GRID, self.y*GRID
-		self.static_level.goto = x, y
+		self.tiles = self._initialize_tiles(self.level)
+		# self.tiles = self._make_all_tiles(self.level)
 
 
 	def change_tile(self, pos, clip):
@@ -109,16 +101,13 @@ class Level(object):
 		self.level[x][y] = clip
 
 	def draw(self):
-		#WIP###
-		self.static_level.draw()
-		#
-
 		for x in self.tiles:
 			for y in x:
 				if y != None:
 					y.draw()
 
-#
+
+#	LOADING DATA
 
 	def _load_level(self, level_dir):
 	#Loads and formats the level for usage.
@@ -202,25 +191,51 @@ class Level(object):
 		level = room_off_level(level)
 		return level
 
-	#
 
-	def _make_tiles(self, level):
+#	TILE CREATION
 
-		def initialize_tiles(level):
-		#Make empty spaces for tiles using the level size.
-			tiles = []
-			fill = [None for y in level[0]]
-			while len(tiles) < len(level):
-				tiles.append(fill)
-			return tiles
+	def _initialize_tiles(self, level):
+	#Make spaces for the tiles to reside in.
+		tiles = []
+		fill = [None for y in level[0]]
+		while len(tiles) < len(level):
+			tiles.append(fill)
+		return [tile[:] for tile in tiles]
 
-		def make_tiles(level):
-		#Add tile graphics based on the level[x][y]
-			for ix, x in enumerate(level):
-				for iy, y in enumerate(x):
-					self.change_tile((ix, iy), y)
 
-		tiles = initialize_tiles(level)
-		self.tiles = [tile[:] for tile in tiles]
-		# make_tiles(level)
+	def _make_all_tiles(self, level):
+	#Make ALL of the tiles in the Level.
+		for ix, x in enumerate(level):
+			for iy, y in enumerate(x):
+				y = "aa"
+				self.change_tile((ix, iy), y)
 		return self.tiles
+
+	def load_around(self, x1, y1, x2, y2):
+	#Load only the tiles within a certain AREA.
+		
+		def keep_in_bounds(x=0, y=0):
+			logic_w, logic_h = self.w-1, self.h-1
+			if logic_w < x: x = logic_w
+			if logic_h < y: y = logic_h
+			if x < 0: x = 0
+			if y < 0: y = 0
+			return x, y
+
+		x1, y1 = keep_in_bounds(x1, y1)
+		x2, y2 = keep_in_bounds(x2, y2)
+
+		for x in range(self.w):
+			for y in range(self.h):
+
+				#Make a tile within the area.
+				if  x in range(x1, x2)\
+				and y in range(y1, y2):
+					if self.tiles[x][y] == None:
+						self.change_tile((x, y),\
+						 self.level[x][y])
+
+				#Remove any tiles outside of the area.
+				if x not in range(x1, x2)\
+				or y not in range(y1, y2):
+					self.tiles[x][y] = None
