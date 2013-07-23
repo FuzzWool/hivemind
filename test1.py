@@ -25,10 +25,10 @@ def camera_controls():
 
 	else:
 		#Move Camera
-		if key.A.held(): Camera.x -= mo.GRID
-		if key.D.held(): Camera.x += mo.GRID
-		if key.W.held(): Camera.y -= mo.GRID
-	if key.S.held(): Camera.y += mo.GRID
+		if key.A.held(): Camera.x -= 5
+		if key.D.held(): Camera.x += 5
+		if key.W.held(): Camera.y -= 5
+	if key.S.held(): Camera.y += 5
 
 #
 

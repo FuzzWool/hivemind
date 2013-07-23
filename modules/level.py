@@ -30,19 +30,9 @@ class Level(object):
 
 	@property
 	def w(self): return len(self.level)
-	@w.setter
-	def w(self, arg):
-		change = arg - self.w
-		if change >= +1: self.expand_right(arg)
-		if change <= -1: self.shrink_right(arg)
 
 	@property
 	def h(self): return len(self.level[0])
-	@h.setter
-	def h(self, arg):
-		change = arg - self.h
-		if change >= +1: self.expand_bottom(arg)
-		if change <= -1: self.shrink_bottom(arg)
 
 	@property
 	def room_x(self): return int(self.x*GRID / ROOM_WIDTH)
@@ -65,8 +55,6 @@ class Level(object):
 	def room_h(self, arg): self.h = arg*(ROOM_HEIGHT/GRID)
 	#
 
-	def __call__(self): return self.level
-	
 	def __init__ (self, level_dir, room_x=0, room_y=0):
 	#Grabs level data and creates tiles.
 
@@ -214,11 +202,10 @@ class Level(object):
 
 	def load_around(self, x1, y1, x2, y2):
 	#Load only the tiles within a certain AREA.
-		
+
 		def keep_in_bounds(x=0, y=0):
-			logic_w, logic_h = self.w-1, self.h-1
-			if logic_w < x: x = logic_w
-			if logic_h < y: y = logic_h
+			if self.w < x: x = self.w
+			if self.h < y: y = self.h
 			if x < 0: x = 0
 			if y < 0: y = 0
 			return x, y
@@ -232,15 +219,17 @@ class Level(object):
 			for y in range(self.h):
 
 				#Make a tile within the area.
-				if  x in range(x1, x2+1)\
-				and y in range(y1, y2+1):
-					if self.tiles[x][y] == None:
+				if  x1 <= x <= x2\
+				and y1 <= y <= y2:
+					if self.tiles[x][y] == None\
+					and self.level[x][y] != "__":
+
 						self.change_tile((x, y),\
 						 self.level[x][y])
 
 				#Remove any tiles outside of the area.
-				if x not in range(x1, x2+1)\
-				or y not in range(y1, y2+1):
+				if x < x1 or x2 < x\
+				or y < y1 or y2 < y:
 					self.tiles[x][y] = None
 
 # DEBUGGING

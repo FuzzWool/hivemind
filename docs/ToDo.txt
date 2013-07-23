@@ -17,7 +17,8 @@ x A WorldMap saves the positioning of all these levels.
 
 -
 
-- Removed tiles from showing, as they caused unecessary lag.
-
-+ Fixed LevelEditor not displaying tiles.
-(EWorldMap dependant on it's own load_around)
+FIX: WorldMap saving hack.
+WorldMap should save temporary rooms.
+temprooms are prioritized for...
+	loading
+	saving
