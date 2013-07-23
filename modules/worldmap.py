@@ -1,4 +1,4 @@
-from modules.level_editor import Level
+from modules import Level
 
 class WorldMap:
 #Glues the individual rooms together.

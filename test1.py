@@ -1,36 +1,66 @@
-#Run WorldMap inside the main app.
-from modules.level_editor import *
+from modules.pysfml_game import sf
 from modules.pysfml_game import quit
 from modules.pysfml_game import window
 from modules.pysfml_game import key
 from modules.pysfml_game import MyCamera
 
 Camera = MyCamera()
-Camera.zoom = 1
+Camera.zoom = 2
 Camera.x, Camera.y = 0, 0
 
+#	ENTITY
+from modules.pysfml_game import MySprite
+from modules.pysfml_game import RENDER_CENTER
+
+class Entity:
+
+#	SPRITE LOADING
+	folders_dir = "img/characters/"
+	image = None
+	texture = None
+	sprite = None
+
+	def __init__ (self, name="nobody"):
+		#Location
+		self.name = name
+		folder_dir = self.folders_dir + name + "/"
+
+		#Set the image.
+		self.image = sf.Image\
+		.load_from_file(folder_dir+"sheet.png")
+		self.image\
+		.create_mask_from_color(sf.Color(255, 0, 255))
+		
+		#Make the texture.
+		self.texture = sf.Texture\
+		.load_from_image(self.image)
+
+		#Make the sprite.
+		self.sprite = MySprite(self.texture)
+		# self.sprite.clip.set(40, 40)
+		# self.sprite.clip.use(0, 0)
+
+		self.sprite.center = RENDER_CENTER
+
+	def draw(self):
+		self.sprite.draw()
+
+
+#	MOVEMENT
+	yVel = 0
+
+	def movement(self):
+		self.gravity()
+
+	def gravity(self):
+		self.yVel += 0.3
+		self.sprite.y += self.yVel
 #
-def camera_controls():
-	if key.L_CTRL.held():
-		#Zoom Camera
-		if key.ADD.pressed(): Camera.zoom *= 2
-		if key.SUBTRACT.pressed(): Camera.zoom /= 2
 
-	elif key.L_SHIFT.held():
-		#Move Camera - Snap to Room
-		if key.A.pressed(): Camera.room_x -= 1
-		if key.D.pressed(): Camera.room_x += 1
-		if key.W.pressed(): Camera.room_y -= 1
-		if key.S.pressed(): Camera.room_y += 1
 
-	else:
-		#Move Camera
-		if key.A.held(): Camera.x -= mo.GRID
-		if key.D.held(): Camera.x += mo.GRID
-		if key.W.held(): Camera.y -= mo.GRID
-	if key.S.held(): Camera.y += mo.GRID
-
-#
+#####
+Nut = Entity("nut")
+Zach = Entity("zach")
 
 from modules.worldmap import WorldMap
 worldmap = WorldMap()
@@ -41,16 +71,21 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		worldmap.say_Rooms()
+		pass
 
-	camera_controls()
 	worldmap.load_around\
 	(Camera.room_points, Camera.tile_points)
 
+	#WIP####
+	# Nut.movement()
+	####
+
 	#Video
 	window.view = Camera
-	window.clear()
+	window.clear(sf.Color(255, 200, 200))
 	#
 	worldmap.draw()
+	Nut.draw()#####
+	Zach.draw()
 	#
 	window.display()

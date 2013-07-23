@@ -1,9 +1,25 @@
-Let there be Levels
+Let there be People
 ===========
-Seamless loading from level to level. No transitions.
+Nut is born, and she has basic controls.
+Interaction with NPCs and enemies.
 
-MAJOR Goals:
-x Append a level to another level from two level files.
-x Gradually load and de-load levels during exploration.
-x Append levels based on a world file's data.
-x A mini world map may determine which 'block' the player is in
+Goals:
+Make Nut with basic left and right controls.
+Allow Nut to run across 1/2-block slopes.
+
+Make an enemy which moves left and right and hits Nut.
+
+Make an NPC to interact with Nut.
+Allow the NPC to provide Nut with an option which activates a flag.
+Allow Nut to select an action with an NPC which makes it turn hostile.
+
+=====
+
+GOAL: Collision Detection.
+
+x Make an entity.
+x Add gravity to entity.
+
+Work out if two sprites are overlapping.
+
+aa tiles in Level are collidable.

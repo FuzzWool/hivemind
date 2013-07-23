@@ -1,12 +1,27 @@
-X Let there be Levels
+======
+TO MAKE
+
+Let there be People
 ===========
-Seamless loading from level to level. No transitions.
+Nut is born, and she has basic controls.
+Interaction with NPCs and enemies.
 
 Goals:
-x Load levels from a file.
-x Append a level to another level from two level files.
-x Gradually load and de-load levels during exploration.
-x Append levels based on a world file's data.
+Make Nut with basic left and right controls.
+Allow Nut to run across 1/2-block slopes.
+
+Make an enemy which moves left and right and hits Nut.
+
+Make an NPC to interact with Nut.
+Allow the NPC to provide Nut with an option which activates a flag.
+Allow Nut to select an action with an NPC which makes it turn hostile.
+
+
+Let there be Saving
+============
+The game is able to save...
+NPC flagging
+Nut's positoning
 
 
 Let there be a Camera
@@ -19,17 +34,15 @@ TU-styled camera positioning for level sections.
 Camera may zoom in and out within certain boundaries.
 
 
-Let there be People
-===========
-Nut is born, and she has basic controls.
-Interaction with NPCs and enemies.
+Let there be... Cool Controls?
+=============
+Nut wants some cool moves, now.
 
 Goals:
-Make Nut with basic left and right controls.
-Make an enemy which moves left and right and hurts Nut.
-Make an NPC to interact with Nut.
-Allow the NPC to provide Nut with an option which activates a flag.
-Allow Nut to select an action with an NPC which makes it turn hostile.
+Make a wall-hang: when Nut just misses a platform, she grabs on to it.
+	(Automatically pulls herself up quickly, Galaxy-style)
+Test ledge-kicking: when wall-hanging, Nut may perform a push-jump from it.
+	(Facing the opposite direction and jumping)
 
 
 Let there be Pain and Death
@@ -42,12 +55,16 @@ When Nut dies (0), add a death transition which resets the level.
 When the enemy dies, make it disappear.
 
 
-Let there be... Cool Controls?
-=============
-Nut wants some cool moves, now.
+
+====
+COMPLETED
+
+X Let there be Levels
+===========
+Seamless loading from level to level. No transitions.
 
 Goals:
-Make a wall-hang: when Nut just misses a platform, she grabs on to it.
-	(Automatically pulls herself up quickly, Galaxy-style)
-Test ledge-kicking: when wall-hanging, Nut may perform a push-jump from it.
-	(Facing the opposite direction and jumping)
+x Load levels from a file.
+x Append a level to another level from two level files.
+x Gradually load and de-load levels during exploration.
+x Append levels based on a world file's data.

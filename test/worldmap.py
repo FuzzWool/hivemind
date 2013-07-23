@@ -1,6 +1,4 @@
-#Run WorldMap inside the main app.
 from modules.pysfml_game import sf
-from modules.level_editor import *
 from modules.pysfml_game import quit
 from modules.pysfml_game import window
 from modules.pysfml_game import key
@@ -19,7 +17,7 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		worldmap.say_Rooms()
+		pass
 
 	worldmap.load_around\
 	(Camera.room_points, Camera.tile_points)

@@ -1,5 +1,5 @@
+from modules import WorldMap
 from modules.level_editor import ELevel
-from modules.worldmap import WorldMap
 
 class EWorldMap(WorldMap):
 #Glues the individual rooms together.

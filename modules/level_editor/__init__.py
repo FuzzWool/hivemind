@@ -1,11 +1,10 @@
 #init
 from elevel import *
 from eworldmap import EWorldMap
-from toolbox import *
+from toolbox import ToolBox
 #####
 
 import modules as mo
-from toolbox import ToolBox
 from modules.pysfml_game import GRID
 
 class LevelEditor:
