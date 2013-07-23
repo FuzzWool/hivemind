@@ -31,6 +31,43 @@ class ELevel(Level):
 		return grid
 
 
+	#Copy and Paste from Level
+	#Tries to cover up ALL empty tiles.
+
+	def load_around(self, x1, y1, x2, y2):
+	#Load only the tiles within a certain AREA.
+
+		def keep_in_bounds(x=0, y=0):
+			if self.w < x: x = self.w
+			if self.h < y: y = self.h
+			if x < 0: x = 0
+			if y < 0: y = 0
+			return x, y
+
+		x1 -= self.x; x2 -= self.x
+		y1 -= self.y; y2 -= self.y
+		x1, y1 = keep_in_bounds(x1, y1)
+		x2, y2 = keep_in_bounds(x2, y2)
+
+		for x in range(self.w):
+			for y in range(self.h):
+
+				#Make a tile within the area.
+				if  x1 <= x <= x2\
+				and y1 <= y <= y2:
+					if self.tiles[x][y] == None:
+					### Only this line has been removed.
+
+						self.change_tile((x, y),\
+						 self.level[x][y])
+
+				#Remove any tiles outside of the area.
+				if x < x1 or x2 < x\
+				or y < y1 or y2 < y:
+
+					self.tiles[x][y] = None
+
+
 #	TEXTURE
 
 	def change_texture(self, texture_name):

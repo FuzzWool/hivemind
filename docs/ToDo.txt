@@ -11,6 +11,8 @@ x A mini world map may determine which 'block' the player is in
 ===
 
 + Added grid for ELevel.
+! ELevel tries to cover up ALL empty tiles.
+! Level tries to cover up any empty tiles not marked "__".
 
 ELevel
 - removed expand_right, shrink_right, expand_bottom, shrink_bottom
