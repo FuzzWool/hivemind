@@ -46,13 +46,8 @@ class Level(object):
 
 	@property
 	def room_w(self): return int(self.w*GRID / ROOM_WIDTH)
-	@room_w.setter
-	def room_w(self, arg): self.w = arg*(ROOM_WIDTH/GRID)
-
 	@property
 	def room_h(self): return int(self.h*GRID / ROOM_HEIGHT)
-	@room_h.setter
-	def room_h(self, arg): self.h = arg*(ROOM_HEIGHT/GRID)
 	#
 
 	def __init__ (self, level_dir, room_x=0, room_y=0):
@@ -69,8 +64,9 @@ class Level(object):
 
 		def make_tile(pos=(), clip=()):
 		#Make a new tile. Requires filler to be in place.
+
 			if clip == "__":
-				return None
+				return self.empty_tile(pos)
 			#
 			sprite = mo.MySprite(self.texture)
 			sprite.clip.set(mo.GRID, mo.GRID)
@@ -87,6 +83,10 @@ class Level(object):
 		tile = make_tile(pos, clip)
 		self.tiles[x][y] = tile
 		self.level[x][y] = clip
+
+	def empty_tile(self, pos=(), clip=()):
+	#I exist entirely for Elevel's sake.
+		return None
 
 	def draw(self):
 		for x in self.tiles:
@@ -230,6 +230,7 @@ class Level(object):
 				#Remove any tiles outside of the area.
 				if x < x1 or x2 < x\
 				or y < y1 or y2 < y:
+
 					self.tiles[x][y] = None
 
 # DEBUGGING

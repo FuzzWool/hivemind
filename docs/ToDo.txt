@@ -10,8 +10,12 @@ x A mini world map may determine which 'block' the player is in
 
 ===
 
-~ Fixed range check in WorldMap.
++ Added grid for ELevel.
 
-+ Fixed WorldMap saving.
-All closed rooms are temporarily stored.
-They are then prioritized for loading and saving.
+ELevel
+- removed expand_right, shrink_right, expand_bottom, shrink_bottom
+- removed old junk for grid and rendertexture
+
+Level
++ added empty_tile for ELevel's grid creation
+- removed room_w, room_h setters
