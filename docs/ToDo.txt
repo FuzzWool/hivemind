@@ -7,17 +7,3 @@ x Append a level to another level from two level files.
 x Gradually load and de-load levels during exploration.
 x Append levels based on a world file's data.
 x A mini world map may determine which 'block' the player is in
-
-===
-
-+ Added grid for ELevel.
-! ELevel tries to cover up ALL empty tiles.
-! Level tries to cover up any empty tiles not marked "__".
-
-ELevel
-- removed expand_right, shrink_right, expand_bottom, shrink_bottom
-- removed old junk for grid and rendertexture
-
-Level
-+ added empty_tile for ELevel's grid creation
-- removed room_w, room_h setters
