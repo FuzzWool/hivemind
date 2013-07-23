@@ -8,17 +8,10 @@ x Gradually load and de-load levels during exploration.
 x Append levels based on a world file's data.
 x A mini world map may determine which 'block' the player is in
 
-=
-0.0.8 - Multiple levels
-Goals:
+===
 
-x ELevels may be altered individually.
-x A WorldMap saves the positioning of all these levels.
+~ Fixed range check in WorldMap.
 
--
-
-FIX: WorldMap saving hack.
-WorldMap should save temporary rooms.
-temprooms are prioritized for...
-	loading
-	saving
++ Fixed WorldMap saving.
+All closed rooms are temporarily stored.
+They are then prioritized for loading and saving.

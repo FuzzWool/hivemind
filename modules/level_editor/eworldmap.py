@@ -9,9 +9,8 @@ class EWorldMap(WorldMap):
 	#Load only the rooms within a certain position.
 
 		def keep_in_bounds(x=0, y=0):
-			logic_w, logic_h = self.w-1, self.h-1
-			if logic_w < x: x = logic_w
-			if logic_h < y: y = logic_h
+			if self.w < x: x = self.w
+			if self.h < y: y = self.h
 			if x < 0: x = 0
 			if y < 0: y = 0
 			return x, y
@@ -26,22 +25,34 @@ class EWorldMap(WorldMap):
 		for x in range(self.w):
 			for y in range(self.h):
 
-				if (x in range(x1, x2+1))\
-				and (y in range(y1, y2+1)):
+				if x1 <= x <= x2\
+				and y1 <= y <= y2:
 					if self.Rooms[x][y] == None:
-						a1 = self.alphabet[x]
-						a2 = self.alphabet[y]
-						new_Room = ELevel(a1+a2, x, y)
-						self.Rooms[x][y] = new_Room
+
+						#Load a stored room when possible.
+						if self.tempRooms[x][y] != None:
+							from copy import copy
+							r = copy(self.tempRooms[x][y])
+							self.Rooms[x][y] = r
+
+						#Otherwise, load afresh.
+						else:
+							a1 = self.alphabet[x]
+							a2 = self.alphabet[y]
+							new_Room = ELevel(a1+a2, x, y)
+							self.Rooms[x][y] = new_Room
 					
 					self.Rooms[x][y]\
 					.load_around(*tile_pos)
 
 				
-				elif (x not in range(x1, x2+1))\
-				or (y not in range(y1, y2+1)):
+				elif x <= x1 or x2 <= x\
+				or   y <= y1 or y2 <= y:
 					if self.Rooms[x][y] != None:
-						self.Rooms[x][y].save()
+						# self.Rooms[x][y].save()
+						from copy import copy
+						oldroom = copy(self.Rooms[x][y])
+						self.tempRooms[x][y] = oldroom
 						self.Rooms[x][y] = None
 
 
@@ -58,6 +69,7 @@ class EWorldMap(WorldMap):
 				# new_Room.room_x = x; new_Room.room_y = y
 				self.Rooms[-1].append(new_Room)
 
+#	SAVING
 
 	def save(self):
 	#Save the WorldMap and all it's rooms.
@@ -67,9 +79,24 @@ class EWorldMap(WorldMap):
 		f.write(data)
 		f.close()
 		
+		rooms = 0
 		#Save all rooms which've been opened and closed.
-		#WIP
+		for x in self.tempRooms:
+			for y in x:
+				if y != None:
+					y.save()
+					rooms += 1
+
 		for x in self.Rooms:
 			for y in x:
 				if y != None:
 					y.save()
+					rooms += 1
+
+		print "Saved the WorldMap! (%s Rooms saved)"\
+		% rooms
+
+	tempRooms = []
+	def __init__ (self):
+		WorldMap.__init__(self)
+		self.tempRooms = [i[:] for i in self.Rooms]

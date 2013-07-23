@@ -62,9 +62,8 @@ class WorldMap:
 	#Load only the rooms within a certain position.
 
 		def keep_in_bounds(x=0, y=0):
-			logic_w, logic_h = self.w-1, self.h-1
-			if logic_w < x: x = logic_w
-			if logic_h < y: y = logic_h
+			if self.w < x: x = self.w
+			if self.h < y: y = self.h
 			if x < 0: x = 0
 			if y < 0: y = 0
 			return x, y
@@ -79,8 +78,8 @@ class WorldMap:
 		for x in range(self.w):
 			for y in range(self.h):
 
-				if (x in range(x1, x2+1))\
-				and (y in range(y1, y2+1)):
+				if x1 <= x <= x2\
+				and y1 <= y <= y2:
 					if self.Rooms[x][y] == None:
 						a1 = self.alphabet[x]
 						a2 = self.alphabet[y]
@@ -91,8 +90,8 @@ class WorldMap:
 					.load_around(*tile_pos)
 
 				
-				elif (x not in range(x1, x2+1))\
-				or (y not in range(y1, y2+1)):
+				elif x < x1 or x2 < x\
+				or   y < y1 or y2 < y:
 					self.Rooms[x][y] = None
 
 #	DEBUG
