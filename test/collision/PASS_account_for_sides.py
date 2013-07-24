@@ -94,7 +94,7 @@ class Entity:
 			if  b.x1 <= x <= b.x2\
 			and b.y1 <= y <= b.y2:
 
-				#Find the shortest way out.
+				#Find the smallest way out.
 				#(To be side-by-side)
 				#1: Positive, 2: Negative
 				if x == a.x1: ox = b.x2 - x

@@ -78,50 +78,52 @@ class Entity:
 		self.cbox.move(x, y)
 
 		ox, oy = self.collision_offset(Entity)
-		if abs(ox) < abs(oy): self.cbox.move(ox, 0)
-		else: self.cbox.move(0, oy)
 
 	def collision_offset(self, Entity):
 	#Work out the offset to move by.
 
 		a, b = self.cbox, Entity.cbox
 
-		#Compare against b's area.
+		#Compare against B's area.
 		def collision_area(x, y):
 		#Return the offset.
 			ox, oy = 0, 0
 
-			if  b.x1 <= x <= b.x2\
-			and b.y1 <= y <= b.y2:
+			if  b.x1 < x < b.x2\
+			and b.y1 < y < b.y2:
 
-				#Find the shortest way out.
-				#(To be side-by-side)
-				#1: Positive, 2: Negative
-				if x == a.x1: ox = b.x2 - x
-				if x == a.x2: ox = b.x1 - x
-				if y == a.y1: oy = b.y2 - y
-				if y == a.y2: oy = b.y1 - y
+				#Find the smallest way out.
+				left = x - b.x1
+				right = b.x2 - x
+				#Return the actual movement.
+				if left < right:
+					ox = -left
+				else:
+					ox = right
+
+				top = y - b.y1
+				bottom = b.y2 - y
+				if top < bottom:
+					oy = -top
+				else:
+					oy = bottom
 
 			return ox, oy
 
+
 		#With all of A's points.
-		#Find the smallest offset.
-		ox, oy = 0, 0
 		for x in [a.x1, a.x2]:
 			for y in [a.y1, a.y2]:
 
-				#See if the way out is smaller.
-				tx, ty = collision_area(x, y)
-				if (ox, oy) == (0, 0):
-					ox, oy = tx, ty
-				if tx != 0:
-					if abs(tx) < abs(ox): ox = tx
-				if ty != 0:
-					if abs(ty) < abs(oy): oy = ty
+				#Find the biggest intersection.
+				print collision_area(x, y)
+		print
 
-		#Now accounts for the amount pushed.
+		#PROBLEM: Needs to account for the amount push.
+		#eg, x1 to move back to a place where
+		# it'd satisfy x2
 
-		return ox, oy
+		return 0, 0
 
 	###
 

@@ -54,3 +54,31 @@ class Rectangle(object):
 		print "boundary", self.boundary
 		print "goto", self.goto, "size", self.size
 		print "points", self.points
+
+
+	#	POINTS
+	@property
+	def x1(self): return self.x
+	@x1.setter
+	def x1(self, arg): self.x = arg
+
+	@property
+	def y1 (self): return self.y
+	@y1.setter
+	def y1(self, arg): self.y = arg
+
+	@property
+	def x2(self):
+		return self.points[2]
+	@x2.setter
+	def x2(self, arg):
+		self.points = \
+		self.x, self.y, arg, self.points[3]
+
+	@property
+	def y2(self):
+		return self.points[3]
+	@y2.setter
+	def y2(self, arg):
+		self.points = \
+		self.x, self.y, self.points[2], arg
