@@ -72,16 +72,31 @@ class Entity:
 #Collisions use cbox.
 
 	###WIP###
-	def move(self, Entity, move=(0, 0)):
-	#Process collisions for every moment.
-		x, y = move
+	def move(self, x=0, y=0):
 		self.cbox.move(x, y)
 
-		ox, oy = self.collision_offset(Entity)
+	def is_colliding(self, Entity):
+		a, b = self.cbox, Entity.cbox
+		truth = False
+		if  b.x1 <= a.x1 <= b.x2\
+		and b.y1 <= a.y1 <= b.y2:
+			truth = True
+		if  b.x1 <= a.x2 <= b.x2\
+		and b.y1 <= a.y2 <= b.y2:
+			truth = True
+		return truth
+
+	def collision_pushback(self, Entity):
+	#Check the Entity's collision against another.
+
+		if not self.is_colliding(Entity): return
+
+		#If so, find the offset to move.
+		ox, oy = self._collision_offset(Entity)
 		if abs(ox) < abs(oy): self.cbox.move(ox, 0)
 		else: self.cbox.move(0, oy)
 
-	def collision_offset(self, Entity):
+	def _collision_offset(self, Entity):
 	#Work out the offset to move by.
 
 		a, b = self.cbox, Entity.cbox
@@ -94,7 +109,7 @@ class Entity:
 			if  b.x1 <= x <= b.x2\
 			and b.y1 <= y <= b.y2:
 
-				#Find the smallest way out.
+				#Find the shortest way out.
 				#(To be side-by-side)
 				#1: Positive, 2: Negative
 				if x == a.x1: ox = b.x2 - x
@@ -119,8 +134,6 @@ class Entity:
 				if ty != 0:
 					if abs(ty) < abs(oy): oy = ty
 
-		#Now accounts for the amount pushed.
-
 		return ox, oy
 
 	###
@@ -132,8 +145,11 @@ class Entity:
 #
 
 
-Nut = Entity("nobody")
-Zach = Entity("nobody2")
+Nut = Entity("nut")
+Zachs = []
+for i in range(75):
+	Zach = Entity("zach")
+	Zachs.append(Zach)
 #####
 
 from modules.worldmap import WorldMap
@@ -149,24 +165,23 @@ while running:
 
 	#WIP###
 	amt = 5
-	if key.A.held(): Nut.move(Zach, (-amt, 0))
-	if key.D.held(): Nut.move(Zach, (+amt, 0))
-	if key.W.held(): Nut.move(Zach, (0, -amt))
-	if key.S.held(): Nut.move(Zach, (0, +amt))
+	if key.A.held(): Nut.move(-amt, 0)
+	if key.D.held(): Nut.move(+amt, 0)
+	if key.W.held(): Nut.move(0, -amt)
+	if key.S.held(): Nut.move(0, +amt)
+
+	for Zach in Zachs:
+		Nut.collision_pushback(Zach)
 	###
 
 	worldmap.load_around\
 	(Camera.room_points, Camera.tile_points)
 
-	#WIP####
-	# Nut.collision_pushback(Zach)
-	###
-
 	#Video
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
 	#
-	worldmap.draw()
+	#worldmap.draw()
 	Zach.draw()####
 	Nut.draw()#####
 	#
