@@ -14,6 +14,10 @@ Allow the NPC to provide Nut with an option which activates a flag.
 Allow Nut to select an action with an NPC which makes it turn hostile.
 
 =====
++ Fixed collision check not checking all sides.
+~ Changed x2, y2 in geometry for efficiency.
++ sheet_move loaded/created for folder
+
 GOAL: Collision Detection.
 
 x Make an entity.
@@ -23,6 +27,7 @@ x Make cbox and center it.
 x Work out if two sprites are overlapping.
 	x Eject from where it came from
 		x Using the smallest offset
+
 
 aa tiles in Level are collidable.
 	check for all tiles surrounding an entity

@@ -35,7 +35,7 @@ class Entity:
 	def make_sprite(self):
 	#Create the main sprite.
 
-		#Set the image.
+		#Set the image (load sheet)
 		self.image = sf.Image\
 		.load_from_file(self.folder_dir+"sheet.png")
 		self.image\
@@ -47,6 +47,19 @@ class Entity:
 
 		#Make the sprite.
 		self.sprite = MySprite(self.texture)
+
+		#(load goto)
+		filename = "sheet_move.txt"
+		try:
+			f = open(self.folder_dir+filename).read()
+			x, y = f.split(",")
+			x, y = int(x), int(y)
+		except:
+			f = open(self.folder_dir+filename, "w")
+			f.write("0,0")
+			f.close()
+			x, y = 0, 0
+		self.sprite.move(x, y)
 
 	cbox_tex = None
 	cbox = None
@@ -77,14 +90,19 @@ class Entity:
 
 	def is_colliding(self, Entity):
 		a, b = self.cbox, Entity.cbox
-		truth = False
 		if  b.x1 <= a.x1 <= b.x2\
 		and b.y1 <= a.y1 <= b.y2:
-			truth = True
+			return True
+		if  b.x1 <= a.x1 <= b.x2\
+		and b.y1 <= a.y2 <= b.y2:
+			return True
+		if  b.x1 <= a.x2 <= b.x2\
+		and b.y1 <= a.y1 <= b.y2:
+			return True
 		if  b.x1 <= a.x2 <= b.x2\
 		and b.y1 <= a.y2 <= b.y2:
-			truth = True
-		return truth
+			return True
+		return False
 
 	def collision_pushback(self, Entity):
 	#Check the Entity's collision against another.
@@ -145,10 +163,10 @@ class Entity:
 #
 
 
-Nut = Entity("nut")
+Nut = Entity("nobody")
 Zachs = []
-for i in range(75):
-	Zach = Entity("zach")
+for i in range(50):
+	Zach = Entity("nobody2")
 	Zachs.append(Zach)
 #####
 

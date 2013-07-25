@@ -35,7 +35,7 @@ class Entity:
 	def make_sprite(self):
 	#Create the main sprite.
 
-		#Set the image.
+		#Set the image (load sheet)
 		self.image = sf.Image\
 		.load_from_file(self.folder_dir+"sheet.png")
 		self.image\
@@ -47,6 +47,19 @@ class Entity:
 
 		#Make the sprite.
 		self.sprite = MySprite(self.texture)
+
+		#(load goto)
+		filename = "sheet_move.txt"
+		try:
+			f = open(self.folder_dir+filename).read()
+			x, y = f.split(",")
+			x, y = int(x), int(y)
+		except:
+			f = open(self.folder_dir+filename, "w")
+			f.write("0,0")
+			f.close()
+			x, y = 0, 0
+		self.sprite.move(x, y)
 
 	cbox_tex = None
 	cbox = None
@@ -146,7 +159,7 @@ class Entity:
 
 Nut = Entity("nut")
 Zachs = []
-for i in range(100):
+for i in range(1):
 	Zach = Entity("zach")
 	Zachs.append(Zach)
 #####
