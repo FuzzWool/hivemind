@@ -84,56 +84,63 @@ class Entity:
 #	MOVEMENT
 #Collisions use cbox.
 
-	###WIP###
 	def move(self, x=0, y=0):
 		self.cbox.move(x, y)
 
-	def is_colliding(self, Entity):
-		a, b = self.cbox, Entity.cbox
-		if  b.x1 <= a.x1 <= b.x2\
-		and b.y1 <= a.y1 <= b.y2:
+	yVel = 0
+	def gravity(self):
+		self.yVel += 0.3
+		self.sprite.y += self.yVel
+
+
+#	COLLISION
+
+	def is_colliding(self, x1, y1, x2, y2):
+		a = self.cbox
+		if  x1 <= a.x1 <= x2\
+		and y1 <= a.y1 <= y2:
 			return True
-		if  b.x1 <= a.x1 <= b.x2\
-		and b.y1 <= a.y2 <= b.y2:
+		if  x1 <= a.x1 <= x2\
+		and y1 <= a.y2 <= y2:
 			return True
-		if  b.x1 <= a.x2 <= b.x2\
-		and b.y1 <= a.y1 <= b.y2:
+		if  x1 <= a.x2 <= x2\
+		and y1 <= a.y1 <= y2:
 			return True
-		if  b.x1 <= a.x2 <= b.x2\
-		and b.y1 <= a.y2 <= b.y2:
+		if  x1 <= a.x2 <= x2\
+		and y1 <= a.y2 <= y2:
 			return True
 		return False
 
-	def collision_pushback(self, Entity):
+	def collision_pushback(self, x1, y1, x2, y2):
 	#Check the Entity's collision against another.
 
-		if not self.is_colliding(Entity): return
+		if not self.is_colliding(x1, y1, x2, y2): return
 
 		#If so, find the offset to move.
-		ox, oy = self._collision_offset(Entity)
+		ox, oy = self._collision_offset(x1, y1, x2, y2)
 		if abs(ox) < abs(oy): self.cbox.move(ox, 0)
 		else: self.cbox.move(0, oy)
 
-	def _collision_offset(self, Entity):
+	def _collision_offset(self, x1, y1, x2, y2):
 	#Work out the offset to move by.
 
-		a, b = self.cbox, Entity.cbox
+		a = self.cbox
 
 		#Compare against b's area.
 		def collision_area(x, y):
 		#Return the offset.
 			ox, oy = 0, 0
 
-			if  b.x1 <= x <= b.x2\
-			and b.y1 <= y <= b.y2:
+			if  x1 <= x <= x2\
+			and y1 <= y <= y2:
 
 				#Find the shortest way out.
 				#(To be side-by-side)
 				#1: Positive, 2: Negative
-				if x == a.x1: ox = b.x2 - x
-				if x == a.x2: ox = b.x1 - x
-				if y == a.y1: oy = b.y2 - y
-				if y == a.y2: oy = b.y1 - y
+				if x == a.x1: ox = x2 - x
+				if x == a.x2: ox = x1 - x
+				if y == a.y1: oy = y2 - y
+				if y == a.y2: oy = y1 - y
 
 			return ox, oy
 
@@ -153,13 +160,6 @@ class Entity:
 					if abs(ty) < abs(oy): oy = ty
 
 		return ox, oy
-
-	###
-
-	yVel = 0
-	def gravity(self):
-		self.yVel += 0.3
-		self.sprite.y += self.yVel
 #
 
 
@@ -189,7 +189,7 @@ while running:
 	if key.S.held(): Nut.move(0, +amt)
 
 	for Zach in Zachs:
-		Nut.collision_pushback(Zach)
+		Nut.collision_pushback(*Zach.cbox.points)
 	###
 
 	worldmap.load_around\
