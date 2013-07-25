@@ -25,9 +25,12 @@ x Work out if two sprites are overlapping.
 	x Eject from where it came from
 		x Using the smallest offset
 
-~ Collisions are now checked using coordinates.
-	Make AABB collision checking a part of MySprite.
-	Entities override coordinates.
++ MySprite has a collision subclass.
+Which handles basic AABB collision checking/pushing.
+Accepts ints/floats/MySprites.
+
+~ Entities may use points or other Entities for collision.
+Now simply passes objects to MySprite's collisions.
 
 aa tiles in Level are collidable.
 	check for all tiles surrounding an entity

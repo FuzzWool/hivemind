@@ -82,7 +82,6 @@ class Entity:
 
 
 #	MOVEMENT
-#Collisions use cbox.
 
 	def move(self, x=0, y=0):
 		self.cbox.move(x, y)
@@ -94,78 +93,30 @@ class Entity:
 
 
 #	COLLISION
+#Handles points and other Entities.
 
-	def is_colliding(self, x1, y1, x2, y2):
-		a = self.cbox
-		if  x1 <= a.x1 <= x2\
-		and y1 <= a.y1 <= y2:
-			return True
-		if  x1 <= a.x1 <= x2\
-		and y1 <= a.y2 <= y2:
-			return True
-		if  x1 <= a.x2 <= x2\
-		and y1 <= a.y1 <= y2:
-			return True
-		if  x1 <= a.x2 <= x2\
-		and y1 <= a.y2 <= y2:
-			return True
-		return False
+	### May use points or other entities.
+	def is_colliding(self, x1=0, y1=0, x2=0, y2=0):
+		if  type(x1) != int\
+		and type(x1) != float: 
+			return self.cbox.collision(x1.cbox)
+		else:
+			return self.cbox.collision(x1, y1, x2, y2)
 
-	def collision_pushback(self, x1, y1, x2, y2):
-	#Check the Entity's collision against another.
+	def collision_pushback(self, x1=0, y1=0, x2=0, y2=0):
+		if  type(x1) != int\
+		and type(x1) != float: 
+			self.cbox.collision.pushback(x1.cbox)
+		else:
+			self.cbox.collision.pushback(x1, y1, x2, y2)
+	###
 
-		if not self.is_colliding(x1, y1, x2, y2): return
-
-		#If so, find the offset to move.
-		ox, oy = self._collision_offset(x1, y1, x2, y2)
-		if abs(ox) < abs(oy): self.cbox.move(ox, 0)
-		else: self.cbox.move(0, oy)
-
-	def _collision_offset(self, x1, y1, x2, y2):
-	#Work out the offset to move by.
-
-		a = self.cbox
-
-		#Compare against b's area.
-		def collision_area(x, y):
-		#Return the offset.
-			ox, oy = 0, 0
-
-			if  x1 <= x <= x2\
-			and y1 <= y <= y2:
-
-				#Find the shortest way out.
-				#(To be side-by-side)
-				#1: Positive, 2: Negative
-				if x == a.x1: ox = x2 - x
-				if x == a.x2: ox = x1 - x
-				if y == a.y1: oy = y2 - y
-				if y == a.y2: oy = y1 - y
-
-			return ox, oy
-
-		#With all of A's points.
-		#Find the smallest offset.
-		ox, oy = 0, 0
-		for x in [a.x1, a.x2]:
-			for y in [a.y1, a.y2]:
-
-				#See if the way out is smaller.
-				tx, ty = collision_area(x, y)
-				if (ox, oy) == (0, 0):
-					ox, oy = tx, ty
-				if tx != 0:
-					if abs(tx) < abs(ox): ox = tx
-				if ty != 0:
-					if abs(ty) < abs(oy): oy = ty
-
-		return ox, oy
 #
 
 
 Nut = Entity("nobody")
 Zachs = []
-for i in range(50):
+for i in range(1):
 	Zach = Entity("nobody2")
 	Zachs.append(Zach)
 #####
@@ -189,7 +140,7 @@ while running:
 	if key.S.held(): Nut.move(0, +amt)
 
 	for Zach in Zachs:
-		Nut.collision_pushback(*Zach.cbox.points)
+		Nut.collision_pushback(Zach)
 	###
 
 	worldmap.load_around\

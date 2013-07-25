@@ -14,6 +14,7 @@ class MySprite(sf.Sprite, Rectangle):
 		self.clip = clip(self)
 		self.box = box(self)
 		self.children = []; self.children_class = children_class(self)
+		self.collision = collision(self)
 
 	#Positioning is handled by goto instead of position.
 	#Position can't be overriden, but it needs to be for children.
@@ -189,3 +190,100 @@ class box(Rectangle):
 class animation:
 #Define an animation in advance, then watch it play.
 	pass
+
+
+###
+
+class collision:
+#Handles basic AABB collision checking.
+	def __init__(self, MySprite): self._ = MySprite 
+
+	def __call__ (self, x1=0, y1=0, x2=0, y2=0,\
+				  MySprite=None):
+		#Use another MySprite if possible.
+		#Use coordinates or a Sprite!
+		if  not type(x1) == int \
+		and not type(x1) == float:
+			MySprite = x1
+
+		if MySprite != None:
+			x1, y1, x2, y2 = MySprite.points
+		return self.is_colliding(x1, y1, x2, y2)
+	#
+	def is_colliding(self, x1, y1, x2, y2):
+		a = self._
+		if  x1 <= a.x1 <= x2\
+		and y1 <= a.y1 <= y2:
+			return True
+		if  x1 <= a.x1 <= x2\
+		and y1 <= a.y2 <= y2:
+			return True
+		if  x1 <= a.x2 <= x2\
+		and y1 <= a.y1 <= y2:
+			return True
+		if  x1 <= a.x2 <= x2\
+		and y1 <= a.y2 <= y2:
+			return True
+		return False
+
+
+	def pushback(self, x1=0, y1=0, x2=0, y2=0,\
+				 MySprite=None):
+		#Use coordinates or a Sprite!
+		if  not type(x1) == int \
+		and not type(x1) == float:
+			MySprite = x1
+
+		if MySprite != None:
+			x1, y1, x2, y2 = MySprite.points
+		self._pushback(x1, y1, x2, y2)
+	#
+	def _pushback(self, x1, y1, x2, y2):
+	#Check the Entity's collision against another.
+
+		if not self.is_colliding(x1, y1, x2, y2): return
+
+		#If so, find the offset to move.
+		ox, oy = self._offset(x1, y1, x2, y2)
+		if abs(ox) < abs(oy): self._.move(ox, 0)
+		else: self._.move(0, oy)
+
+	def _offset(self, x1, y1, x2, y2):
+	#Work out the offset to move by.
+
+		a = self._
+
+		#Compare against b's area.
+		def collision_area(x, y):
+		#Return the offset.
+			ox, oy = 0, 0
+
+			if  x1 <= x <= x2\
+			and y1 <= y <= y2:
+
+				#Find the shortest way out.
+				#(To be side-by-side)
+				#1: Positive, 2: Negative
+				if x == a.x1: ox = x2 - x
+				if x == a.x2: ox = x1 - x
+				if y == a.y1: oy = y2 - y
+				if y == a.y2: oy = y1 - y
+
+			return ox, oy
+
+		#With all of A's points.
+		#Find the smallest offset.
+		ox, oy = 0, 0
+		for x in [a.x1, a.x2]:
+			for y in [a.y1, a.y2]:
+
+				#See if the way out is smaller.
+				tx, ty = collision_area(x, y)
+				if (ox, oy) == (0, 0):
+					ox, oy = tx, ty
+				if tx != 0:
+					if abs(tx) < abs(ox): ox = tx
+				if ty != 0:
+					if abs(ty) < abs(oy): oy = ty
+
+		return ox, oy
