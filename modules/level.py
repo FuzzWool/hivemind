@@ -1,7 +1,5 @@
-import modules as mo
-from modules.pysfml_game import MySprite
+from modules.pysfml_game import MySprite, MyTexture
 from modules.pysfml_game import GRID
-from modules.pysfml_game import sf
 from modules.pysfml_game import ROOM_WIDTH, ROOM_HEIGHT
 
 class Level(object):
@@ -58,6 +56,8 @@ class Level(object):
 		self.tiles = self._initialize_tiles(self.level)
 		# self.tiles = self._make_all_tiles(self.level)
 
+		self.collision = collision(self)
+
 
 	def change_tile(self, pos, clip):
 	#Changes a tile, updates the level and tiles.
@@ -68,12 +68,12 @@ class Level(object):
 			if clip == "__":
 				return self.empty_tile(pos)
 			#
-			sprite = mo.MySprite(self.texture)
-			sprite.clip.set(mo.GRID, mo.GRID)
+			sprite = MySprite(self.texture)
+			sprite.clip.set(GRID, GRID)
 			cx = self.alphabet.index(clip[0])
 			cy = self.alphabet.index(clip[1])
 			sprite.clip.use(cy, cx)
-			x, y = pos[0]*mo.GRID, pos[1]*mo.GRID
+			x, y = pos[0]*GRID, pos[1]*GRID
 			# print self.room_x, self.room_y
 			x += self.x*GRID; y += self.y*GRID
 			sprite.goto = x, y
@@ -120,7 +120,7 @@ class Level(object):
 			self.texture_name = level.split("\n")[0]
 			tex_dir = "img/tilemaps/%s.png" \
 			% self.texture_name
-			self.texture = mo.texture(tex_dir)
+			self.texture = MyTexture(tex_dir)
 
 			lvl = ""
 			for line in level.split("\n")[1:]:
@@ -141,13 +141,13 @@ class Level(object):
 		def room_off_level(level):
 		#The level should be room-sized.
 			def room_w():
-				room = mo.ROOM_WIDTH/mo.GRID
+				room = ROOM_WIDTH/GRID
 				w = room
 				while w < len(level)-1:
 					w += room
 				return w
 			def room_h(x):
-				room = mo.ROOM_HEIGHT/mo.GRID
+				room = ROOM_HEIGHT/GRID
 				h = room
 				while h < len(level[0])-1:
 					h += room
@@ -235,8 +235,31 @@ class Level(object):
 
 # DEBUGGING
 
+	def level_ascii(self, level=None):
+	#Return the level in an ASCII-kinda style.
+		if level == None: level = self.level
+		text = ""
+		text += self.texture_name+"\n"
+		for iy, y in enumerate(level[0]):
+			for ix, x in enumerate(level):
+				text += str(level[ix][iy])
+			text += "\n"
+		text = text[:-1]
+		return text
+
+	@property
+	def filled_level(self):
+	#How many tiles are solid, and not empty.
+		amt = 0
+		for x in self.level:
+			for y in x:
+				if y != "__":
+					amt += 1
+		return amt
+
 	@property
 	def tiles_loaded(self):
+	#Retrun all the loaded tiles.
 		loaded = []
 		for x in self.tiles:
 			for y in x:
@@ -245,9 +268,107 @@ class Level(object):
 		return loaded
 
 	def say_tiles(self):
+	#Say how many tiles are loaded out of the room's
+	#potential total.
 		total = self.w * self.h
 		loaded = len(self.tiles_loaded)
 
 		string = "%s loaded (%s/%s) tiles."\
 		% (self.name, loaded, total)
 		print string
+
+#
+
+class collision:
+#Returning bounding boxes for external objects.
+
+	class bound:
+	#Coordinates to be referenced in multiple tiles.
+		x1, y1, x2, y2 = None, None, None, None
+
+		@property
+		def points(self):
+			return self.x1, self.y1, self.x2, self.y2
+
+
+	def __init__ (self, Level):
+		self._ = Level
+		
+		#Create bounding boxes.
+		
+		#Grid format.
+		#Every space which is filled has a bound.
+		#The bound is a reference to the original x1, y1.
+
+		self.bounds = []
+		#Every column has a bound.
+		for ix, x in enumerate(self._.level):
+			self.bounds.append([])
+
+			old = None
+			for iy, y in enumerate(x):
+
+				#If there's a tile...
+				if y != "__":
+					#And there wasn't a tile beforehand.
+					if old == "__"\
+					or iy == 0:
+						#Make a new bound.
+						bound = self.bound()
+						bound.x1, bound.x2 = ix, ix
+						bound.y1, bound.y2 = iy, iy
+						self.bounds[-1].append(bound)
+
+					#And there WAS a tile beforehand.
+					else:
+						#Use that bound.
+						bound = self.bounds[-1][-1]
+						bound.x2, bound.y2 = ix, iy
+						self.bounds[-1].append(bound)
+
+				#If there isn't a tile.
+				else:
+					#Add an empty space.
+					self.bounds[-1].append(None)
+
+				old = y
+
+		# #Merge the columns together.
+		w = len(self.bounds)
+		h = len(self.bounds[0])
+
+		for x in range(1, w):
+			for y in range(h):
+
+				#If they're aligned, merge them.
+				a = self.bounds[x-1][y]
+				b = self.bounds[x][y]
+				if a != None and b != None:
+					if (a.y1,a.y2) == (b.y1,b.y2):
+						#Expand a.
+						a.x2 = b.x2
+
+						#Convert b to a.
+						for y2 in range(h):
+							if self.bounds[x][y2] == b:
+								self.bounds[x][y2] = a
+						b = a
+						# print x, y, b
+
+		self.say_bounds()
+
+
+	#Debugging
+	def say_bounds(self):
+		unique = 0
+		old = []
+		for x in self.bounds:
+			for y in x:
+				if y not in old and y != None:
+					print y.points
+					unique += 1
+				old.append(y)
+
+		msg = "Using %s bounds from %s tiles."\
+		% (unique, self._.filled_level)
+		print msg

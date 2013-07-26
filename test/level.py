@@ -1,6 +1,3 @@
-#Test making bounding boxes for the Level.
-#And their respective collision checks.
-
 from modules.pysfml_game import sf
 from modules.pysfml_game import quit
 from modules.pysfml_game import window
@@ -13,7 +10,6 @@ Camera.x, Camera.y = 0, 0
 
 from modules.level import Level
 level = Level("aa", 0, 0)
-
 #########################################################
 
 running = True
@@ -23,7 +19,8 @@ while running:
 	if key.RETURN.pressed():
 		pass
 
-	level.load_around(*Camera.tile_points)
+	level.load_around\
+	(*Camera.tile_points)
 
 	#Video
 	window.view = Camera

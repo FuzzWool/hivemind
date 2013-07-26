@@ -14,6 +14,8 @@ Allow the NPC to provide Nut with an option which activates a flag.
 Allow Nut to select an action with an NPC which makes it turn hostile.
 
 =====
+- Removed mo dependancies from Level.
++ Added Level subclass collisions.
 
 GOAL: Collision Detection.
 
@@ -25,15 +27,22 @@ x Work out if two sprites are overlapping.
 	x Eject from where it came from
 		x Using the smallest offset
 
-+ MySprite has a collision subclass.
-Which handles basic AABB collision checking/pushing.
-Accepts ints/floats/MySprites.
++ Level.collision.compounds (for tile collision checks)
+It compounds all of the collidable tiles together into the same object.
+For all tiles in the compound, it references the compound object.
+To use this compound with intended results, do not re-use any references of the same memory.
+(Data is contained in all tiles so the information may be accessed anywhere, but can be filtered to only be checked once)
 
-~ Entities may use points or other Entities for collision.
-Now simply passes objects to MySprite's collisions.
-
-aa tiles in Level are collidable.
-	check for all tiles surrounding an entity
-
-	make compound boxes
+aa tiles in Level are collidable with entities.
+	
+	when the level is loaded...
+		make compound boxes
 		return the sizes of these boxes
+
+		!remember to all references so they aren't re-checked
+
+	for every loop...
+		Level contains all collisions
+		Stored in x, y format
+		Located all in occupied spaces in x, y
+			Only checks once
