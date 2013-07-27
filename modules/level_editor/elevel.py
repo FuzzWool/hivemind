@@ -1,4 +1,4 @@
-from modules.level import Level
+from modules.game import Level
 from modules.pysfml_game import ROOM_HEIGHT, ROOM_WIDTH
 from modules.pysfml_game import GRID
 from modules.pysfml_game import MyTexture, MySprite

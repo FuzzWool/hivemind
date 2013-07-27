@@ -14,8 +14,8 @@ Allow the NPC to provide Nut with an option which activates a flag.
 Allow Nut to select an action with an NPC which makes it turn hostile.
 
 =====
-- Removed mo dependancies from Level.
-+ Added Level subclass collisions.
+~ Entity is now in game.
+~ Level and WorldMap is now in game.
 
 GOAL: Collision Detection.
 
@@ -28,12 +28,10 @@ x Work out if two sprites are overlapping.
 		x Using the smallest offset
 
 + Created compound boxes for the Level's collision handling.
-
 x Entities collide with the compound boxes.
 
+Test collision for exploring a world map.
 
-+ Fixed Glitch: Ignoring non-corner collisions.
-if A is large enough, it may slip in to B without collision checking.
 
 ! Glitch: Slipping off platforms.
 If y is fast and intersects more of y then x, it will be ejected x-ward.

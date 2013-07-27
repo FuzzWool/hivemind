@@ -1,4 +1,4 @@
-from modules import WorldMap
+from modules.game import WorldMap
 from modules.level_editor import ELevel
 
 class EWorldMap(WorldMap):
