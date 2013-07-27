@@ -196,6 +196,8 @@ class animation:
 
 class collision:
 #Handles basic AABB collision checking.
+#Checks X and Y individually.
+
 	def __init__(self, MySprite): self._ = MySprite 
 
 	def __call__ (self, x1=0, y1=0, x2=0, y2=0,\
@@ -211,24 +213,16 @@ class collision:
 		return self.is_colliding(x1, y1, x2, y2)
 	#
 	def is_colliding(self, x1, y1, x2, y2):
-		a = self._
-		if  x1 <= a.x1 <= x2\
-		and y1 <= a.y1 <= y2:
-			return True
-		if  x1 <= a.x1 <= x2\
-		and y1 <= a.y2 <= y2:
-			return True
-		if  x1 <= a.x2 <= x2\
-		and y1 <= a.y1 <= y2:
-			return True
-		if  x1 <= a.x2 <= x2\
-		and y1 <= a.y2 <= y2:
-			return True
-		return False
+		is_x = self.x_overlap(x1, x2)
+		is_y = self.y_overlap(y1, y2)
+
+		if is_x and is_y: return True
+		else: return False
 
 
 	def pushback(self, x1=0, y1=0, x2=0, y2=0,\
-				 MySprite=None):
+				MySprite=None):
+		#Use another MySprite if possible.
 		#Use coordinates or a Sprite!
 		if  not type(x1) == int \
 		and not type(x1) == float:
@@ -236,54 +230,64 @@ class collision:
 
 		if MySprite != None:
 			x1, y1, x2, y2 = MySprite.points
-		self._pushback(x1, y1, x2, y2)
+		return self._pushback(x1, y1, x2, y2)
 	#
 	def _pushback(self, x1, y1, x2, y2):
-	#Check the Entity's collision against another.
+		is_x = self.x_overlap(x1, x2)
+		is_y = self.y_overlap(y1, y2)
 
-		if not self.is_colliding(x1, y1, x2, y2): return
+		if is_x and is_y:
+			ox = self.x_pushback(x1, x2)
+			oy = self.y_pushback(y1, y2)
 
-		#If so, find the offset to move.
-		ox, oy = self._offset(x1, y1, x2, y2)
-		if abs(ox) < abs(oy): self._.move(ox, 0)
-		else: self._.move(0, oy)
+			if abs(ox) <= abs(oy): self._.move(ox, 0)
+			else:				  self._.move(0, oy)
 
-	def _offset(self, x1, y1, x2, y2):
-	#Work out the offset to move by.
+	#
 
+	#Simply detects if there is any overlapping.
+	def x_overlap(self, x1, x2):
 		a = self._
+		if x1 <= a.x1 <= x2: return True
+		if x1 <= a.x2 <= x2: return True
+		if a.x1 <= x1 <= a.x2: return True
+		if a.x1 <= x2 <= a.x2: return True
+		return False
 
-		#Compare against b's area.
-		def collision_area(x, y):
-		#Return the offset.
-			ox, oy = 0, 0
+	def y_overlap(self, y1, y2):
+		a = self._
+		if y1 <= a.y1 <= y2: return True
+		if y1 <= a.y2 <= y2: return True
+		if a.y1 <= y1 <= a.y2: return True
+		if a.y1 <= y2 <= a.y2: return True
+		return False
+	#
 
-			if  x1 <= x <= x2\
-			and y1 <= y <= y2:
+	#Works out the shortest pushback.
+	def x_pushback(self, x1, x2):
+		a = self._
+		p = []
+		if x1 <= a.x1 <= x2: p.append(x2 - a.x1)
+		if x1 <= a.x2 <= x2: p.append(x1 - a.x2)
+		if a.x1 <= x1 <= a.x2: p.append(a.x1 - x2)
+		if a.x1 <= x2 <= a.x2: p.append(a.x2 - x1)
 
-				#Find the shortest way out.
-				#(To be side-by-side)
-				#1: Positive, 2: Negative
-				if x == a.x1: ox = x2 - x
-				if x == a.x2: ox = x1 - x
-				if y == a.y1: oy = y2 - y
-				if y == a.y2: oy = y1 - y
+		lowest = None
+		for i in p:
+			if lowest == None: lowest = i
+			if abs(i) <= lowest: lowest = i
+		return lowest
 
-			return ox, oy
+	def y_pushback(self, y1, y2):
+		a = self._
+		p = []
+		if y1 <= a.y1 <= y2: p.append(y2 - a.y1)
+		if y1 <= a.y2 <= y2: p.append(y1 - a.y2)
+		if a.y1 <= y1 <= a.y2: p.append(a.y1 - y2)
+		if a.y1 <= y2 <= a.y2: p.append(a.y2 - y1)
 
-		#With all of A's points.
-		#Find the smallest offset.
-		ox, oy = 0, 0
-		for x in [a.x1, a.x2]:
-			for y in [a.y1, a.y2]:
-
-				#See if the way out is smaller.
-				tx, ty = collision_area(x, y)
-				if (ox, oy) == (0, 0):
-					ox, oy = tx, ty
-				if tx != 0:
-					if abs(tx) < abs(ox): ox = tx
-				if ty != 0:
-					if abs(ty) < abs(oy): oy = ty
-
-		return ox, oy
+		lowest = None
+		for i in p:
+			if lowest == None: lowest = i
+			if abs(i) <= lowest: lowest = i
+		return lowest

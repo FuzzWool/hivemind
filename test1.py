@@ -123,10 +123,6 @@ for i in range(1):
 
 from modules.level import Level
 level = Level("aa", 0, 0)
-
-
-for point in level.collision.points:
-	print point
 #########################################################
 
 running = True
@@ -151,7 +147,7 @@ while running:
 
 	# for Zach in Zachs:
 	# 	Nut.collision_pushback(Zach)
-	###
+	# ##
 
 	level.load_around(*Camera.tile_points)
 

@@ -31,5 +31,9 @@ x Work out if two sprites are overlapping.
 
 x Entities collide with the compound boxes.
 
-! Glitch: Entity may squidge by a block by pressing against a wall.
-* Fix: Make x and y collision checks seperate.
+
++ Fixed Glitch: Ignoring non-corner collisions.
+if A is large enough, it may slip in to B without collision checking.
+
+! Glitch: Slipping off platforms.
+If y is fast and intersects more of y then x, it will be ejected x-ward.
