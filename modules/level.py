@@ -280,7 +280,30 @@ class Level(object):
 #
 
 class collision:
-#Returning bounding boxes for external objects.
+#Bounds all of the tiles together to handle only a few
+#collision points.
+
+	@property
+	def points(self):
+	#Return all of the room's collision points.
+	#Absolute values
+		points = []
+		old = []
+		for x in self._bounds:
+			for y in x:
+				if y not in old and y != None:
+					old.append(y)
+					x1, y1 = (y.x1)*GRID, (y.y1)*GRID
+					x2, y2 = (y.x2+1)*GRID, (y.y2+1)*GRID
+					point = (x1, y1, x2, y2)
+					points.append(point)
+		return points
+
+	#
+
+	def __init__ (self, Level):
+		self._ = Level
+		self._create_bounds()
 
 	class bound:
 	#Coordinates to be referenced in multiple tiles.
@@ -291,19 +314,17 @@ class collision:
 			return self.x1, self.y1, self.x2, self.y2
 
 
-	def __init__ (self, Level):
-		self._ = Level
-		
+	def _create_bounds(self):	
 		#Create bounding boxes.
 		
 		#Grid format.
 		#Every space which is filled has a bound.
 		#The bound is a reference to the original x1, y1.
 
-		self.bounds = []
+		self._bounds = []
 		#Every column has a bound.
 		for ix, x in enumerate(self._.level):
-			self.bounds.append([])
+			self._bounds.append([])
 
 			old = None
 			for iy, y in enumerate(x):
@@ -317,32 +338,32 @@ class collision:
 						bound = self.bound()
 						bound.x1, bound.x2 = ix, ix
 						bound.y1, bound.y2 = iy, iy
-						self.bounds[-1].append(bound)
+						self._bounds[-1].append(bound)
 
 					#And there WAS a tile beforehand.
 					else:
 						#Use that bound.
-						bound = self.bounds[-1][-1]
+						bound = self._bounds[-1][-1]
 						bound.x2, bound.y2 = ix, iy
-						self.bounds[-1].append(bound)
+						self._bounds[-1].append(bound)
 
 				#If there isn't a tile.
 				else:
 					#Add an empty space.
-					self.bounds[-1].append(None)
+					self._bounds[-1].append(None)
 
 				old = y
 
 		# #Merge the columns together.
-		w = len(self.bounds)
-		h = len(self.bounds[0])
+		w = len(self._bounds)
+		h = len(self._bounds[0])
 
 		for x in range(1, w):
 			for y in range(h):
 
 				#If they're aligned, merge them.
-				a = self.bounds[x-1][y]
-				b = self.bounds[x][y]
+				a = self._bounds[x-1][y]
+				b = self._bounds[x][y]
 				if a != None and b != None:
 					if (a.y1,a.y2) == (b.y1,b.y2):
 						#Expand a.
@@ -350,19 +371,19 @@ class collision:
 
 						#Convert b to a.
 						for y2 in range(h):
-							if self.bounds[x][y2] == b:
-								self.bounds[x][y2] = a
+							if self._bounds[x][y2] == b:
+								self._bounds[x][y2] = a
 						b = a
 						# print x, y, b
 
-		self.say_bounds()
+		# self.say_bounds()
 
 
 	#Debugging
 	def say_bounds(self):
 		unique = 0
 		old = []
-		for x in self.bounds:
+		for x in self._bounds:
 			for y in x:
 				if y not in old and y != None:
 					print y.points

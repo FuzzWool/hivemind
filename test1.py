@@ -121,8 +121,12 @@ for i in range(1):
 	Zachs.append(Zach)
 #####
 
-from modules.worldmap import WorldMap
-worldmap = WorldMap()
+from modules.level import Level
+level = Level("aa", 0, 0)
+
+
+for point in level.collision.points:
+	print point
 #########################################################
 
 running = True
@@ -139,19 +143,24 @@ while running:
 	if key.W.held(): Nut.move(0, -amt)
 	if key.S.held(): Nut.move(0, +amt)
 
-	for Zach in Zachs:
-		Nut.collision_pushback(Zach)
+
+	#Collision
+
+	for point in level.collision.points:
+		Nut.collision_pushback(*point)
+
+	# for Zach in Zachs:
+	# 	Nut.collision_pushback(Zach)
 	###
 
-	worldmap.load_around\
-	(Camera.room_points, Camera.tile_points)
+	level.load_around(*Camera.tile_points)
 
 	#Video
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
 	#
-	#worldmap.draw()
-	Zach.draw()####
+	level.draw()
+	# Zach.draw()####
 	Nut.draw()#####
 	#
 	window.display()

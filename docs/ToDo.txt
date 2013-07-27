@@ -27,22 +27,9 @@ x Work out if two sprites are overlapping.
 	x Eject from where it came from
 		x Using the smallest offset
 
-+ Level.collision.compounds (for tile collision checks)
-It compounds all of the collidable tiles together into the same object.
-For all tiles in the compound, it references the compound object.
-To use this compound with intended results, do not re-use any references of the same memory.
-(Data is contained in all tiles so the information may be accessed anywhere, but can be filtered to only be checked once)
++ Created compound boxes for the Level's collision handling.
 
-aa tiles in Level are collidable with entities.
-	
-	when the level is loaded...
-		make compound boxes
-		return the sizes of these boxes
+x Entities collide with the compound boxes.
 
-		!remember to all references so they aren't re-checked
-
-	for every loop...
-		Level contains all collisions
-		Stored in x, y format
-		Located all in occupied spaces in x, y
-			Only checks once
+! Glitch: Entity may squidge by a block by pressing against a wall.
+* Fix: Make x and y collision checks seperate.
