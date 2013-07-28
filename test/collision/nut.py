@@ -12,11 +12,52 @@ Camera.x, Camera.y = 0, 0
 from modules.game import Entity
 class WIPEntity(Entity):
 
-	xVel, yVel = 0, 0	
-	def handle_physics(self):
-		self.yVel += 0.8
+#	PHYSICS
 
+	gravity = 0.5
+	xVel, yVel = 0, 0
+	xLim, yLim = "to add", 8
+
+	def handle_physics(self):
+	#Gravity
+		if self.yVel + self.gravity < self.yLim:
+			self.yVel += self.gravity
+		else: self.yVel = self.yLim
 		self.move(0, self.yVel)
+
+
+#	CONTROLS
+
+	def handle_controls(self, key):
+	#Keyboard controls for the player character.
+		amt = 3
+		if key.LEFT.held(): Nut.move(-amt, 0)
+		if key.RIGHT.held(): Nut.move(+amt, 0)
+		if key.Z.pressed():
+			Nut.jump()
+
+
+	can_jump = False
+
+	def jump(self):
+		if self.can_jump:
+			Nut.yVel -= 8
+
+#	COLLISIONS
+
+	def handle_platforms(self, collision_points):
+		self.can_jump = False
+		for point in collision_points:
+
+			self.collision_pushback(*point)
+
+			if self.cbox.collision.bottom_to_top(*point):
+				self.yVel = 0
+				self.can_jump = True
+
+			if self.cbox.collision.top_to_bottom(*point):
+				self.yVel = 0
+				self.can_jump = False
 
 
 Nut = WIPEntity("nut")
@@ -33,27 +74,20 @@ while running:
 		pass
 
 	#WIP###
-	amt = 3
-	if key.A.held(): Nut.move(-amt, 0)
-	if key.D.held(): Nut.move(+amt, 0)
-	# if key.W.held(): Nut.move(0, -amt)
-	# if key.S.held(): Nut.move(0, +amt)
-	if key.W.pressed(): Nut.yVel -= 10
-
+	Nut.handle_controls(key)
 	Nut.handle_physics()
-
-	for point in level.collision.points:
-		Nut.collision_pushback(*point)
-
+	Nut.handle_platforms(level.collision.points)
 	####
 
-	level.load_around(*Camera.tile_points)
-
 	#Video
+
+	# Camera.center = Nut.cbox.center
+
+	level.load_around(*Camera.tile_points)
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
 	#
 	level.draw()
-	Nut.draw()#####
+	Nut.draw()
 	#
 	window.display()

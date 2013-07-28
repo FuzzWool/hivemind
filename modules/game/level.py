@@ -295,6 +295,13 @@ class collision:
 					old.append(y)
 					x1, y1 = (y.x1)*GRID, (y.y1)*GRID
 					x2, y2 = (y.x2+1)*GRID, (y.y2+1)*GRID
+
+					#offset
+					ox = self._.x*GRID
+					oy = self._.y*GRID
+					x1, y1 = x1 + ox, y1 + oy
+					x2, y2 = x2 + ox, y2 + oy
+
 					point = (x1, y1, x2, y2)
 					points.append(point)
 		return points

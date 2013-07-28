@@ -4,7 +4,7 @@ Nut is born, and she has basic controls.
 Interaction with NPCs and enemies.
 
 Goals:
-Make Nut with basic left and right controls.
+x Make Nut with basic left and right controls.
 Allow Nut to run across 1/2-block slopes.
 
 Make an enemy which moves left and right and hits Nut.
@@ -14,8 +14,10 @@ Allow the NPC to provide Nut with an option which activates a flag.
 Allow Nut to select an action with an NPC which makes it turn hostile.
 
 =====
-+ Made a quick test Nut. Appears to platform fine.
-+ Added public side checks to MySprite.collision.
++ Fixed jumping.
++ Nut's physics are now (and should remain) ints.
++ Entities now handle_controls and handle_platforms.
+~ Entities may traverse the world map.
 
 GOAL: Collision Detection.
 
@@ -30,8 +32,6 @@ x Work out if two sprites are overlapping.
 + Created compound boxes for the Level's collision handling.
 x Entities collide with the compound boxes.
 
-Test collision for exploring a world map.
-	Detect that a's bottom has been in contact with a rect.
-
-! Glitch: Slipping off platforms.
-If y is fast and intersects more of y then x, it will be ejected x-ward.
+x Entity may tranverse a world map.
+	Fix lag issue.
+		Entity only checks collisions which are close to it.

@@ -68,7 +68,7 @@ class Entity:
 
 	def draw(self):
 		self.sprite.draw()
-		self.cbox.draw()
+		# self.cbox.draw()
 
 #	MOVEMENT
 

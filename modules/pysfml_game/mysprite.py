@@ -299,25 +299,25 @@ class collision:
 	#Side checks.
 	def bottom_to_top(self, x1, y1, x2, y2):
 	#If a's bottom is colliding with b's top.
-		if self._x_collision(x1, x2):
+		if self.x_overlap(x1, x2):
 			a = self._
 			if a.y2 == y1: return True
 		return False
 
 	def top_to_bottom(self, x1, y1, x2, y2):
-		if self._x_collision(x1, x2):
+		if self.x_overlap(x1, x2):
 			a = self._
 			if a.y1 == y2: return True
 		return False
 
 	def left_to_right(self, x1, y1, x2, y2):
-		if self._y_collision(y1, y2):
+		if self.y_overlap(y1, y2):
 			a = self._
 			if a.x1 == x2: return True
 		return False
 
 	def right_to_left(self, x1, y1, x2, y2):
-		if self._y_collision(y1, y2):
+		if self.y_overlap(y1, y2):
 			a = self._
 			if a.x2 == x1: return True
 		return False
