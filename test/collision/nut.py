@@ -45,10 +45,6 @@ while running:
 	for point in level.collision.points:
 		Nut.collision_pushback(*point)
 
-		if Nut.cbox.collision\
-		.bottom_to_top(*point):
-			Nut.yVel = 0
-
 	####
 
 	level.load_around(*Camera.tile_points)

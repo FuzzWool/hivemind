@@ -70,19 +70,13 @@ class Entity:
 		self.sprite.draw()
 		self.cbox.draw()
 
-
 #	MOVEMENT
 
 	def move(self, x=0, y=0):
 		self.cbox.move(x, y)
 
-	yVel = 0
-	def gravity(self):
-		self.yVel += 0.3
-		self.sprite.y += self.yVel
 
-
-#	COLLISION
+#COLLISION
 #Simply forwards to cboxes.
 #Handles points and other Entities.
 

@@ -291,3 +291,52 @@ class collision:
 			if lowest == None: lowest = i
 			if abs(i) <= lowest: lowest = i
 		return lowest
+
+
+#####	Extra checks
+#For resetting jumps, etc.
+
+	#Side checks.
+	def bottom_to_top(self, x1, y1, x2, y2):
+	#If a's bottom is colliding with b's top.
+		if self._x_collision(x1, x2):
+			a = self._
+			if a.y2 == y1: return True
+		return False
+
+	def top_to_bottom(self, x1, y1, x2, y2):
+		if self._x_collision(x1, x2):
+			a = self._
+			if a.y1 == y2: return True
+		return False
+
+	def left_to_right(self, x1, y1, x2, y2):
+		if self._y_collision(y1, y2):
+			a = self._
+			if a.x1 == x2: return True
+		return False
+
+	def right_to_left(self, x1, y1, x2, y2):
+		if self._y_collision(y1, y2):
+			a = self._
+			if a.x2 == x1: return True
+		return False
+	#
+
+
+	#Simply detects if there is any collision (no overlap)
+	def _x_collision(self, x1, x2):
+		a = self._
+		if x1 < a.x1 < x2: return True
+		if x1 < a.x2 < x2: return True
+		if a.x1 < x1 < a.x2: return True
+		if a.x1 < x2 < a.x2: return True
+		return False
+
+	def _y_collision(self, y1, y2):
+		a = self._
+		if y1 < a.y1 < y2: return True
+		if y1 < a.y2 < y2: return True
+		if a.y1 < y1 < a.y2: return True
+		if a.y1 < y2 < a.y2: return True
+		return False
