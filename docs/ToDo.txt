@@ -15,6 +15,14 @@ Allow the NPC to provide Nut with an option which activates a flag.
 Allow Nut to select an action with an NPC which makes it turn hostile.
 
 =====
+x Entities may run with progressive speed.
+
 GOAL: Running across 1/2-block slopes.
 
-x Entities may run with progressive speed.
+~ sheet_pos is now sheet_config
+Contains Move and Clip.
+
+x Make jump animation.
+	x Add clipping to sheet_config
+
+Make walk animation.
