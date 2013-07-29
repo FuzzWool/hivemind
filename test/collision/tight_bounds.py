@@ -46,6 +46,8 @@ class WIPEntity(Entity):
 
 	def handle_platforms(self, collision):
 	#Handles pushback and states in response to platforms.
+		self.can_jump = False
+
 		#Get the range to perform collision checks.
 		x1, y1, x2, y2 = Nut.cbox.points
 		x1 = int(x1/GRID)-2; y1 = int(y1/GRID)-2
@@ -68,8 +70,8 @@ class WIPEntity(Entity):
 
 Nut = WIPEntity("nut")
 
-from modules.game import WorldMap
-worldmap = WorldMap()
+from modules.game import Level
+level = Level("aa")
 #########################################################
 
 running = True
@@ -82,23 +84,18 @@ while running:
 	#WIP###
 	Nut.handle_controls(key)
 	Nut.handle_physics()
-
-	Nut.can_jump = False
-	for x in worldmap.Rooms:
-		for y in x:
-			if y != None:
-				Nut.handle_platforms(y.collision)
+	Nut.handle_platforms(level.collision)
 	###
 
 	#Video
 
-	Camera.center = Nut.cbox.center
-	worldmap.load_around(Camera.room_points, Camera.tile_points)
+	# Camera.center = Nut.cbox.center
+	level.load_around(*Camera.tile_points)
 	
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
 	#
-	worldmap.draw()
+	level.draw()
 	Nut.draw()
 	#
 	window.display()

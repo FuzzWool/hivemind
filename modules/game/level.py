@@ -286,7 +286,7 @@ class collision:
 	@property
 	def points(self):
 	#Return all of the room's collision points.
-	#Absolute values
+	#Returns absolute values
 		points = []
 		old = []
 		for x in self._bounds:
@@ -305,6 +305,40 @@ class collision:
 					point = (x1, y1, x2, y2)
 					points.append(point)
 		return points
+
+
+	###WIP
+	def points_range(self, rx1, ry1, rx2, ry2):
+	#Returns all of the room's collision points.
+	#...within a certain grid range.
+
+		#Positioning offset
+		rx1 -= self._.x; rx2 -= self._.x
+		ry1 -= self._.y; ry2 -= self._.y
+		if rx1 < 1: rx1 = 0
+		if ry1 < 1: ry1 = 0
+
+		points = []
+		old = []
+
+		for x in self._bounds[rx1:rx2]:
+			for y in x[ry1:ry2]:
+
+				if y not in old and y != None:
+					old.append(y)
+					x1, y1 = (y.x1)*GRID, (y.y1)*GRID
+					x2, y2 = (y.x2+1)*GRID, (y.y2+1)*GRID
+
+					#offset
+					ox = self._.x*GRID
+					oy = self._.y*GRID
+					x1, y1 = x1 + ox, y1 + oy
+					x2, y2 = x2 + ox, y2 + oy
+
+					point = (x1, y1, x2, y2)
+					points.append(point)
+		return points
+	###
 
 	#
 

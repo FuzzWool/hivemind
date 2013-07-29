@@ -10,7 +10,6 @@ Camera.x, Camera.y = 0, 0
 
 
 from modules.game import Entity
-from modules.pysfml_game import GRID
 class WIPEntity(Entity):
 
 #	PHYSICS
@@ -20,7 +19,7 @@ class WIPEntity(Entity):
 	xLim, yLim = "to add", 8
 
 	def handle_physics(self):
-		#Gravity
+	#Gravity
 		if self.yVel + self.gravity < self.yLim:
 			self.yVel += self.gravity
 		else: self.yVel = self.yLim
@@ -32,28 +31,23 @@ class WIPEntity(Entity):
 	def handle_controls(self, key):
 	#Keyboard controls for the player character.
 		amt = 5
-		if key.LEFT.held():  self.move(-amt, 0)
-		if key.RIGHT.held(): self.move(+amt, 0)
-		if key.Z.pressed():  self.jump()
+		if key.LEFT.held(): Nut.move(-amt, 0)
+		if key.RIGHT.held(): Nut.move(+amt, 0)
+		if key.Z.pressed():
+			Nut.jump()
 
 
 	can_jump = False
+
 	def jump(self):
 		if self.can_jump:
 			Nut.yVel -= 8
 
 #	COLLISIONS
 
-	def handle_platforms(self, collision):
+	def handle_platforms(self, collision_points):
 	#Handles pushback and states in response to platforms.
-		#Get the range to perform collision checks.
-		x1, y1, x2, y2 = Nut.cbox.points
-		x1 = int(x1/GRID)-2; y1 = int(y1/GRID)-2
-		x2 = int(x2/GRID)+2; y2 = int(y2/GRID)+2
-		points = collision.points_range(x1, y1, x2, y2)
-		#
-
-		for point in points:
+		for point in collision_points:
 
 			self.collision_pushback(*point)
 
@@ -83,18 +77,17 @@ while running:
 	Nut.handle_controls(key)
 	Nut.handle_physics()
 
-	Nut.can_jump = False
-	for x in worldmap.Rooms:
-		for y in x:
-			if y != None:
-				Nut.handle_platforms(y.collision)
-	###
+	# Nut.can_jump = False
+	# for x in worldmap.Rooms:
+	# 	for y in x:
+	# 		if y != None:
+	# 			Nut.handle_platforms(y.collision.points)
+	####
 
 	#Video
 
 	Camera.center = Nut.cbox.center
 	worldmap.load_around(Camera.room_points, Camera.tile_points)
-	
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
 	#

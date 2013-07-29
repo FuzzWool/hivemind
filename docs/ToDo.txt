@@ -14,12 +14,10 @@ Allow the NPC to provide Nut with an option which activates a flag.
 Allow Nut to select an action with an NPC which makes it turn hostile.
 
 =====
-+ Fixed jumping.
-+ Nut's physics are now (and should remain) ints.
-+ Entities now handle_controls and handle_platforms.
-~ Entities may traverse the world map.
-
 GOAL: Collision Detection.
++ Fixed stress issue:
+Entities only check close-by collisions bounds.
+
 
 x Make an entity.
 x Add gravity to entity.
@@ -32,6 +30,6 @@ x Work out if two sprites are overlapping.
 + Created compound boxes for the Level's collision handling.
 x Entities collide with the compound boxes.
 
-x Entity may tranverse a world map.
-	Fix lag issue.
-		Entity only checks collisions which are close to it.
+x Entity may traverse a world map.
+	x Fix lag issue.
+		x Entity only checks collisions which are close to it
