@@ -15,32 +15,83 @@ class WIPEntity(Entity):
 
 #	PHYSICS
 
-	gravity = 0.5
 	xVel, yVel = 0, 0
-	xLim, yLim = "to add", 8
+	xLim, yLim = 8, 8
+	gravity = 0.5
 
 	def handle_physics(self):
+	#Gravity and Vel movements.
+		self.cbox.move(self.xVel, self.yVel)
+
 		#Gravity
-		if self.yVel + self.gravity < self.yLim:
-			self.yVel += self.gravity
-		else: self.yVel = self.yLim
-		self.move(0, self.yVel)
+		self.move(0, self.gravity)
+
+	def move(self, x=0, y=0):
+	#Doesn't move directly. Impacts the Vel.
+	#Needs physics to be handled.
+
+		#Speed limits. Cannot ever be exceeded.
+		if   self.xVel + x > +self.xLim:
+			self.xVel = self.xLim
+		elif self.xVel + x < -self.xLim:
+			self.xVel = -self.xLim
+		else:
+			self.xVel += x
+
+		if   self.yVel + y > +self.yLim:
+			self.yVel = self.yLim
+		elif self.yVel + y < -self.yLim:
+			self.yVel = -self.yLim
+		else:
+			self.yVel += y
+
+
+	def x_slowdown(self, amt=1):
+	#Slowdown the xVel to nothingness.
+		self.right_slowdown(amt)
+		self.left_slowdown(amt)
+		#
+	def right_slowdown(self, amt=1):
+		if self.xVel > 0:
+			if self.xVel - amt < 0: self.xVel = 0
+			else: self.xVel -= amt
+		#
+	def left_slowdown(self, amt=1):
+		if self.xVel < 0:
+			if self.xVel + amt > 0: self.xVel = 0
+			else: self.xVel += amt
 
 
 #	CONTROLS
 
 	def handle_controls(self, key):
 	#Keyboard controls for the player character.
-		amt = 5
-		if key.LEFT.held():  self.move(-amt, 0)
-		if key.RIGHT.held(): self.move(+amt, 0)
-		if key.Z.pressed():  self.jump()
+
+		amt = 0.5
+		walkLim = 3 #Walking speed limit.
+		if key.LEFT.held() or key.RIGHT.held():
+			
+			if key.LEFT.held():
+				if -walkLim <= self.xVel - amt:
+					self.move(-amt, 0)
+				self.right_slowdown(amt)
+			
+			if key.RIGHT.held():
+				if self.xVel + amt <= walkLim:
+					self.move(+amt, 0)
+				self.left_slowdown(amt)
+
+		else:
+			self.x_slowdown()
+
+
+		if key.Z.pressed(): self.jump()
 
 
 	can_jump = False
 	def jump(self):
-		if self.can_jump:
-			Nut.yVel -= 8
+	#Jumps if the entity is able to.
+		if self.can_jump: self.yVel -= 8
 
 #	COLLISIONS
 
@@ -62,8 +113,12 @@ class WIPEntity(Entity):
 				self.can_jump = True
 
 			if self.cbox.collision.top_to_bottom(*point):
-				self.yVel = 0
+				if self.yVel < 0: self.yVel = 0
 				self.can_jump = False
+
+			if self.cbox.collision.left_to_right(*point)\
+			or self.cbox.collision.right_to_left(*point):
+				self.xVel = 0
 
 
 Nut = WIPEntity("nut")

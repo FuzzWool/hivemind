@@ -72,8 +72,7 @@ class Entity:
 
 #	MOVEMENT
 
-	def move(self, x=0, y=0):
-		self.cbox.move(x, y)
+	pass
 
 
 #COLLISION
