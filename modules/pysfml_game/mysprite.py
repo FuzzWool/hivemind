@@ -93,7 +93,7 @@ class resize: #PRIVATE
 
 
 class clip:
-#Saves grid size, chooses grid position. For spritesheets.
+#Set grid size, chooses grid position. For spritesheets.
 	def __init__ (self, MySprite):
 		self._ = MySprite
 		self.ox, self.oy, self.w, self.h = 0, 0, 0, 0
@@ -101,6 +101,7 @@ class clip:
 
 	def __call__ (self, *args): self.set(*args)
 	def set(self, w, h, x=0, y=0): #Absolute
+	#Sets the grid boundaries for displaying.
 		self.w, self.h, self.ox, self.oy = w, h, x, y
 		self._.set_texture_rect(\
 			sf.IntRect(x, y, w, h))
@@ -110,12 +111,30 @@ class clip:
 		self.set(w, h)
 
 	def use(self, x=-1, y=-1):
+	#Selects which portion of the spritesheet to display.
 		if x == -1: x = self.x
 		if y == -1: y = self.y
+
 		self.x, self.y = x, y
 		ox, oy, w, h = self.ox, self.oy, self.w, self.h
-		self._.set_texture_rect(sf.IntRect\
-			(ox+(w*x), oy+(h*y), w, h))
+
+		if not self.flipped:
+			x1, y1 = ox+(w*x), oy+(h*y)
+		#
+		if self.flipped:
+			x += 1
+			x1, y1 = ox+(w*-x), oy+(h*y)
+		
+		x2, y2 = w, h
+		self._.set_texture_rect(sf.IntRect(x1,y1,x2,y2))
+	#
+
+	flipped = False
+	def flip(self):
+		self.flipped = not self.flipped
+		self.w = -self.w
+		self.set(self.w, self.h)
+		self.use(self.x, self.y)
 
 
 
@@ -342,15 +361,16 @@ class collision:
 class animation:
 #Define an animation in advance, then watch it play.
 
-	def __init__(self, MySprite): self._ = MySprite
+	def __init__(self, MySprite):
+		self._ = MySprite
 
-	#	CLIP
-	clips = []
-	clip_interval = 0.5
-	#
-	clipClock = sf.Clock()
-	clip_index = 0
-	clip_init = True
+		#	CLIP
+		self.clips = []
+		self.clip_interval = 0.5
+		#
+		self.clipClock = sf.Clock()
+		self.clip_index = 0
+		self.clip_init = True
 
 	def play(self):
 

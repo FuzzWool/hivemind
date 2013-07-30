@@ -15,6 +15,15 @@ class Player(Entity):
 
 	def draw(self):
 
+		#Direction
+		if self.facing_right:
+			if self.sprite.clip.flipped:
+				self.sprite.clip.flip()
+		if self.facing_left:
+			if not self.sprite.clip.flipped:
+				self.sprite.clip.flip()
+
+		#Animation
 		if self.in_air:
 			if self.rising:
 				self.sprite.clip.use(2, 0)
@@ -26,7 +35,6 @@ class Player(Entity):
 				sequence = ((1,1),(0,1),(3,1),(2,1))
 				self.sprite.animation.clips = sequence
 				self.sprite.animation.clip_interval = 0.1
-				# self.sprite.clip.use(1,1)
 			else:
 				self.sprite.clip.use(0, 0)
 

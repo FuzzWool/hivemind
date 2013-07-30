@@ -4,7 +4,7 @@ from modules.pysfml_game import RENDER_CENTER
 from modules.pysfml_game import GRID
 
 
-class Entity:
+class Entity(object):
 #Stuff the Player, NPCS and enemies all have in common.
 
 	name = None
@@ -144,11 +144,13 @@ class Entity:
 		if key.LEFT.held() or key.RIGHT.held():
 			
 			if key.LEFT.held():
+				self.facing_left = True
 				if -walkLim <= self.xVel - amt:
 					self.move(-amt, 0)
 				self.right_slowdown(amt)
 			
 			if key.RIGHT.held():
+				self.facing_right = True
 				if self.xVel + amt <= walkLim:
 					self.move(+amt, 0)
 				self.left_slowdown(amt)
@@ -214,10 +216,17 @@ class Entity:
 	can_jump = False
 	in_air = True
 
+	facing_left = False
+	@property
+	def facing_right(self):
+		return not self.facing_left
+	@facing_right.setter
+	def facing_right(self, arg):
+		self.facing_left = not arg
+
 	@property
 	def falling(self): return bool(self.yVel > 0)
 	@property
 	def rising(self): return bool(self.yVel < 0)
-
 	@property
 	def moving(self): return bool(self.xVel != 0)
