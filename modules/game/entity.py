@@ -218,3 +218,6 @@ class Entity:
 	def falling(self): return bool(self.yVel > 0)
 	@property
 	def rising(self): return bool(self.yVel < 0)
+
+	@property
+	def moving(self): return bool(self.xVel != 0)

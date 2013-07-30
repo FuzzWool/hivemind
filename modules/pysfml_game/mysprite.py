@@ -15,6 +15,7 @@ class MySprite(sf.Sprite, Rectangle):
 		self.box = box(self)
 		self.children = []; self.children_class = children_class(self)
 		self.collision = collision(self)
+		self.animation = animation(self)
 
 	#Positioning is handled by goto instead of position.
 	#Position can't be overriden, but it needs to be for children.
@@ -89,6 +90,7 @@ class resize: #PRIVATE
 				rw = rh
 			#
 			self._.scale(rw, rh)
+
 
 class clip:
 #Saves grid size, chooses grid position. For spritesheets.
@@ -185,12 +187,6 @@ class box(Rectangle):
 		if self.rect.size != self.size: make_rect()
 		if self.rect.position != self.goto: make_rect()
 		window.draw(self.rect)
-
-
-class animation:
-#Define an animation in advance, then watch it play.
-	pass
-
 
 ###
 
@@ -340,3 +336,56 @@ class collision:
 		if a.y1 < y1 < a.y2: return True
 		if a.y1 < y2 < a.y2: return True
 		return False
+
+####
+
+class animation:
+#Define an animation in advance, then watch it play.
+
+	def __init__(self, MySprite): self._ = MySprite
+
+	#	CLIP
+	clips = []
+	clip_interval = 0.5
+	#
+	clipClock = sf.Clock()
+	clip_index = 0
+	clip_init = True
+
+	def play(self):
+
+
+		#Keep resetting if there's no clips.
+		if len(self.clips) == 0:
+			self.clip_init = True
+			self.clip_index = 0
+
+		#Change clip
+		if len(self.clips) != 0:
+
+			#Immediately if it's just been initialized
+			ticks = self.clipClock\
+					.elapsed_time.as_seconds()
+
+			if self.clip_init\
+			or ticks > self.clip_interval:
+
+				#Use the new clip.
+				x, y = self.clips[self.clip_index]
+				self._.clip.use(x, y)
+
+				#Change the index.
+				self.clip_index += 1
+				if self.clip_index >= len(self.clips):
+					self.clip_index = 0
+
+				#Reset timer.
+				self.clipClock.restart()
+				self.clip_init = False
+
+		#Check if the clip has gone out of the animation.
+		#If so, stop animating.
+		x, y = self._.clip.x, self._.clip.y
+		if (x, y) not in self.clips:
+			self.clips = []
+	#

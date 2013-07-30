@@ -11,22 +11,30 @@ Camera.x, Camera.y = 0, 0
 
 from modules.game import Entity
 class Player(Entity):
-#GRAPHICS
+	#GRAPHICS
 
 	def draw(self):
-		#Jumping
+
 		if self.in_air:
 			if self.rising:
 				self.sprite.clip.use(2, 0)
 			if self.falling:
 				self.sprite.clip.use(4, 0)
-		#Idle
+
 		else:
-			self.sprite.clip.use(0, 0)
+			if self.moving:
+				sequence = ((1,1),(0,1),(3,1),(2,1))
+				self.sprite.animation.clips = sequence
+				self.sprite.animation.clip_interval = 0.1
+				# self.sprite.clip.use(1,1)
+			else:
+				self.sprite.clip.use(0, 0)
 
 		#Drawing
 		Entity.draw(self)
 
+	def play(self):
+		self.sprite.animation.play()
 
 Nut = Player("nut")
 
@@ -53,6 +61,8 @@ while running:
 				Nut.handle_platforms(y.collision)
 	###
 
+	#Animation
+	Nut.play()
 
 	#Video
 

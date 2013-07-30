@@ -31,9 +31,7 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-
-		#Interrupt the sequence.
-		sprites[0][0].clip.use(1,0)
+		pass
 
 	#Animation
 	#

@@ -17,12 +17,35 @@ Allow Nut to select an action with an NPC which makes it turn hostile.
 =====
 x Entities may run with progressive speed.
 
-GOAL: Running across 1/2-block slopes.
-
 ~ sheet_pos is now sheet_config
 Contains Move and Clip.
 
 x Make jump animation.
 	x Add clipping to sheet_config
 
-Make walk animation.
+-
+
++ Made a walking animation.
+
++ Added MySprite.animation.clips and clip_interval
+
+Giving clips a sequence ((x,y),(x,y)) will cause it to swap between those clips endlessly, updating every clip_interval.
+
+May be set once. Interrupted when clip chosen is outside of sequence.
+
+
+GOAL: Running across 1/2-block slopes.
+
+x Make walk animation.
+	x Made a clip cycler within MySprite.animation
+
+		x Fixed: doesn't stop when a new clip is assigned
+		Fix this: make a system that flushes the clip
+
+		x Fixed: skipping the first clip
+
+x Consider a more elegant approach to the clip cycler.
+	x Only needs to be called once.
+	x Sequence breaks only if clip is called outside of the animation.
+
+Look in to running across 1/2-block slopes.
