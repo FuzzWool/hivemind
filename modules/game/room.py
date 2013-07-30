@@ -2,11 +2,11 @@ from modules.pysfml_game import MySprite, MyTexture
 from modules.pysfml_game import GRID
 from modules.pysfml_game import ROOM_WIDTH, ROOM_HEIGHT
 
-class Level(object):
+class Room(object):
 	name = ""
 	texture_name = ""
-	texture = "loaded from the first level file line"
-	level = []; tiles = []
+	texture = "loaded from the first room file line"
+	data = []; tiles = []
 	alphabet = ["a","b","c","d","e","f","g",\
 	 "h","i","j","k","l","m","n","o","p","q",\
 	 "q","r","s","t","u","v","w","x","y","z"]
@@ -27,10 +27,10 @@ class Level(object):
 		self._y = arg
 
 	@property
-	def w(self): return len(self.level)
+	def w(self): return len(self.data)
 
 	@property
-	def h(self): return len(self.level[0])
+	def h(self): return len(self.data[0])
 
 	@property
 	def room_x(self): return int(self.x*GRID / ROOM_WIDTH)
@@ -48,19 +48,19 @@ class Level(object):
 	def room_h(self): return int(self.h*GRID / ROOM_HEIGHT)
 	#
 
-	def __init__ (self, level_dir, room_x=0, room_y=0):
-	#Grabs level data and creates tiles.
+	def __init__ (self, room_dir, room_x=0, room_y=0):
+	#Grabs Room data and creates tiles.
 
 		self.room_x, self.room_y = room_x, room_y
-		self.level = self._load_level(level_dir)
-		self.tiles = self._initialize_tiles(self.level)
-		# self.tiles = self._make_all_tiles(self.level)
+		self.data = self._load_room(room_dir)
+		self.tiles = self._initialize_tiles(self.data)
+		# self.tiles = self._make_all_tiles(self.data)
 
 		self.collision = collision(self)
 
 
 	def change_tile(self, pos, clip):
-	#Changes a tile, updates the level and tiles.
+	#Changes a tile, updates the Room and tiles.
 
 		def make_tile(pos=(), clip=()):
 		#Make a new tile. Requires filler to be in place.
@@ -82,10 +82,10 @@ class Level(object):
 		x, y = pos[0], pos[1]
 		tile = make_tile(pos, clip)
 		self.tiles[x][y] = tile
-		self.level[x][y] = clip
+		self.data[x][y] = clip
 
 	def empty_tile(self, pos=(), clip=()):
-	#I exist entirely for Elevel's sake.
+	#I exist entirely for ERoom's sake.
 		return None
 
 	def draw(self):
@@ -97,40 +97,40 @@ class Level(object):
 
 #	LOADING DATA
 
-	def _load_level(self, level_dir):
-	#Loads and formats the level for usage.
+	def _load_room(self, room_dir):
+	#Loads and formats the Room for usage.
 
-		def get_level(level_dir):
-		#Grab level data from text file.
-			self.name = level_dir
-			level_dir = "outside/levels/%s.txt" % level_dir
+		def get_data(room_dir):
+		#Grab Room data from text file.
+			self.name = room_dir
+			room_dir = "outside/levels/%s.txt" % room_dir
 			
 			try: #loading the file...
-				f = open(level_dir)
-				level = f.read()
+				f = open(room_dir)
+				room = f.read()
 				f.close()
 			except: #If that fails, use a generic template.
-				level = "_template"
+				room = "_template"
 
-			return level
+			return room
 
-		def grab_texture(level):
-		#Load the texture from the first level data line.
+		def grab_texture(data):
+		#Load the texture from the first data data line.
 			#Grab and remove the texture line.
-			self.texture_name = level.split("\n")[0]
+			self.texture_name = data.split("\n")[0]
 			tex_dir = "img/tilemaps/%s.png" \
 			% self.texture_name
 			self.texture = MyTexture(tex_dir)
 
 			lvl = ""
-			for line in level.split("\n")[1:]:
+			for line in data.split("\n")[1:]:
 				lvl += str(line) + "\n"
 
 			return lvl[:-1]
 
-		def format_level(level):
-		#The level is now in an [x][y] format.
-			rows = level.split("\n")
+		def format_data(data):
+		#The data is now in an [x][y] format.
+			rows = data.split("\n")
 			format = []
 			i = 0
 			while i < len(rows[0])-1:
@@ -138,62 +138,62 @@ class Level(object):
 				i += 2
 			return format
 
-		def room_off_level(level):
-		#The level should be room-sized.
+		def room_off_data(data):
+		#The data should be room-sized.
 			def room_w():
 				room = ROOM_WIDTH/GRID
 				w = room
-				while w < len(level)-1:
+				while w < len(data)-1:
 					w += room
 				return w
 			def room_h(x):
 				room = ROOM_HEIGHT/GRID
 				h = room
-				while h < len(level[0])-1:
+				while h < len(data[0])-1:
 					h += room
 				return h
 			#
-			level_w = lambda: len(level)
-			level_h = lambda x: len(level[x])
+			data_w = lambda: len(data)
+			data_h = lambda x: len(data[x])
 
 			#Append pre-existing columns.
 			x = 0
 			while x < room_w():
 
 				#Add new column if needed.
-				if x >= level_w():
-					level.append([])
+				if x >= data_w():
+					data.append([])
 
-				y = level_h(x)
+				y = data_h(x)
 				while y < room_h(x):
-					level[x].append("__")
+					data[x].append("__")
 					y += 1
 				y = 0
 				x += 1
 
-			return level
+			return data
 
-		level = get_level(level_dir)
-		level = grab_texture(level)
-		level = format_level(level)
-		level = room_off_level(level)
-		return level
+		data = get_data(room_dir)
+		data = grab_texture(data)
+		data = format_data(data)
+		data = room_off_data(data)
+		return data
 
 
 #	TILE CREATION
 
-	def _initialize_tiles(self, level):
+	def _initialize_tiles(self, data):
 	#Make spaces for the tiles to reside in.
 		tiles = []
-		fill = [None for y in level[0]]
-		while len(tiles) < len(level):
+		fill = [None for y in data[0]]
+		while len(tiles) < len(data):
 			tiles.append(fill)
 		return [tile[:] for tile in tiles]
 
 
-	def _make_all_tiles(self, level):
-	#Make ALL of the tiles in the Level.
-		for ix, x in enumerate(level):
+	def _make_all_tiles(self, data):
+	#Make ALL of the tiles in the data.
+		for ix, x in enumerate(data):
 			for iy, y in enumerate(x):
 				y = "aa"
 				self.change_tile((ix, iy), y)
@@ -222,10 +222,10 @@ class Level(object):
 				if  x1 <= x <= x2\
 				and y1 <= y <= y2:
 					if self.tiles[x][y] == None\
-					and self.level[x][y] != "__":
+					and self.data[x][y] != "__":
 
 						self.change_tile((x, y),\
-						 self.level[x][y])
+						 self.data[x][y])
 
 				#Remove any tiles outside of the area.
 				if x < x1 or x2 < x\
@@ -235,23 +235,23 @@ class Level(object):
 
 # DEBUGGING
 
-	def level_ascii(self, level=None):
-	#Return the level in an ASCII-kinda style.
-		if level == None: level = self.level
+	def data_ascii(self, data=None):
+	#Return the data in an ASCII-kinda style.
+		if data == None: data = self.data
 		text = ""
 		text += self.texture_name+"\n"
-		for iy, y in enumerate(level[0]):
-			for ix, x in enumerate(level):
-				text += str(level[ix][iy])
+		for iy, y in enumerate(data[0]):
+			for ix, x in enumerate(data):
+				text += str(data[ix][iy])
 			text += "\n"
 		text = text[:-1]
 		return text
 
 	@property
-	def filled_level(self):
+	def filled_data(self):
 	#How many tiles are solid, and not empty.
 		amt = 0
-		for x in self.level:
+		for x in self.data:
 			for y in x:
 				if y != "__":
 					amt += 1
@@ -342,8 +342,8 @@ class collision:
 
 	#
 
-	def __init__ (self, Level):
-		self._ = Level
+	def __init__ (self, Room):
+		self._ = Room
 		self._create_bounds()
 
 	class bound:
@@ -364,7 +364,7 @@ class collision:
 
 		self._bounds = []
 		#Every column has a bound.
-		for ix, x in enumerate(self._.level):
+		for ix, x in enumerate(self._.data):
 			self._bounds.append([])
 
 			old = None
@@ -432,5 +432,5 @@ class collision:
 				old.append(y)
 
 		msg = "Using %s bounds from %s tiles."\
-		% (unique, self._.filled_level)
+		% (unique, self._.filled_data)
 		print msg

@@ -184,9 +184,25 @@ class Entity(object):
 			self.cbox.collision.pushback(x1, y1, x2, y2)
 	#
 
-	def handle_platforms(self, collision):
+	def collide_with_WorldMap(self, WorldMap):
+	#Checks every room inside of the WorldMap.
+		self.in_air = True
+		self.can_jump = False
+
+		for x in WorldMap.Rooms:
+			for y in x:
+				if y != None:
+					self.collide_with_Room(y, True)
+
+	def collide_with_Room(self, Room,
+						  called_directly=False):
 	#Handles pushback and states in response to platforms.
 	#State handling performed here.
+		if not called_directly:
+			self.in_air = True
+			self.can_jump = False
+
+		collision = Room.collision
 
 		#Get the range to perform collision checks.
 		x1, y1, x2, y2 = self.cbox.points
@@ -198,17 +214,18 @@ class Entity(object):
 
 			self.collision_pushback(*point)
 
-			if self.cbox.collision.bottom_to_top(*point):
+			collision = self.cbox.collision
+			if collision.bottom_to_top(*point):
 				self.yVel = 0
 				self.can_jump = True
 				self.in_air = False
 
-			if self.cbox.collision.top_to_bottom(*point):
+			if collision.top_to_bottom(*point):
 				if self.yVel < 0: self.yVel = 0
 				self.can_jump = False
 
-			if self.cbox.collision.left_to_right(*point)\
-			or self.cbox.collision.right_to_left(*point):
+			if collision.left_to_right(*point)\
+			or collision.right_to_left(*point):
 				self.xVel = 0
 
 #	STATES
@@ -230,3 +247,42 @@ class Entity(object):
 	def rising(self): return bool(self.yVel < 0)
 	@property
 	def moving(self): return bool(self.xVel != 0)
+
+
+
+
+class Player(Entity):
+# Nut's functionality.
+
+	#GRAPHICS
+
+	def draw(self):
+
+		#Direction
+		if self.facing_right:
+			if self.sprite.clip.flipped:
+				self.sprite.clip.flip()
+		if self.facing_left:
+			if not self.sprite.clip.flipped:
+				self.sprite.clip.flip()
+
+		#Animation
+		if self.in_air:
+			if self.rising:
+				self.sprite.clip.use(2, 0)
+			if self.falling:
+				self.sprite.clip.use(4, 0)
+
+		else:
+			if self.moving:
+				sequence = ((1,1),(0,1),(3,1),(2,1))
+				self.sprite.animation.clips = sequence
+				self.sprite.animation.clip_interval = 0.1
+			else:
+				self.sprite.clip.use(0, 0)
+
+		#Drawing
+		Entity.draw(self)
+
+	def play(self):
+		self.sprite.animation.play()

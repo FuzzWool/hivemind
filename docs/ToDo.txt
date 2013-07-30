@@ -21,16 +21,12 @@ x Entities may run with progressive speed.
 Contains Move and Clip.
 
 x Make jump animation.
-	x Add clipping to sheet_config
-
 x Make walk animation.
-	(MySprite.animation.clips)
--
-
 + Sprites are flipped when facing another direction.
-	+ MySprite.clip may now flip sprites horizontally.
 
-~ Added MySprite.animation.clip inits to init
 
+~ Changed the class/filename of Level to Room.
+~ Changed the class/filename of ELevel to ERoom.
+~ Changed Room.level to Room.data.
 
 GOAL: Running across 1/2-block slopes.

@@ -1,5 +1,5 @@
 from modules.game import WorldMap
-from modules.level_editor import ELevel
+from modules.level_editor import ERoom
 
 class EWorldMap(WorldMap):
 #Glues the individual rooms together.
@@ -39,7 +39,7 @@ class EWorldMap(WorldMap):
 						else:
 							a1 = self.alphabet[x]
 							a2 = self.alphabet[y]
-							new_Room = ELevel(a1+a2, x, y)
+							new_Room = ERoom(a1+a2, x, y)
 							self.Rooms[x][y] = new_Room
 					
 					self.Rooms[x][y]\
@@ -65,7 +65,7 @@ class EWorldMap(WorldMap):
 			for y in range(self.h):
 				a1 = self.alphabet[x]
 				a2 = self.alphabet[y]
-				new_Room = ELevel(a1+a2, x, y)
+				new_Room = ERoom(a1+a2, x, y)
 				# new_Room.room_x = x; new_Room.room_y = y
 				self.Rooms[-1].append(new_Room)
 

@@ -1,10 +1,10 @@
-from modules.game import Level
+from modules.game import Room
 from modules.pysfml_game import ROOM_HEIGHT, ROOM_WIDTH
 from modules.pysfml_game import GRID
 from modules.pysfml_game import MyTexture, MySprite
 
-class ELevel(Level):
-#A level-editor specific version of Level.
+class ERoom(Room):
+#A Level-editor specific version of Room.
 #Designed to be altered.
 
 #	GRID
@@ -12,7 +12,7 @@ class ELevel(Level):
 	grid_tex = MyTexture("img/level_editor/grid.png")
 
 	def empty_tile(self, pos=()):
-	#Forwarded from Level.
+	#Forwarded from Room.
 		x, y = pos
 		return self.make_grid(x, y)
 
@@ -31,7 +31,7 @@ class ELevel(Level):
 		return grid
 
 
-	#Copy and Paste from Level
+	#Copy and Paste from Room
 	#Tries to cover up ALL empty tiles.
 
 	def load_around(self, x1, y1, x2, y2):
@@ -59,7 +59,7 @@ class ELevel(Level):
 					### Only this line has been removed.
 
 						self.change_tile((x, y),\
-						 self.level[x][y])
+						 self.data[x][y])
 
 				#Remove any tiles outside of the area.
 				if x < x1 or x2 < x\
@@ -76,21 +76,21 @@ class ELevel(Level):
 		self.texture = MyTexture(tex_dir)
 
 		#Update all of the tiles' textures.
-		for x in self.tiles:
-			for y in x:
-				if y != None:
+		for ix, x in enumerate(self.tiles):
+			for iy, y in enumerate(x):
+				if self.data[ix][iy] != "__":
 					y.texture = self.texture
 
 #	SAVING
 
 	def save(self):
-	#Saves the level back in to the file it originated.
+	#Saves the data back in to the file it originated.
 		#Grab the data.
 		text = ""
 		text += self.texture_name+"\n"
-		for iy, y in enumerate(self.level[0]):
-			for ix, x in enumerate(self.level):
-				text += str(self.level[ix][iy])		
+		for iy, y in enumerate(self.data[0]):
+			for ix, x in enumerate(self.data):
+				text += str(self.data[ix][iy])		
 			text += "\n"
 		text = text[:-1]
 

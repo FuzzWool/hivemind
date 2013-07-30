@@ -1,3 +1,3 @@
-from level import *
+from room import *
 from worldmap import *
 from entity import *

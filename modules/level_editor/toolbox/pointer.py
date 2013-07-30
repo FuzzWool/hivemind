@@ -82,47 +82,6 @@ class _LevelProperties:
 
 			self.tileset = Etileset
 
-	# class LevelProperties_2(MyFrame):
-
-	# 	def initUI(self, Level):
-	# 	#Position/Size Labels
-	# 		x, y = Level.room_x, Level.room_y
-	# 		w, h = Level.room_w, Level.room_h
-
-	# 		entry_width = 10
-	# 		entry_row = 0
-
-	# 		Lx = Label(self, text="x", width=2)
-	# 		Lx.grid(row=entry_row, column=0)
-	# 		Ex = Entry(self, width=entry_width)
-	# 		Ex.insert(INSERT, x)
-	# 		Ex.grid(row=entry_row, column=1)
-
-	# 		Ly = Label(self, text="y")
-	# 		Ly.grid(row=entry_row, column=2)
-	# 		Ey = Entry(self, width=entry_width)
-	# 		Ey.insert(INSERT, y)
-	# 		Ey.grid(row=entry_row, column=3)
-
-	# 		entry_row = 1
-
-	# 		Lw = Label(self, text="w")
-	# 		Lw.grid(row=entry_row, column=0)
-	# 		Ew = Entry(self, width=entry_width)
-	# 		Ew.grid(row=entry_row, column=1)
-	# 		Ew.insert(INSERT, w)
-
-	# 		Lh = Label(self, text="h")
-	# 		Lh.grid(row=entry_row, column=2)
-	# 		Eh = Entry(self, width=entry_width)
-	# 		Eh.grid(row=entry_row, column=3)
-	# 		Eh.insert(INSERT, h)
-
-	# 		self.pack(fill=BOTH, expand=1)
-
-	# 		self.x, self.y = Ex, Ey
-	# 		self.w, self.h = Ew, Eh
-
 	class ConfirmButtons(MyFrame):
 
 		def initUI(self, arg=None):

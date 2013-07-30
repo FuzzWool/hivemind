@@ -1,5 +1,5 @@
 #init
-from elevel import *
+from eroom import *
 from eworldmap import EWorldMap
 from toolbox import ToolBox
 #####

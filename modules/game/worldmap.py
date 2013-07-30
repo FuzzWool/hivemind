@@ -1,4 +1,4 @@
-from modules.game import Level
+from modules.game import Room
 
 class WorldMap:
 #Glues the individual rooms together.
@@ -17,7 +17,7 @@ class WorldMap:
 
 
 	def init_slots(self):
-	#Make only the slots needed for loading the levels.
+	#Make only the slots needed for loading the rooms.
 		self.w, self.h = 0, 0
 		self.Rooms = []
 
@@ -53,7 +53,7 @@ class WorldMap:
 			for y in range(self.h):
 				a1 = self.alphabet[x]
 				a2 = self.alphabet[y]
-				new_Room = Level(a1+a2, x, y)
+				new_Room = Room(a1+a2, x, y)
 				# new_Room.room_x = x; new_Room.room_y = y
 				self.Rooms[-1].append(new_Room)
 
@@ -83,7 +83,7 @@ class WorldMap:
 					if self.Rooms[x][y] == None:
 						a1 = self.alphabet[x]
 						a2 = self.alphabet[y]
-						new_Room = Level(a1+a2, x, y)
+						new_Room = Room(a1+a2, x, y)
 						self.Rooms[x][y] = new_Room
 					
 					self.Rooms[x][y]\
