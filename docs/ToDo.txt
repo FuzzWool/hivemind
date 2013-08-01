@@ -24,9 +24,19 @@ x Make jump animation.
 x Make walk animation.
 + Sprites are flipped when facing another direction.
 
-
-~ Changed the class/filename of Level to Room.
-~ Changed the class/filename of ELevel to ERoom.
-~ Changed Room.level to Room.data.
-
 GOAL: Running across 1/2-block slopes.
+
+Using the Seperating Axis Theorem.
+	* Make a new collision check for triangular objects.
+	* Draw the projection of the check.
+
+
+x Get the bottom-left to top-right points.
+	x Connect them with a line.
+
+Pushback the rectangle from the triangle
+	Pushback only what is needed.
+
+Work out how the triangle is supposed to intersect
+	via pixels?
+	via args?

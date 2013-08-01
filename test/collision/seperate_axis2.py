@@ -77,10 +77,8 @@ class AxisCollision:
 		self.draw_lines(Triangle)
 
 		#####
-		# Pushback
-		# collision = b.collision.is_colliding(*t.points)
-		if self.collision(that):
-			b.collision.pushback(t)
+		# Check collisions
+
 
 	def collision(self, that):
 		if self.z1 <= that.z1 <= self.z2\

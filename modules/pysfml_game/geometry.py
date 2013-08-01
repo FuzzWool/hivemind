@@ -1,3 +1,4 @@
+#	VIRTUAL
 class Rectangle(object):
 #A class designed to be used with pySFML's transformable.
 #Goto is used instead of position, because position cannot be overriden.
@@ -70,3 +71,21 @@ class Rectangle(object):
 	@property
 	def y2(self):
 		return self.goto[1] + self.h
+
+
+#	PHYSICAL
+from window import sf, window
+class Line:
+#Create a line from one point to another.
+
+	def __call__ (self): return self.vertices
+	def __init__(self, x1, y1, x2, y2,\
+				 w=1, color=sf.Color.RED):
+		sfml = sf
+		v = sfml.Vertex
+		self.vertices = [v((x1-w, y1), color, (x2-w, y2)),
+						 v((x2-w, y2), color, (x2+w, y2)),
+						 v((x2+w, y2), color, (x1+w, y1)),
+						 v((x1+w, y1), color, (x1-w, y1))]
+	def draw(self):
+		window.draw(self(), sf.QUADS)
