@@ -99,6 +99,9 @@ class clip:
 		self.ox, self.oy, self.w, self.h = 0, 0, 0, 0
 		self.x, self.y = 0, 0
 
+		self.set(self._.w, self._.h)
+		self.use(0, 0)
+
 	def __call__ (self, *args): self.set(*args)
 	def set(self, w, h, x=0, y=0): #Absolute
 	#Sets the grid boundaries for displaying.
@@ -118,21 +121,38 @@ class clip:
 		self.x, self.y = x, y
 		ox, oy, w, h = self.ox, self.oy, self.w, self.h
 
-		if not self.flipped:
-			x1, y1 = ox+(w*x), oy+(h*y)
-		#
-		if self.flipped:
-			x += 1
-			x1, y1 = ox+(w*-x), oy+(h*y)
+		if self.flipped_horizontal:x += 1; x1 = ox+(w*-x)
+		else: x1 = ox+(w*x)
+		if self.flipped_vertical: y += 1; y1 = oy+(h*-y)
+		else: y1 = oy+(h*y)
 		
 		x2, y2 = w, h
 		self._.set_texture_rect(sf.IntRect(x1,y1,x2,y2))
+
+
+	#	FLIPPING
+
+	flipped_vertical = False
+	flipped_horizontal = False
+	@property
+	def flipped(self): return self.flipped_horizontal
+
 	#
 
-	flipped = False
 	def flip(self):
-		self.flipped = not self.flipped
+		self.flip_horizontal()
+
+	def flip_horizontal(self):
+		self.flipped_horizontal \
+		= not self.flipped_horizontal
 		self.w = -self.w
+		self.set(self.w, self.h)
+		self.use(self.x, self.y)
+
+	def flip_vertical(self):
+		self.flipped_vertical \
+		= not self.flipped_vertical
+		self.h = -self.h
 		self.set(self.w, self.h)
 		self.use(self.x, self.y)
 

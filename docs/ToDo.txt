@@ -24,19 +24,44 @@ x Make jump animation.
 x Make walk animation.
 + Sprites are flipped when facing another direction.
 
+
+-
++ Added vertical and horizontal flipping to MySprite.clip
++ Added Dot to geometry for debugging purposes
+
+
 GOAL: Running across 1/2-block slopes.
 
 Using the Seperating Axis Theorem.
 	* Make a new collision check for triangular objects.
 	* Draw the projection of the check.
+-
 
 
-x Get the bottom-left to top-right points.
-	x Connect them with a line.
+! Transition is unclean, it doesn't matter, because:
+* Arbitary x is always far enough away from the check, so the transition never makes contact.
 
-Pushback the rectangle from the triangle
-	Pushback only what is needed.
+x Make a third SAT test.
 
-Work out how the triangle is supposed to intersect
-	via pixels?
-	via args?
+x Test that the Z-axis can handle being given different angles.
+	x Create...
+		x Coordinates.
+		x Lengths.
+		x Angles.
+
+	x Create a quick way to test all four triangle types.
+	
+	x Make lines connecting to the z-points.
+		x Convert points in to objects.
+
+		x Works for 'changed points'. (Points not binded to a side)
+
+	x Make z1 and z2 and their line.
+		x Test with every anchor.
+
+
+Make collision push-back.
+
+	! ru Bug: When the projected corner of the rect intersects with c, it bounces rapidly
+	
+		Work out collisions in advance

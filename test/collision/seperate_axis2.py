@@ -77,16 +77,57 @@ class AxisCollision:
 		self.draw_lines(Triangle)
 
 		#####
-		# Check collisions
+		# Pushback
+		# collision = b.collision.is_colliding(*t.points)
+		# if self.z_overlap(that):
+		# 	b.collision.pushback(t)
+		self.pushback(*t.points, z1=that.z1, z2=that.z2)
 
-
-	def collision(self, that):
-		if self.z1 <= that.z1 <= self.z2\
-		or self.z1 <= that.z2 <= self.z1\
-		or that.z1 <= self.z1 <= that.z2\
-		or that.z1 <= self.z2 <= that.z2:
+	def z_overlap(self, z1, z2):
+		if self.z1 <= z1 <= self.z2\
+		or self.z1 <= z2 <= self.z1\
+		or z1 <= self.z1 <= z2\
+		or z1 <= self.z2 <= z2:
 			return True
 		return False
+
+#	PUSHBACK (borrowed from default collision)
+
+	def pushback(self, x1, y1, x2, y2, z1, z2):
+
+		AABB = self._.collision
+		is_x = AABB.x_overlap(x1, x2)
+		is_y = AABB.y_overlap(y1, y2)
+		is_z = self.z_overlap(z1, z2)
+
+		if is_x and is_y and is_z:
+			ox = AABB.x_pushback(x1, x2)
+			oy = AABB.y_pushback(y1, y2)
+			oz = self.z_pushback(z1, z2)
+
+			# print "ox", ox, "oy", oy, "oz", oz
+			smallest = abs(ox); use = ox
+			if abs(oy) <= smallest:
+				smallest = abs(oy); use = oy
+			if abs(oz) <= smallest:
+				smallest = abs(oz); use = oz
+			# #
+			if smallest == abs(ox): self._.move(use, 0)
+			else: self._.move(0, use)
+
+	def z_pushback(self, z1, z2):
+		a = self
+		p = []
+		if z1 <= a.z1 <= z2: p.append(z2 - a.z1)
+		if z1 <= a.z2 <= z2: p.append(z1 - a.z2)
+		if a.z1 <= z1 <= a.z2: p.append(a.z1 - z2)
+		if a.z1 <= z2 <= a.z2: p.append(a.z2 - z1)
+
+		lowest = None
+		for i in p:
+			if lowest == None: lowest = i
+			if abs(i) <= lowest: lowest = i
+		return lowest
 
 
 #	VISUAL DEBUG
@@ -95,9 +136,10 @@ class AxisCollision:
 		t = Triangle
 		that = t.axis_collision
 
-		if self.collision(that): color = sf.Color.GREEN
-		else: color = sf.Color.RED
-		
+		if self.z_overlap(that.z1, that.z2):
+			color = sf.Color.GREEN
+		else:
+			color = sf.Color.RED
 
 		x = self.x
 		#Triangle lines.
@@ -136,7 +178,7 @@ box = WIPMySprite(box_tex)
 box.goto = 25, 25
 
 #Triangle
-triangle_tex = MyTexture("img/triangle3.png")
+triangle_tex = MyTexture("img/triangle2.png")
 triangle = WIPMySprite(triangle_tex)
 triangle.goto = 400, 350
 

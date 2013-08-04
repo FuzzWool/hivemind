@@ -22,16 +22,7 @@ class WIPMySprite(MySprite):
 class AxisCollision:
 #Collision detection designed for triangles.
 
-
-	def __init__ (self, MySprite):
-		self._ = MySprite
-		self.z1, self.z2 = 0, 0 #Slope gradient.
-		self.no1, self.no2 = 0, 0 #Order.
-
-
-#	INITIALIZING
-#	Creating the coordinates, lengths and angles.
-#	Working out the order to create the slope gradient.
+	z1, z2 = 0, 0
 
 	class axis:
 	#Each axis object.
@@ -41,9 +32,11 @@ class AxisCollision:
 		angle = 0
 		length = 0
 
-	z1, z2 = 0, 0
-	no1, no2 = None, None #The order to draw 
-	def init_angles(self, Triangle, points=None):
+
+	def __init__ (self, MySprite):
+		self._ = MySprite
+
+	def calculate_angles(self, Triangle, points=None):
 	#Determine the points and angle to be checked against.
 	#Calculate everything for the projection.
 		t = Triangle
@@ -86,90 +79,6 @@ class AxisCollision:
 		# self.say_angles(that)
 
 
-		# WORK OUT ORDER
-		#Calculates the triangle a single time.
-
-		t = Triangle
-		that = t.axis_collision
-		r = self._
-
-		#Pick the first and second points manually.
-		h = that.b.point
-		no1, no2 = None, None
-		if h == (t.x2, t.y2): no1 = that.c; no2 = that.b
-		if h == (t.x1, t.y2): no1 = that.c; no2 = that.b
-		if h == (t.x2, t.y1): no1 = that.b; no2 = that.a
-		if h == (t.x1, t.y1): no1 = that.b; no2 = that.a
-		
-		#X is always in a direction which takes Y up.
-		if that.b.point == (t.x2, t.y2)\
-		or that.b.point == (t.x1, t.y1):
-			x = t.x2 + r.w + 30
-		if that.b.point == (t.x1, t.y2)\
-		or that.b.point == (t.x2, t.y1):
-			x = t.x1 - r.w - 30
-
-		that.no1, that.no2 = no1, no2
-		that.x = x
-
-	def observe_angles(self, Triangle):
-	#Continous
-	#Updates the z-axis for self.
-
-		###COPY AND PASTED###
-		r = self._
-		t = Triangle
-		that = t.axis_collision
-
-
-		def sine_rule(a1, a2, l2):
-		#Get the length.
-			from math import sin, radians
-			a1 = radians(a1); a2 = radians(a2)
-			return (l2/sin(a2))*sin(a1)
-
-		#Work out y from arbitary x.
-		#Attach the first point to
-		x1, y1 = that.no1.point
-		x2 = that.x
-		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)
-		y2 = y1 - abs(_y2)
-		t_z1 = y2
-		
-		x1, y1 = that.no2.point
-		x2 = that.x
-		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)
-		y2 = y1 - abs(_y2)
-		t_z2 = y2
-
-
-		#The point order
-		no1 = r.x1, r.y1
-		no2 = r.x2, r.y2
-		if r.x2 > that.x:
-			no1 = r.x2, r.y1
-			no2 = r.x1, r.y2
-
-		#The lines
-		x1, y1 = no1
-		x2 = that.x
-		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)
-		y2 = y1 - abs(_y2)
-		z1 = y2
-
-		x1, y1 = no2
-		x2 = that.x
-		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)		
-		y2 = y1 - abs(_y2)
-		z2 = y2
-		####
-		
-		self.no1, self.no2 = no1, no2
-		#
-		that.z1, that.z2 = t_z1, t_z2
-		self.z1, self.z2 = z1, z2
-
-
 #	PUSHBACK (borrowed from default collision)
 
 	def z_overlap(self, z1, z2):
@@ -199,16 +108,11 @@ class AxisCollision:
 			smallest = abs(ox); use = ox
 			if abs(oy) <= smallest:
 				smallest = abs(oy); use = oy
-			if abs(oz) < smallest:
+			if abs(oz) <= smallest:
 				smallest = abs(oz); use = oz
 			# #
-			if smallest == abs(oz):
-				self._.move(0, use)
-			elif smallest == abs(ox):
-				self._.move(use, 0)
-			elif smallest == abs(oy):
-				self._.move(0, use)
-
+			if smallest == abs(ox): self._.move(use, 0)
+			else: self._.move(0, use)
 
 	def z_pushback(self, z1, z2):
 		a = self
@@ -260,6 +164,8 @@ class AxisCollision:
 	#to represent the collidable angle.
 		t = Triangle
 		that = t.axis_collision
+		r = self._
+
 
 		def sine_rule(a1, a2, l2):
 		#Get the length.
@@ -268,47 +174,77 @@ class AxisCollision:
 			return (l2/sin(a2))*sin(a1)
 
 
+		# PICK THE AXIS
+		
+		#Pick the first and second points manually.
+		h = that.b.point
+		no1, no2 = None, None
+		if h == (t.x2, t.y2): no1 = that.c; no2 = that.b
+		if h == (t.x1, t.y2): no1 = that.c; no2 = that.b
+		if h == (t.x2, t.y1): no1 = that.b; no2 = that.a
+		if h == (t.x1, t.y1): no1 = that.b; no2 = that.a
+		
+		#X is always in a direction which takes Y up.
+		if that.b.point == (t.x2, t.y2)\
+		or that.b.point == (t.x1, t.y1):
+			x = t.x2 + r.w + 30
+		if that.b.point == (t.x1, t.y2)\
+		or that.b.point == (t.x2, t.y1):
+			x = t.x1 - r.w - 30
+
 		# ATTACH THE POINTS
+
 		line_color = sf.Color.GREEN
 		gap_color = sf.Color.BLACK
 		
-		#TRIANGLE
-		x1, y1 = that.no1.point
-		x2 = that.x
+		#Triangle
+
+		#Work out y from arbitary x.
+		#Attach the first point to
+		x1, y1 = no1.point
+		x2 = x
 		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)
 		y2 = y1 - abs(_y2)
 		that.line1 = Line(x1, y1, x2, y2, 3, line_color)
 		that.z1 = y2
 		
-		x1, y1 = that.no2.point
-		x2 = that.x
+		x1, y1 = no2.point
+		x2 = x
 		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)
 		y2 = y1 - abs(_y2)
 		that.line2 = Line(x1, y1, x2, y2, 3, line_color)
 		that.z2 = y2
 
 		that.line_gap = \
-		Line(that.x, that.z1, that.x, that.z2, 5, gap_color)
+		Line(x, that.z1, x, that.z2, 5, gap_color)
 
-		#RECTANGLE
+		#Rectangle
 		line_color = sf.Color.BLUE
 
-		x1, y1 = self.no1
-		x2 = that.x
+		#The point order
+		no1 = r.x1, r.y1
+		no2 = r.x2, r.y2
+		if r.x2 > x:
+			no1 = r.x2, r.y1
+			no2 = r.x1, r.y2
+
+		#The lines
+		x1, y1 = no1
+		x2 = x
 		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)
 		y2 = y1 - abs(_y2)
 		self.line1 = Line(x1, y1, x2, y2, 3, line_color)
 		self.z1 = y2
 
-		x1, y1 = self.no2
-		x2 = that.x
+		x1, y1 = no2
+		x2 = x
 		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)		
 		y2 = y1 - abs(_y2)
 		self.line2 = Line(x1, y1, x2, y2, 3, line_color)
 		self.z2 = y2
 
 		self.line_gap = \
-		Line(that.x, self.z1, that.x, self.z2, 5, gap_color)
+		Line(x, self.z1, x, self.z2, 5, gap_color)
 
 	def draw(self, Triangle):
 		self.make_lines(Triangle)
@@ -337,7 +273,7 @@ triangle_tex = MyTexture("img/triangle3.png")
 triangle = WIPMySprite(triangle_tex)
 triangle.goto = 200, 200
 
-# ####DEBUGGING
+####DEBUGGING
 hypo = "rd"
 
 t = triangle
@@ -363,7 +299,7 @@ if hypo == "lu":
 	triangle.clip.flip_horizontal()
 
 points = a, b, c
-box.axis_collision.init_angles(triangle, points)
+box.axis_collision.calculate_angles(triangle, points)
 
 #########################################################
 running = True
@@ -379,7 +315,6 @@ while running:
 	if key.W.held(): box.move(0, -amt)
 	if key.S.held(): box.move(0, +amt)
 
-	box.axis_collision.observe_angles(triangle)
 	box.axis_collision.pushback(triangle)
 
 	#Animation
@@ -388,9 +323,10 @@ while running:
 	#Video
 	window.clear(sf.Color.WHITE)
 	#
+
 	triangle.draw()
 	box.draw()
-	# box.axis_collision.draw(triangle)
+	box.axis_collision.draw(triangle)
 	#
 	window.view = Camera
 	window.display()

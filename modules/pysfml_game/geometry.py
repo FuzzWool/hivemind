@@ -89,3 +89,59 @@ class Line:
 						 v((x1+w, y1), color, (x1-w, y1))]
 	def draw(self):
 		window.draw(self(), sf.QUADS)
+
+
+#
+
+class Dot(object):
+	def __init__(self, radius=4):
+		self.radius = radius
+		self.color = sf.Color.RED
+
+	#	SIZE
+
+	_radius = 0
+	@property
+	def radius(self): return self._radius
+	@radius.setter
+	def radius(self, arg):
+		self.dot = sf.CircleShape(arg)
+		self._radius = arg
+
+	#	POSITION
+
+	@property
+	def goto(self):
+		pos = self.dot.position
+		return pos[0], pos[1]
+	@goto.setter
+	def goto(self, args):
+		self.dot.position = args[0], args[1]
+
+	@property
+	def center(self):
+		x, y = self.goto
+		r = self.radius
+		return x+(r/2), y+(r/2)
+	@center.setter
+	def center(self, args):
+		x, y = args
+		r = self.radius
+		self.goto = x-(r/2), y-(r/2)
+
+
+	#	DRAWING
+
+	_color = None
+	@property
+	def color(self): return self._color
+	@color.setter
+	def color(self, arg):
+		self.dot.fill_color = arg
+		self._color = arg
+		#Outline
+		self.dot.outline_thickness = 2
+		self.dot.outline_color = sf.Color.WHITE
+
+	def draw(self):
+		window.draw(self.dot)
