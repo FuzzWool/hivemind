@@ -61,7 +61,13 @@ x Test that the Z-axis can handle being given different angles.
 
 
 Make collision push-back.
+		x Work out collisions in advance
 
-	! ru Bug: When the projected corner of the rect intersects with c, it bounces rapidly
-	
-		Work out collisions in advance
+		x Always slide on the hypotenuse
+			x Use ratio of the angle to determine priority
+			x between z and x
+
+
+		Test all triangle anchors.
+
+			up anchors - colliding against a downward slope pushes nut into the ground

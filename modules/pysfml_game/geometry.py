@@ -59,18 +59,24 @@ class Rectangle(object):
 
 	#	POINTS
 	@property
-	def x1(self): return self.goto[0]
+	def x1(self): return self.x
+	@x1.setter
+	def x1(self, arg): self.x = arg
 
 	@property
-	def y1 (self): return self.goto[1]
+	def y1 (self): return self.y
+	@y1.setter
+	def y1 (self, arg): self.y = arg
 
 	@property
-	def x2(self):
-		return self.goto[0] + self.w
+	def x2(self): return self.x + self.w
+	@x2.setter
+	def x2(self, arg): self.x = arg - self.w
 
 	@property
-	def y2(self):
-		return self.goto[1] + self.h
+	def y2(self): return self.y + self.h
+	@y2.setter
+	def y2(self, arg): self.y = arg - self.h
 
 
 #	PHYSICAL
