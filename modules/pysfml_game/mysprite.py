@@ -612,8 +612,8 @@ class AxisCollision:
 			oy = AABB.y_pushback(y1, y2)
 			oz = self.z_pushback(z1, z2)
 
-			print "ox", ox, "oy", oy, "oz", oz
 
+			print "ox", ox, "oy", oy, "oz", oz
 			#SELECT the SMALLEST.
 			smallest = abs(oz); use = oz
 

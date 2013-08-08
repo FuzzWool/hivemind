@@ -38,36 +38,11 @@ Using the Seperating Axis Theorem.
 -
 
 
-! Transition is unclean, it doesn't matter, because:
-* Arbitary x is always far enough away from the check, so the transition never makes contact.
+x Make a fourth test. This time disregarding SAT.
+Instead, focus on ratios.
 
-x Make a third SAT test.
-
-x Test that the Z-axis can handle being given different angles.
-	x Create...
-		x Coordinates.
-		x Lengths.
-		x Angles.
-
-	x Create a quick way to test all four triangle types.
-	
-	x Make lines connecting to the z-points.
-		x Convert points in to objects.
-
-		x Works for 'changed points'. (Points not binded to a side)
-
-	x Make z1 and z2 and their line.
-		x Test with every anchor.
-
-
-Make collision push-back.
-		x Work out collisions in advance
-
-		x Always slide on the hypotenuse
-			x Use ratio of the angle to determine priority
-			x between z and x
-
-
-		Test all triangle anchors.
-
-			up anchors - colliding against a downward slope pushes nut into the ground
+Test with all Triangle...
+	x sizes
+	x anchors
+	x sizes + anchors
+	x new points

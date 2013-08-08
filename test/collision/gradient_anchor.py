@@ -75,20 +75,21 @@ class slope_collision(object):
 
 	def y_overlap_amt(self, Slope):
 	#Returns a positive value.
-		that = Slope.slope_collision
 		ratio = Slope.h/Slope.w
+		that = Slope.slope_collision
 
 
 		y_lowering = self._.x2 - Slope.x1
 		y_lowering *= ratio
+		gap = self._.y1 - Slope.y1
 
 		if that.anchor == "rd":
 			gap = self._.y2 - Slope.y2
-			return +(gap + y_lowering)
+			return (gap + y_lowering)
 
 		if that.anchor == "ru":
 			gap = self._.y1 - Slope.y1
-			return -(gap - y_lowering)
+			return -((gap - y_lowering))
 
 
 		y_lowering = self._.x1 - Slope.x1
@@ -96,11 +97,11 @@ class slope_collision(object):
 
 		if that.anchor == "ld":
 			gap = self._.y2 - Slope.y1
-			return +(gap - y_lowering)
+			return (gap - y_lowering)
 
 		if that.anchor == "lu":
-			gap = self._.y1 - Slope.y2
-			return -(gap + y_lowering)
+			gap = self._.y1 - Slope.y1
+			return -((gap + y_lowering) - Slope.h)
 	#
 
 

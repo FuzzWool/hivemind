@@ -17,15 +17,16 @@ class WIPMySprite(MySprite):
 
 
 from modules.pysfml_game import Dot
-class slope_collision(object):
-	def __init__(self, MySprite):
-		self._ = MySprite
+class slope_collision:
+	def __init__(self, MySprite): self._ = MySprite
 
-		#Set the points defining the intersection
-		self.a, self.b = 0, 0
-		#Set where the right-angle should be anchored
-		self.anchor = "rd"
 
+	#	SETTINGS
+
+	#Set the points defining the intersection
+	a, b = 0, 0
+	#Set where the right-angle should be anchored (hypot)
+	anchor = "rd"
 	@property
 	def anchor_x(self): return self.anchor[0]
 	@property
@@ -41,67 +42,73 @@ class slope_collision(object):
 
 		is_x = AABB.x_overlap(x1, x2)
 		is_y = AABB.y_overlap(y1, y2)
-		is_z = self.is_z(Slope)
-
+		is_z = self.z_overlap(Slope)
 
 		if is_x and is_y and is_z:
 			ox1 = AABB.x_pushback(x1, x2)
 			oy1 = AABB.y_pushback(y1, y2)
 
-			#The slope's pushback's positivity depends
-			#on anchor.
-			that = Slope.slope_collision
-			if that.anchor in ["rd", "ld"]:
-				oy2 = -self.y_overlap_amt(Slope)
-			if that.anchor in ["ru", "lu"]:
-				oy2 = self.y_overlap_amt(Slope)
+			ox2 = -self.x_overlap_amt(Slope)
+			oy2 = -self.y_overlap_amt(Slope)
 
 			#FIND the smallest pushback.
-			# small = ox2
-			small = oy2
+			small = ox2
 			if abs(oy2) <= abs(small): small = oy2
 			if abs(ox1) <= abs(small): small = ox1
 			if abs(oy1) <= abs(small): small = oy1
 
 			#MOVE BY the smallest pushback.
 			if small in [oy1, oy2]:
+				# print small
 				self._.move(0, small) 
 			else:
+				# print small
 				self._.move(small, 0)
 
-	def is_z(self, Slope):
-		z = self.y_overlap_amt(Slope)
-		return bool(0 < z)
+
+
+	def z_overlap(self, Slope):
+	#If the slope's hypotenuse is being crossed.
+		x = self.x_overlap_amt(Slope)
+		y = self.y_overlap_amt(Slope)
+		is_x = bool(0 <= x)
+		is_y = bool(0 <= y)
+
+		if is_x and is_y: return True
+		return False
+
+	## The amount of the hypotenuse being overlapped.
+	def x_overlap_amt(self, Slope):
+		ratio = Slope.w/Slope.h
+		#
+		distance = self._.y2 - Slope.y1
+		distance *= ratio
+		x_intersect = Slope.x2 - distance
+		return self._.x2 - x_intersect
 
 	def y_overlap_amt(self, Slope):
-	#Returns a positive value.
-		that = Slope.slope_collision
 		ratio = Slope.h/Slope.w
-
-
-		y_lowering = self._.x2 - Slope.x1
-		y_lowering *= ratio
-
-		if that.anchor == "rd":
-			gap = self._.y2 - Slope.y2
-			return +(gap + y_lowering)
-
-		if that.anchor == "ru":
-			gap = self._.y1 - Slope.y1
-			return -(gap - y_lowering)
-
-
-		y_lowering = self._.x1 - Slope.x1
-		y_lowering *= ratio
-
-		if that.anchor == "ld":
-			gap = self._.y2 - Slope.y1
-			return +(gap - y_lowering)
-
-		if that.anchor == "lu":
-			gap = self._.y1 - Slope.y2
-			return -(gap + y_lowering)
+		#
+		distance = self._.x2 - Slope.x1
+		distance *= ratio
+		y_intersect = Slope.y2 - distance
+		return self._.y2 - y_intersect
 	#
+
+
+	# def y_pushback(self, y1, y2):
+	# 	a = self._
+	# 	p = []
+	# 	if y1 <= a.y1 <= y2: p.append(y2 - a.y1)
+	# 	if y1 <= a.y2 <= y2: p.append(y1 - a.y2)
+	# 	if a.y1 <= y1 <= a.y2: p.append(a.y1 - y2)
+	# 	if a.y1 <= y2 <= a.y2: p.append(a.y2 - y1)
+
+	# 	lowest = None
+	# 	for i in p:
+	# 		if lowest == None: lowest = i
+	# 		if abs(i) <= lowest: lowest = i
+	# 	return lowest
 
 
 	# VISUAL DEBUG
@@ -124,12 +131,12 @@ box = WIPMySprite(box_tex)
 box.goto = 25, 25
 
 #TRIANGLE
-triangle_tex = MyTexture("img/triangle3.png")
+triangle_tex = MyTexture("img/triangle2.png")
 triangle = WIPMySprite(triangle_tex)
-triangle.goto = 200, 200
+triangle.goto = 200, 150
 #####
 
-hypo = "lu"
+hypo = "ld"
 
 t = triangle
 if hypo == "rd":
