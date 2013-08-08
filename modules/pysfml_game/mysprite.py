@@ -16,7 +16,7 @@ class MySprite(sf.Sprite, Rectangle):
 		self.children = []; self.children_class = children_class(self)
 		self.collision = collision(self)
 		self.animation = animation(self)
-		self.axis_collision = AxisCollision(self)
+		self.slope_collision = slope_collision(self)
 
 	#Positioning is handled by goto instead of position.
 	#Position can't be overriden, but it needs to be for children.
@@ -432,328 +432,109 @@ class animation:
 	#
 
 
-#	AXIS COLLISION
-
-from modules.pysfml_game import Dot, Line
-
-class AxisCollision:
-#Collision detection designed for triangles.
-
-
-	def __init__ (self, MySprite):
+from modules.pysfml_game import Dot
+class slope_collision(object):
+	def __init__(self, MySprite):
 		self._ = MySprite
-		self.z1, self.z2 = 0, 0 #Slope gradient.
-		self.no1, self.no2 = 0, 0 #Order.
 
+		#Set the points defining the intersection
+		self.a, self.b = 0, 0
+		#Set where the right-angle should be anchored
+		self.anchor = "rd"
 
-#	INITIALIZING
-#	Creating the coordinates, lengths and angles.
-#	Working out the order to create the slope gradient.
+	@property
+	def anchor_x(self): return self.anchor[0]
+	@property
+	def anchor_y(self): return self.anchor[1]
 
-	class axis:
-	#Each axis object.
-		def __init__(self, name=None): self.name = name
+	#	COLLISION
 
-		point = (0,0)
-		angle = 0
-		length = 0
-
-	z1, z2 = 0, 0
-	no1, no2 = None, None #The order to draw 
-	def init_angles(self, Triangle, points=None):
-	#Determine the points and angle to be checked against.
-	#Calculate everything for the projection.
-		t = Triangle
-		that = t.axis_collision
-
-		ax = self.axis
-		that.a, that.b, that.c = ax("a"), ax("b"), ax("c")
-
-		#The main coordinates.
-		if points == None:
-			that.a.point = (t.x1, t.y2)
-			that.b.point = (t.x2, t.y2)
-			that.c.point = (t.x2, t.y1)
-		else:
-			that.a.point, that.b.point, that.c.point \
-			= points
-
-		#The main lengths. (Opposite the coords/angles)
-		from math import hypot
-		that.a.length = abs(that.a.point[1] - that.b.point[1])
-		that.c.length = abs(that.c.point[0] - that.b.point[0])
-		that.b.length = hypot(that.a.length, that.c.length)
-
-		# #The main angles.
-		a, b, c = \
-		that.a.length, that.b.length, that.c.length
-
-		def cos_rule(a, b, c):
-		#Three lengths gets an angle.
-			from math import acos, degrees
-			cos1 = (b**2 + c**2 - a**2)/(2*b*c)
-			return degrees(acos(cos1))
-
-		that.b.angle = 90
-		that.a.angle = cos_rule(a, b, c)
-		that.c.angle = cos_rule(c, a, b)
-
-		# self.say_lengths(that)
-		# print
-		# self.say_angles(that)
-
-
-		# WORK OUT ORDER
-		#Calculates the triangle a single time.
-
-		t = Triangle
-		that = t.axis_collision
-		r = self._
-
-		#Pick the first and second points manually.
-		h = that.b.point
-		no1, no2 = None, None
-		if h == (t.x2, t.y2): no1 = that.c; no2 = that.b
-		if h == (t.x1, t.y2): no1 = that.c; no2 = that.b
-		if h == (t.x2, t.y1): no1 = that.b; no2 = that.a
-		if h == (t.x1, t.y1): no1 = that.b; no2 = that.a
-		
-		#X is always in a direction which takes Y up.
-		if that.b.point == (t.x2, t.y2)\
-		or that.b.point == (t.x1, t.y1):
-			x = t.x2 + r.w + 30
-		if that.b.point == (t.x1, t.y2)\
-		or that.b.point == (t.x2, t.y1):
-			x = t.x1 - r.w - 30
-
-		that.no1, that.no2 = no1, no2
-		that.x = x
-
-	def observe_angles(self, Triangle):
-	#Continous
-	#Updates the z-axis for self.
-
-		###COPY AND PASTED###
-		r = self._
-		t = Triangle
-		that = t.axis_collision
-
-
-		def sine_rule(a1, a2, l2):
-		#Get the length.
-			from math import sin, radians
-			a1 = radians(a1); a2 = radians(a2)
-			return (l2/sin(a2))*sin(a1)
-
-		#Work out y from arbitary x.
-		#Attach the first point to
-		x1, y1 = that.no1.point
-		x2 = that.x
-		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)
-		y2 = y1 - abs(_y2)
-		t_z1 = y2
-		
-		x1, y1 = that.no2.point
-		x2 = that.x
-		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)
-		y2 = y1 - abs(_y2)
-		t_z2 = y2
-
-
-		#The point order
-		no1 = r.x1, r.y1
-		no2 = r.x2, r.y2
-		if r.x2 > that.x:
-			no1 = r.x2, r.y1
-			no2 = r.x1, r.y2
-
-		#The lines
-		x1, y1 = no1
-		x2 = that.x
-		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)
-		y2 = y1 - abs(_y2)
-		z1 = y2
-
-		x1, y1 = no2
-		x2 = that.x
-		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)		
-		y2 = y1 - abs(_y2)
-		z2 = y2
-		####
-		
-		self.no1, self.no2 = no1, no2
-		#
-		that.z1, that.z2 = t_z1, t_z2
-		self.z1, self.z2 = z1, z2
-
-
-#	PUSHBACK (borrowed from default collision)
-
-	def z_overlap(self, z1, z2):
-		if self.z1 <= z1 <= self.z2\
-		or self.z1 <= z2 <= self.z1\
-		or z1 <= self.z1 <= z2\
-		or z1 <= self.z2 <= z2:
-			return True
-		return False
-
-	def pushback(self, Triangle):
-		x1, y1, x2, y2 = Triangle.points
-		that = Triangle.axis_collision
-		z1, z2 = that.z1, that.z2
-
+	def pushback(self, Slope):
+	#Against a slope with it's A and B set.
+	#Borrows from MySprite.collision
+		x1, y1, x2, y2 = Slope.points
 		AABB = self._.collision
+
 		is_x = AABB.x_overlap(x1, x2)
 		is_y = AABB.y_overlap(y1, y2)
-		is_z = self.z_overlap(z1, z2)
+		is_z = self.is_z(Slope)
+
 
 		if is_x and is_y and is_z:
-			ox = AABB.x_pushback(x1, x2)
-			oy = AABB.y_pushback(y1, y2)
-			oz = self.z_pushback(z1, z2)
+			ox1 = AABB.x_pushback(x1, x2)
+			oy1 = AABB.y_pushback(y1, y2)
+
+			#The slope's pushback's positivity depends
+			#on anchor.
+			that = Slope.slope_collision
+			if that.anchor in ["rd", "ld"]:
+				oy2 = -self.y_overlap_amt(Slope)
+			if that.anchor in ["ru", "lu"]:
+				oy2 = self.y_overlap_amt(Slope)
+
+			#FIND the smallest pushback.
+			# small = ox2
+			small = oy2
+			if abs(oy2) <= abs(small): small = oy2
+			if abs(ox1) <= abs(small): small = ox1
+			if abs(oy1) <= abs(small): small = oy1
+
+			#MOVE BY the smallest pushback.
+			if small in [oy1, oy2]:
+				self._.move(0, small) 
+			else:
+				self._.move(small, 0)
+
+	def is_z(self, Slope):
+		z = self.y_overlap_amt(Slope)
+		return bool(0 < z)
+
+	def y_overlap_amt(self, Slope):
+	#Returns a positive value.
+		that = Slope.slope_collision
+
+		#Gradient
+		w = that.b[0] - that.a[0]; w = abs(w)
+		h = that.b[1] - that.a[1]; h = abs(h)
+		ratio = h/w
+
+		#X from origin
+		y_lowering = self._.x2 - that.a[0]
+		y_lowering *= ratio
+
+		if that.anchor == "rd":
+			if h <= y_lowering: y_lowering = h
+			gap = self._.y2 - that.a[1]
+			return +(gap + y_lowering)
+
+		if that.anchor == "ru":
+			if 0 <= y_lowering: y_lowering = 0
+			gap = self._.y1 - that.a[1]
+			return -(gap - y_lowering)
 
 
-			print "ox", ox, "oy", oy, "oz", oz
-			#SELECT the SMALLEST.
-			smallest = abs(oz); use = oz
+		y_lowering = self._.x1 - Slope.x1
+		y_lowering *= ratio
 
-			if abs(oy) < smallest:
-				ratio = Triangle.w/Triangle.h
-				if abs(oy) < abs(oz)*ratio:
-					smallest = abs(oy); use = oy
+		if that.anchor == "ld":
+			if y_lowering <= 0: y_lowering = 0
+			gap = self._.y2 - that.a[1]
+			return +(gap - y_lowering)
 
-			#WIP###
-			#If it's a z comparison
-			if smallest == abs(oz):
-				ratio = Triangle.w/Triangle.h
-				# print "ox ",abs(ox), "  oz ",abs(oz)*ratio
-				if abs(ox) < abs(oz)*ratio:
-					smallest = abs(ox); use = ox
-			####
-			elif abs(ox) < smallest:
-				smallest = abs(ox); use = ox
-
-			#MOVE by the SMALLEST.
-			if smallest == abs(oy):
-				self._.move(0, use)
-			elif smallest == abs(ox):
-				self._.move(use, 0)
-			elif smallest == abs(oz):
-				self._.move(0, use)
+		if that.anchor == "lu":
+			if y_lowering <= 0: y_lowering = 0
+			gap = self._.y1 - that.a[1]
+			return -(gap + y_lowering)
+	#
 
 
-	def z_pushback(self, z1, z2):
-		a = self
-		p = []
-		if z1 <= a.z1 <= z2: p.append(z2 - a.z1)
-		if z1 <= a.z2 <= z2: p.append(z1 - a.z2)
-		if a.z1 <= z1 <= a.z2: p.append(a.z1 - z2)
-		if a.z1 <= z2 <= a.z2: p.append(a.z2 - z1)
+	# VISUAL DEBUG
 
-		lowest = None
-		for i in p:
-			if lowest == None: lowest = i
-			if abs(i) <= lowest: lowest = i
-		return lowest
-
-
-#	DEBUGGING
-
-	def say_lengths(self, that):
-		t = that
-		a, b, c = t.a.length, t.b.length, t.c.length
-		print "a:",a," b:",b," c:",c
-
-	def say_angles(self, that):
-		a, b, c = that.a.angle, that.b.angle, that.c.angle
-		print "a:",a," b:",b," c:",c
-		print "Total: ", a+b+c
-
-
-#	VISUAL DEBUGGING
-
-	#Continous
-	dots = []
-	def make_dots(self, Triangle):
-	#Make dots for each point.
-		that = Triangle.axis_collision
-		a = Dot(); a.center = that.a.point
-		a.color = sf.Color.RED
-		b = Dot(); b.center = that.b.point
-		b.color = sf.Color.GREEN
-		c = Dot(); c.center = that.c.point
-		c.color = sf.Color.BLUE
-		self.dots = [a, b, c]
-
-
-	#Continous
-	def make_lines(self, Triangle):
-	#Make the lines connecting to the z-height,
-	#to represent the collidable angle.
-		t = Triangle
-		that = t.axis_collision
-
-		def sine_rule(a1, a2, l2):
-		#Get the length.
-			from math import sin, radians
-			a1 = radians(a1); a2 = radians(a2)
-			return (l2/sin(a2))*sin(a1)
-
-
-		# ATTACH THE POINTS
-		line_color = sf.Color.GREEN
-		gap_color = sf.Color.BLACK
-		
-		#TRIANGLE
-		x1, y1 = that.no1.point
-		x2 = that.x
-		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)
-		y2 = y1 - abs(_y2)
-		that.line1 = Line(x1, y1, x2, y2, 3, line_color)
-		that.z1 = y2
-		
-		x1, y1 = that.no2.point
-		x2 = that.x
-		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)
-		y2 = y1 - abs(_y2)
-		that.line2 = Line(x1, y1, x2, y2, 3, line_color)
-		that.z2 = y2
-
-		that.line_gap = \
-		Line(that.x, that.z1, that.x, that.z2, 5, gap_color)
-
-		#RECTANGLE
-		line_color = sf.Color.BLUE
-
-		x1, y1 = self.no1
-		x2 = that.x
-		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)
-		y2 = y1 - abs(_y2)
-		self.line1 = Line(x1, y1, x2, y2, 3, line_color)
-		self.z1 = y2
-
-		x1, y1 = self.no2
-		x2 = that.x
-		_y2 = sine_rule(that.a.angle, that.c.angle, x2-x1)		
-		y2 = y1 - abs(_y2)
-		self.line2 = Line(x1, y1, x2, y2, 3, line_color)
-		self.z2 = y2
-
-		self.line_gap = \
-		Line(that.x, self.z1, that.x, self.z2, 5, gap_color)
-
-	def draw(self, Triangle):
-		self.make_lines(Triangle)
-		#
-		that = Triangle.axis_collision
-		that.line1.draw()
-		that.line2.draw()
-		that.line_gap.draw()
-		#
-		self.line1.draw()
-		self.line2.draw()
-		self.line_gap.draw()
-
-		self.make_dots(Triangle)
-		for dot in self.dots:
-			dot.draw()
+	adot, bdot = None, None
+	def draw(self):
+		#Make the dots.
+		if (self.adot, self.bdot) == (None, None):
+			self.adot = Dot(); self.adot.goto = self.a
+			self.bdot = Dot(); self.bdot.goto = self.b
+		#Draw the dots.
+		self.adot.draw(); self.bdot.draw()

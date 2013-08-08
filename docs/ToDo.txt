@@ -24,25 +24,21 @@ x Make jump animation.
 x Make walk animation.
 + Sprites are flipped when facing another direction.
 
-
--
 + Added vertical and horizontal flipping to MySprite.clip
 + Added Dot to geometry for debugging purposes
-
++ Added MySprite.slope_collision
 
 GOAL: Running across 1/2-block slopes.
-
-Using the Seperating Axis Theorem.
-	* Make a new collision check for triangular objects.
-	* Draw the projection of the check.
 -
 
 
-x Make a fourth test. This time disregarding SAT.
-Instead, focus on ratios.
+Make a tileset explicitly for collisions.
+	(txt) Make collision settings for tiles.
 
-Test with all Triangle...
-	x sizes
-	x anchors
-	x sizes + anchors
-	x new points
+	x Room.collision reads the _collision.txt
+	Room.collision handles a collidable sprite for pushback
+
+
+Test 1/2-tile length slopes from all angles.
+
+Make a tileset collision editor in Level Editor.

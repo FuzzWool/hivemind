@@ -57,6 +57,8 @@ class Room(object):
 		# self.tiles = self._make_all_tiles(self.data)
 
 		self.collision = collision(self)
+		self.collision.make_bounds()
+		self.collision.filler()
 
 
 	def change_tile(self, pos, clip):
@@ -283,6 +285,65 @@ class collision:
 #Bounds all of the tiles together to handle only a few
 #collision points.
 
+	
+	def __init__ (self, Room): self._ = Room
+
+
+	# TILE COLLISION
+	#For reading a %name%_collision.txt to interpret
+	#what tiles have what kind of collision.
+
+	def filler(self):
+		self.read_collisions()
+
+	def read_collisions(self):
+	#Make collision data.
+
+		#READ the data from a file.
+		collision_dir = "img/tilemaps/%s_collision.txt"\
+		 % self._.texture_name
+		try:
+			f = open(collision_dir,"r+")
+		except:
+			#Make and save as the DEFAULT.
+			f = open(collision_dir,"w")
+			w = self._.texture.width/GRID
+			h = self._.texture.height/GRID
+			txt = ""
+			for x in range(w):
+				if txt != "": txt = txt+"\n"
+				for y in range(h):
+					txt = txt+"aa"
+			f.write(txt)
+
+		raw = f.read()
+		f.close()
+
+		#CONVERT into usable collision data.
+		self.tileset = []
+		raw = raw.split("\n")
+		for line in raw:
+			self.tileset.append([])
+			c = 0
+			while c < len(line):
+				self.tileset[-1].append(line[c:c+2])
+				c += 2
+
+		#x/y format
+		xy_tileset = []
+		row = 0
+		while row < len(self.tileset[0]):
+			column = [i[row] for i in self.tileset] 
+			xy_tileset.append(column[:])
+			row += 1
+		self.tileset = [i[:] for i in xy_tileset]
+		
+		print self.tileset
+
+
+	# BOUNDS
+	#For condensing the rects of the level together.
+
 	@property
 	def points(self):
 	#Return all of the room's collision points.
@@ -307,7 +368,6 @@ class collision:
 		return points
 
 
-	###WIP
 	def points_range(self, rx1, ry1, rx2, ry2):
 	#Returns all of the room's collision points.
 	#...within a certain grid range.
@@ -338,13 +398,6 @@ class collision:
 					point = (x1, y1, x2, y2)
 					points.append(point)
 		return points
-	###
-
-	#
-
-	def __init__ (self, Room):
-		self._ = Room
-		self._create_bounds()
 
 	class bound:
 	#Coordinates to be referenced in multiple tiles.
@@ -355,7 +408,7 @@ class collision:
 			return self.x1, self.y1, self.x2, self.y2
 
 
-	def _create_bounds(self):	
+	def make_bounds(self):	
 		#Create bounding boxes.
 		
 		#Grid format.
