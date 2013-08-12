@@ -1,8 +1,8 @@
 from window import sf, window
 from geometry import Rectangle
 
-texture = sf.Texture.load_from_file
-MyTexture = sf.Texture.load_from_file
+texture = sf.Texture.from_file
+MyTexture = sf.Texture.from_file
 
 class MySprite(sf.Sprite, Rectangle):
 #Provides additional functionality for sf.Sprite.
@@ -22,10 +22,9 @@ class MySprite(sf.Sprite, Rectangle):
 	#Position can't be overriden, but it needs to be for children.
 	@property
 	def goto(self):
-		return self.position[0] - \
-				(self.origin[0] * self.scale[0]),\
-			   self.position[1] - \
-				(self.origin[1] * self.scale[1])
+		return self.position[0], self.position[1]
+				# - (self.origin[0] * self.scale(0)),\
+				# - (self.origin[1] * self.scale[1])
 	@goto.setter
 	def goto(self, args):
 		self.children_class.goto(args)
@@ -107,8 +106,7 @@ class clip:
 	def set(self, w, h, x=0, y=0): #Absolute
 	#Sets the grid boundaries for displaying.
 		self.w, self.h, self.ox, self.oy = w, h, x, y
-		self._.set_texture_rect(\
-			sf.IntRect(x, y, w, h))
+		self._.texture_rectangle = (x, y, w, h)
 
 	def division(self, x, y): #Relative
 		w, h = self._.w / x, self._.h / y
@@ -128,7 +126,7 @@ class clip:
 		else: y1 = oy+(h*y)
 		
 		x2, y2 = w, h
-		self._.set_texture_rect(sf.IntRect(x1,y1,x2,y2))
+		self._.texture_rectangle = (x1, y1, x2, y2)
 
 
 	#	FLIPPING
@@ -406,7 +404,7 @@ class animation:
 
 			#Immediately if it's just been initialized
 			ticks = self.clipClock\
-					.elapsed_time.as_seconds()
+					.elapsed_time.seconds
 
 			if self.clip_init\
 			or ticks > self.clip_interval:

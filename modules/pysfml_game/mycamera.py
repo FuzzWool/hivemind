@@ -18,7 +18,7 @@ class MyCamera(sf.View):
 	@property
 	def x(self):
 		cx = self.center[0]
-		w = self.width
+		w = self.size[0]
 		return cx - (w/2)
 	@x.setter
 	def x(self, arg):
@@ -28,7 +28,7 @@ class MyCamera(sf.View):
 	@property
 	def y(self):
 		cy = self.center[1]
-		h = self.height
+		h = self.size[1]
 		return cy - (h/2)
 	@y.setter
 	def y(self, arg):

@@ -58,7 +58,7 @@ class Room(object):
 
 		self.collision = collision(self)
 		self.collision.make_bounds()
-		self.collision.filler()
+		# self.collision.filler()
 
 
 	def change_tile(self, pos, clip):
@@ -304,6 +304,7 @@ class collision:
 		 % self._.texture_name
 		try:
 			f = open(collision_dir,"r+")
+			_raw = f.read()
 		except:
 			#Make and save as the DEFAULT.
 			f = open(collision_dir,"w")
@@ -315,8 +316,9 @@ class collision:
 				for y in range(h):
 					txt = txt+"aa"
 			f.write(txt)
+			_raw = txt
 
-		raw = f.read()
+		raw = _raw
 		f.close()
 
 		#CONVERT into usable collision data.

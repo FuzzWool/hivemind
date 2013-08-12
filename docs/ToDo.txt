@@ -28,6 +28,8 @@ x Make walk animation.
 + Added Dot to geometry for debugging purposes
 + Added MySprite.slope_collision
 
+~ Ported from pysfml2-cython to pySFML 1.3.
+
 GOAL: Running across 1/2-block slopes.
 -
 

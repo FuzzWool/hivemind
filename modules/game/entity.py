@@ -29,13 +29,13 @@ class Entity(object):
 
 		#Set the image (load sheet)
 		self.image = sf.Image\
-		.load_from_file(self.folder_dir+"sheet.png")
+		.from_file(self.folder_dir+"sheet.png")
 		self.image\
 		.create_mask_from_color(sf.Color(255, 0, 255))
 		
 		#Make the texture.
 		self.texture = sf.Texture\
-		.load_from_image(self.image)
+		.from_image(self.image)
 
 		#Make the sprite.
 		self.sprite = MySprite(self.texture)
@@ -72,7 +72,7 @@ class Entity(object):
 	def make_cbox(self):
 		#Make the sprite.
 		self.cbox_tex = sf.Texture\
-		.load_from_file(self.folder_dir+"cbox.png")
+		.from_file(self.folder_dir+"cbox.png")
 		self.cbox = MySprite(self.cbox_tex)
 
 		#Parents all the other sprites.

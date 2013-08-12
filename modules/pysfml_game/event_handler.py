@@ -4,14 +4,12 @@ import window as wi
 import new
 
 #Quit the app.
+import key
 def quit():
 	window = wi.window
-	for event in window.iter_events():
-		if event.type == sf.Event.CLOSED:
-			return True
-		if event.type == sf.Event.KEY_PRESSED:
-			if event.code == sf.Keyboard.ESCAPE:
-				return True
+	for event in window.events:
+		if type(event) is sf.CloseEvent: return True
+		if key.ESCAPE.pressed(): return True
 	return False
 
 #
@@ -120,7 +118,7 @@ class Button:
 
 		#If time runs out, the first press is falsed.
 		if self.first_press\
-		 and self.clock.elapsed_time.as_seconds() >= secs:
+		 and self.clock.elapsed_time.seconds >= secs:
 		 	self.first_press = False
 		 	self.clock.restart()
 

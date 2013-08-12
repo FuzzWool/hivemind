@@ -18,7 +18,7 @@ window = \
 		sf.VideoMode\
 		 (SCREEN_WIDTH, SCREEN_HEIGHT), "Hivemind")
 window.framerate_limit = 60
-window.vertical_sync_enabled = True
+window.vertical_synchronization = True
 
 del scale
 
