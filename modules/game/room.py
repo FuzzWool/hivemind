@@ -91,6 +91,8 @@ class Room(object):
 		return None
 
 	def draw(self):
+		# if self.tiles[0][0] != None:
+		# 	self.tiles[0][0].draw()
 		for x in self.tiles:
 			for y in x:
 				if y != None:
@@ -180,7 +182,7 @@ class Room(object):
 		data = format_data(data)
 		data = room_off_data(data)
 		return data
-
+		# return [["aa"]]
 
 #	TILE CREATION
 
@@ -261,7 +263,7 @@ class Room(object):
 
 	@property
 	def tiles_loaded(self):
-	#Retrun all the loaded tiles.
+	#Return all the loaded tiles.
 		loaded = []
 		for x in self.tiles:
 			for y in x:

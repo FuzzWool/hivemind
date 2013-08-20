@@ -58,6 +58,8 @@ class WorldMap:
 				self.Rooms[-1].append(new_Room)
 
 
+	old_x1, old_y1 = 0, 0
+	old_x2, old_y2 = 0, 0
 	def load_around(self, room_pos, tile_pos):
 	#Load only the rooms within a certain position.
 
@@ -73,26 +75,34 @@ class WorldMap:
 		x1, y1 = keep_in_bounds(x1, y1)
 		x2, y2 = keep_in_bounds(x2, y2)
 
-		#Load any rooms within the range, if they're empty
-		#Void any rooms not within the range
-		for x in range(self.w):
-			for y in range(self.h):
+		#MAKE new ROOMS.
+		#Check only the range, nothing outside.
+		for x in range(x1, x2+1):
+			for y in range(y1, y2+1):
+				if self.Rooms[x][y] == None:
+					a1 = self.alphabet[x]
+					a2 = self.alphabet[y]
+					new_Room = Room(a1+a2, x, y)
+					self.Rooms[x][y] = new_Room
 
-				if x1 <= x <= x2\
+				self.Rooms[x][y].load_around(*tile_pos)
+
+		#DISPOSE of old ROOMS.
+		#Grab the last range.
+		#None all of it's rooms which
+		#aren't also within the new range.
+		for x in range(self.old_x1, self.old_x2+1):
+			for y in range(self.old_y1, self.old_y2+1):
+
+				if  x1 <= x <= x2\
 				and y1 <= y <= y2:
-					if self.Rooms[x][y] == None:
-						a1 = self.alphabet[x]
-						a2 = self.alphabet[y]
-						new_Room = Room(a1+a2, x, y)
-						self.Rooms[x][y] = new_Room
-					
-					self.Rooms[x][y]\
-					.load_around(*tile_pos)
-
-				
-				elif x < x1 or x2 < x\
-				or   y < y1 or y2 < y:
+					pass
+				else:
 					self.Rooms[x][y] = None
+
+		self.old_x1, self.old_y1 = x1, y1
+		self.old_x2, self.old_y2 = x2, y2
+
 
 #	DEBUG
 

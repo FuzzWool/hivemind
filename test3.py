@@ -1,3 +1,5 @@
+#Move a camera around the world map.
+
 from modules.pysfml_game import sf
 from modules.pysfml_game import quit
 from modules.pysfml_game import window
@@ -8,37 +10,29 @@ Camera = MyCamera()
 Camera.zoom = 2
 Camera.x, Camera.y = 0, 0
 
-
-from modules.game import Player
-Nut = Player("nut")
-
 from modules.game import WorldMap
 worldmap = WorldMap()
-
 #########################################################
 
 running = True
 while running:
 	#Logic
 	if quit(): running = False
-	if key.RETURN.pressed():
-		pass
+	if key.RETURN.pressed(): worldmap.say_Rooms()
 
-	Nut.handle_controls(key)
-	Nut.handle_physics()
-	Nut.collide_with_WorldMap(worldmap)
-
-	#Animation
-	Nut.play()
+	#Camera movements
+	amt = 10
+	if key.W.held(): Camera.y -= amt
+	if key.S.held(): Camera.y += amt
+	if key.A.held(): Camera.x -= amt
+	if key.D.held(): Camera.x += amt
 
 	#Video
-	Camera.center = Nut.cbox.center
 	worldmap.load_around(Camera.room_points, Camera.tile_points)
-	
+
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
 	#
 	worldmap.draw()
-	Nut.draw()
 	#
 	window.display()
