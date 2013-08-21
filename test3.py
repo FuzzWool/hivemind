@@ -21,11 +21,14 @@ while running:
 	if key.RETURN.pressed(): worldmap.say_Rooms()
 
 	#Camera movements
-	amt = 10
+	amt = 5
 	if key.W.held(): Camera.y -= amt
 	if key.S.held(): Camera.y += amt
 	if key.A.held(): Camera.x -= amt
 	if key.D.held(): Camera.x += amt
+
+	if key.ADD.held(): 		Camera.zoom *= 1.1
+	if key.SUBTRACT.held(): Camera.zoom /= 1.1
 
 	#Video
 	worldmap.load_around(Camera.room_points, Camera.tile_points)

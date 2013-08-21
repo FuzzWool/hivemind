@@ -31,18 +31,17 @@ x Make walk animation.
 ~ Ported from pysfml2-cython to pySFML 1.3.
 ======
 
+GOAL: Add collisions to the game.
+Check collisions tile-per-tile.
 
-GOAL: Wipe out loading lag from room-to-room.
--
+A new way to load from collisions which doesn't lag the game.
 
-x Drawing
-x Try drawing only one column.
-	x There's still lag. Not a drawing glitch.
 
-x Initializing
-	x One tile for returned data
++ Loads collision data from a tileset.
+Converts the tileset collisions into room collisions.
 
-Checks
-	~ WorldMap no longer scans for levels outside of it's boundary. Instead, only adds Rooms based on a boundary.
 
-	~ To remove rooms, WorldMap saves the old boundary and removes any Rooms stored in it which isn't relevant to the new bounds.
+* Entity collides with any aa tiles.
+	x Fixed: Collision data doesn't match-up with data.
+
+	! Room range goes out of an individual Room's bounds.

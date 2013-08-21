@@ -72,13 +72,14 @@ class WorldMap:
 
 		#Find ROOM positons.
 		x1, y1, x2, y2 = room_pos
+		x2 += 1; y2 += 1
 		x1, y1 = keep_in_bounds(x1, y1)
 		x2, y2 = keep_in_bounds(x2, y2)
 
 		#MAKE new ROOMS.
 		#Check only the range, nothing outside.
-		for x in range(x1, x2+1):
-			for y in range(y1, y2+1):
+		for x in range(x1, x2):
+			for y in range(y1, y2):
 				if self.Rooms[x][y] == None:
 					a1 = self.alphabet[x]
 					a2 = self.alphabet[y]
@@ -91,8 +92,8 @@ class WorldMap:
 		#Grab the last range.
 		#None all of it's rooms which
 		#aren't also within the new range.
-		for x in range(self.old_x1, self.old_x2+1):
-			for y in range(self.old_y1, self.old_y2+1):
+		for x in range(self.old_x1, self.old_x2):
+			for y in range(self.old_y1, self.old_y2):
 
 				if  x1 <= x <= x2\
 				and y1 <= y <= y2:

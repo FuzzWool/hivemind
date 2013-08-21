@@ -46,20 +46,34 @@ class Room(object):
 	def room_w(self): return int(self.w*GRID / ROOM_WIDTH)
 	@property
 	def room_h(self): return int(self.h*GRID / ROOM_HEIGHT)
+	
 	#
 
 	def __init__ (self, room_dir, room_x=0, room_y=0):
 	#Grabs Room data and creates tiles.
 
 		self.room_x, self.room_y = room_x, room_y
+
 		self.data = self._load_room(room_dir)
+		# self.data = [["aa"]]
+		# self.texture = MyTexture("img/tilemaps/level.png")
+		
 		self.tiles = self._initialize_tiles(self.data)
 		# self.tiles = self._make_all_tiles(self.data)
 
+		#Collisions.
 		self.collision = collision(self)
-		self.collision.make_bounds()
-		# self.collision.filler()
+		# self.collision.make_bounds()
+		self.collision.filler()
 
+
+	#	WIP - TILE CREATION
+
+	class Tile:
+		data = "__"
+		sprite = None
+
+	#
 
 	def change_tile(self, pos, clip):
 	#Changes a tile, updates the Room and tiles.
@@ -192,6 +206,8 @@ class Room(object):
 		fill = [None for y in data[0]]
 		while len(tiles) < len(data):
 			tiles.append(fill)
+
+		# return tiles
 		return [tile[:] for tile in tiles]
 
 
@@ -281,15 +297,25 @@ class Room(object):
 		% (self.name, loaded, total)
 		print string
 
+	def say_textures(self):
+	#Say the amount of individual textures being used
+	#by the tiles.
+		amt = 0
+		old = None
+		for x in self.tiles:
+			for y in x:
+				if y.texture != old:
+					amt += 1
+				old = y.texture
+
+
+
 #
 
 class collision:
 #Bounds all of the tiles together to handle only a few
 #collision points.
-
-	
 	def __init__ (self, Room): self._ = Room
-
 
 	# TILE COLLISION
 	#For reading a %name%_collision.txt to interpret
@@ -301,7 +327,7 @@ class collision:
 	def read_collisions(self):
 	#Make collision data.
 
-		#READ the data from a file.
+	#READ the data from a file.
 		collision_dir = "img/tilemaps/%s_collision.txt"\
 		 % self._.texture_name
 		try:
@@ -333,161 +359,47 @@ class collision:
 				self.tileset[-1].append(line[c:c+2])
 				c += 2
 
-		#x/y format
-		xy_tileset = []
-		row = 0
-		while row < len(self.tileset[0]):
-			column = [i[row] for i in self.tileset] 
-			xy_tileset.append(column[:])
-			row += 1
-		self.tileset = [i[:] for i in xy_tileset]
-		
-		print self.tileset
+		# #x/y format
+		# xy_tileset = []
+		# row = 0
+		# while row < len(self.tileset[0]):
+		# 	column = [i[row] for i in self.tileset] 
+		# 	xy_tileset.append(column[:])
+		# 	row += 1
+		# self.tileset = [i[:] for i in xy_tileset]
 
+		# #debug
+		# if self._.name == "aa":
+		# 	print self.tileset
 
-	# BOUNDS
-	#For condensing the rects of the level together.
+	#USE tileset data to make room DATA.
+		self.data = []
 
-	@property
-	def points(self):
-	#Return all of the room's collision points.
-	#Returns absolute values
-		points = []
-		old = []
-		for x in self._bounds:
+		for x in self._.data:
+			self.data.append([])
 			for y in x:
-				if y not in old and y != None:
-					old.append(y)
-					x1, y1 = (y.x1)*GRID, (y.y1)*GRID
-					x2, y2 = (y.x2+1)*GRID, (y.y2+1)*GRID
 
-					#offset
-					ox = self._.x*GRID
-					oy = self._.y*GRID
-					x1, y1 = x1 + ox, y1 + oy
-					x2, y2 = x2 + ox, y2 + oy
-
-					point = (x1, y1, x2, y2)
-					points.append(point)
-		return points
-
-
-	def points_range(self, rx1, ry1, rx2, ry2):
-	#Returns all of the room's collision points.
-	#...within a certain grid range.
-
-		#Positioning offset
-		rx1 -= self._.x; rx2 -= self._.x
-		ry1 -= self._.y; ry2 -= self._.y
-		if rx1 < 1: rx1 = 0
-		if ry1 < 1: ry1 = 0
-
-		points = []
-		old = []
-
-		for x in self._bounds[rx1:rx2]:
-			for y in x[ry1:ry2]:
-
-				if y not in old and y != None:
-					old.append(y)
-					x1, y1 = (y.x1)*GRID, (y.y1)*GRID
-					x2, y2 = (y.x2+1)*GRID, (y.y2+1)*GRID
-
-					#offset
-					ox = self._.x*GRID
-					oy = self._.y*GRID
-					x1, y1 = x1 + ox, y1 + oy
-					x2, y2 = x2 + ox, y2 + oy
-
-					point = (x1, y1, x2, y2)
-					points.append(point)
-		return points
-
-	class bound:
-	#Coordinates to be referenced in multiple tiles.
-		x1, y1, x2, y2 = None, None, None, None
-
-		@property
-		def points(self):
-			return self.x1, self.y1, self.x2, self.y2
-
-
-	def make_bounds(self):	
-		#Create bounding boxes.
-		
-		#Grid format.
-		#Every space which is filled has a bound.
-		#The bound is a reference to the original x1, y1.
-
-		self._bounds = []
-		#Every column has a bound.
-		for ix, x in enumerate(self._.data):
-			self._bounds.append([])
-
-			old = None
-			for iy, y in enumerate(x):
-
-				#If there's a tile...
-				if y != "__":
-					#And there wasn't a tile beforehand.
-					if old == "__"\
-					or iy == 0:
-						#Make a new bound.
-						bound = self.bound()
-						bound.x1, bound.x2 = ix, ix
-						bound.y1, bound.y2 = iy, iy
-						self._bounds[-1].append(bound)
-
-					#And there WAS a tile beforehand.
-					else:
-						#Use that bound.
-						bound = self._bounds[-1][-1]
-						bound.x2, bound.y2 = ix, iy
-						self._bounds[-1].append(bound)
-
-				#If there isn't a tile.
+				#Using the data character, get the
+				#position on the collision tileset.
+				if y == "__":
+					self.data[-1].append("__")
 				else:
-					#Add an empty space.
-					self._bounds[-1].append(None)
+					c1, c2 = y
+					cx = self._.alphabet.index(c1)
+					cy = self._.alphabet.index(c2)
+					tileset_data = self.tileset[cx][cy]
+					self.data[-1].append(tileset_data)
 
-				old = y
+		#x/y format
+		# xy_data = []
+		# row = 0
+		# while row < len(self.data[0]):
+		# 	column = [i[row] for i in self.data] 
+		# 	xy_data.append(column[:])
+		# 	row += 1
+		# self.data = [i[:] for i in xy_data]
 
-		# #Merge the columns together.
-		w = len(self._bounds)
-		h = len(self._bounds[0])
-
-		for x in range(1, w):
-			for y in range(h):
-
-				#If they're aligned, merge them.
-				a = self._bounds[x-1][y]
-				b = self._bounds[x][y]
-				if a != None and b != None:
-					if (a.y1,a.y2) == (b.y1,b.y2):
-						#Expand a.
-						a.x2 = b.x2
-
-						#Convert b to a.
-						for y2 in range(h):
-							if self._bounds[x][y2] == b:
-								self._bounds[x][y2] = a
-						b = a
-						# print x, y, b
-
-		# self.say_bounds()
-
-
-	#Debugging
-	def say_bounds(self):
-		unique = 0
-		old = []
-		for x in self._bounds:
-			for y in x:
-				if y not in old and y != None:
-					print y.points
-					unique += 1
-				old.append(y)
-
-		msg = "Using %s bounds from %s tiles."\
-		% (unique, self._.filled_data)
-		print msg
+		# #debug
+		if self._.name == "aa": 
+			print self._.data_ascii(self.data)
+			print self._.data_ascii(self._.data)

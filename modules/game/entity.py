@@ -208,25 +208,42 @@ class Entity(object):
 		x1, y1, x2, y2 = self.cbox.points
 		x1 = int(x1/GRID)-2; y1 = int(y1/GRID)-2
 		x2 = int(x2/GRID)+2; y2 = int(y2/GRID)+2
-		points = collision.points_range(x1, y1, x2, y2)
-		#
-		for point in points:
 
-			self.collision_pushback(*point)
+		#Fix the range
+		x1 -= Room.x; x2 -= Room.x
+		y1 -= Room.y; y2 -= Room.y
+		if x1 < 0: x1 = 0
+		if y1 < 0: y1 = 0
+		if x2 > Room.w: x2 = Room.w
+		if y2 > Room.h: y2 = Room.h
 
-			collision = self.cbox.collision
-			if collision.bottom_to_top(*point):
-				self.yVel = 0
-				self.can_jump = True
-				self.in_air = False
 
-			if collision.top_to_bottom(*point):
-				if self.yVel < 0: self.yVel = 0
-				self.can_jump = False
+		#Scan the range
+		for x in range(x1, x2):
+			for y in range(y1, y2):
 
-			if collision.left_to_right(*point)\
-			or collision.right_to_left(*point):
-				self.xVel = 0
+				if Room.collision.data[x][y] == "aa":
+
+					tile = Room.tiles[x][y]
+					points = tile.points
+
+					#
+
+					self.cbox.collision.pushback(tile)
+
+					collision = self.cbox.collision
+					if collision.bottom_to_top(*points):
+						self.yVel = 0
+						self.can_jump = True
+						self.in_air = False
+
+					if collision.top_to_bottom(*points):
+						if self.yVel < 0: self.yVel = 0
+						self.can_jump = False
+
+					if collision.left_to_right(*points)\
+					or collision.right_to_left(*points):
+						self.xVel = 0
 
 #	STATES
 

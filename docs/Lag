@@ -1,0 +1,8 @@
+Found big contributers to stuttering:
+	- WorldMap/Room/Tile scan boundary.
+	- Tilemap image size.
+
+=
+
+~ WorldMap level de(loading) made more efficient.
+~ Tilemap img made smaller.

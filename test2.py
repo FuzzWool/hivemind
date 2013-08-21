@@ -22,10 +22,10 @@ while running:
         if type(event) is sf.CloseEvent: running = False
 
     amt = 10
-    if sf.Keyboard.is_key_pressed(sf.Keyboard.UP): sprite.move((0, -amt))
-    if sf.Keyboard.is_key_pressed(sf.Keyboard.DOWN): sprite.move((0, +amt))
-    if sf.Keyboard.is_key_pressed(sf.Keyboard.LEFT): sprite.move((-amt, 0))
-    if sf.Keyboard.is_key_pressed(sf.Keyboard.RIGHT): sprite.move((+amt, 0))
+    if sf.Keyboard.is_key_pressed(sf.Keyboard.W): sprite.move((0, -amt))
+    if sf.Keyboard.is_key_pressed(sf.Keyboard.S): sprite.move((0, +amt))
+    if sf.Keyboard.is_key_pressed(sf.Keyboard.A): sprite.move((-amt, 0))
+    if sf.Keyboard.is_key_pressed(sf.Keyboard.D): sprite.move((+amt, 0))
 
     # Graphics
     window.clear(sf.Color.YELLOW)

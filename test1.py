@@ -34,7 +34,8 @@ while running:
 
 	#Video
 	Camera.center = Nut.cbox.center
-	worldmap.load_around(Camera.room_points, Camera.tile_points)
+	worldmap\
+	.load_around(Camera.room_points, Camera.tile_points)
 	
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
