@@ -39,15 +39,23 @@ x Entity collides with any aa tiles.
 GOAL: Add collisions to the game.
 Check collisions tile-per-tile.
 
-* Add slope collisions.
-	+ Added basic testing.
+x Add slope collisions.
 
-	* All all side checks to slope_collisions.
-		All sides. All anchors.
-		x bottom_to_top
-		x top_to_bottom
-		x left_to_right
-		x right_to_left
+* Add collisions for every tile in the slope collisions tilemap.
+	A clean way to apply collision settings to a tile.
+
+	1! In order for a tile to be collidable, it has to have an existing sprite.
+		! Off-screen NPCs cannot collide with anything.
+
+
+1! Make a tile class with...
+	data
+	sprite
+
+	Modes:
+	* Active: Draw, collide. 
+	* Passive: Don't draw, collide.
+	* Remove: Don't draw, Don't collide.
 
 
 * Fix side detection faults.

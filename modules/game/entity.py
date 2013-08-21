@@ -83,7 +83,7 @@ class Entity(object):
 
 	def draw(self):
 		self.sprite.draw()
-		self.cbox.draw()
+		# self.cbox.draw()
 
 #	MOVEMENT
 
@@ -245,7 +245,7 @@ class Entity(object):
 					or collision.right_to_left(*points):
 						self.xVel = 0
 
-				if Room.collision.data[x][y] == "ba":
+				elif Room.collision.data[x][y] != "__":
 
 					tile = Room.tiles[x][y]
 					points = tile.points
@@ -260,18 +260,18 @@ class Entity(object):
 
 					self.cbox.slope_collision.pushback(tile)
 
-					# collision = self.cbox.slope_collision
-					# if collision.bottom_to_top(*points):
-					# 	self.yVel = 0
-					# 	self.can_jump = True
-					# 	self.in_air = False
+					collision = self.cbox.slope_collision
+					if collision.bottom_to_top(tile):
+						self.yVel = 0
+						self.can_jump = True
+						self.in_air = False
 
-					# if collision.top_to_bottom(*points):
-					# 	if self.yVel < 0: self.yVel = 0
-					# 	self.can_jump = False
+					if collision.top_to_bottom(tile):
+						# if self.yVel < 0: self.yVel = 0
+						self.can_jump = False
 
-					# if collision.left_to_right(*points)\
-					# or collision.right_to_left(*points):
+					# if collision.left_to_right(tile)\
+					# or collision.right_to_left(tile):
 					# 	self.xVel = 0
 
 #	STATES

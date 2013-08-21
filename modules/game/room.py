@@ -359,25 +359,12 @@ class collision:
 				self.tileset[-1].append(line[c:c+2])
 				c += 2
 
-		# #x/y format
-		# xy_tileset = []
-		# row = 0
-		# while row < len(self.tileset[0]):
-		# 	column = [i[row] for i in self.tileset] 
-		# 	xy_tileset.append(column[:])
-		# 	row += 1
-		# self.tileset = [i[:] for i in xy_tileset]
-
-		# #debug
-		# if self._.name == "aa":
-		# 	print self.tileset
-
 	#USE tileset data to make room DATA.
 		self.data = []
 
-		for x in self._.data:
+		for ix, x in enumerate(self._.data):
 			self.data.append([])
-			for y in x:
+			for iy, y in enumerate(x):
 
 				#Using the data character, get the
 				#position on the collision tileset.
@@ -390,16 +377,19 @@ class collision:
 					tileset_data = self.tileset[cx][cy]
 					self.data[-1].append(tileset_data)
 
-		#x/y format
-		# xy_data = []
-		# row = 0
-		# while row < len(self.data[0]):
-		# 	column = [i[row] for i in self.data] 
-		# 	xy_data.append(column[:])
-		# 	row += 1
-		# self.data = [i[:] for i in xy_data]
+	#
 
-		# # #debug
-		# if self._.name == "aa": 
-		# 	print self._.data_ascii(self.data)
-		# 	print self._.data_ascii(self._.data)
+	def apply_collision_settings(self, x, y):
+		pass
+
+		#OLD
+		# #Apply collision SETTINGS for the
+		# #tile sprites.
+		# if tileset_data == "ba":
+		# 	tile = self._.tiles[ix][iy]
+
+		# 	# a = (tile.x2, tile.y1)
+		# 	# c = (tile.x1, tile.y2)
+		# 	# tile.slope_collision.a = a
+		# 	# tile.slope_collision.b = c
+		# 	# tile.slope_collision.anchor = "rd"
