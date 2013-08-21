@@ -206,8 +206,8 @@ class Entity(object):
 
 		#Get the range to perform collision checks.
 		x1, y1, x2, y2 = self.cbox.points
-		x1 = int(x1/GRID)-2; y1 = int(y1/GRID)-2
-		x2 = int(x2/GRID)+2; y2 = int(y2/GRID)+2
+		x1 = int(x1/GRID)-1; y1 = int(y1/GRID)-1
+		x2 = int(x2/GRID)+1; y2 = int(y2/GRID)+1
 
 		#Fix the range
 		x1 -= Room.x; x2 -= Room.x
@@ -244,6 +244,35 @@ class Entity(object):
 					if collision.left_to_right(*points)\
 					or collision.right_to_left(*points):
 						self.xVel = 0
+
+				if Room.collision.data[x][y] == "ba":
+
+					tile = Room.tiles[x][y]
+					points = tile.points
+
+					#ba points
+					a = (tile.x2, tile.y1)
+					c = (tile.x1, tile.y2)
+					tile.slope_collision.a = a
+					tile.slope_collision.b = c
+					tile.slope_collision.anchor = "rd"
+					#
+
+					self.cbox.slope_collision.pushback(tile)
+
+					# collision = self.cbox.slope_collision
+					# if collision.bottom_to_top(*points):
+					# 	self.yVel = 0
+					# 	self.can_jump = True
+					# 	self.in_air = False
+
+					# if collision.top_to_bottom(*points):
+					# 	if self.yVel < 0: self.yVel = 0
+					# 	self.can_jump = False
+
+					# if collision.left_to_right(*points)\
+					# or collision.right_to_left(*points):
+					# 	self.xVel = 0
 
 #	STATES
 

@@ -33,7 +33,7 @@ while running:
 	Nut.play()
 
 	#Video
-	Camera.center = Nut.cbox.center
+	# Camera.center = Nut.cbox.center
 	worldmap\
 	.load_around(Camera.room_points, Camera.tile_points)
 	

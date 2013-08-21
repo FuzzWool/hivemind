@@ -30,18 +30,24 @@ x Make walk animation.
 
 ~ Ported from pysfml2-cython to pySFML 1.3.
 ======
++ Loads collision data from a tileset.
+Converts the tileset collisions into room collisions.
+
+x Entity collides with any aa tiles.
+=
 
 GOAL: Add collisions to the game.
 Check collisions tile-per-tile.
 
-A new way to load from collisions which doesn't lag the game.
+* Add slope collisions.
+	+ Added basic testing.
+
+	* All all side checks to slope_collisions.
+		All sides. All anchors.
+		x bottom_to_top
+		x top_to_bottom
+		x left_to_right
+		x right_to_left
 
 
-+ Loads collision data from a tileset.
-Converts the tileset collisions into room collisions.
-
-
-* Entity collides with any aa tiles.
-	x Fixed: Collision data doesn't match-up with data.
-
-	! Room range goes out of an individual Room's bounds.
+* Fix side detection faults.

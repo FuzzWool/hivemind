@@ -399,7 +399,7 @@ class collision:
 		# 	row += 1
 		# self.data = [i[:] for i in xy_data]
 
-		# #debug
-		if self._.name == "aa": 
-			print self._.data_ascii(self.data)
-			print self._.data_ascii(self._.data)
+		# # #debug
+		# if self._.name == "aa": 
+		# 	print self._.data_ascii(self.data)
+		# 	print self._.data_ascii(self._.data)

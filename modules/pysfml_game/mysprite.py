@@ -526,6 +526,72 @@ class slope_collision(object):
 	#
 
 
+	#####	Extra checks
+	#For resetting jumps, etc.
+
+	#Side checks.
+	def bottom_to_top(self, triangle):
+	#If a's bottom is colliding with b's top.
+		x1, y2, x2, y2 = triangle.points
+
+		if self._.collision._x_collision(x1, x2):
+			
+			#straight
+			if triangle.slope_collision.anchor_y == "d":
+				if self.y_overlap_amt(triangle) == 0:
+					return True
+
+			#sloped
+			if triangle.slope_collision.anchor_y == "u":
+				if self._.y2 == triangle.y1:
+					return True
+		return False
+
+
+	def top_to_bottom(self, triangle):
+		x1, y1, x2, y2 = triangle.points
+
+		if self._.collision._x_collision(x1, x2):
+			if triangle.slope_collision.anchor_y == "d":
+				if self._.y1 == triangle.y2:
+					return True
+
+			if triangle.slope_collision.anchor_y == "u":
+				if self.y_overlap_amt(triangle) == 0:
+					return True
+		return False
+
+
+	def left_to_right(self, triangle):
+		x1, y1, x2, y2 = triangle.points
+		
+		if self._.collision._y_collision(y1, y2):
+			if triangle.slope_collision.anchor_x == "l":
+				if self._.x2 == triangle.x1:
+					return True
+
+			if triangle.slope_collision.anchor_x == "r":
+				if self.y_overlap_amt(triangle) == 0:
+					return True
+		return False
+
+
+	def right_to_left(self, triangle):
+		x1, y1, x2, y2 = triangle.points
+
+		if self._.collision._y_collision(y1, y2):
+			if triangle.slope_collision.anchor_x == "l":
+				if self.y_overlap_amt(triangle) == 0:
+					return True
+
+			if triangle.slope_collision.anchor_x == "r":
+				if self._.x1 == triangle.x2:
+					return True
+		return False
+	#
+
+
+
 	# VISUAL DEBUG
 
 	adot, bdot = None, None
