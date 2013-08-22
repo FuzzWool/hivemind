@@ -53,12 +53,9 @@ x Add slope collisions.
 	x change tile (cell) to tile.sprite
 	x change collision.data to tile.collision
 
-	* Fix for LevelEditor.
 
-	Modes:
-	* Active: Draw, collide. 
-	* Passive: Don't draw, collide.
-	* Remove: Don't draw, Don't collide.
+	* Tiles now None the Sprite texture when off-screen.
+	Collision information is still stored in the sprite.
 
 
 * Fix side detection faults.

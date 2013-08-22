@@ -52,9 +52,10 @@ class Room(object):
 	#
 	class Tile:
 		data = "__"
-		sprite = None
-		#
+		sprite = MySprite(None)
 		collision = "__"
+
+		mode = "active"
 	#
 
 	def change_tile(self, pos, clip):
@@ -89,9 +90,8 @@ class Room(object):
 	def draw(self):
 		for x in self.tiles:
 			for y in x:
-				if y != None:
-					if y.sprite != None:
-						y.sprite.draw()
+				if y.sprite != None:
+					y.sprite.draw()
 
 
 #	LOADING DATA
@@ -200,6 +200,8 @@ class Room(object):
 		return [tile[:] for tile in tiles]
 
 
+#	TILE DRAWING
+
 	def _make_all_tiles(self, data):
 	#Make ALL of the tiles in the data.
 		for ix, x in enumerate(data):
@@ -230,7 +232,8 @@ class Room(object):
 				#Make a tile within the area.
 				if  x1 <= x <= x2\
 				and y1 <= y <= y2:
-					if self.tiles[x][y].sprite == None\
+					if self.tiles[x][y].sprite.texture\
+					 == None\
 					and self.tiles[x][y].data != "__":
 
 						self.change_tile((x, y),\
@@ -240,7 +243,7 @@ class Room(object):
 				if x < x1 or x2 < x\
 				or y < y1 or y2 < y:
 
-					self.tiles[x][y].sprite = None
+					self.tiles[x][y].sprite.texture = None
 
 # DEBUGGING
 
@@ -310,7 +313,8 @@ class collision:
 	#what tiles have what kind of collision.
 
 	def filler(self):
-		self.read_collisions()
+		self.tileset = self.read_collisions()
+		self.apply_collision_settings()
 
 	def read_collisions(self):
 	#READ the data from a file.
@@ -336,16 +340,20 @@ class collision:
 		f.close()
 
 		#CONVERT into usable collision data.
-		self.tileset = []
+		tileset = []
 		raw = raw.split("\n")
 		for line in raw:
-			self.tileset.append([])
+			tileset.append([])
 			c = 0
 			while c < len(line):
-				self.tileset[-1].append(line[c:c+2])
+				tileset[-1].append(line[c:c+2])
 				c += 2
 
-	#USE tileset data to make room DATA.
+		return tileset
+
+
+	def apply_collision_settings(self):
+		#USE tileset data to make room DATA.
 		#
 		tiles_data = []
 		for x in self._.tiles:
@@ -367,11 +375,6 @@ class collision:
 					tileset_data = self.tileset[cx][cy]
 					self._.tiles[ix][iy].collision\
 					= (tileset_data)
-
-	#
-
-	def apply_collision_settings(self, x, y):
-		pass
 
 		#OLD
 		# #Apply collision SETTINGS for the
