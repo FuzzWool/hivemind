@@ -53,13 +53,12 @@ x Add slope collisions.
 	x change tile (cell) to tile.sprite
 	x change collision.data to tile.collision
 
+	* Fix for LevelEditor.
 
 	Modes:
 	* Active: Draw, collide. 
 	* Passive: Don't draw, collide.
 	* Remove: Don't draw, Don't collide.
-
-	Test with main and level editor.
 
 
 * Fix side detection faults.

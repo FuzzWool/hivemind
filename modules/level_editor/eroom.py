@@ -55,17 +55,17 @@ class ERoom(Room):
 				#Make a tile within the area.
 				if  x1 <= x <= x2\
 				and y1 <= y <= y2:
-					if self.tiles[x][y] == None:
+					if self.tiles[x][y].sprite == None:
 					### Only this line has been removed.
 
 						self.change_tile((x, y),\
-						 self.data[x][y])
+						 self.tiles[x][y].data)
 
 				#Remove any tiles outside of the area.
 				if x < x1 or x2 < x\
 				or y < y1 or y2 < y:
 
-					self.tiles[x][y] = None
+					self.tiles[x][y].sprite = None
 
 
 #	TEXTURE
@@ -78,19 +78,21 @@ class ERoom(Room):
 		#Update all of the tiles' textures.
 		for ix, x in enumerate(self.tiles):
 			for iy, y in enumerate(x):
-				if self.data[ix][iy] != "__":
-					y.texture = self.texture
+				if self.tiles[ix][iy].data != "__":
+					y.sprite.texture = self.texture
 
 #	SAVING
 
 	def save(self):
 	#Saves the data back in to the file it originated.
-		#Grab the data.
+		
+		#Grab the tile data.
 		text = ""
 		text += self.texture_name+"\n"
-		for iy, y in enumerate(self.data[0]):
-			for ix, x in enumerate(self.data):
-				text += str(self.data[ix][iy])		
+		for iy, y in enumerate(self.tiles[0]):
+			for ix, x in enumerate(self.tiles):
+				# self.tiles[ix][iy].data
+				text += str(self.tiles[ix][iy].data)		
 			text += "\n"
 		text = text[:-1]
 
