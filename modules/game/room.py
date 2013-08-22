@@ -5,32 +5,20 @@ from modules.pysfml_game import ROOM_WIDTH, ROOM_HEIGHT
 class Room(object):
 	name = ""
 	texture_name = ""
-	texture = "loaded from the first room file line"
-	data = []; tiles = []
+	texture = None
+	tiles = []
 	alphabet = ["a","b","c","d","e","f","g",\
 	 "h","i","j","k","l","m","n","o","p","q",\
 	 "q","r","s","t","u","v","w","x","y","z"]
 
- 	#Properties (size, position)
-	_x, _y = 0, 0
+ 	#Size / Position
+	x, y = 0, 0
 
 	@property
-	def x(self): return self._x
-	@x.setter
-	def x(self, arg):
-		self._x = arg
+	def w(self): return len(self.tiles)
 
 	@property
-	def y(self): return self._y
-	@y.setter
-	def y(self, arg):
-		self._y = arg
-
-	@property
-	def w(self): return len(self.data)
-
-	@property
-	def h(self): return len(self.data[0])
+	def h(self): return len(self.tiles[0])
 
 	@property
 	def room_x(self): return int(self.x*GRID / ROOM_WIDTH)
@@ -54,25 +42,19 @@ class Room(object):
 
 		self.room_x, self.room_y = room_x, room_y
 
-		self.data = self._load_room(room_dir)
-		# self.data = [["aa"]]
-		# self.texture = MyTexture("img/tilemaps/level.png")
-		
-		self.tiles = self._initialize_tiles(self.data)
-		# self.tiles = self._make_all_tiles(self.data)
+		data = self._load_room(room_dir)
+		self.tiles = self._initialize_tiles(data)
 
 		#Collisions.
 		self.collision = collision(self)
-		# self.collision.make_bounds()
 		self.collision.filler()
 
-
-	#	WIP - TILE CREATION
-
+	#
 	class Tile:
 		data = "__"
 		sprite = None
-
+		#
+		collision = "__"
 	#
 
 	def change_tile(self, pos, clip):
@@ -97,20 +79,19 @@ class Room(object):
 
 		x, y = pos[0], pos[1]
 		tile = make_tile(pos, clip)
-		self.tiles[x][y] = tile
-		self.data[x][y] = clip
+		self.tiles[x][y].sprite = tile
+		self.tiles[x][y].data = clip
 
 	def empty_tile(self, pos=(), clip=()):
 	#I exist entirely for ERoom's sake.
 		return None
 
 	def draw(self):
-		# if self.tiles[0][0] != None:
-		# 	self.tiles[0][0].draw()
 		for x in self.tiles:
 			for y in x:
 				if y != None:
-					y.draw()
+					if y.sprite != None:
+						y.sprite.draw()
 
 
 #	LOADING DATA
@@ -196,16 +177,24 @@ class Room(object):
 		data = format_data(data)
 		data = room_off_data(data)
 		return data
-		# return [["aa"]]
 
 #	TILE CREATION
 
 	def _initialize_tiles(self, data):
 	#Make spaces for the tiles to reside in.
 		tiles = []
-		fill = [None for y in data[0]]
-		while len(tiles) < len(data):
-			tiles.append(fill)
+		x = 0
+		while x < len(data):
+			tiles.append([])
+
+			y = 0
+			while y < len(data[x]):
+				tiles[x].append(self.Tile())
+				tiles[x][y].data = data[x][y]
+				y += 1
+
+			y = 0
+			x += 1
 
 		# return tiles
 		return [tile[:] for tile in tiles]
@@ -241,17 +230,17 @@ class Room(object):
 				#Make a tile within the area.
 				if  x1 <= x <= x2\
 				and y1 <= y <= y2:
-					if self.tiles[x][y] == None\
-					and self.data[x][y] != "__":
+					if self.tiles[x][y].sprite == None\
+					and self.tiles[x][y].data != "__":
 
 						self.change_tile((x, y),\
-						 self.data[x][y])
+						 self.tiles[x][y].data)
 
 				#Remove any tiles outside of the area.
 				if x < x1 or x2 < x\
 				or y < y1 or y2 < y:
 
-					self.tiles[x][y] = None
+					self.tiles[x][y].sprite = None
 
 # DEBUGGING
 
@@ -313,8 +302,7 @@ class Room(object):
 #
 
 class collision:
-#Bounds all of the tiles together to handle only a few
-#collision points.
+#Alters tile.collision data.
 	def __init__ (self, Room): self._ = Room
 
 	# TILE COLLISION
@@ -325,8 +313,6 @@ class collision:
 		self.read_collisions()
 
 	def read_collisions(self):
-	#Make collision data.
-
 	#READ the data from a file.
 		collision_dir = "img/tilemaps/%s_collision.txt"\
 		 % self._.texture_name
@@ -360,22 +346,27 @@ class collision:
 				c += 2
 
 	#USE tileset data to make room DATA.
-		self.data = []
+		#
+		tiles_data = []
+		for x in self._.tiles:
+			tiles_data.append([])
+			for y in x:
+				tiles_data[-1].append(y.data)
+		#
 
-		for ix, x in enumerate(self._.data):
-			self.data.append([])
+		for ix, x in enumerate(tiles_data):
 			for iy, y in enumerate(x):
-
 				#Using the data character, get the
 				#position on the collision tileset.
 				if y == "__":
-					self.data[-1].append("__")
+					self._.tiles[ix][iy].collision = "__"
 				else:
 					c1, c2 = y
 					cx = self._.alphabet.index(c1)
 					cy = self._.alphabet.index(c2)
 					tileset_data = self.tileset[cx][cy]
-					self.data[-1].append(tileset_data)
+					self._.tiles[ix][iy].collision\
+					= (tileset_data)
 
 	#
 

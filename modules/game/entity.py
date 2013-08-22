@@ -222,9 +222,9 @@ class Entity(object):
 		for x in range(x1, x2):
 			for y in range(y1, y2):
 
-				if Room.collision.data[x][y] == "aa":
+				if Room.tiles[x][y].collision == "aa":
 
-					tile = Room.tiles[x][y]
+					tile = Room.tiles[x][y].sprite
 					points = tile.points
 
 					#
@@ -245,9 +245,9 @@ class Entity(object):
 					or collision.right_to_left(*points):
 						self.xVel = 0
 
-				elif Room.collision.data[x][y] != "__":
+				elif Room.tiles[x][y].collision != "__":
 
-					tile = Room.tiles[x][y]
+					tile = Room.tiles[x][y].sprite
 					points = tile.points
 
 					#ba points
