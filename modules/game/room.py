@@ -387,16 +387,44 @@ class collision:
 				tile = y
 				sprite = tile.sprite
 
+				anchor = None
+
+				#ONE-TILE SLOPES
+				#rd
 				if tile.collision == "ba":
 					a = (sprite.x1+GRID, sprite.y1)
 					b = (sprite.x1, sprite.y1+GRID)
-					sprite.slope_collision.a = a
-					sprite.slope_collision.b = b
-					sprite.slope_collision.anchor = "rd"
+					anchor = "rd"
 
+				#ld
 				if tile.collision == "ca":
 					a = (sprite.x1, sprite.y1)
 					b = (sprite.x1+GRID, sprite.y1+GRID)
+					anchor = "ld"
+
+				#ru
+				if tile.collision == "bb":
+					a = (sprite.x1+GRID, sprite.y1+GRID)
+					b = (sprite.x1, sprite.y1)
+					anchor = "ru"
+
+				#lu
+				if tile.collision == "cb":
+					a = (sprite.x1, sprite.y1+GRID)
+					b = (sprite.x1+GRID, sprite.y1)
+					anchor = "lu"
+
+				# #TWO-TILE SLOPES
+				# if tile.collision == "da":
+				# 	a = (sprite.x1+GRID, sprite.y1+(GRID/2))
+				# 	b = (sprite.x1, sprite.y1+GRID)
+				# 	anchor = "rd"
+				# if tile.collision == "ea":
+				# 	a = (sprite.x1+GRID, sprite.y1)
+				# 	b = (sprite.x1, sprite.y1+(GRID/2))
+				# 	anchor = "rd"
+
+				if anchor:
 					sprite.slope_collision.a = a
 					sprite.slope_collision.b = b
-					sprite.slope_collision.anchor = "ld"
+					sprite.slope_collision.anchor = anchor

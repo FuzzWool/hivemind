@@ -20,7 +20,7 @@ triangle = MySprite(triangle_tex)
 triangle.goto = 200, 200
 #####
 
-hypo = "lu"
+hypo = "ld"
 
 t = triangle
 if hypo == "rd":
@@ -67,9 +67,9 @@ while running:
 
 	box.slope_collision.pushback(triangle)
 
-	#TESTING SIDES
-	if box.slope_collision.right_to_left(triangle):
-		print 100
+	# #TESTING SIDES
+	# if box.slope_collision.right_to_left(triangle):
+	# 	print 100
 	#
 
 

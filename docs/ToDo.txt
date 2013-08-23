@@ -36,22 +36,18 @@ Converts the tileset collisions into room collisions.
 x Entity collides with any aa tiles.
 =
 
-GOAL: Add collisions to the game.
+GOAL: Add slope collisions to the game.
 Check collisions tile-per-tile.
-
-x Add slope collisions.
 
 * Add collisions for every tile in the slope collisions tilemap.
 	* Define these collision types in advance.
 
-		~ Filled in all of the collision cells.
-		* Make data for every single collision tile, using _collision as a reference
-			! ca has collision issues.
-
-* Fix side detection faults.
+		x Filled in all of the collision cells.
+			x 1-tile slopes
+			* 2-tile slopes
+			* 3-tile slopes
 
 * Fix lag issue while moving around the WorldMap.
 	* Investigate the stress empty MySprites put on.
-
 
 * Add a system for assigning collision data to a tilemap.

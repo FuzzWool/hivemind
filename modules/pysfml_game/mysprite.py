@@ -475,13 +475,13 @@ class slope_collision(object):
 			#FIND the smallest pushback.
 			# small = ox2
 			small = oy2
-			if abs(oy2) <= abs(small): small = oy2
-			if abs(ox1) <= abs(small): small = ox1
-			if abs(oy1) <= abs(small): small = oy1
+			# if abs(oy2) <= abs(small): small = oy2
+			if abs(ox1) < abs(small): small = ox1
+			if abs(oy1) < abs(small): small = oy1
 
 			#MOVE BY the smallest pushback.
 			if small in [oy1, oy2]:
-				self._.move(0, small) 
+				self._.move(0, small)
 			else:
 				self._.move(small, 0)
 
