@@ -55,7 +55,8 @@ class ERoom(Room):
 				#Make a tile within the area.
 				if  x1 <= x <= x2\
 				and y1 <= y <= y2:
-					if self.tiles[x][y].sprite == None:
+					if self.tiles[x][y].sprite.texture\
+					 == None:
 					### Only this line has been removed.
 
 						self.change_tile((x, y),\
@@ -65,7 +66,7 @@ class ERoom(Room):
 				if x < x1 or x2 < x\
 				or y < y1 or y2 < y:
 
-					self.tiles[x][y].sprite = None
+					self.tiles[x][y].sprite.texture = None
 
 
 #	TEXTURE

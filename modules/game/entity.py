@@ -245,7 +245,8 @@ class Entity(object):
 					or collision.right_to_left(*points):
 						self.xVel = 0
 
-				elif Room.tiles[x][y].collision == "ba":
+				#Slope collisions
+				elif Room.tiles[x][y].collision != "__":
 
 					tile = Room.tiles[x][y].sprite
 					points = tile.points

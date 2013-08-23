@@ -385,11 +385,17 @@ class collision:
 		for x in self._.tiles:
 			for y in x:
 				tile = y
+				sprite = tile.sprite
 
 				if tile.collision == "ba":
-					sprite = tile.sprite
 					a = (sprite.x1+GRID, sprite.y1)
 					b = (sprite.x1, sprite.y1+GRID)
 					sprite.slope_collision.a = a
 					sprite.slope_collision.b = b
 					sprite.slope_collision.anchor = "rd"
+
+				# if tile.collision == "ca":
+				# 	a = (sprite.x1+GRID, sprite.y1)
+				# 	b = (sprite.x1, sprite.y1+GRID)
+				# 	sprite.slope_collision.a = a
+				# 	sprite.slope_collision.b = b

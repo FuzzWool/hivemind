@@ -42,9 +42,12 @@ Check collisions tile-per-tile.
 x Add slope collisions.
 
 * Add collisions for every tile in the slope collisions tilemap.
-	* Define these collision types in advance.
+	x Define these collision types in advance.
 
-	! Changing the tile creates a completely new one.
-	~ Tiles should simply be altered to retain their collision settings.
+	! LevelEditor crashes.
+
+
+* Fix lag issue while moving around the WorldMap.
+	* Investigate the stress empty MySprites put on.
 
 * Fix side detection faults.
