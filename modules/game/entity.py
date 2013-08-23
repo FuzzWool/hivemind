@@ -219,6 +219,20 @@ class Entity(object):
 
 
 		#Scan the range
+
+		#FIRST - for pushback
+		for x in range(x1, x2):
+			for y in range(y1, y2):
+
+				tile = Room.tiles[x][y].sprite
+				if Room.tiles[x][y].collision == "aa":
+					self.cbox.collision.pushback(tile)
+
+				elif Room.tiles[x][y].collision != "__":
+					self.cbox.slope_collision.pushback(tile)
+
+
+		#SECOND - for states
 		for x in range(x1, x2):
 			for y in range(y1, y2):
 
@@ -226,10 +240,6 @@ class Entity(object):
 
 					tile = Room.tiles[x][y].sprite
 					points = tile.points
-
-					#
-
-					self.cbox.collision.pushback(tile)
 
 					collision = self.cbox.collision
 					if collision.bottom_to_top(*points):
@@ -251,8 +261,6 @@ class Entity(object):
 					tile = Room.tiles[x][y].sprite
 					points = tile.points
 
-					self.cbox.slope_collision.pushback(tile)
-
 					collision = self.cbox.slope_collision
 					if collision.bottom_to_top(tile):
 						self.yVel = 0
@@ -266,6 +274,7 @@ class Entity(object):
 					# if collision.left_to_right(tile)\
 					# or collision.right_to_left(tile):
 					# 	self.xVel = 0
+
 
 #	STATES
 
