@@ -42,20 +42,9 @@ Check collisions tile-per-tile.
 x Add slope collisions.
 
 * Add collisions for every tile in the slope collisions tilemap.
-	A clean way to apply collision settings to a tile.
+	* Define these collision types in advance.
 
-	1! In order for a tile to be collidable, it has to have an existing sprite.
-		! Off-screen NPCs cannot collide with anything.
-
-
-1! Make a tile class with...
-	x change data (cell) to tile.data
-	x change tile (cell) to tile.sprite
-	x change collision.data to tile.collision
-
-
-	* Tiles now None the Sprite texture when off-screen.
-	Collision information is still stored in the sprite.
-
+	! Changing the tile creates a completely new one.
+	~ Tiles should simply be altered to retain their collision settings.
 
 * Fix side detection faults.

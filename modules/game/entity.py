@@ -245,18 +245,10 @@ class Entity(object):
 					or collision.right_to_left(*points):
 						self.xVel = 0
 
-				elif Room.tiles[x][y].collision != "__":
+				elif Room.tiles[x][y].collision == "ba":
 
 					tile = Room.tiles[x][y].sprite
 					points = tile.points
-
-					#ba points
-					a = (tile.x2, tile.y1)
-					c = (tile.x1, tile.y2)
-					tile.slope_collision.a = a
-					tile.slope_collision.b = c
-					tile.slope_collision.anchor = "rd"
-					#
 
 					self.cbox.slope_collision.pushback(tile)
 

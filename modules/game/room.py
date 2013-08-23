@@ -51,11 +51,10 @@ class Room(object):
 
 	#
 	class Tile:
-		data = "__"
-		sprite = MySprite(None)
-		collision = "__"
-
-		mode = "active"
+		def __init__(self):
+			self.data = "__"
+			self.sprite = MySprite(None)
+			self.collision = "__"
 	#
 
 	def change_tile(self, pos, clip):
@@ -67,13 +66,17 @@ class Room(object):
 			if clip == "__":
 				return self.empty_tile(pos)
 			#
-			sprite = MySprite(self.texture)
+			sprite = self.tiles[pos[0]][pos[1]].sprite
+			# print sprite
+			sprite.texture = self.texture
+
+			# sprite = MySprite(self.texture)
 			sprite.clip.set(GRID, GRID)
 			cx = self.alphabet.index(clip[0])
 			cy = self.alphabet.index(clip[1])
 			sprite.clip.use(cy, cx)
+
 			x, y = pos[0]*GRID, pos[1]*GRID
-			# print self.room_x, self.room_y
 			x += self.x*GRID; y += self.y*GRID
 			sprite.goto = x, y
 			return sprite
@@ -90,7 +93,7 @@ class Room(object):
 	def draw(self):
 		for x in self.tiles:
 			for y in x:
-				if y.sprite != None:
+				if y.sprite.texture != None:
 					y.sprite.draw()
 
 
@@ -190,6 +193,7 @@ class Room(object):
 			y = 0
 			while y < len(data[x]):
 				tiles[x].append(self.Tile())
+				tiles[x][y].sprite.goto = x*GRID, y*GRID
 				tiles[x][y].data = data[x][y]
 				y += 1
 
@@ -313,8 +317,8 @@ class collision:
 	#what tiles have what kind of collision.
 
 	def filler(self):
-		self.tileset = self.read_collisions()
-		self.apply_collision_settings()
+		tileset = self.read_collisions()
+		self.apply_collision_settings(tileset)
 
 	def read_collisions(self):
 	#READ the data from a file.
@@ -352,7 +356,8 @@ class collision:
 		return tileset
 
 
-	def apply_collision_settings(self):
+	def apply_collision_settings(self, tileset):
+
 		#USE tileset data to make room DATA.
 		#
 		tiles_data = []
@@ -372,18 +377,19 @@ class collision:
 					c1, c2 = y
 					cx = self._.alphabet.index(c1)
 					cy = self._.alphabet.index(c2)
-					tileset_data = self.tileset[cx][cy]
+					tileset_data = tileset[cx][cy]
 					self._.tiles[ix][iy].collision\
 					= (tileset_data)
 
-		#OLD
-		# #Apply collision SETTINGS for the
-		# #tile sprites.
-		# if tileset_data == "ba":
-		# 	tile = self._.tiles[ix][iy]
+		#APPLY slope collisions to tile SPRITES.
+		for x in self._.tiles:
+			for y in x:
+				tile = y
 
-		# 	# a = (tile.x2, tile.y1)
-		# 	# c = (tile.x1, tile.y2)
-		# 	# tile.slope_collision.a = a
-		# 	# tile.slope_collision.b = c
-		# 	# tile.slope_collision.anchor = "rd"
+				if tile.collision == "ba":
+					sprite = tile.sprite
+					a = (sprite.x1+GRID, sprite.y1)
+					b = (sprite.x1, sprite.y1+GRID)
+					sprite.slope_collision.a = a
+					sprite.slope_collision.b = b
+					sprite.slope_collision.anchor = "rd"

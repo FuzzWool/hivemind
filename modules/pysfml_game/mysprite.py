@@ -70,7 +70,7 @@ class resize: #PRIVATE
 		self._ = mysprite
 
 	def w(self, w, to_scale = True):
-		if w != 0:
+		if w != 0 and self._.w != 0:
 			rw = w / self._.w
 			#
 			if to_scale == False:
@@ -78,10 +78,10 @@ class resize: #PRIVATE
 			else:
 				rh = rw
 			#
-			self._.scale(rw, rh)
+			self._.scale(rw)
 
 	def h(self, h, to_scale = True):
-		if h != 0:
+		if h != 0 and self._.h != 0:
 			rh = h / self._.h
 			#
 			if to_scale == False:
@@ -89,7 +89,7 @@ class resize: #PRIVATE
 			else:
 				rw = rh
 			#
-			self._.scale(rw, rh)
+			self._.scale(rh)
 
 
 class clip:
@@ -169,14 +169,16 @@ class children_class: #PRIVATE
 
 	#Works out the proportion of the parent's scale. Applies to children.
 	def w(self, arg):
-		proportion = arg / self._.w
-		for s in self._.children:
-			s.w = proportion * s.w
+		if self._.h != 0:
+			proportion = arg / self._.w
+			for s in self._.children:
+				s.w = proportion * s.w
 
 	def h(self, arg):
-		p = arg / self._.h
-		for s in self._.children:
-			s.h = p * s.h
+		if self._.h != 0:
+			p = arg / self._.h
+			for s in self._.children:
+				s.h = p * s.h
 	#
 
 class box(Rectangle):
