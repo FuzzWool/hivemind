@@ -17,7 +17,7 @@ sprite1.clip.use(0, 0)
 sprite1.goto = 25, 25
 
 sprite2 = MySprite(texture)
-sprite2.clip.set(25, 25)
+sprite2.clip.set(50, 25)
 sprite2.clip.use(0,1)
 sprite2.goto = 100, 100
 #########################################################
@@ -32,8 +32,8 @@ while running:
 	amt = 5
 	if key.W.held(): sprite1.collision.try_move(y= -amt)
 	if key.S.held(): sprite1.collision.try_move(y= +amt)
-	if key.A.held(): sprite1.collision.try_move(x= -amt)
-	if key.D.held(): sprite1.collision.try_move(x= +amt)
+	if key.A.held(): sprite1.collision.try_move(x= -1)
+	if key.D.held(): sprite1.collision.try_move(x= +1)
 
 	#WIP
 	sprite1.collision.pushback(sprite2)

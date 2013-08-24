@@ -257,11 +257,10 @@ class collision:
 			ox = self.x_pushback(x1, x2)
 			oy = self.y_pushback(y1, y2)
 
-			# if abs(ox) <= abs(oy): self._.move(ox, 0)
-			# else:				   self._.move(0, oy)
-
-			if abs(ox) <= abs(oy): self.tx -= ox
-			else:				   self.ty -= oy
+			if abs(ox)-abs(self.tx) <= abs(oy)-abs(self.ty):
+				self.tx -= ox
+			else:
+				self.ty -= oy
 
 	def confirm_move(self):
 		self._.move(self.tx, self.ty)
