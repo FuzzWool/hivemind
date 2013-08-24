@@ -47,6 +47,15 @@ Check collisions tile-per-tile.
 			* 2-tile slopes
 			* 3-tile slopes
 
+-
+
+GOAL: Don't allow collision sprites to intersect, ever.
+
+-
+
+* Fix the messiness of collisions.
+
+
 * Fix lag issue while moving around the WorldMap.
 	* Investigate the stress empty MySprites put on.
 
