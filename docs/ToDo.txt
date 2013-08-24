@@ -51,6 +51,11 @@ Check collisions tile-per-tile.
 
 GOAL: Don't allow collision sprites to intersect, ever.
 
+try_move
+pushback
+do_move
+
+
 -
 
 * Fix the messiness of collisions.

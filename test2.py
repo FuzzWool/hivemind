@@ -30,11 +30,14 @@ while running:
 		pass
 
 	amt = 5
-	if key.W.held(): sprite1.move(0, -amt)
-	if key.S.held(): sprite1.move(0, +amt)
-	if key.A.held(): sprite1.move(-amt, 0)
-	if key.D.held(): sprite1.move(+amt, 0)
+	if key.W.held(): sprite1.collision.try_move(y= -amt)
+	if key.S.held(): sprite1.collision.try_move(y= +amt)
+	if key.A.held(): sprite1.collision.try_move(x= -amt)
+	if key.D.held(): sprite1.collision.try_move(x= +amt)
 
+	#WIP
+	sprite1.collision.pushback(sprite2)
+	sprite1.collision.confirm_move()
 	#
 
 	#Video
@@ -42,7 +45,7 @@ while running:
 	#
 	sprite2.draw()
 	sprite1.draw()
-	sprite1.collision.pushback(sprite2)
-	#
+
+
 	window.view = Camera
 	window.display()
