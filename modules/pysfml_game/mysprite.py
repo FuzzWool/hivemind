@@ -462,31 +462,54 @@ class slope_collision(object):
 			#The slope's pushback's positivity depends
 			#on anchor.
 			that = Slope.slope_collision
-			if that.anchor in ["rd", "ld"]:
-				oy2 = -self.y_overlap_amt(Slope)
-			if that.anchor in ["ru", "lu"]:
-				oy2 = self.y_overlap_amt(Slope)
+			oy2 = self.y_overlap_amt(Slope)
+
+			##WIP
+			tx = self._.collision.tx
+			ty = self._.collision.ty
+			##
 
 			#FIND the smallest pushback.
-			# small = ox2
 			small = oy2
-			# if abs(oy2) <= abs(small): small = oy2
-			if abs(ox1) < abs(small): small = ox1
-			if abs(oy1) < abs(small): small = oy1
+			if abs(ox1)-abs(tx) < abs(oy2)-abs(ty):
+				small = ox1
+			#
+			if small == oy2:
+				if abs(oy1)-abs(ty) < abs(oy2)-abs(ty):
+					small = oy1
+			if small == ox1:
+				if abs(oy1)-abs(ty) < abs(ox1)-abs(tx):
+					small = oy1
 
 			#MOVE BY the smallest pushback.
-			if small in [oy1, oy2]:
-				self._.move(0, small)
+			if small == oy1:
+				self._.collision.ty -= small
+			elif small == oy2:
+				self._.collision.ty -= small
 			else:
-				self._.move(small, 0)
+				self._.collision.tx -= small
+
+			# if abs(ox)-abs(self.tx) <= abs(oy)-abs(self.ty):
+			# 	self.tx -= ox
+			# else:
+			# 	self.ty -= oy
 
 	def is_z(self, Slope):
 		z = self.y_overlap_amt(Slope)
-		return bool(0 < z)
+		that = Slope.slope_collision
+		if that.anchor in ["rd", "ld"]:
+			return bool(0 < z)
+		if that.anchor in ["ru", "lu"]:
+			return bool(z < 0)
 
 	def y_overlap_amt(self, Slope):
 	#Returns a positive value.
 		that = Slope.slope_collision
+
+		#WIP
+		tx = self._.collision.tx
+		ty = self._.collision.ty
+		#
 
 		#Gradient
 		w = that.b[0] - that.a[0]; w = abs(w)
@@ -494,32 +517,32 @@ class slope_collision(object):
 		ratio = h/w
 
 		#X from origin
-		y_lowering = self._.x2 - that.a[0]
+		y_lowering = self._.x2 - that.a[0] + tx
 		y_lowering *= ratio
 
 		if that.anchor == "rd":
 			if h <= y_lowering: y_lowering = h
-			gap = self._.y2 - that.a[1]
-			return +(gap + y_lowering)
+			gap = self._.y2 - that.a[1] + ty
+			return (gap + y_lowering)
 
 		if that.anchor == "ru":
 			if 0 <= y_lowering: y_lowering = 0
-			gap = self._.y1 - that.a[1]
-			return -(gap - y_lowering)
+			gap = self._.y1 - that.a[1] + ty
+			return (gap - y_lowering)
 
 
-		y_lowering = self._.x1 - Slope.x1
+		y_lowering = self._.x1 - Slope.x1 + tx
 		y_lowering *= ratio
 
 		if that.anchor == "ld":
 			if y_lowering <= 0: y_lowering = 0
-			gap = self._.y2 - that.a[1]
-			return +(gap - y_lowering)
+			gap = self._.y2 - that.a[1] + ty
+			return (gap - y_lowering)
 
 		if that.anchor == "lu":
 			if y_lowering <= 0: y_lowering = 0
-			gap = self._.y1 - that.a[1]
-			return -(gap + y_lowering)
+			gap = self._.y1 - that.a[1] + ty
+			return (gap + y_lowering)
 	#
 
 

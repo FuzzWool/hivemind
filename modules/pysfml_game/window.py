@@ -14,7 +14,7 @@ ROOM_HEIGHT = ROOM_SIZE[1]
 
 video_mode = sf.VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT)
 window = sf.RenderWindow(video_mode, "Hivemind")
-# window.framerate_limit = 20
+# window.framerate_limit = 30
 window.vertical_synchronization = True
 
 del scale

@@ -20,7 +20,7 @@ triangle = MySprite(triangle_tex)
 triangle.goto = 200, 200
 #####
 
-hypo = "ld"
+hypo = "lu"
 
 t = triangle
 if hypo == "rd":
@@ -60,17 +60,10 @@ while running:
 		pass
 
 	amt = 5
-	if key.A.held(): box.move(-amt, 0)
-	if key.D.held(): box.move(+amt, 0)
-	if key.W.held(): box.move(0, -amt)
-	if key.S.held(): box.move(0, +amt)
-
-	box.slope_collision.pushback(triangle)
-
-	# #TESTING SIDES
-	# if box.slope_collision.right_to_left(triangle):
-	# 	print 100
-	#
+	if key.A.held(): box.collision.try_move(x= -amt)
+	if key.D.held(): box.collision.try_move(x= +amt)
+	if key.W.held(): box.collision.try_move(y= -amt)
+	if key.S.held(): box.collision.try_move(y= +amt)
 
 
 	#Animation
@@ -82,6 +75,10 @@ while running:
 	triangle.draw()
 	box.draw()
 	triangle.slope_collision.draw()
+
+	box.slope_collision.pushback(triangle)
+	box.collision.confirm_move()
+
 	#
 	window.view = Camera
 	window.display()
