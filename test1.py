@@ -27,6 +27,7 @@ while running:
 	Nut.handle_controls(key)
 	Nut.handle_physics()
 	Nut.collide_with_WorldMap(worldmap)
+	Nut.cbox.collision.confirm_move()
 	# ###
 
 	#Animation

@@ -246,18 +246,21 @@ class collision:
 	def try_move(self, x=None, y=None):
 		if x == None: x = self.tx
 		if y == None: y = self.ty
-		self.tx, self.ty = x, y
+		self.tx = x
+		self.ty = y
 
 	def pushback(self, ThatSprite):
 		x1, y1, x2, y2 = ThatSprite.points
 		is_x = self.x_overlap(x1, x2)
-		is_y = self.y_overlap(y1, y2)
+		is_y = self.y_collision(y1, y2)
 
 		if is_x and is_y:
 			ox = self.x_pushback(x1, x2)
 			oy = self.y_pushback(y1, y2)
 
-			if abs(ox)-abs(self.tx) <= abs(oy)-abs(self.ty):
+			if abs(ox - self.tx) < abs(oy - self.ty):
+				# if self.tx != 0:
+				# 	print "tx", self.tx, ox, "ty", self.ty, oy
 				self.tx -= ox
 			else:
 				self.ty -= oy
@@ -273,13 +276,34 @@ class collision:
 		a = self._
 		tx = self.tx
 
+		if x1 < a.x1+tx < x2: return True
+		if x1 < a.x2+tx < x2: return True
+		if a.x1+tx < x1 < a.x2+tx: return True
+		if a.x1+tx < x2 < a.x2+tx: return True
+		return False
+
+	def y_overlap(self, y1, y2):
+		a = self._
+		ty = self.ty
+
+		if y1 < a.y1+ty < y2: return True
+		if y1 < a.y2+ty < y2: return True
+		if a.y1+ty < y1 < a.y2+ty: return True
+		if a.y1+ty < y2 < a.y2+ty: return True
+		return False
+
+	#
+	def x_collision(self, x1, x2):
+		a = self._
+		tx = self.tx
+
 		if x1 <= a.x1+tx <= x2: return True
 		if x1 <= a.x2+tx <= x2: return True
 		if a.x1+tx <= x1 <= a.x2+tx: return True
 		if a.x1+tx <= x2 <= a.x2+tx: return True
 		return False
 
-	def y_overlap(self, y1, y2):
+	def y_collision(self, y1, y2):
 		a = self._
 		ty = self.ty
 
@@ -288,6 +312,10 @@ class collision:
 		if a.y1+ty <= y1 <= a.y2+ty: return True
 		if a.y1+ty <= y2 <= a.y2+ty: return True
 		return False
+
+
+
+
 	#
 
 	#Works out the shortest pushback.
@@ -353,24 +381,6 @@ class collision:
 			if a.x2 == x1: return True
 		return False
 	#
-
-
-	#Simply detects if there is any collision (no overlap)
-	def _x_collision(self, x1, x2):
-		a = self._
-		if x1 < a.x1 < x2: return True
-		if x1 < a.x2 < x2: return True
-		if a.x1 < x1 < a.x2: return True
-		if a.x1 < x2 < a.x2: return True
-		return False
-
-	def _y_collision(self, y1, y2):
-		a = self._
-		if y1 < a.y1 < y2: return True
-		if y1 < a.y2 < y2: return True
-		if a.y1 < y1 < a.y2: return True
-		if a.y1 < y2 < a.y2: return True
-		return False
 
 ####
 
@@ -489,10 +499,6 @@ class slope_collision(object):
 			else:
 				self._.collision.tx -= small
 
-			# if abs(ox)-abs(self.tx) <= abs(oy)-abs(self.ty):
-			# 	self.tx -= ox
-			# else:
-			# 	self.ty -= oy
 
 	def is_z(self, Slope):
 		z = self.y_overlap_amt(Slope)

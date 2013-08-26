@@ -46,21 +46,24 @@ Check collisions tile-per-tile.
 			x 1-tile slopes
 			* 2-tile slopes
 			* 3-tile slopes
+-
+
+GOAL: Add 'clip' collisions to Entity.
+
+Problems:
+	x FIXED: Nut gets caught in gaps between the tiles.
+	(x only checks for overlap, y checks for any collision)
+
+	* Nut jumps strangely.
+	
+	x FIXED: Hitbox clips against bottom and right
+	(top and left of the tile)
+		Scan wasn't large enough.
 
 -
 
-GOAL: Don't allow collision sprites to intersect, ever.
-
-SLOPE
-Eradicate: 
-x Barging into another sprite.
-x 'Squeezing' past the edges.
-
-
--
 
 * Fix the messiness of collisions.
-
 
 * Fix lag issue while moving around the WorldMap.
 	* Investigate the stress empty MySprites put on.

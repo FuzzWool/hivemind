@@ -93,7 +93,7 @@ class Entity(object):
 
 	def handle_physics(self):
 	#Gravity and Vel movements.
-		self.cbox.move(self.xVel, self.yVel)
+		self.cbox.collision.try_move(self.xVel, self.yVel)
 
 		#Gravity
 		self.move(0, self.gravity)
@@ -206,8 +206,8 @@ class Entity(object):
 
 		#Get the range to perform collision checks.
 		x1, y1, x2, y2 = self.cbox.points
-		x1 = int(x1/GRID)-1; y1 = int(y1/GRID)-1
-		x2 = int(x2/GRID)+1; y2 = int(y2/GRID)+1
+		x1 = int(x1/GRID)-2; y1 = int(y1/GRID)-2
+		x2 = int(x2/GRID)+2; y2 = int(y2/GRID)+2
 
 		#Fix the range
 		x1 -= Room.x; x2 -= Room.x
@@ -220,6 +220,7 @@ class Entity(object):
 
 		#Scan the range
 
+
 		#FIRST - for pushback
 		for x in range(x1, x2):
 			for y in range(y1, y2):
@@ -231,50 +232,48 @@ class Entity(object):
 				elif Room.tiles[x][y].collision != "__":
 					self.cbox.slope_collision.pushback(tile)
 
+		# #SECOND - for states
+		# for x in range(x1, x2):
+		# 	for y in range(y1, y2):
 
-		#SECOND - for states
-		for x in range(x1, x2):
-			for y in range(y1, y2):
+		# 		if Room.tiles[x][y].collision == "aa":
 
-				if Room.tiles[x][y].collision == "aa":
+		# 			tile = Room.tiles[x][y].sprite
+		# 			points = tile.points
 
-					tile = Room.tiles[x][y].sprite
-					points = tile.points
+		# 			collision = self.cbox.collision
+		# 			if collision.bottom_to_top(*points):
+		# 				self.yVel = 0
+		# 				self.can_jump = True
+		# 				self.in_air = False
 
-					collision = self.cbox.collision
-					if collision.bottom_to_top(*points):
-						self.yVel = 0
-						self.can_jump = True
-						self.in_air = False
+		# 			if collision.top_to_bottom(*points):
+		# 				if self.yVel < 0: self.yVel = 0
+		# 				self.can_jump = False
 
-					if collision.top_to_bottom(*points):
-						if self.yVel < 0: self.yVel = 0
-						self.can_jump = False
+		# 			if collision.left_to_right(*points)\
+		# 			or collision.right_to_left(*points):
+		# 				self.xVel = 0
 
-					if collision.left_to_right(*points)\
-					or collision.right_to_left(*points):
-						self.xVel = 0
+		# 		#Slope collisions
+		# 		elif Room.tiles[x][y].collision != "__":
 
-				#Slope collisions
-				elif Room.tiles[x][y].collision != "__":
+		# 			tile = Room.tiles[x][y].sprite
+		# 			points = tile.points
 
-					tile = Room.tiles[x][y].sprite
-					points = tile.points
+		# 			collision = self.cbox.slope_collision
+		# 			if collision.bottom_to_top(tile):
+		# 				self.yVel = 0
+		# 				self.can_jump = True
+		# 				self.in_air = False
 
-					collision = self.cbox.slope_collision
-					if collision.bottom_to_top(tile):
-						self.yVel = 0
-						self.can_jump = True
-						self.in_air = False
+		# 			if collision.top_to_bottom(tile):
+		# 				# if self.yVel < 0: self.yVel = 0
+		# 				self.can_jump = False
 
-					if collision.top_to_bottom(tile):
-						# if self.yVel < 0: self.yVel = 0
-						self.can_jump = False
-
-					# if collision.left_to_right(tile)\
-					# or collision.right_to_left(tile):
-					# 	self.xVel = 0
-
+		# 			# if collision.left_to_right(tile)\
+		# 			# or collision.right_to_left(tile):
+		# 			# 	self.xVel = 0
 
 #	STATES
 
