@@ -251,7 +251,7 @@ class collision:
 
 	def pushback(self, ThatSprite):
 		x1, y1, x2, y2 = ThatSprite.points
-		is_x = self.x_overlap(x1, x2)
+		is_x = self.x_collision(x1, x2)
 		is_y = self.y_collision(y1, y2)
 
 		if is_x and is_y:
@@ -259,8 +259,6 @@ class collision:
 			oy = self.y_pushback(y1, y2)
 
 			if abs(ox - self.tx) < abs(oy - self.ty):
-				# if self.tx != 0:
-				# 	print "tx", self.tx, ox, "ty", self.ty, oy
 				self.tx -= ox
 			else:
 				self.ty -= oy
@@ -333,7 +331,8 @@ class collision:
 		for i in p:
 			if lowest == None: lowest = i
 			if abs(i) <= lowest: lowest = i
-		return tx - lowest
+		if lowest != None:
+			return tx - lowest
 
 	def y_pushback(self, y1, y2):
 		a = self._
@@ -358,25 +357,25 @@ class collision:
 	#Side checks.
 	def bottom_to_top(self, x1, y1, x2, y2):
 	#If a's bottom is colliding with b's top.
-		if self._x_collision(x1, x2):
+		if self.x_overlap(x1, x2):
 			a = self._
 			if a.y2 == y1: return True
 		return False
 
 	def top_to_bottom(self, x1, y1, x2, y2):
-		if self._x_collision(x1, x2):
+		if self.x_overlap(x1, x2):
 			a = self._
 			if a.y1 == y2: return True
 		return False
 
 	def left_to_right(self, x1, y1, x2, y2):
-		if self._y_collision(y1, y2):
+		if self.y_overlap(y1, y2):
 			a = self._
 			if a.x1 == x2: return True
 		return False
 
 	def right_to_left(self, x1, y1, x2, y2):
-		if self._y_collision(y1, y2):
+		if self.y_overlap(y1, y2):
 			a = self._
 			if a.x2 == x1: return True
 		return False

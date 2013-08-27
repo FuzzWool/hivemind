@@ -18,6 +18,12 @@ worldmap = WorldMap()
 
 running = True
 while running:
+
+	#Loading
+	# Camera.center = Nut.cbox.center
+	worldmap\
+	.load_around(Camera.room_points, Camera.tile_points)
+	
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
@@ -27,17 +33,12 @@ while running:
 	Nut.handle_controls(key)
 	Nut.handle_physics()
 	Nut.collide_with_WorldMap(worldmap)
-	Nut.cbox.collision.confirm_move()
 	# ###
 
 	#Animation
 	Nut.play()
 
 	#Video
-	# Camera.center = Nut.cbox.center
-	worldmap\
-	.load_around(Camera.room_points, Camera.tile_points)
-	
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
 	#

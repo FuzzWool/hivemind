@@ -54,16 +54,25 @@ Problems:
 	x FIXED: Nut gets caught in gaps between the tiles.
 	(x only checks for overlap, y checks for any collision)
 
-	* Nut jumps strangely.
+	x FIXED: Nut jumps strangely.
+	(move is confirmed right after pushback and before checks)
 	
 	x FIXED: Hitbox clips against bottom and right
 	(top and left of the tile)
 		Scan wasn't large enough.
 
+	* When jumping and landing, Nut gets pushed away from the gap of a tile.
+		* Make a PRUNING system which grabs only the tiles closest to x and y.
+			! GRAPHICAL DEBUGGING
+
+! Colour all tiles nearby to the player.
+
 -
 
 
 * Fix the messiness of collisions.
+
+! Holding both directional keys causes weird Nut walking.
 
 * Fix lag issue while moving around the WorldMap.
 	* Investigate the stress empty MySprites put on.
