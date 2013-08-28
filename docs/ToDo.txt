@@ -61,16 +61,34 @@ Problems:
 	(top and left of the tile)
 		Scan wasn't large enough.
 
-	* When jumping and landing, Nut gets pushed away from the gap of a tile.
-		* Make a PRUNING system which grabs only the tiles closest to x and y.
-			! GRAPHICAL DEBUGGING
+	-
 
-! Colour all tiles nearby to the player.
+	x FIXED: When jumping and landing, Nut gets pushed away from the gap of a tile.
+		x Make a PRUNING system which grabs only the tiles closest to x and y.
+			x Using the amount of x/y area the tile covers Nut
+	#
+	+ MySprite.overlap (x/y)
+
+
+	* Nut tries to collide against ceilings and sides incorrectly, leading to harsh pushouts.
+		Only for tight ceilings (one-space gap)
+
+		* overlap comparisons should be used for cx, cy
+		#
+		center is inappropriate because closeness can't be
+		cleanly measured against other tiles. (?)
+
+
+	* Slipping off of slopes
+	Hunch: x_surface and y_surface try to push both of their x/y values, when they should only be doing one.
+
+		Make a top and right tile check.
+
 
 -
 
-
 * Fix the messiness of collisions.
+Namely: tx/ty
 
 ! Holding both directional keys causes weird Nut walking.
 

@@ -17,6 +17,7 @@ class MySprite(sf.Sprite, Rectangle):
 		self.collision = collision(self)
 		self.animation = animation(self)
 		self.slope_collision = slope_collision(self)
+		self.overlap = overlap(self)
 
 	#Positioning is handled by goto instead of position.
 	#Position can't be overriden, but it needs to be for children.
@@ -627,3 +628,57 @@ class slope_collision(object):
 			self.bdot = Dot(); self.bdot.goto = self.b
 		#Draw the dots.
 		self.adot.draw(); self.bdot.draw()
+
+
+class overlap:
+	def __init__ (self, MySprite): self._ = MySprite
+
+	def x(self, ThatSprite):
+
+
+		sprite1, sprite2 = self._, ThatSprite
+		if sprite2.w > sprite1.w:
+			big, small = sprite2, sprite1
+		else:
+			big, small = sprite1, sprite2
+		
+		#Next move.
+		stx, sty = small.collision.tx, small.collision.ty
+		btx, bty = big.collision.tx, big.collision.ty
+
+		#Choose which SIDE to return based on the CENTER.
+		o = small.center[0]+stx - big.center[0]+bty
+
+		if o <= 0:
+			left_gap = small.x2+stx - big.x1+btx
+			if left_gap > small.w: left_gap = small.w
+			return left_gap
+		if o >  0:
+			right_gap = big.x2+btx - small.x1+stx
+			if right_gap > small.w: right_gap = small.w
+			return right_gap
+
+
+	def y(self, ThatSprite):
+		sprite1, sprite2 = self._, ThatSprite
+
+		if sprite2.h > sprite1.h:
+			big, small = sprite2, sprite1
+		else:
+			big, small = sprite1, sprite2
+		
+		#Next move.
+		stx, sty = small.collision.tx, small.collision.ty
+		btx, bty = big.collision.tx, big.collision.ty
+		o = small.center[1]+sty - big.center[1]+bty
+
+		if o <= 0:
+			up_gap = small.y2 - big.y1
+			if up_gap > small.h: up_gap = small.h
+			gap = up_gap
+		if o >  0:
+			down_gap = big.y2 - small.y1
+			if down_gap > small.h: down_gap = small.h
+			gap = down_gap
+
+		return gap

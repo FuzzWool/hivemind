@@ -205,8 +205,11 @@ class Entity(object):
 
 		#Get the range to perform collision checks.
 		x1, y1, x2, y2 = self.cbox.points
-		x1 = int(x1/GRID)-2; y1 = int(y1/GRID)-2
-		x2 = int(x2/GRID)+2; y2 = int(y2/GRID)+2
+		coat = 2
+		x1 = int(round(x1/GRID))-coat;
+		y1 = int(round(y1/GRID))-coat
+		x2 = int(round(x2/GRID))+coat;
+		y2 = int(round(y2/GRID))+coat
 
 		#Fix the range
 		x1 -= Room.x; x2 -= Room.x
@@ -216,9 +219,12 @@ class Entity(object):
 		if x2 > Room.w: x2 = Room.w
 		if y2 > Room.h: y2 = Room.h
 
+		#CHANGE THIS.
+		if Room.name != "aa": return 
 
 		#Scan the range
 
+		##########
 		#ZERO - pruning
 		x_tile, y_tile = None, None
 
@@ -227,12 +233,10 @@ class Entity(object):
 		c = self.cbox.center
 		tx = self.cbox.collision.tx
 		ty = self.cbox.collision.ty
-		cx, cy = c[0]+tx, c[1]+ty
+		cx, cy = c[0], c[1]
 		cx = int(cx/GRID); cy = int(cy/GRID)
 
-
-		#Debug
-
+		###debug
 		#Any tile not in range is transparent.
 		for x in range(Room.w):
 			for y in range(Room.h):
@@ -246,70 +250,103 @@ class Entity(object):
 				sprite = Room.tiles[x][y].sprite
 				if sprite.texture != None:
 					sprite.color = sf.Color(255,255,255,255)
+		###
+
 
 		#Find the NEAREST x collision.
 		#(A space which isn't empty.)
-		pass
+		old = None
+		for x in range(x1, x2):
+			#The biggest area.
+			new = Room.tiles[x][cy]
+
+			if new.collision != "__":
+				if old == None: old = new #init
+
+				#check
+				if new.sprite.overlap.x(self.cbox) \
+				>  old.sprite.overlap.x(self.cbox):
+					old = new
+		x_surface = old
+
+		###debug - display x_surface
+		if x_surface != None:
+			x_surface.sprite.color = sf.Color(0,0,0,255)
+
+		###
 
 		#Find the NEAREST y collision.
-		pass
+		old = None
+		for y in range(y1, y2):
+			new = Room.tiles[cx][y]
+			if new.collision != "__":
+				if old == None: old = new
 
+				if new.sprite.overlap.y(self.cbox) \
+				>= old.sprite.overlap.y(self.cbox):
+					old = new
+		y_surface = old
+
+		if y_surface != None:
+			y_surface.sprite.color = sf.Color(0,0,0,255)
+		##########
 
 		#FIRST - for pushback
-		for x in range(x1, x2):
-			for y in range(y1, y2):
+		for tile in [x_surface, y_surface]:
 
-				tile = Room.tiles[x][y].sprite
-				if Room.tiles[x][y].collision == "aa":
-					self.cbox.collision.pushback(tile)
+				if tile != None:
+					s = tile.sprite
+					if tile.collision == "aa":
+						self.cbox.collision.pushback(s)
 
-				elif Room.tiles[x][y].collision != "__":
-					self.cbox.slope_collision.pushback(tile)
+					elif tile.collision != "__":
+						self.cbox.slope_collision.pushback(s)
 
 
 		self.cbox.collision.confirm_move()
 
 		#SECOND - for states
-		for x in range(x1, x2):
-			for y in range(y1, y2):
+		for tile in [x_surface, y_surface]:
 
-				if Room.tiles[x][y].collision == "aa":
+				if tile != None:
 
-					tile = Room.tiles[x][y].sprite
-					points = tile.points
+					if tile.collision == "aa":
 
-					collision = self.cbox.collision
-					if collision.bottom_to_top(*points):
-						self.yVel = 0
-						self.can_jump = True
-						self.in_air = False
+						s = tile.sprite
+						points = s.points
 
-					if collision.top_to_bottom(*points):
-						if self.yVel < 0: self.yVel = 0
+						collision = self.cbox.collision
+						if collision.bottom_to_top(*points):
+							self.yVel = 0
+							self.can_jump = True
+							self.in_air = False
 
-					if collision.left_to_right(*points)\
-					or collision.right_to_left(*points):
-						self.xVel = 0
+						if collision.top_to_bottom(*points):
+							if self.yVel < 0: self.yVel = 0
 
-				#Slope collisions
-				elif Room.tiles[x][y].collision != "__":
+						if collision.left_to_right(*points)\
+						or collision.right_to_left(*points):
+							self.xVel = 0
 
-					tile = Room.tiles[x][y].sprite
-					points = tile.points
+					#Slope collisions
+					elif tile.collision != "__":
 
-					collision = self.cbox.slope_collision
-					if collision.bottom_to_top(tile):
-						self.yVel = 0
-						self.can_jump = True
-						self.in_air = False
+						s = tile.sprite
+						points = s.points
 
-					if collision.top_to_bottom(tile):
-						# if self.yVel < 0: self.yVel = 0
-						self.can_jump = False
+						collision = self.cbox.slope_collision
+						if collision.bottom_to_top(tile):
+							self.yVel = 0
+							self.can_jump = True
+							self.in_air = False
 
-					# if collision.left_to_right(tile)\
-					# or collision.right_to_left(tile):
-					# 	self.xVel = 0
+						if collision.top_to_bottom(tile):
+							# if self.yVel < 0: self.yVel = 0
+							self.can_jump = False
+
+						# if collision.left_to_right(tile)\
+						# or collision.right_to_left(tile):
+						# 	self.xVel = 0
 
 #	STATES
 
