@@ -51,38 +51,17 @@ Check collisions tile-per-tile.
 GOAL: Add 'clip' collisions to Entity.
 
 Problems:
-	x FIXED: Nut gets caught in gaps between the tiles.
-	(x only checks for overlap, y checks for any collision)
 
-	x FIXED: Nut jumps strangely.
-	(move is confirmed right after pushback and before checks)
-	
-	x FIXED: Hitbox clips against bottom and right
-	(top and left of the tile)
-		Scan wasn't large enough.
+	FIXED: Nut tries to collide against ceilings and sides incorrectly, leading to harsh pushouts.
+		x/y had issues with tight ceilings and tile sides.
 
+		Check to see if overlap predictions are correct.
+		FIXED: Now accounts for tx/ty properly.
 	-
-
-	x FIXED: When jumping and landing, Nut gets pushed away from the gap of a tile.
-		x Make a PRUNING system which grabs only the tiles closest to x and y.
-			x Using the amount of x/y area the tile covers Nut
-	#
-	+ MySprite.overlap (x/y)
-
-
-	* Nut tries to collide against ceilings and sides incorrectly, leading to harsh pushouts.
-		Only for tight ceilings (one-space gap)
-
-		* overlap comparisons should be used for cx, cy
-		#
-		center is inappropriate because closeness can't be
-		cleanly measured against other tiles. (?)
 
 
 	* Slipping off of slopes
 	Hunch: x_surface and y_surface try to push both of their x/y values, when they should only be doing one.
-
-		Make a top and right tile check.
 
 
 -

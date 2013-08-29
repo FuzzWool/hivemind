@@ -32,7 +32,7 @@ class Entity(object):
 		.from_file(self.folder_dir+"sheet.png")
 		self.image\
 		.create_mask_from_color(sf.Color(255, 0, 255))
-		
+
 		#Make the texture.
 		self.texture = sf.Texture\
 		.from_image(self.image)
@@ -47,7 +47,7 @@ class Entity(object):
 		try:
 			f = open(self.folder_dir+filename).read()
 			f = f.split("\n")
-			
+
 			#Move
 			x, y = f[0][6:].split(",")
 			x, y = int(x), int(y)
@@ -141,13 +141,13 @@ class Entity(object):
 		amt = 0.5
 		walkLim = 3 #Walking speed limit.
 		if key.LEFT.held() or key.RIGHT.held():
-			
+
 			if key.LEFT.held():
 				self.facing_left = True
 				if -walkLim <= self.xVel - amt:
 					self.move(-amt, 0)
 				self.right_slowdown(amt)
-			
+
 			if key.RIGHT.held():
 				self.facing_right = True
 				if self.xVel + amt <= walkLim:
@@ -233,8 +233,11 @@ class Entity(object):
 		c = self.cbox.center
 		tx = self.cbox.collision.tx
 		ty = self.cbox.collision.ty
-		cx, cy = c[0], c[1]
-		cx = int(cx/GRID); cy = int(cy/GRID)
+		cx, cy = c[0]+tx, c[1]+ty
+		cx = int((cx/GRID));
+		cy = int((cy/GRID))
+
+		print self.cbox.goto
 
 		###debug
 		#Any tile not in range is transparent.
@@ -263,10 +266,15 @@ class Entity(object):
 			if new.collision != "__":
 				if old == None: old = new #init
 
+				ox = old.sprite.overlap.x(self.cbox)
+				oy = old.sprite.overlap.y(self.cbox)
+				nx = new.sprite.overlap.x(self.cbox)
+				ny = new.sprite.overlap.y(self.cbox)
+
 				#check
-				if new.sprite.overlap.x(self.cbox) \
-				>  old.sprite.overlap.x(self.cbox):
-					old = new
+				if nx >= ox:
+					if nx > ox: old = new
+					if ny > oy: old = new
 		x_surface = old
 
 		###debug - display x_surface
@@ -282,13 +290,18 @@ class Entity(object):
 			if new.collision != "__":
 				if old == None: old = new
 
-				if new.sprite.overlap.y(self.cbox) \
-				>= old.sprite.overlap.y(self.cbox):
-					old = new
+				ox = old.sprite.overlap.x(self.cbox)
+				oy = old.sprite.overlap.y(self.cbox)
+				nx = new.sprite.overlap.x(self.cbox)
+				ny = new.sprite.overlap.y(self.cbox)
+
+				if ny >= oy:
+					if ny > oy: old = new
+					if nx > ox: old = new
 		y_surface = old
 
 		if y_surface != None:
-			y_surface.sprite.color = sf.Color(0,0,0,255)
+			y_surface.sprite.color = sf.Color(0,0,0,100)
 		##########
 
 		#FIRST - for pushback

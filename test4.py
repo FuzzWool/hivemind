@@ -28,16 +28,17 @@ running = True
 while running:
 	#Logic
 	if quit(): running = False
-	if key.RETURN.pressed():
-
-		#!!! Has to keep negative values.
-		print sprite1.overlap.y(sprite2)
 
 	amt = 2
-	if key.W.held(): sprite1.move(y= -amt)
-	if key.S.held(): sprite1.move(y= +amt)
-	if key.A.held(): sprite1.move(x= -amt)
-	if key.D.held(): sprite1.move(x= +amt)
+	if key.W.held(): sprite1.collision.try_move(y= -amt)
+	if key.S.held(): sprite1.collision.try_move(y= +amt)
+	if key.A.held(): sprite1.collision.try_move(x= -amt)
+	if key.D.held(): sprite1.collision.try_move(x= +amt)
+	sprite1.collision.confirm_move()
+	
+	if key.RETURN.pressed():
+		print sprite1.overlap.y(sprite2)
+
 
 	#Animation
 	#

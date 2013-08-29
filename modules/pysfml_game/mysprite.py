@@ -650,11 +650,11 @@ class overlap:
 		o = small.center[0]+stx - big.center[0]+bty
 
 		if o <= 0:
-			left_gap = small.x2+stx - big.x1+btx
+			left_gap = small.x2+stx - big.x1-btx
 			if left_gap > small.w: left_gap = small.w
 			return left_gap
 		if o >  0:
-			right_gap = big.x2+btx - small.x1+stx
+			right_gap = big.x2+btx - small.x1-stx
 			if right_gap > small.w: right_gap = small.w
 			return right_gap
 
@@ -670,14 +670,15 @@ class overlap:
 		#Next move.
 		stx, sty = small.collision.tx, small.collision.ty
 		btx, bty = big.collision.tx, big.collision.ty
+		
 		o = small.center[1]+sty - big.center[1]+bty
 
 		if o <= 0:
-			up_gap = small.y2 - big.y1
+			up_gap = small.y2+sty - big.y1-bty
 			if up_gap > small.h: up_gap = small.h
 			gap = up_gap
 		if o >  0:
-			down_gap = big.y2 - small.y1
+			down_gap = big.y2+bty - small.y1-sty
 			if down_gap > small.h: down_gap = small.h
 			gap = down_gap
 
