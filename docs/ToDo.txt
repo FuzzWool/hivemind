@@ -61,7 +61,10 @@ Problems:
 
 
 	* Slipping off of slopes
-	Hunch: x_surface and y_surface try to push both of their x/y values, when they should only be doing one.
+	If c is higher than the middle of a block, it is no longer checked for an x collision.
+
+		y checks from the left-most x (lx instead of cx)
+		so that left sides collide properly
 
 
 -

@@ -226,7 +226,6 @@ class Entity(object):
 
 		##########
 		#ZERO - pruning
-		x_tile, y_tile = None, None
 
 		#Find the closest collidable tile which the
 		#based on width and height area.
@@ -237,7 +236,12 @@ class Entity(object):
 		cx = int((cx/GRID));
 		cy = int((cy/GRID))
 
-		print self.cbox.goto
+		#wip
+		lx, rx = self.cbox.x1 + tx, self.cbox.x2 + tx
+		lx, rx = int(lx/GRID), int(rx/GRID)
+		uy, dy = self.cbox.y1 + ty, self.cbox.y2 + ty
+		uy, dy = int(uy/GRID), int(dy/GRID)
+		#
 
 		###debug
 		#Any tile not in range is transparent.
@@ -246,6 +250,7 @@ class Entity(object):
 				sprite = Room.tiles[x][y].sprite
 				if sprite.texture != None:
 					sprite.color = sf.Color(255,255,255,100)
+					sprite.clip.use(0,0)
 
 		#Any tile in range is opaque.
 		for x in range(x1, x2):
@@ -254,58 +259,21 @@ class Entity(object):
 				if sprite.texture != None:
 					sprite.color = sf.Color(255,255,255,255)
 		###
+		lx_tile = Room.tiles[lx][cy]
+		rx_tile = Room.tiles[rx][cy]
+		dy_tile = Room.tiles[cx][dy]
+		uy_tile = Room.tiles[cx][uy]
 
+		if lx_tile != None: lx_tile.sprite.clip.use(0,1)
+		if rx_tile != None: rx_tile.sprite.clip.use(0,2)
+		if dy_tile != None: dy_tile.sprite.clip.use(0,3)
+		if uy_tile != None: uy_tile.sprite.clip.use(0,4)
 
-		#Find the NEAREST x collision.
-		#(A space which isn't empty.)
-		old = None
-		for x in range(x1, x2):
-			#The biggest area.
-			new = Room.tiles[x][cy]
-
-			if new.collision != "__":
-				if old == None: old = new #init
-
-				ox = old.sprite.overlap.x(self.cbox)
-				oy = old.sprite.overlap.y(self.cbox)
-				nx = new.sprite.overlap.x(self.cbox)
-				ny = new.sprite.overlap.y(self.cbox)
-
-				#check
-				if nx >= ox:
-					if nx > ox: old = new
-					if ny > oy: old = new
-		x_surface = old
-
-		###debug - display x_surface
-		if x_surface != None:
-			x_surface.sprite.color = sf.Color(0,0,0,255)
-
-		###
-
-		#Find the NEAREST y collision.
-		old = None
-		for y in range(y1, y2):
-			new = Room.tiles[cx][y]
-			if new.collision != "__":
-				if old == None: old = new
-
-				ox = old.sprite.overlap.x(self.cbox)
-				oy = old.sprite.overlap.y(self.cbox)
-				nx = new.sprite.overlap.x(self.cbox)
-				ny = new.sprite.overlap.y(self.cbox)
-
-				if ny >= oy:
-					if ny > oy: old = new
-					if nx > ox: old = new
-		y_surface = old
-
-		if y_surface != None:
-			y_surface.sprite.color = sf.Color(0,0,0,100)
+		collidable_tiles = [lx_tile,rx_tile,uy_tile,dy_tile]
 		##########
 
 		#FIRST - for pushback
-		for tile in [x_surface, y_surface]:
+		for tile in collidable_tiles:
 
 				if tile != None:
 					s = tile.sprite
@@ -319,7 +287,7 @@ class Entity(object):
 		self.cbox.collision.confirm_move()
 
 		#SECOND - for states
-		for tile in [x_surface, y_surface]:
+		for tile in collidable_tiles:
 
 				if tile != None:
 
