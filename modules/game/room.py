@@ -55,6 +55,11 @@ class Room(object):
 			self.data = "__"
 			self.sprite = MySprite(None)
 			self.collision = "__"
+
+		@property
+		def x(self): return int(self.sprite.x/GRID)
+		@property
+		def y(self): return int(self.sprite.y/GRID)
 	#
 
 	def change_tile(self, pos, clip):

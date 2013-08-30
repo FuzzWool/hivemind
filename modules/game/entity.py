@@ -259,17 +259,50 @@ class Entity(object):
 				if sprite.texture != None:
 					sprite.color = sf.Color(255,255,255,255)
 		###
-		lx_tile = Room.tiles[lx][cy]
-		rx_tile = Room.tiles[rx][cy]
-		dy_tile = Room.tiles[cx][dy]
-		uy_tile = Room.tiles[cx][uy]
 
-		if lx_tile != None: lx_tile.sprite.clip.use(0,1)
-		if rx_tile != None: rx_tile.sprite.clip.use(0,2)
-		if dy_tile != None: dy_tile.sprite.clip.use(0,3)
-		if uy_tile != None: uy_tile.sprite.clip.use(0,4)
+		x_tile, y_tile = None, None
 
-		collidable_tiles = [lx_tile,rx_tile,uy_tile,dy_tile]
+		if tx <= 0: left, right = True, False
+		if tx >  0: left, right = False, True
+		if ty <= 0: up, down = True, False
+		if ty >  0: up, down = False, True
+		
+
+		#Look for the closest x and y tiles in the range.
+		x_tile, y_tile = None, None
+		for x in range(x1, x2):
+			for y in range(y1, y2):
+				
+				tile = Room.tiles[x][y]
+				if tile.collision != "__":
+					if x_tile == None: x_tile = tile
+					if y_tile == None: y_tile = tile
+
+					new_x = tile.sprite.overlap.x(self.cbox)
+					new_y = tile.sprite.overlap.y(self.cbox)
+					x_x =  x_tile.sprite.overlap.x(self.cbox)
+					x_y =  x_tile.sprite.overlap.y(self.cbox)
+					y_x =  y_tile.sprite.overlap.x(self.cbox)
+					y_y =  y_tile.sprite.overlap.y(self.cbox)
+					
+					if new_y >= x_y:
+						if new_y > x_y: x_tile = tile
+						if new_x > x_x: x_tile = tile
+
+					if new_x >= y_x:
+						if new_x > y_x: y_tile = tile
+						if new_y >= y_y: y_tile = tile
+		#Fixes.
+		if x_tile and y_tile:
+			if y_tile.x == x_tile.x: y_tile = None
+			elif x_tile.y == y_tile.y: x_tile = None
+		#
+		collidable_tiles = [x_tile, y_tile]
+		
+		#debug
+		if x_tile != None: x_tile.sprite.clip.use(0,1) #DG
+		if y_tile != None: y_tile.sprite.clip.use(0,2) #LG
+
 		##########
 
 		#FIRST - for pushback
@@ -316,12 +349,12 @@ class Entity(object):
 						points = s.points
 
 						collision = self.cbox.slope_collision
-						if collision.bottom_to_top(tile):
+						if collision.bottom_to_top(points):
 							self.yVel = 0
 							self.can_jump = True
 							self.in_air = False
 
-						if collision.top_to_bottom(tile):
+						if collision.top_to_bottom(points):
 							# if self.yVel < 0: self.yVel = 0
 							self.can_jump = False
 

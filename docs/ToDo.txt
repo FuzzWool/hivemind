@@ -59,13 +59,8 @@ Problems:
 		FIXED: Now accounts for tx/ty properly.
 	-
 
-
-	* Slipping off of slopes
-	If c is higher than the middle of a block, it is no longer checked for an x collision.
-
-		y checks from the left-most x (lx instead of cx)
-		so that left sides collide properly
-
+	! Slipping off of slopes
+	The actual collision still struggles to work with this.
 
 -
 
