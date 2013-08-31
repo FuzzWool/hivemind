@@ -205,7 +205,7 @@ class Entity(object):
 
 		#Get the range to perform collision checks.
 		x1, y1, x2, y2 = self.cbox.points
-		coat = 2
+		coat = 1
 		x1 = int(round(x1/GRID))-coat;
 		y1 = int(round(y1/GRID))-coat
 		x2 = int(round(x2/GRID))+coat;
@@ -250,15 +250,14 @@ class Entity(object):
 				sprite = Room.tiles[x][y].sprite
 				if sprite.texture != None:
 					sprite.color = sf.Color(255,255,255,100)
-					sprite.clip.use(0,0)
 
-		#Any tile in range is opaque.
-		for x in range(x1, x2):
-			for y in range(y1, y2):
-				sprite = Room.tiles[x][y].sprite
-				if sprite.texture != None:
-					sprite.color = sf.Color(255,255,255,255)
-		###
+		# #Any tile in range is opaque.
+		# for x in range(x1, x2):
+		# 	for y in range(y1, y2):
+		# 		sprite = Room.tiles[x][y].sprite
+		# 		if sprite.texture != None:
+		# 			sprite.color = sf.Color(255,255,255,255)
+		# ###
 
 		x_tile, y_tile = None, None
 
@@ -299,9 +298,12 @@ class Entity(object):
 		#
 		collidable_tiles = [x_tile, y_tile]
 		
-		#debug
-		if x_tile != None: x_tile.sprite.clip.use(0,1) #DG
-		if y_tile != None: y_tile.sprite.clip.use(0,2) #LG
+		# #debug
+		if x_tile != None:
+			x_tile.sprite.color = sf.Color(255,255,255,255)
+		if y_tile != None:
+			y_tile.sprite.color = sf.Color(255,255,255,255)
+
 
 		##########
 
@@ -349,18 +351,22 @@ class Entity(object):
 						points = s.points
 
 						collision = self.cbox.slope_collision
-						if collision.bottom_to_top(points):
+						if collision.bottom_to_top(s):
 							self.yVel = 0
 							self.can_jump = True
 							self.in_air = False
 
-						if collision.top_to_bottom(points):
+						if collision.top_to_bottom(s):
 							# if self.yVel < 0: self.yVel = 0
 							self.can_jump = False
 
-						# if collision.left_to_right(tile)\
-						# or collision.right_to_left(tile):
-						# 	self.xVel = 0
+						if collision.left_to_right(s)\
+						and s.slope_collision.anchor_x=="l":
+							self.xVel = 0
+
+						if collision.right_to_left(s)\
+						and s.slope_collision.anchor_x=="r":
+							self.xVel = 0
 
 #	STATES
 

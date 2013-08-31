@@ -1,5 +1,4 @@
-#Testing new collision predictions.
-#The moving sprite1 will NEVER overlap the opposing sprite1.
+#Testing side collisions.
 
 import modules.pysfml_game.key as key
 from modules.pysfml_game import quit, window, sf
@@ -7,21 +6,52 @@ from modules.pysfml_game import MySprite, MyTexture
 from modules.pysfml_game import MyCamera
 
 Camera = MyCamera()
-Camera.zoom = 2
+Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
-texture = MyTexture("img/tilemaps/level.png")
-sprite1 = MySprite(texture)
-sprite1.clip.set(25, 25)
-sprite1.clip.use(0, 0)
-sprite1.goto = 25, 25
+#Box
+box_tex = MyTexture("img/characters/nobody/cbox.png")
+box = MySprite(box_tex)
+box.goto = 25, 25
 
-sprite2 = MySprite(texture)
-sprite2.clip.set(50, 25)
-sprite2.clip.use(0,1)
-sprite2.goto = 100, 100
+#TRIANGLE
+triangle_tex = MyTexture("img/triangle1.png")
+triangle = MySprite(triangle_tex)
+triangle.goto = 200, 200
+#####
+
+hypo = "rd"
+
+t = triangle
+if hypo == "rd":
+	\
+					  c = (t.x2, t.y1)
+	a = (t.x1, t.y2)
+
+if hypo == "ru":
+	\
+	c = (t.x1, t.y1);\
+					  a = (t.x2, t.y2)
+	triangle.clip.flip_vertical()
+
+if hypo == "ld":
+	\
+	a = (t.x1, t.y1);\
+					 c = (t.x2, t.y2)
+	triangle.clip.flip_horizontal()
+
+if hypo == "lu":
+	\
+					 c = (t.x2, t.y1)
+	a = (t.x1, t.y2)
+	triangle.clip.flip_vertical()
+	triangle.clip.flip_horizontal()
+
+triangle.slope_collision.a = a
+triangle.slope_collision.b = c
+triangle.slope_collision.anchor = hypo
+print triangle.slope_collision.anchor
 #########################################################
-
 running = True
 while running:
 	#Logic
@@ -30,22 +60,28 @@ while running:
 		pass
 
 	amt = 5
-	if key.W.held(): sprite1.collision.try_move(y= -amt)
-	if key.S.held(): sprite1.collision.try_move(y= +amt)
-	if key.A.held(): sprite1.collision.try_move(x= -amt)
-	if key.D.held(): sprite1.collision.try_move(x= +amt)
+	if key.A.held(): box.collision.try_move(x= -amt)
+	if key.D.held(): box.collision.try_move(x= +amt)
+	if key.W.held(): box.collision.try_move(y= -amt)
+	if key.S.held(): box.collision.try_move(y= +amt)
 
-	#WIP
-	sprite1.collision.pushback(sprite2)
-	sprite1.collision.confirm_move()
+	box.slope_collision.pushback(triangle)
+	box.collision.confirm_move()
+
+	if box.slope_collision.bottom_to_top(triangle):
+		print 100
+
+	#Animation
 	#
 
 	#Video
 	window.clear(sf.Color.WHITE)
 	#
-	sprite2.draw()
-	sprite1.draw()
+	triangle.draw()
 
+	box.draw()
+	triangle.slope_collision.draw()
 
+	#
 	window.view = Camera
 	window.display()

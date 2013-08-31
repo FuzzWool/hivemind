@@ -460,35 +460,31 @@ class slope_collision(object):
 		x1, y1, x2, y2 = Slope.points
 		AABB = self._.collision
 
-		is_x = AABB.x_overlap(x1, x2)
-		is_y = AABB.y_overlap(y1, y2)
+		is_x = AABB.x_collision(x1, x2)
+		is_y = AABB.y_collision(y1, y2)
 		is_z = self.is_z(Slope)
 
 
 		if is_x and is_y and is_z:
-			ox1 = AABB.x_pushback(x1, x2)
-			oy1 = AABB.y_pushback(y1, y2)
+			ox1 = AABB.x_pushback(x1, x2) #has tx/ty
+			oy1 = AABB.y_pushback(y1, y2) #has tx/ty
 
 			#The slope's pushback's positivity depends
 			#on anchor.
 			that = Slope.slope_collision
 			oy2 = self.y_overlap_amt(Slope)
 
-			##WIP
-			tx = self._.collision.tx
-			ty = self._.collision.ty
-			##
 
 			#FIND the smallest pushback.
 			small = oy2
-			if abs(ox1)-abs(tx) < abs(oy2)-abs(ty):
+			if abs(ox1) < abs(oy2):
 				small = ox1
 			#
 			if small == oy2:
-				if abs(oy1)-abs(ty) < abs(oy2)-abs(ty):
+				if abs(oy1) < abs(oy2):
 					small = oy1
 			if small == ox1:
-				if abs(oy1)-abs(ty) < abs(ox1)-abs(tx):
+				if abs(oy1) < abs(ox1):
 					small = oy1
 
 			#MOVE BY the smallest pushback.
@@ -558,9 +554,14 @@ class slope_collision(object):
 	#Side checks.
 	def bottom_to_top(self, triangle):
 	#If a's bottom is colliding with b's top.
-		x1, y2, x2, y2 = triangle.points
+		x1, y1, x2, y2 = triangle.points
 
-		if self._.collision._x_collision(x1, x2):
+		#Instant Cancels
+		if self._.collision.ty < 0: return False
+		#
+
+
+		if self._.collision.x_collision(x1, x2):
 			
 			#straight
 			if triangle.slope_collision.anchor_y == "d":
@@ -571,13 +572,20 @@ class slope_collision(object):
 			if triangle.slope_collision.anchor_y == "u":
 				if self._.y2 == triangle.y1:
 					return True
+
+			#UNIQUE FIX
+			if triangle.slope_collision.anchor_x == "r":
+				if  triangle.x2 <= self._.x2\
+				and self._.y2 == triangle.y1:
+					return True
+
 		return False
 
 
 	def top_to_bottom(self, triangle):
 		x1, y1, x2, y2 = triangle.points
 
-		if self._.collision._x_collision(x1, x2):
+		if self._.collision.x_collision(x1, x2):
 			if triangle.slope_collision.anchor_y == "d":
 				if self._.y1 == triangle.y2:
 					return True
@@ -591,7 +599,7 @@ class slope_collision(object):
 	def left_to_right(self, triangle):
 		x1, y1, x2, y2 = triangle.points
 		
-		if self._.collision._y_collision(y1, y2):
+		if self._.collision.y_collision(y1, y2):
 			if triangle.slope_collision.anchor_x == "l":
 				if self._.x2 == triangle.x1:
 					return True
@@ -605,7 +613,7 @@ class slope_collision(object):
 	def right_to_left(self, triangle):
 		x1, y1, x2, y2 = triangle.points
 
-		if self._.collision._y_collision(y1, y2):
+		if self._.collision.y_collision(y1, y2):
 			if triangle.slope_collision.anchor_x == "l":
 				if self.y_overlap_amt(triangle) == 0:
 					return True

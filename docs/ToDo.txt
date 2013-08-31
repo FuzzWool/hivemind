@@ -50,17 +50,20 @@ Check collisions tile-per-tile.
 
 GOAL: Add 'clip' collisions to Entity.
 
-Problems:
+~ FIX: slopes now use collisions instead of overlaps, can now mount properly
 
-	FIXED: Nut tries to collide against ceilings and sides incorrectly, leading to harsh pushouts.
-		x/y had issues with tight ceilings and tile sides.
+~ FIX: bottom_to_top fixed for sprites directly on-top of the slope (only needed for r)
+~ FIX: x collision states fixed for slope anchors
 
-		Check to see if overlap predictions are correct.
-		FIXED: Now accounts for tx/ty properly.
-	-
+	! Core collision still pushes sprites out in the wrong direction if at the EDGE of a tile.
 
-	! Slipping off of slopes
-	The actual collision still struggles to work with this.
+	! Slopes: tips don't count as bottom_to_top collisions
+		! Fix all side detections.
+
+		x ld
+		x rd
+		lu
+		ru
 
 -
 
