@@ -48,22 +48,15 @@ Check collisions tile-per-tile.
 			* 3-tile slopes
 -
 
-GOAL: Add 'clip' collisions to Entity.
+FIXED: One-tile tunnel spazzes disabling jump. (x/y tile comparisons were checking the wrong axis)
 
-~ FIX: slopes now use collisions instead of overlaps, can now mount properly
+	! Core collision still pushes sprites out in the wrong direction if at the EDGE of a tile. (for blocks)
 
-~ FIX: bottom_to_top fixed for sprites directly on-top of the slope (only needed for r)
-~ FIX: x collision states fixed for slope anchors
+	! Nut gets stuck in the ceiling of two slope collisions.
 
-	! Core collision still pushes sprites out in the wrong direction if at the EDGE of a tile.
-
-	! Slopes: tips don't count as bottom_to_top collisions
-		! Fix all side detections.
-
-		x ld
-		x rd
-		lu
-		ru
+	! Nut bounces off the floor if going down a slope.
+	Make a 'lock' to the hypotenuse.
+	Make a floor_lock tile for the slope having a top-to-bottom collision.
 
 -
 
@@ -72,7 +65,9 @@ Namely: tx/ty
 
 ! Holding both directional keys causes weird Nut walking.
 
-* Fix lag issue while moving around the WorldMap.
+! Fix lag issue while moving around the WorldMap.
 	* Investigate the stress empty MySprites put on.
 
-* Add a system for assigning collision data to a tilemap.
+! Add a system for assigning collision data to a tilemap.
+
+! Center Nut's sprite properly within her cbox.

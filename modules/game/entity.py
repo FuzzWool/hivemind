@@ -293,17 +293,18 @@ class Entity(object):
 						if new_y >= y_y: y_tile = tile
 		#Fixes.
 		if x_tile and y_tile:
-			if y_tile.x == x_tile.x: y_tile = None
-			elif x_tile.y == y_tile.y: x_tile = None
+			if y_tile.y == x_tile.y: y_tile = None
+			elif x_tile.x == y_tile.x: x_tile = None
 		#
 		collidable_tiles = [x_tile, y_tile]
+		
 		
 		# #debug
 		if x_tile != None:
 			x_tile.sprite.color = sf.Color(255,255,255,255)
 		if y_tile != None:
 			y_tile.sprite.color = sf.Color(255,255,255,255)
-
+		#
 
 		##########
 
@@ -357,7 +358,7 @@ class Entity(object):
 							self.in_air = False
 
 						if collision.top_to_bottom(s):
-							# if self.yVel < 0: self.yVel = 0
+							if self.yVel < 0: self.yVel = 0
 							self.can_jump = False
 
 						if collision.left_to_right(s)\

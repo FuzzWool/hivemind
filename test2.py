@@ -1,4 +1,4 @@
-#Testing side collisions.
+#Testing y_snap for slope_collision
 
 import modules.pysfml_game.key as key
 from modules.pysfml_game import quit, window, sf
@@ -56,8 +56,10 @@ running = True
 while running:
 	#Logic
 	if quit(): running = False
-	if key.RETURN.pressed():
-		pass
+	if key.RETURN.held():
+		y = -box.slope_collision.y_overlap_amt(triangle)
+		box.collision.try_move(y = y)
+
 
 	amt = 5
 	if key.A.held(): box.collision.try_move(x= -amt)
@@ -68,8 +70,6 @@ while running:
 	box.slope_collision.pushback(triangle)
 	box.collision.confirm_move()
 
-	if box.slope_collision.bottom_to_top(triangle):
-		print 100
 
 	#Animation
 	#
