@@ -48,8 +48,6 @@ Check collisions tile-per-tile.
 			* 3-tile slopes
 -
 
-FIXED: One-tile tunnel spazzes disabling jump. (x/y tile comparisons were checking the wrong axis)
-
 	! Core collision still pushes sprites out in the wrong direction if at the EDGE of a tile. (for blocks)
 
 	! Nut gets stuck in the ceiling of two slope collisions.
@@ -57,6 +55,8 @@ FIXED: One-tile tunnel spazzes disabling jump. (x/y tile comparisons were checki
 	! Nut bounces off the floor if going down a slope.
 	Make a 'lock' to the hypotenuse.
 	Make a floor_lock tile for the slope having a top-to-bottom collision.
+
+	~ Collision states no longer predict movement (for the benefit of pre-collision)
 
 -
 

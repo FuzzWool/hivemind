@@ -14,8 +14,8 @@ class MySprite(sf.Sprite, Rectangle):
 		self.clip = clip(self)
 		self.box = box(self)
 		self.children = []; self.children_class = children_class(self)
-		self.collision = collision(self)
 		self.animation = animation(self)
+		self.collision = collision(self)
 		self.slope_collision = slope_collision(self)
 		self.overlap = overlap(self)
 
@@ -231,6 +231,59 @@ class box(Rectangle):
 
 ###
 
+
+class animation:
+#Define an animation in advance, then watch it play.
+
+	def __init__(self, MySprite):
+		self._ = MySprite
+
+		#	CLIP
+		self.clips = []
+		self.clip_interval = 0.5
+		#
+		self.clipClock = sf.Clock()
+		self.clip_index = 0
+		self.clip_init = True
+
+	def play(self):
+
+
+		#Keep resetting if there's no clips.
+		if len(self.clips) == 0:
+			self.clip_init = True
+			self.clip_index = 0
+
+		#Change clip
+		if len(self.clips) != 0:
+
+			#Immediately if it's just been initialized
+			ticks = self.clipClock\
+					.elapsed_time.seconds
+
+			if self.clip_init\
+			or ticks > self.clip_interval:
+
+				#Use the new clip.
+				x, y = self.clips[self.clip_index]
+				self._.clip.use(x, y)
+
+				#Change the index.
+				self.clip_index += 1
+				if self.clip_index >= len(self.clips):
+					self.clip_index = 0
+
+				#Reset timer.
+				self.clipClock.restart()
+				self.clip_init = False
+
+		#Check if the clip has gone out of the animation.
+		#If so, stop animating.
+		x, y = self._.clip.x, self._.clip.y
+		if (x, y) not in self.clips:
+			self.clips = []
+	#
+
 class collision:
 #Handles basic AABB collision checking.
 #Checks X and Y individually.
@@ -271,9 +324,10 @@ class collision:
 	#
 
 	#Simply detects if there is any overlapping.
-	def x_overlap(self, x1, x2):
+	def x_overlap(self, x1, x2, predict=True):
 		a = self._
-		tx = self.tx
+		if predict: tx = self.tx
+		if not predict: tx = 0
 
 		if x1 < a.x1+tx < x2: return True
 		if x1 < a.x2+tx < x2: return True
@@ -281,9 +335,10 @@ class collision:
 		if a.x1+tx < x2 < a.x2+tx: return True
 		return False
 
-	def y_overlap(self, y1, y2):
+	def y_overlap(self, y1, y2, predict=True):
 		a = self._
-		ty = self.ty
+		if predict: ty = self.ty
+		if not predict: ty = 0
 
 		if y1 < a.y1+ty < y2: return True
 		if y1 < a.y2+ty < y2: return True
@@ -292,9 +347,10 @@ class collision:
 		return False
 
 	#
-	def x_collision(self, x1, x2):
+	def x_collision(self, x1, x2, predict=True):
 		a = self._
-		tx = self.tx
+		if predict: tx = self.tx
+		if not predict: tx = 0
 
 		if x1 <= a.x1+tx <= x2: return True
 		if x1 <= a.x2+tx <= x2: return True
@@ -302,9 +358,10 @@ class collision:
 		if a.x1+tx <= x2 <= a.x2+tx: return True
 		return False
 
-	def y_collision(self, y1, y2):
+	def y_collision(self, y1, y2, predict=True):
 		a = self._
-		ty = self.ty
+		if predict: ty = self.ty
+		if not predict: ty = 0
 
 		if y1 <= a.y1+ty <= y2: return True
 		if y1 <= a.y2+ty <= y2: return True
@@ -384,59 +441,6 @@ class collision:
 
 ####
 
-class animation:
-#Define an animation in advance, then watch it play.
-
-	def __init__(self, MySprite):
-		self._ = MySprite
-
-		#	CLIP
-		self.clips = []
-		self.clip_interval = 0.5
-		#
-		self.clipClock = sf.Clock()
-		self.clip_index = 0
-		self.clip_init = True
-
-	def play(self):
-
-
-		#Keep resetting if there's no clips.
-		if len(self.clips) == 0:
-			self.clip_init = True
-			self.clip_index = 0
-
-		#Change clip
-		if len(self.clips) != 0:
-
-			#Immediately if it's just been initialized
-			ticks = self.clipClock\
-					.elapsed_time.seconds
-
-			if self.clip_init\
-			or ticks > self.clip_interval:
-
-				#Use the new clip.
-				x, y = self.clips[self.clip_index]
-				self._.clip.use(x, y)
-
-				#Change the index.
-				self.clip_index += 1
-				if self.clip_index >= len(self.clips):
-					self.clip_index = 0
-
-				#Reset timer.
-				self.clipClock.restart()
-				self.clip_init = False
-
-		#Check if the clip has gone out of the animation.
-		#If so, stop animating.
-		x, y = self._.clip.x, self._.clip.y
-		if (x, y) not in self.clips:
-			self.clips = []
-	#
-
-
 from modules.pysfml_game import Dot
 class slope_collision(object):
 	def __init__(self, MySprite):
@@ -504,13 +508,15 @@ class slope_collision(object):
 		if that.anchor in ["ru", "lu"]:
 			return bool(z < 0)
 
-	def y_overlap_amt(self, Slope):
+	def y_overlap_amt(self, Slope, predict=True):
 	#Returns a positive value.
 		that = Slope.slope_collision
 
 		#WIP
-		tx = self._.collision.tx
-		ty = self._.collision.ty
+		if predict:
+			tx,ty = self._.collision.tx,self._.collision.ty
+		if not predict:
+			tx,ty = 0,0
 		#
 
 		#Gradient
@@ -561,11 +567,12 @@ class slope_collision(object):
 		#
 
 
-		if self._.collision.x_collision(x1, x2):
+		if self._.collision\
+		.x_collision(x1, x2, predict=False):
 			
 			#straight
 			if triangle.slope_collision.anchor_y == "d":
-				if self.y_overlap_amt(triangle) == 0:
+				if self.y_overlap_amt(triangle, predict=False) == 0:
 					return True
 
 			#sloped
@@ -585,13 +592,15 @@ class slope_collision(object):
 	def top_to_bottom(self, triangle):
 		x1, y1, x2, y2 = triangle.points
 
-		if self._.collision.x_collision(x1, x2):
+		if self._.collision\
+		.x_collision(x1, x2, predict=False):
+
 			if triangle.slope_collision.anchor_y == "d":
 				if self._.y1 == triangle.y2:
 					return True
 
 			if triangle.slope_collision.anchor_y == "u":
-				if self.y_overlap_amt(triangle) == 0:
+				if self.y_overlap_amt(triangle, predict=False) == 0:
 					return True
 		return False
 
@@ -599,13 +608,15 @@ class slope_collision(object):
 	def left_to_right(self, triangle):
 		x1, y1, x2, y2 = triangle.points
 		
-		if self._.collision.y_collision(y1, y2):
+		if self._.collision\
+		.y_collision(y1, y2, predict=False):
+
 			if triangle.slope_collision.anchor_x == "l":
 				if self._.x2 == triangle.x1:
 					return True
 
 			if triangle.slope_collision.anchor_x == "r":
-				if self.y_overlap_amt(triangle) == 0:
+				if self.y_overlap_amt(triangle, predict=False) == 0:
 					return True
 		return False
 
@@ -613,9 +624,11 @@ class slope_collision(object):
 	def right_to_left(self, triangle):
 		x1, y1, x2, y2 = triangle.points
 
-		if self._.collision.y_collision(y1, y2):
+		if self._.collision\
+		.y_collision(y1, y2, predict=False):
+
 			if triangle.slope_collision.anchor_x == "l":
-				if self.y_overlap_amt(triangle) == 0:
+				if self.y_overlap_amt(triangle, predict=False) == 0:
 					return True
 
 			if triangle.slope_collision.anchor_x == "r":
