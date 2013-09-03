@@ -295,6 +295,10 @@ class Entity(object):
 			if x_tile.collision == "da":
 				x, y = x_tile.x, x_tile.y
 				extra_tile = Room.tiles[x+1][y]
+
+			if x_tile.collision == "ga":
+				x, y = x_tile.x, x_tile.y
+				extra_tile = Room.tiles[x-1][y]
 		#
 
 		collidable_tiles = [x_tile, y_tile, extra_tile]

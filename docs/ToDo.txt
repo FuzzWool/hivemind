@@ -50,17 +50,8 @@ Check collisions tile-per-tile.
 
 GOAL: Fix 2-tile slopes.
 
-* STATES weren't responding correctly for 2-TILE-SLOPES
-fix: changed state handling to convert floats to ints
-
-* 2-TILE-SLOPES collisions cause ENTITY to LEVITATE
-fix: swapped a and b around in room
-
-	* LEVITATED over the left-SLOPE tile.
-	fix: states now check for the slope points instead of the rect points
-
-		* ENTITY clips into the GAP between 2-TILE SLOPE
-		fix: when the collision is the left of a 2-tile slope, it immediately checks the right tile too
+"ld" 2-tile slopes
+Fix: added left checking for extra_tile.
 
 -
 	! Core collision still pushes sprites out in the wrong direction if at the EDGE of a tile. (for blocks)
