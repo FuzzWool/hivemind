@@ -285,23 +285,26 @@ class Entity(object):
 						if new_y >= y_y: y_tile = tile
 		#Fixes.
 		if x_tile and y_tile:
-			if y_tile.y == x_tile.y:
-				if y_tile not in ["da","ea"]:
-					y_tile = None
-			elif x_tile.x == y_tile.x:
-				if y_tile not in ["da","ea"]:
-					x_tile = None
+			if y_tile.y == x_tile.y: y_tile = None
+			elif x_tile.x == y_tile.x: x_tile = None
 		#
-		collidable_tiles = [x_tile, y_tile]
+
+		#For 2-tile slopes
+		extra_tile = None
+		if x_tile != None:
+			if x_tile.collision == "da":
+				x, y = x_tile.x, x_tile.y
+				extra_tile = Room.tiles[x+1][y]
+		#
+
+		collidable_tiles = [x_tile, y_tile, extra_tile]
 		collidable_tiles[:] = \
 		[tile for tile in collidable_tiles if tile != None]
 		
 
 		# #debug
-		if x_tile != None:
-			x_tile.sprite.color = sf.Color(255,255,255,255)
-		if y_tile != None:
-			y_tile.sprite.color = sf.Color(255,255,255,255)
+		for tile in collidable_tiles:
+			tile.sprite.color = sf.Color(255,255,255,255)
 		#
 
 
