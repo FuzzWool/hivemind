@@ -1,4 +1,6 @@
 #Testing side collisions for slopes
+#See if the y snap works correctly
+
 
 import modules.pysfml_game.key as key
 from modules.pysfml_game import quit, window, sf
@@ -25,7 +27,7 @@ hypo = "rd"
 t = triangle
 if hypo == "rd":
 	\
-					  c = (t.x2, t.y1)
+					  c = (t.x2, t.y1+50)
 	a = (t.x1, t.y2)
 
 if hypo == "ru":
@@ -56,6 +58,9 @@ running = True
 while running:
 	#Logic
 	if quit(): running = False
+	if key.RETURN.pressed():
+		print triangle.slope_collision.left_point
+		print triangle.slope_collision.right_point
 
 	amt = 5
 	if key.A.held(): box.collision.try_move(x= -amt)
@@ -66,9 +71,9 @@ while running:
 
 	#State checks - these should come before the pushback
 	if box.slope_collision.bottom_to_top(triangle):
-		triangle.color = sf.Color(255,255,255,100)
-	else:
 		triangle.color = sf.Color(255,255,255,255)
+	else:
+		triangle.color = sf.Color(255,255,255,50)
 
 	box.slope_collision.pushback(triangle)
 	box.collision.confirm_move()

@@ -243,21 +243,13 @@ class Entity(object):
 		uy, dy = int(uy/GRID), int(dy/GRID)
 		#
 
-		# ###debug
-		# #Any tile not in range is transparent.
-		# for x in range(Room.w):
-		# 	for y in range(Room.h):
-		# 		sprite = Room.tiles[x][y].sprite
-		# 		if sprite.texture != None:
-		# 			sprite.color = sf.Color(255,255,255,100)
-
-		# #Any tile in range is opaque.
-		# for x in range(x1, x2):
-		# 	for y in range(y1, y2):
-		# 		sprite = Room.tiles[x][y].sprite
-		# 		if sprite.texture != None:
-		# 			sprite.color = sf.Color(255,255,255,255)
-		# ###
+		###debug
+		#Any tile not in range is transparent.
+		for x in range(Room.w):
+			for y in range(Room.h):
+				sprite = Room.tiles[x][y].sprite
+				if sprite.texture != None:
+					sprite.color = sf.Color(255,255,255,100)
 
 		x_tile, y_tile = None, None
 
@@ -293,8 +285,12 @@ class Entity(object):
 						if new_y >= y_y: y_tile = tile
 		#Fixes.
 		if x_tile and y_tile:
-			if y_tile.y == x_tile.y: y_tile = None
-			elif x_tile.x == y_tile.x: x_tile = None
+			if y_tile.y == x_tile.y:
+				if y_tile not in ["da","ea"]:
+					y_tile = None
+			elif x_tile.x == y_tile.x:
+				if y_tile not in ["da","ea"]:
+					x_tile = None
 		#
 		collidable_tiles = [x_tile, y_tile]
 		collidable_tiles[:] = \
@@ -308,7 +304,14 @@ class Entity(object):
 			y_tile.sprite.color = sf.Color(255,255,255,255)
 		#
 
+
+		# for tile in collidable_tiles:
+		# 	if tile.collision not in ["__","aa"]:
+		# 		tile.sprite.slope_collision.draw()
+
 		##########
+
+		coll = self.cbox.collision
 
 		# Pre-collision states
 		for tile in collidable_tiles:
@@ -323,7 +326,7 @@ class Entity(object):
 
 					if t.slope_collision.anchor_x == "l":
 						if tx > 0: c.collision.ty = tx
-
+					#
 					if t.slope_collision.anchor_x == "r":
 						if tx < 0: c.collision.ty = -tx
 
@@ -337,7 +340,6 @@ class Entity(object):
 
 				elif tile.collision != "__":
 					self.cbox.slope_collision.pushback(s)
-
 
 		self.cbox.collision.confirm_move()
 
@@ -373,6 +375,7 @@ class Entity(object):
 						self.yVel = 0
 						self.can_jump = True
 						self.in_air = False
+
 
 					if collision.top_to_bottom(s):
 						if self.yVel < 0: self.yVel = 0

@@ -46,17 +46,25 @@ Check collisions tile-per-tile.
 			x 1-tile slopes
 			* 2-tile slopes
 			* 3-tile slopes
+
+
+GOAL: Fix 2-tile slopes.
+
+* STATES weren't responding correctly for 2-TILE-SLOPES
+fix: changed state handling to convert floats to ints
+
+* 2-TILE-SLOPES collisions cause ENTITY to LEVITATE
+fix: swapped a and b around in room
+
+	* LEVITATED over the left-SLOPE tile.
+	fix: states now check for the slope points instead of the rect points
+
+		! ENTITY clips into the GAP between 2-SLOPE TILES
+		x/y tile selection doesn't check for the right tile
+
+
 -
-
 	! Core collision still pushes sprites out in the wrong direction if at the EDGE of a tile. (for blocks)
-
-	! Nut gets stuck in the ceiling of two slope collisions.
-
-	! Nut bounces off the floor if going down a slope.
-	Make a 'lock' to the hypotenuse.
-	Make a floor_lock tile for the slope having a top-to-bottom collision.
-
-	~ Collision states no longer predict movement (for the benefit of pre-collision)
 
 -
 
