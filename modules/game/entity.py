@@ -306,10 +306,10 @@ class Entity(object):
 		[tile for tile in collidable_tiles if tile != None]
 		
 
-		# #debug
-		for tile in collidable_tiles:
-			tile.sprite.color = sf.Color(255,255,255,255)
-		#
+		# # #debug
+		# for tile in collidable_tiles:
+		# 	tile.sprite.color = sf.Color(255,255,255,255)
+		# #
 
 
 		# for tile in collidable_tiles:
@@ -355,46 +355,33 @@ class Entity(object):
 		#SECOND - for states
 		for tile in collidable_tiles:
 
+			s = tile.sprite
+
 			if tile.collision == "aa":
 				collision = self.cbox.collision
 			elif tile.collision != "__":
 				collision = self.cbox.slope_collision
 
+
+			if collision.bottom_to_top(s):
+				self.yVel = 0
+				self.can_jump = True
+				self.in_air = False
+
+				#debug
+				tile.sprite.color = sf.Color(255,255,255,255)
+				#
+
+
+			if collision.top_to_bottom(s):
+				if self.yVel < 0: self.yVel = 0
+
 			if tile.collision == "aa":
-
-				s = tile.sprite
-				points = s.points
-
-				collision = self.cbox.collision
-				if collision.bottom_to_top(*points):
-					self.yVel = 0
-					self.can_jump = True
-					self.in_air = False
-
-				if collision.top_to_bottom(*points):
-					if self.yVel < 0: self.yVel = 0
-
-				if collision.left_to_right(*points)\
-				or collision.right_to_left(*points):
+				if collision.left_to_right(s)\
+				or collision.right_to_left(s):
 					self.xVel = 0
 
-			#Slope collisions
-			elif tile.collision != "__":
-
-				s = tile.sprite
-				points = s.points
-
-				collision = self.cbox.slope_collision
-				if collision.bottom_to_top(s):
-					self.yVel = 0
-					self.can_jump = True
-					self.in_air = False
-
-
-				if collision.top_to_bottom(s):
-					if self.yVel < 0: self.yVel = 0
-					self.can_jump = False
-
+			else:
 				if collision.left_to_right(s)\
 				and s.slope_collision.anchor_x=="l":
 					self.xVel = 0

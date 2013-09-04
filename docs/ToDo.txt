@@ -53,12 +53,13 @@ GOAL: Clean up code!
 
 ~ MYSPRITE split into directory with COLLISION being seperated
 ~ next class for MySprite
-
-* predict class for MySprite.collision
-* slope class for MySprite.collision
-
 * make slope_collision more consistant with collision
 (for trimming down entity state checking)
+	* fix: Glitch:
+		One-tile slopes rely on 'proper' height for their bottom_to_top checks to work properly.
+
+
+! clean slope_collision side checks
 
 -
 

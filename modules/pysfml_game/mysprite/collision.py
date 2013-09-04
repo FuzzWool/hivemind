@@ -56,13 +56,12 @@ class collision:
 	# collision.
 
 	def pushback(self, ThatSprite):
-		x1, y1, x2, y2 = ThatSprite.points
-		is_x = self.x_collision(x1, x2)
-		is_y = self.y_collision(y1, y2)
+		is_x = self.x_collision(ThatSprite)
+		is_y = self.y_collision(ThatSprite)
 
 		if is_x and is_y:
-			ox = self.x_pushback(x1, x2)
-			oy = self.y_pushback(y1, y2)
+			ox = self.x_pushback(ThatSprite)
+			oy = self.y_pushback(ThatSprite)
 
 			nx, ny = self.next.stored_move
 			if abs(ox - nx) < abs(oy - ny):
@@ -72,22 +71,24 @@ class collision:
 	#
 
 	#Simply detects if there is any overlapping.
-	def x_overlap(self, x1, x2, predict=True):
+	def x_overlap(self, ThatSprite, predict=True):
 		a = self._
 		if predict: tx = self.next.x_move
 		if not predict: tx = 0
 
+		x1, x2 = ThatSprite.x1, ThatSprite.x2
 		if x1 < a.x1+tx < x2: return True
 		if x1 < a.x2+tx < x2: return True
 		if a.x1+tx < x1 < a.x2+tx: return True
 		if a.x1+tx < x2 < a.x2+tx: return True
 		return False
 
-	def y_overlap(self, y1, y2, predict=True):
+	def y_overlap(self, ThatSprite, predict=True):
 		a = self._
 		if predict: ty = self.next.y_move
 		if not predict: ty = 0
 
+		y1, y2 = ThatSprite.y1, ThatSprite.y2
 		if y1 < a.y1+ty < y2: return True
 		if y1 < a.y2+ty < y2: return True
 		if a.y1+ty < y1 < a.y2+ty: return True
@@ -95,22 +96,24 @@ class collision:
 		return False
 
 	#
-	def x_collision(self, x1, x2, predict=True):
+	def x_collision(self, ThatSprite, predict=True):
 		a = self._
 		if predict: tx = self.next.x_move
 		if not predict: tx = 0
 
+		x1, x2 = ThatSprite.x1, ThatSprite.x2
 		if x1 <= a.x1+tx <= x2: return True
 		if x1 <= a.x2+tx <= x2: return True
 		if a.x1+tx <= x1 <= a.x2+tx: return True
 		if a.x1+tx <= x2 <= a.x2+tx: return True
 		return False
 
-	def y_collision(self, y1, y2, predict=True):
+	def y_collision(self, ThatSprite, predict=True):
 		a = self._
 		if predict: ty = self.next.y_move
 		if not predict: ty = 0
 
+		y1, y2 = ThatSprite.y1, ThatSprite.y2
 		if y1 <= a.y1+ty <= y2: return True
 		if y1 <= a.y2+ty <= y2: return True
 		if a.y1+ty <= y1 <= a.y2+ty: return True
@@ -120,11 +123,12 @@ class collision:
 	#
 
 	#Works out the shortest pushback.
-	def x_pushback(self, x1, x2):
+	def x_pushback(self, ThatSprite):
 		a = self._
 		tx = self.next.x_move
 		p = []
 
+		x1, x2 = ThatSprite.x1, ThatSprite.x2
 		if x1 <= a.x1+tx <= x2: p.append(x2 - a.x1)
 		if x1 <= a.x2+tx <= x2: p.append(x1 - a.x2)
 		if a.x1+tx <= x1 <= a.x2+tx: p.append(a.x1 - x2)
@@ -137,11 +141,12 @@ class collision:
 		if lowest != None:
 			return tx - lowest
 
-	def y_pushback(self, y1, y2):
+	def y_pushback(self, ThatSprite):
 		a = self._
 		ty = self.next.y_move
 		p = []
 		
+		y1, y2 = ThatSprite.y1, ThatSprite.y2
 		if y1 <= a.y1+ty <= y2: p.append(y2 - a.y1)
 		if y1 <= a.y2+ty <= y2: p.append(y1 - a.y2)
 		if a.y1+ty <= y1 <= a.y2+ty: p.append(a.y1 - y2)
@@ -154,33 +159,27 @@ class collision:
 		return ty - lowest
 
 
-#####	Extra checks
+#####	Side Checks
 #For resetting jumps, etc.
 
-	#Side checks.
-	def bottom_to_top(self, x1, y1, x2, y2):
-	#If a's bottom is colliding with b's top.
-		if self.x_overlap(x1, x2):
-			a = self._
-			if a.y2 == y1: return True
+	def bottom_to_top(self, ThatSprite):
+		if self.x_overlap(ThatSprite):
+			if self._.y2 == ThatSprite.y1: return True
 		return False
 
-	def top_to_bottom(self, x1, y1, x2, y2):
-		if self.x_overlap(x1, x2):
-			a = self._
-			if a.y1 == y2: return True
+	def top_to_bottom(self, ThatSprite):
+		if self.x_overlap(ThatSprite):
+			if self._.y1 == ThatSprite.y2: return True
 		return False
 
-	def left_to_right(self, x1, y1, x2, y2):
-		if self.y_overlap(y1, y2):
-			a = self._
-			if a.x1 == x2: return True
+	def left_to_right(self, ThatSprite):
+		if self.y_overlap(ThatSprite):
+			if self._.x1 == ThatSprite.x2: return True
 		return False
 
-	def right_to_left(self, x1, y1, x2, y2):
-		if self.y_overlap(y1, y2):
-			a = self._
-			if a.x2 == x1: return True
+	def right_to_left(self, ThatSprite):
+		if self.y_overlap(ThatSprite):
+			if self._.x2 == ThatSprite.x1: return True
 		return False
 	#
 
@@ -238,13 +237,13 @@ class slope_collision(object):
 		x1, y1, x2, y2 = Slope.points
 		AABB = self._.collision
 
-		is_x = AABB.x_collision(x1, x2)
-		is_y = AABB.y_collision(y1, y2)
+		is_x = AABB.x_collision(Slope)
+		is_y = AABB.y_collision(Slope)
 		is_z = self.is_z(Slope)
 
 		if is_x and is_y and is_z:
-			ox1 = AABB.x_pushback(x1, x2) #has tx/ty
-			oy1 = AABB.y_pushback(y1, y2) #has tx/ty
+			ox1 = AABB.x_pushback(Slope) #has tx/ty
+			oy1 = AABB.y_pushback(Slope) #has tx/ty
 
 			#The slope's pushback's positivity depends
 			#on anchor.
@@ -332,17 +331,13 @@ class slope_collision(object):
 	#Side checks.
 	def bottom_to_top(self, triangle):
 	#If a's bottom is colliding with b's top.
-		x1, y1, x2, y2 = triangle.points
-		y1 = triangle.slope_collision.up_point[0]
-		y2 = triangle.slope_collision.down_point[0]
-
 
 		#Instant Cancels
 		if self.next.y_move < 0: return False
 		#
 
 		if self._.collision\
-		.x_collision(x1, x2, predict=False):
+		.x_collision(triangle, predict=False):
 
 			#straight
 			if triangle.slope_collision.anchor_y == "d":
@@ -356,21 +351,20 @@ class slope_collision(object):
 				if self._.y2 == y1:
 					return True
 
+			# print self._.y2, y1
 			#UNIQUE FIX
 			if triangle.slope_collision.anchor_x == "r":
 				if  triangle.x2 <= self._.x2\
-				and self._.y2 == y1:
-					print "PROBLEM"
+				and self._.y2 == triangle.y1:
 					return True
 
 		return False
 
 
 	def top_to_bottom(self, triangle):
-		x1, y1, x2, y2 = triangle.points
 
 		if self._.collision\
-		.x_collision(x1, x2, predict=False):
+		.x_collision(triangle, predict=False):
 
 			if triangle.slope_collision.anchor_y == "d":
 				if self._.y1 == triangle.y2:
@@ -379,15 +373,15 @@ class slope_collision(object):
 			if triangle.slope_collision.anchor_y == "u":
 				if int(self.y_overlap_amt\
 				(triangle, predict=False)) == 0:
+					print 100
 					return True
 		return False
 
 
 	def left_to_right(self, triangle):
-		x1, y1, x2, y2 = triangle.points
 		
 		if self._.collision\
-		.y_collision(y1, y2, predict=False):
+		.y_collision(triangle, predict=False):
 
 			if triangle.slope_collision.anchor_x == "l":
 				if self._.x2 == triangle.x1:
@@ -401,10 +395,9 @@ class slope_collision(object):
 
 
 	def right_to_left(self, triangle):
-		x1, y1, x2, y2 = triangle.points
 
 		if self._.collision\
-		.y_collision(y1, y2, predict=False):
+		.y_collision(triangle, predict=False):
 
 			if triangle.slope_collision.anchor_x == "l":
 				if int(self.y_overlap_amt\
@@ -418,7 +411,7 @@ class slope_collision(object):
 	#
 
 	# VISUAL DEBUG
-
+	
 	adot, bdot = None, None
 	def draw(self):
 		#Make the dots.
