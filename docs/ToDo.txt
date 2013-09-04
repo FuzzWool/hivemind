@@ -50,9 +50,15 @@ Check collisions tile-per-tile.
 
 -
 GOAL: Clean up code!
-* movement class for MySprite
-* predict class for MySprite.animation
-* slope class for MySprite.animation
+
+~ MYSPRITE split into directory with COLLISION being seperated
+~ next class for MySprite
+
+* predict class for MySprite.collision
+* slope class for MySprite.collision
+
+* make slope_collision more consistant with collision
+(for trimming down entity state checking)
 
 -
 

@@ -93,7 +93,8 @@ class Entity(object):
 
 	def handle_physics(self):
 	#Gravity and Vel movements.
-		self.cbox.collision.try_move(self.xVel, self.yVel)
+		self.cbox.collision\
+		.next.store_move(self.xVel, self.yVel)
 
 		#Gravity
 		self.move(0, self.gravity)
@@ -230,16 +231,15 @@ class Entity(object):
 		#Find the closest collidable tile which the
 		#based on width and height area.
 		c = self.cbox.center
-		tx = self.cbox.collision.tx
-		ty = self.cbox.collision.ty
+		tx, ty = self.cbox.collision.next.position
 		cx, cy = c[0]+tx, c[1]+ty
-		cx = int((cx/GRID));
-		cy = int((cy/GRID))
+		cx = int((cx/GRID)); cy = int((cy/GRID))
 
 		#wip
-		lx, rx = self.cbox.x1 + tx, self.cbox.x2 + tx
+		cbox_next = self.cbox.collision.next
+		lx, rx = cbox_next.x1, cbox_next.x2
 		lx, rx = int(lx/GRID), int(rx/GRID)
-		uy, dy = self.cbox.y1 + ty, self.cbox.y2 + ty
+		uy, dy = cbox_next.y1, cbox_next.y2
 		uy, dy = int(uy/GRID), int(dy/GRID)
 		#
 
@@ -329,72 +329,79 @@ class Entity(object):
 				t = tile.sprite
 				c = self.cbox
 				if c.slope_collision.bottom_to_top(t):
-					tx = c.collision.tx
+					tx = c.collision.next.x_move
 
 					if t.slope_collision.anchor_x == "l":
-						if tx > 0: c.collision.ty = tx
+						if tx > 0:
+							c.collision.next.y_move = tx
 					#
 					if t.slope_collision.anchor_x == "r":
-						if tx < 0: c.collision.ty = -tx
+						if tx < 0:
+							c.collision.next.y_move = -tx
 
 
 		#FIRST - for pushback
 		for tile in collidable_tiles:
 
-				s = tile.sprite
-				if tile.collision == "aa":
-					self.cbox.collision.pushback(s)
+			s = tile.sprite
+			if tile.collision == "aa":
+				self.cbox.collision.pushback(s)
 
-				elif tile.collision != "__":
-					self.cbox.slope_collision.pushback(s)
+			elif tile.collision != "__":
+				self.cbox.slope_collision.pushback(s)
 
-		self.cbox.collision.confirm_move()
+		self.cbox.collision.next.confirm_move()
 
 		#SECOND - for states
 		for tile in collidable_tiles:
 
-				if tile.collision == "aa":
+			if tile.collision == "aa":
+				collision = self.cbox.collision
+			elif tile.collision != "__":
+				collision = self.cbox.slope_collision
 
-					s = tile.sprite
-					points = s.points
+			if tile.collision == "aa":
 
-					collision = self.cbox.collision
-					if collision.bottom_to_top(*points):
-						self.yVel = 0
-						self.can_jump = True
-						self.in_air = False
+				s = tile.sprite
+				points = s.points
 
-					if collision.top_to_bottom(*points):
-						if self.yVel < 0: self.yVel = 0
+				collision = self.cbox.collision
+				if collision.bottom_to_top(*points):
+					self.yVel = 0
+					self.can_jump = True
+					self.in_air = False
 
-					if collision.left_to_right(*points)\
-					or collision.right_to_left(*points):
-						self.xVel = 0
+				if collision.top_to_bottom(*points):
+					if self.yVel < 0: self.yVel = 0
 
-				#Slope collisions
-				elif tile.collision != "__":
+				if collision.left_to_right(*points)\
+				or collision.right_to_left(*points):
+					self.xVel = 0
 
-					s = tile.sprite
-					points = s.points
+			#Slope collisions
+			elif tile.collision != "__":
 
-					collision = self.cbox.slope_collision
-					if collision.bottom_to_top(s):
-						self.yVel = 0
-						self.can_jump = True
-						self.in_air = False
+				s = tile.sprite
+				points = s.points
+
+				collision = self.cbox.slope_collision
+				if collision.bottom_to_top(s):
+					self.yVel = 0
+					self.can_jump = True
+					self.in_air = False
 
 
-					if collision.top_to_bottom(s):
-						if self.yVel < 0: self.yVel = 0
-						self.can_jump = False
+				if collision.top_to_bottom(s):
+					if self.yVel < 0: self.yVel = 0
+					self.can_jump = False
 
-					if collision.left_to_right(s)\
-					and s.slope_collision.anchor_x=="l":
-						self.xVel = 0
+				if collision.left_to_right(s)\
+				and s.slope_collision.anchor_x=="l":
+					self.xVel = 0
 
-					if collision.right_to_left(s)\
-					and s.slope_collision.anchor_x=="r":
-						self.xVel = 0
+				if collision.right_to_left(s)\
+				and s.slope_collision.anchor_x=="r":
+					self.xVel = 0
 
 #	STATES
 

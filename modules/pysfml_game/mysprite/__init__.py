@@ -12,12 +12,14 @@ class MySprite(sf.Sprite, Rectangle):
 	def __init__ (self, arg):
 		sf.Sprite.__init__(self, arg)
 		
-		#All sub-classes
+		#General sub-classes.
 		self.resize = resize(self)
 		self.clip = clip(self)
 		self.box = box(self)
 		self.children = []; self.children_class = children_class(self)
 		self.animation = animation(self)
+
+		#Collision sub-classes.
 		self.collision = collision(self)
 		self.slope_collision = slope_collision(self)
 		self.overlap = overlap(self)
