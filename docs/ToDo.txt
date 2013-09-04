@@ -54,12 +54,13 @@ GOAL: Clean up code!
 ~ MYSPRITE split into directory with COLLISION being seperated
 ~ next class for MySprite
 * make slope_collision more consistant with collision
-(for trimming down entity state checking)
-	* fix: Glitch:
-		One-tile slopes rely on 'proper' height for their bottom_to_top checks to work properly.
+~ Fixed: Jumping stopped by left slope when touching the side.
 
 
-! clean slope_collision side checks
+
+
+* Clean SLOPE COLLISION side checks.
+2-tile slopes are likely broken. Investigate.
 
 -
 

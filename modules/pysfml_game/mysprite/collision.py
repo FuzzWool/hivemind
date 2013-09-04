@@ -344,7 +344,8 @@ class slope_collision(object):
 
 				if int(self.y_overlap_amt\
 					(triangle, predict=False)) == 0:
-					return True
+					if self._.x1 != triangle.x2:
+						return True
 
 			#sloped
 			if triangle.slope_collision.anchor_y == "u":
