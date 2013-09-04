@@ -48,13 +48,11 @@ Check collisions tile-per-tile.
 			* 3-tile slopes
 
 
-GOAL: Fix 2-tile slopes.
-
-"ld" 2-tile slopes
-Fix: added left checking for extra_tile.
-
 -
-	! Core collision still pushes sprites out in the wrong direction if at the EDGE of a tile. (for blocks)
+GOAL: Clean up code!
+* movement class for MySprite
+* predict class for MySprite.animation
+* slope class for MySprite.animation
 
 -
 
