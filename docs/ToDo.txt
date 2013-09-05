@@ -47,25 +47,17 @@ Check collisions tile-per-tile.
 			* 2-tile slopes
 			* 3-tile slopes
 
-
 -
-GOAL: Clean up code!
 
-~ MYSPRITE split into directory with COLLISION being seperated
-~ next class for MySprite
-* make slope_collision more consistant with collision
-~ Fixed: Jumping stopped by left slope when touching the side.
+! Add ru and lu anchored 2-tile slopes.
 
-
-
-
-* Clean SLOPE COLLISION side checks.
-2-tile slopes are likely broken. Investigate.
+! When jumping to the left side of ru, entity locks on top of it.
 
 -
 
-* Fix the messiness of collisions.
-Namely: tx/ty
+! Slopes 'leading' to the ground cause the entity to spaz.
+
+-
 
 ! Holding both directional keys causes weird Nut walking.
 

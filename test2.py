@@ -22,7 +22,7 @@ triangle = MySprite(triangle_tex)
 triangle.goto = 200, 200
 #####
 
-hypo = "rd"
+hypo = "ru"
 
 t = triangle
 if hypo == "rd":
@@ -63,10 +63,10 @@ while running:
 		print triangle.slope_collision.right_point
 
 	amt = 5
-	if key.A.held(): box.collision.try_move(x= -amt)
-	if key.D.held(): box.collision.try_move(x= +amt)
-	if key.W.held(): box.collision.try_move(y= -amt)
-	if key.S.held(): box.collision.try_move(y= +amt)
+	if key.A.held(): box.collision.next.store_move(x= -amt)
+	if key.D.held(): box.collision.next.store_move(x= +amt)
+	if key.W.held(): box.collision.next.store_move(y= -amt)
+	if key.S.held(): box.collision.next.store_move(y= +amt)
 
 
 	#State checks - these should come before the pushback
@@ -76,7 +76,7 @@ while running:
 		triangle.color = sf.Color(255,255,255,50)
 
 	box.slope_collision.pushback(triangle)
-	box.collision.confirm_move()
+	box.collision.next.confirm_move()
 
 	#
 	#Animation

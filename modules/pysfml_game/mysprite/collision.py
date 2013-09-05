@@ -331,83 +331,95 @@ class slope_collision(object):
 	#Side checks.
 	def bottom_to_top(self, triangle):
 	#If a's bottom is colliding with b's top.
+		a, b = self._, triangle
 
 		#Instant Cancels
 		if self.next.y_move < 0: return False
+		if a.x2 == b.x1: return False
+		if b.x2 == a.x1: return False
 		#
 
 		if self._.collision\
-		.x_collision(triangle, predict=False):
+		.x_collision(b, predict=False):
 
 			#straight
-			if triangle.slope_collision.anchor_y == "d":
-
+			if b.slope_collision.anchor_y == "d":
 				if int(self.y_overlap_amt\
-					(triangle, predict=False)) == 0:
-					if self._.x1 != triangle.x2:
-						return True
-
-			#sloped
-			if triangle.slope_collision.anchor_y == "u":
-				if self._.y2 == y1:
+					(b, predict=False)) == 0:
 					return True
 
-			# print self._.y2, y1
+			#sloped
+			if b.slope_collision.anchor_y == "u":
+				if a.y2 == b.y1: return True
+
 			#UNIQUE FIX
 			if triangle.slope_collision.anchor_x == "r":
-				if  triangle.x2 <= self._.x2\
-				and self._.y2 == triangle.y1:
+				if  b.x2 <= a.x2 and a.y2 == b.y1:
 					return True
 
 		return False
 
 
 	def top_to_bottom(self, triangle):
+		a, b = self._, triangle
+
+		#Instant Cancels
+		if a.x2 == b.x1: return False
+		if b.x2 == a.x1: return False
+		#
 
 		if self._.collision\
-		.x_collision(triangle, predict=False):
+		.x_collision(b, predict=False):
 
-			if triangle.slope_collision.anchor_y == "d":
-				if self._.y1 == triangle.y2:
-					return True
+			if b.slope_collision.anchor_y == "d":
+				if a.y1 == b.y2: return True
 
-			if triangle.slope_collision.anchor_y == "u":
+			if b.slope_collision.anchor_y == "u":
 				if int(self.y_overlap_amt\
-				(triangle, predict=False)) == 0:
-					print 100
+				(b, predict=False)) == 0:
 					return True
 		return False
 
 
 	def left_to_right(self, triangle):
-		
+		a, b = self._, triangle
+
+		#Instant Cancels
+		if a.y2 == b.y1: return False
+		if b.y2 == a.y1: return False
+		#
+
 		if self._.collision\
-		.y_collision(triangle, predict=False):
+		.x_collision(b, predict=False):
 
-			if triangle.slope_collision.anchor_x == "l":
-				if self._.x2 == triangle.x1:
-					return True
+			if b.slope_collision.anchor_x == "l":
+				if a.x2 == b.x1: return True
 
-			if triangle.slope_collision.anchor_x == "r":
+			if b.slope_collision.anchor_x == "r":
 				if int(self.y_overlap_amt\
-				(triangle, predict=False)) == 0:
+				(b, predict=False)) == 0:
 					return True
 		return False
 
 
 	def right_to_left(self, triangle):
+		a, b = self._, triangle
+
+		#Instant Cancels
+		if a.y2 == b.y1: return False
+		if b.y2 == a.y1: return False
+		#
 
 		if self._.collision\
-		.y_collision(triangle, predict=False):
+		.y_collision(b, predict=False):
 
-			if triangle.slope_collision.anchor_x == "l":
+			if b.slope_collision.anchor_x == "l":
 				if int(self.y_overlap_amt\
-				(triangle, predict=False)) == 0:
+				(b, predict=False)) == 0:
 					return True
 
-			if triangle.slope_collision.anchor_x == "r":
-				if self._.x1 == triangle.x2:
-					return True
+			if b.slope_collision.anchor_x == "r":
+				if a.x1 == b.x2: return True
 		return False
 	#
 

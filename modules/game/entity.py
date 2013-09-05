@@ -292,11 +292,11 @@ class Entity(object):
 		#For 2-tile slopes
 		extra_tile = None
 		if x_tile != None:
-			if x_tile.collision == "da":
+			if x_tile.collision in ["da","db"]:
 				x, y = x_tile.x, x_tile.y
 				extra_tile = Room.tiles[x+1][y]
 
-			if x_tile.collision == "ga":
+			if x_tile.collision in ["ga","gb"]:
 				x, y = x_tile.x, x_tile.y
 				extra_tile = Room.tiles[x-1][y]
 		#
@@ -367,11 +367,6 @@ class Entity(object):
 				self.yVel = 0
 				self.can_jump = True
 				self.in_air = False
-
-				#debug
-				tile.sprite.color = sf.Color(255,255,255,255)
-				#
-
 
 			if collision.top_to_bottom(s):
 				if self.yVel < 0: self.yVel = 0

@@ -438,6 +438,15 @@ class collision:
 					b = (sprite.x1, sprite.y1+GRID)
 					anchor = "ld"
 
+				if tile.collision == "db":
+					b = (sprite.x1, sprite.y1)
+					a = (sprite.x1+GRID, sprite.y1+(GRID/2))
+					anchor = "ru"
+				if tile.collision == "eb":
+					b = (sprite.x1, sprite.y1+(GRID/2))
+					a = (sprite.x1+GRID, sprite.y1+GRID)
+					anchor = "ru"
+
 				if anchor:
 					sprite.slope_collision.a = a
 					sprite.slope_collision.b = b
