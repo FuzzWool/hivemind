@@ -67,7 +67,7 @@ class collision:
 			oy = self.y_pushback(ThatSprite)
 
 			nx, ny = self.next.stored_move
-			if abs(ox)-nx < abs(oy)-ny:
+			if abs(ox)-abs(nx) < abs(oy)-abs(ny):
 				self.next.x_move -= ox
 			else:
 				self.next.y_move -= oy
