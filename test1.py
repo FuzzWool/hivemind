@@ -18,7 +18,7 @@ worldmap = WorldMap()
 
 running = True
 while running:
-
+	
 	#Loading
 	# Camera.center = Nut.cbox.center
 	worldmap\

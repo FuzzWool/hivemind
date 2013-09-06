@@ -57,37 +57,20 @@ class collision:
 	# collision.
 
 	def pushback(self, ThatSprite):
-		self._hug_protection(ThatSprite)
+		# self._hug_protection(ThatSprite)
 
-		is_x = bool(self.overlap.x(ThatSprite) >= 0)
-		is_y = bool(self.overlap.y(ThatSprite) >= 0)
+		is_x = bool(self.overlap.x(ThatSprite) > 0)
+		is_y = bool(self.overlap.y(ThatSprite) > 0)
 
 		if is_x and is_y:
 			ox = self.x_pushback(ThatSprite)
 			oy = self.y_pushback(ThatSprite)
 
 			nx, ny = self.next.stored_move
-			if abs(ox) < abs(oy):
+			if abs(ox)-nx < abs(oy)-ny:
 				self.next.x_move -= ox
 			else:
 				self.next.y_move -= oy
-
-	def _hug_protection(self, ThatSprite):
-		#Stop any 'build-up' from hugging a side.
-		if self.left_to_right(ThatSprite)\
-		and self.next.x_move < 0:
-			self.next.x_move = 0
-		if self.right_to_left(ThatSprite)\
-		and self.next.x_move > 0:
-			self.next.x_move = 0
-
-		if self.top_to_bottom(ThatSprite)\
-		and self.next.y_move < 0:
-			self.next.y_move = 0
-		if self.bottom_to_top(ThatSprite)\
-		and self.next.y_move > 0:
-			self.next.y_move = 0
-
 
 	#
 

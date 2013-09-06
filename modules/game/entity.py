@@ -354,7 +354,7 @@ class Entity(object):
 
 
 			if collision.bottom_to_top(s):
-				self.yVel = 0
+				if self.yVel > 0: self.yVel = 0
 				self.can_jump = True
 				self.in_air = False
 
