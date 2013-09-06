@@ -51,11 +51,9 @@ Check collisions tile-per-tile.
 
 GOAL: TEST all one-tile SLOPES.
 
-+ Fixed: ENTITY MOVING DOWN A SLOPE causes it to BOUNCE.
-+ Predict toggle added to overlap class.
-
-
 !ENTITY jumping UNDER a TILE causes it to SLIP X-wise.
+Added nx, ny check to the last slopeless comparison for pushback's small.
+
 
 -
 SLOPE bugs

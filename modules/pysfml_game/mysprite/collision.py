@@ -202,6 +202,7 @@ class slope_collision(object):
 			oy2 = self.y_overlap_amt(Slope)
 
 			#FIND the smallest pushback.
+			nx, ny = self.next.stored_move
 			small = oy2
 			if abs(ox1) < abs(oy2):
 				small = ox1
@@ -210,7 +211,7 @@ class slope_collision(object):
 				if abs(oy1) < abs(oy2):
 					small = oy1
 			if small == ox1:
-				if abs(oy1) < abs(ox1):
+				if abs(oy1)-abs(ny) < abs(ox1)-abs(nx):
 					small = oy1
 
 			#MOVE BY the smallest pushback.
