@@ -321,13 +321,14 @@ class Entity(object):
 				if c.slope_collision.bottom_to_top(t):
 					tx = c.collision.next.x_move
 
+					y = c.slope_collision.y_overlap_amt(t)
 					if t.slope_collision.anchor_x == "l":
 						if tx > 0:
-							c.collision.next.y_move = tx
+							c.collision.next.y_move = -y
 					#
 					if t.slope_collision.anchor_x == "r":
 						if tx < 0:
-							c.collision.next.y_move = -tx
+							c.collision.next.y_move = -y
 
 
 		#FIRST - for pushback
@@ -357,6 +358,8 @@ class Entity(object):
 				if self.yVel > 0: self.yVel = 0
 				self.can_jump = True
 				self.in_air = False
+
+				tile.sprite.color = sf.Color(255,255,255)
 
 			if collision.top_to_bottom(s):
 				if self.yVel < 0: self.yVel = 0

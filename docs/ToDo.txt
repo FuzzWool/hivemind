@@ -49,18 +49,21 @@ Check collisions tile-per-tile.
 
 -
 
-~ Fix for: ENTITY can JUMP through BOTTOM of CONNECTED TILES. 
-Changed the value for is_x and is_y.
+GOAL: TEST all one-tile SLOPES.
+
++ Fixed: ENTITY MOVING DOWN A SLOPE causes it to BOUNCE.
++ Predict toggle added to overlap class.
 
 
+!ENTITY jumping UNDER a TILE causes it to SLIP X-wise.
+
+-
 SLOPE bugs
 ! When JUMPING to the side of a SLOPE, the ENTITY locks on TOP
 ! Can't JUMP while going LEFT on TOP of a SLOPE.
 
--
 
 ! Slopes 'leading' to the ground cause the entity to spaz.
-
 -
 
 ! Holding both directional keys causes weird Nut walking.

@@ -57,8 +57,6 @@ class collision:
 	# collision.
 
 	def pushback(self, ThatSprite):
-		# self._hug_protection(ThatSprite)
-
 		is_x = bool(self.overlap.x(ThatSprite) > 0)
 		is_y = bool(self.overlap.y(ThatSprite) > 0)
 
@@ -142,6 +140,7 @@ class slope_collision(object):
 	def __init__(self, MySprite):
 		self._ = MySprite
 		self.next = self._.collision.next
+		self.overlap = self._.overlap
 
 		#Slope
 		self.a, self.b = 0, 0
@@ -189,8 +188,8 @@ class slope_collision(object):
 		x1, y1, x2, y2 = Slope.points
 		AABB = self._.collision
 
-		is_x = AABB.x_collision(Slope)
-		is_y = AABB.y_collision(Slope)
+		is_x = bool(self.overlap.x(Slope) > 0)
+		is_y = bool(self.overlap.y(Slope) > 0)
 		is_z = self.is_z(Slope)
 
 		if is_x and is_y and is_z:
@@ -281,9 +280,9 @@ class slope_collision(object):
 	#For resetting jumps, etc.
 
 	#Side checks.
-	def bottom_to_top(self, triangle):
+	def bottom_to_top(self, ThatSprite):
 	#If a's bottom is colliding with b's top.
-		a, b = self._, triangle
+		a, b = self._, ThatSprite
 
 		#Instant Cancels
 		if self.next.y_move < 0: return False
@@ -291,8 +290,7 @@ class slope_collision(object):
 		if b.x2 == a.x1: return False
 		#
 
-		if self._.collision\
-		.x_collision(b, predict=False):
+		if self.overlap.x(b, predict=False) > 0:
 
 			#straight
 			if b.slope_collision.anchor_y == "d":
@@ -305,23 +303,22 @@ class slope_collision(object):
 				if a.y2 == b.y1: return True
 
 			#UNIQUE FIX
-			if triangle.slope_collision.anchor_x == "r":
+			if b.slope_collision.anchor_x == "r":
 				if  b.x2 <= a.x2 and a.y2 == b.y1:
 					return True
 
 		return False
 
 
-	def top_to_bottom(self, triangle):
-		a, b = self._, triangle
+	def top_to_bottom(self, ThatSprite):
+		a, b = self._, ThatSprite
 
 		#Instant Cancels
 		if a.x2 == b.x1: return False
 		if b.x2 == a.x1: return False
 		#
 
-		if self._.collision\
-		.x_collision(b, predict=False):
+		if self.overlap.x(b, predict=False) > 0:
 
 			if b.slope_collision.anchor_y == "d":
 				if a.y1 == b.y2: return True
@@ -333,16 +330,15 @@ class slope_collision(object):
 		return False
 
 
-	def left_to_right(self, triangle):
-		a, b = self._, triangle
+	def left_to_right(self, ThatSprite):
+		a, b = self._, ThatSprite
 
 		#Instant Cancels
 		if a.y2 == b.y1: return False
 		if b.y2 == a.y1: return False
 		#
 
-		if self._.collision\
-		.x_collision(b, predict=False):
+		if self.overlap.y(b, predict=False) > 0:
 
 			if b.slope_collision.anchor_x == "l":
 				if a.x2 == b.x1: return True
@@ -354,16 +350,15 @@ class slope_collision(object):
 		return False
 
 
-	def right_to_left(self, triangle):
-		a, b = self._, triangle
+	def right_to_left(self, ThatSprite):
+		a, b = self._, ThatSprite
 
 		#Instant Cancels
 		if a.y2 == b.y1: return False
 		if b.y2 == a.y1: return False
 		#
 
-		if self._.collision\
-		.y_collision(b, predict=False):
+		if self.overlap.y(b, predict=False) > 0:
 
 			if b.slope_collision.anchor_x == "l":
 				if int(self.y_overlap_amt\
@@ -390,7 +385,7 @@ class slope_collision(object):
 class overlap:
 	def __init__ (self, MySprite): self._ = MySprite
 
-	def x(self, ThatSprite):
+	def x(self, ThatSprite, predict=True):
 
 
 		sprite1, sprite2 = self._, ThatSprite
@@ -400,8 +395,11 @@ class overlap:
 			big, small = sprite1, sprite2
 		
 		#Next move.
-		stx, sty = small.collision.next.stored_move
-		btx, bty = big.collision.next.stored_move
+		if predict:
+			stx, sty = small.collision.next.stored_move
+			btx, bty = big.collision.next.stored_move
+		else:
+			stx, sty, btx, bty = 0, 0, 0, 0
 
 		#Choose which SIDE to return based on the CENTER.
 		o = small.center[0]+stx - big.center[0]+bty
@@ -416,7 +414,7 @@ class overlap:
 			return right_gap
 
 
-	def y(self, ThatSprite):
+	def y(self, ThatSprite, predict=True):
 		sprite1, sprite2 = self._, ThatSprite
 
 		if sprite2.h > sprite1.h:
@@ -425,8 +423,11 @@ class overlap:
 			big, small = sprite1, sprite2
 		
 		#Next move.
-		stx, sty = small.collision.next.stored_move
-		btx, bty = big.collision.next.stored_move
+		if predict:
+			stx, sty = small.collision.next.stored_move
+			btx, bty = big.collision.next.stored_move
+		else:
+			stx, sty, btx, bty = 0, 0, 0, 0
 		
 		o = small.center[1]+sty - big.center[1]+bty
 
