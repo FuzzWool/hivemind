@@ -252,7 +252,7 @@ class slope_collision(object):
 		y_lowering *= ratio
 
 		if that.anchor == "rd":
-			if h <= y_lowering: y_lowering = h
+			if 0 <= y_lowering: y_lowering = 0
 			gap = self._.y2 - that.a[1] + ty
 			return (gap + y_lowering)
 

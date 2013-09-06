@@ -51,8 +51,10 @@ Check collisions tile-per-tile.
 
 GOAL: TEST all one-tile SLOPES.
 
-!ENTITY jumping UNDER a TILE causes it to SLIP X-wise.
-Added nx, ny check to the last slopeless comparison for pushback's small.
+~ Fix: ENTITY going down an RD SLOPE causes it to POP UPWARDS.
+~ y_overlap_amt made consistant.
+
+! ENTITY BOUNCES while going DOWN a SLOPE.
 
 
 -
