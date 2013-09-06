@@ -49,12 +49,20 @@ Check collisions tile-per-tile.
 
 -
 
-~ collision now uses overlap CLASS instead of PERSONAL overlap
+! Tried HUG PROTECTION.
+Stops any speed build up from collisions obviously connecting to each other.
 
+- Feels like a crude fix.
+- Can't prevent TOP LOCKING when a Sprite has jumped on top of it without hugging the side.
+
+Ultimately: Didn't fix the core problem, just decreased the likelihood of it occuring.
+
+
+other
 TILE bugs
-*! Jumping on the right or left of a slope 'snaps' to the edge
+! Jumping on the right or left of a slope 'snaps' to the edge
 or
-! Hugging the SIDE of the TILE while JUMPING locks on TOP.
+*! Hugging the SIDE of the TILE while JUMPING locks on TOP.
 
 
 SLOPE bugs

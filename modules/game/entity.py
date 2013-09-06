@@ -311,7 +311,8 @@ class Entity(object):
 
 		# Pre-collision states
 		for tile in collidable_tiles:
-			tile.color = sf.Color(255,255,255,255)
+
+			#Slope Lock
 			if tile.collision not in ["__", "aa"]:
 				
 				#Slope lock

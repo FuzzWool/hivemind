@@ -57,25 +57,37 @@ class collision:
 	# collision.
 
 	def pushback(self, ThatSprite):
-		is_x = bool(self.overlap.x(ThatSprite) > 0)
-		is_y = bool(self.overlap.y(ThatSprite) > 0)
+		self._hug_protection(ThatSprite)
+
+		is_x = bool(self.overlap.x(ThatSprite) >= 0)
+		is_y = bool(self.overlap.y(ThatSprite) >= 0)
 
 		if is_x and is_y:
 			ox = self.x_pushback(ThatSprite)
 			oy = self.y_pushback(ThatSprite)
 
-			# nx, ny = self.next.stored_move
-			# if abs(ox - nx) < abs(oy - ny):
-			# 	self.next.x_move -= ox
-			# else:
-			# 	self.next.y_move -= oy
-
-			x_overlap = self.overlap.x(ThatSprite)
-			y_overlap = self.overlap.y(ThatSprite)
-			if y_overlap < x_overlap:
-				self.next.y_move -= oy
-			else:
+			nx, ny = self.next.stored_move
+			if abs(ox) < abs(oy):
 				self.next.x_move -= ox
+			else:
+				self.next.y_move -= oy
+
+	def _hug_protection(self, ThatSprite):
+		#Stop any 'build-up' from hugging a side.
+		if self.left_to_right(ThatSprite)\
+		and self.next.x_move < 0:
+			self.next.x_move = 0
+		if self.right_to_left(ThatSprite)\
+		and self.next.x_move > 0:
+			self.next.x_move = 0
+
+		if self.top_to_bottom(ThatSprite)\
+		and self.next.y_move < 0:
+			self.next.y_move = 0
+		if self.bottom_to_top(ThatSprite)\
+		and self.next.y_move > 0:
+			self.next.y_move = 0
+
 
 	#
 
@@ -130,12 +142,12 @@ class collision:
 		return False
 
 	def left_to_right(self, ThatSprite):
-		if self.overlap.y(ThatSprite) > 0:
+		if self.overlap.y(ThatSprite) >= 0:
 			if self._.x1 == ThatSprite.x2: return True
 		return False
 
 	def right_to_left(self, ThatSprite):
-		if self.overlap.y(ThatSprite) > 0:
+		if self.overlap.y(ThatSprite) >= 0:
 			if self._.x2 == ThatSprite.x1: return True
 		return False
 	#
