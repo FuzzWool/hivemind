@@ -20,9 +20,9 @@ class MySprite(sf.Sprite, Rectangle):
 		self.animation = animation(self)
 
 		#Collision sub-classes.
+		self.overlap = overlap(self)
 		self.collision = collision(self)
 		self.slope_collision = slope_collision(self)
-		self.overlap = overlap(self)
 
 	#Positioning is handled by goto instead of position.
 	#Position can't be overriden, but it needs to be for children.

@@ -304,17 +304,6 @@ class Entity(object):
 		collidable_tiles = [x_tile, y_tile, extra_tile]
 		collidable_tiles[:] = \
 		[tile for tile in collidable_tiles if tile != None]
-		
-
-		# # #debug
-		# for tile in collidable_tiles:
-		# 	tile.sprite.color = sf.Color(255,255,255,255)
-		# #
-
-
-		# for tile in collidable_tiles:
-		# 	if tile.collision not in ["__","aa"]:
-		# 		tile.sprite.slope_collision.draw()
 
 		##########
 

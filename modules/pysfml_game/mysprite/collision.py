@@ -50,75 +50,32 @@ class collision:
 	def __init__(self, MySprite):
 		self._ = MySprite
 		self.next = next(self._)
+		self.overlap = self._.overlap
 
 	#PUSHBACK
 	# Clip any movements back which will result in a
 	# collision.
 
 	def pushback(self, ThatSprite):
-		is_x = self.x_collision(ThatSprite)
-		is_y = self.y_collision(ThatSprite)
+		is_x = bool(self.overlap.x(ThatSprite) > 0)
+		is_y = bool(self.overlap.y(ThatSprite) > 0)
 
 		if is_x and is_y:
 			ox = self.x_pushback(ThatSprite)
 			oy = self.y_pushback(ThatSprite)
 
-			nx, ny = self.next.stored_move
-			if abs(ox - nx) < abs(oy - ny):
-				self.next.x_move -= ox
-			else:
+			# nx, ny = self.next.stored_move
+			# if abs(ox - nx) < abs(oy - ny):
+			# 	self.next.x_move -= ox
+			# else:
+			# 	self.next.y_move -= oy
+
+			x_overlap = self.overlap.x(ThatSprite)
+			y_overlap = self.overlap.y(ThatSprite)
+			if y_overlap < x_overlap:
 				self.next.y_move -= oy
-	#
-
-	#Simply detects if there is any overlapping.
-	def x_overlap(self, ThatSprite, predict=True):
-		a = self._
-		if predict: tx = self.next.x_move
-		if not predict: tx = 0
-
-		x1, x2 = ThatSprite.x1, ThatSprite.x2
-		if x1 < a.x1+tx < x2: return True
-		if x1 < a.x2+tx < x2: return True
-		if a.x1+tx < x1 < a.x2+tx: return True
-		if a.x1+tx < x2 < a.x2+tx: return True
-		return False
-
-	def y_overlap(self, ThatSprite, predict=True):
-		a = self._
-		if predict: ty = self.next.y_move
-		if not predict: ty = 0
-
-		y1, y2 = ThatSprite.y1, ThatSprite.y2
-		if y1 < a.y1+ty < y2: return True
-		if y1 < a.y2+ty < y2: return True
-		if a.y1+ty < y1 < a.y2+ty: return True
-		if a.y1+ty < y2 < a.y2+ty: return True
-		return False
-
-	#
-	def x_collision(self, ThatSprite, predict=True):
-		a = self._
-		if predict: tx = self.next.x_move
-		if not predict: tx = 0
-
-		x1, x2 = ThatSprite.x1, ThatSprite.x2
-		if x1 <= a.x1+tx <= x2: return True
-		if x1 <= a.x2+tx <= x2: return True
-		if a.x1+tx <= x1 <= a.x2+tx: return True
-		if a.x1+tx <= x2 <= a.x2+tx: return True
-		return False
-
-	def y_collision(self, ThatSprite, predict=True):
-		a = self._
-		if predict: ty = self.next.y_move
-		if not predict: ty = 0
-
-		y1, y2 = ThatSprite.y1, ThatSprite.y2
-		if y1 <= a.y1+ty <= y2: return True
-		if y1 <= a.y2+ty <= y2: return True
-		if a.y1+ty <= y1 <= a.y2+ty: return True
-		if a.y1+ty <= y2 <= a.y2+ty: return True
-		return False
+			else:
+				self.next.x_move -= ox
 
 	#
 
@@ -163,22 +120,22 @@ class collision:
 #For resetting jumps, etc.
 
 	def bottom_to_top(self, ThatSprite):
-		if self.x_overlap(ThatSprite):
+		if self.overlap.x(ThatSprite) > 0:
 			if self._.y2 == ThatSprite.y1: return True
 		return False
 
 	def top_to_bottom(self, ThatSprite):
-		if self.x_overlap(ThatSprite):
+		if self.overlap.x(ThatSprite) > 0:
 			if self._.y1 == ThatSprite.y2: return True
 		return False
 
 	def left_to_right(self, ThatSprite):
-		if self.y_overlap(ThatSprite):
+		if self.overlap.y(ThatSprite) > 0:
 			if self._.x1 == ThatSprite.x2: return True
 		return False
 
 	def right_to_left(self, ThatSprite):
-		if self.y_overlap(ThatSprite):
+		if self.overlap.y(ThatSprite) > 0:
 			if self._.x2 == ThatSprite.x1: return True
 		return False
 	#

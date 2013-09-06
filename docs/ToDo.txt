@@ -49,9 +49,17 @@ Check collisions tile-per-tile.
 
 -
 
-! Add ru and lu anchored 2-tile slopes.
+~ collision now uses overlap CLASS instead of PERSONAL overlap
 
-! When jumping to the left side of ru, entity locks on top of it.
+TILE bugs
+*! Jumping on the right or left of a slope 'snaps' to the edge
+or
+! Hugging the SIDE of the TILE while JUMPING locks on TOP.
+
+
+SLOPE bugs
+! When JUMPING to the side of a SLOPE, the ENTITY locks on TOP
+! Can't JUMP while going LEFT on TOP of a SLOPE.
 
 -
 

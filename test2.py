@@ -1,6 +1,4 @@
-#Testing side collisions for slopes
-#See if the y snap works correctly
-
+#Testing MySprite.overlap (x/y)
 
 import modules.pysfml_game.key as key
 from modules.pysfml_game import quit, window, sf
@@ -8,88 +6,41 @@ from modules.pysfml_game import MySprite, MyTexture
 from modules.pysfml_game import MyCamera
 
 Camera = MyCamera()
-Camera.zoom = 1
+Camera.zoom = 2
 Camera.x, Camera.y = 0, 0
 
 #Box
-box_tex = MyTexture("img/characters/nobody/cbox.png")
-box = MySprite(box_tex)
-box.goto = 25, 25
+box_tex = MyTexture("img/characters/nut/cbox.png")
+tile_tex = MyTexture("img/tilemaps/_collision.png")
+box1 = MySprite(box_tex); box1.goto = 25, 25
+box2 = MySprite(tile_tex); box2.goto = 50, 50
+box2.clip.set(25,25)
 
-#TRIANGLE
-triangle_tex = MyTexture("img/triangle1.png")
-triangle = MySprite(triangle_tex)
-triangle.goto = 200, 200
-#####
-
-hypo = "ru"
-
-t = triangle
-if hypo == "rd":
-	\
-					  c = (t.x2, t.y1+50)
-	a = (t.x1, t.y2)
-
-if hypo == "ru":
-	\
-	c = (t.x1, t.y1);\
-					  a = (t.x2, t.y2)
-	triangle.clip.flip_vertical()
-
-if hypo == "ld":
-	\
-	a = (t.x1, t.y1);\
-					 c = (t.x2, t.y2)
-	triangle.clip.flip_horizontal()
-
-if hypo == "lu":
-	\
-					 c = (t.x2, t.y1)
-	a = (t.x1, t.y2)
-	triangle.clip.flip_vertical()
-	triangle.clip.flip_horizontal()
-
-triangle.slope_collision.a = a
-triangle.slope_collision.b = c
-triangle.slope_collision.anchor = hypo
-print triangle.slope_collision.anchor
 #########################################################
 running = True
 while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		print triangle.slope_collision.left_point
-		print triangle.slope_collision.right_point
-
-	amt = 5
-	if key.A.held(): box.collision.next.store_move(x= -amt)
-	if key.D.held(): box.collision.next.store_move(x= +amt)
-	if key.W.held(): box.collision.next.store_move(y= -amt)
-	if key.S.held(): box.collision.next.store_move(y= +amt)
+		print box1.overlap.y(box2)
 
 
-	#State checks - these should come before the pushback
-	if box.slope_collision.bottom_to_top(triangle):
-		triangle.color = sf.Color(255,255,255,255)
-	else:
-		triangle.color = sf.Color(255,255,255,50)
 
-	box.slope_collision.pushback(triangle)
-	box.collision.next.confirm_move()
+	amt = 2
+	if key.A.held(): box1.collision.next.store_move(x= -amt)
+	if key.D.held(): box1.collision.next.store_move(x= +amt)
+	if key.W.held(): box1.collision.next.store_move(y= -amt)
+	if key.S.held(): box1.collision.next.store_move(y= +amt)
 
-	#
-	#Animation
-	#
+	box1.collision.pushback(box2)
+	box1.collision.next.confirm_move()
+
 
 	#Video
 	window.clear(sf.Color.WHITE)
 	#
-	triangle.draw()
-
-	box.draw()
-	triangle.slope_collision.draw()
-
+	box2.draw()
+	box1.draw()
 	#
 	window.view = Camera
 	window.display()
