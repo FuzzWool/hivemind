@@ -319,16 +319,21 @@ class Entity(object):
 				t = tile.sprite
 				c = self.cbox
 				if c.slope_collision.bottom_to_top(t):
-					tx = c.collision.next.x_move
+					
+					if t.slope_collision.anchor_y == "d":
 
-					y = c.slope_collision.y_overlap_amt(t)
-					if t.slope_collision.anchor_x == "l":
-						if tx > 0:
-							c.collision.next.y_move = -y+abs(tx)
-					#
-					if t.slope_collision.anchor_x == "r":
-						if tx < 0:
-							c.collision.next.y_move = -y+abs(tx)
+						tx = c.collision.next.x_move
+						y = c.slope_collision.y_overlap_amt(t)
+
+						if t.slope_collision.anchor_x == "l":
+							if tx > 0:
+								c.collision.next.y_move \
+								= -y+abs(tx)
+						#
+						if t.slope_collision.anchor_x == "r":
+							if tx < 0:
+								c.collision.next.y_move \
+								= -y+abs(tx)
 
 
 		#FIRST - for pushback

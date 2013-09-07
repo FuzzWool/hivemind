@@ -51,16 +51,10 @@ Check collisions tile-per-tile.
 
 GOAL: TEST all one-tile SLOPES.
 
-*Fix: ENTITY BOUNCES while going DOWN a SLOPE.
-	~ 'Straightening off' the ends of slopes.
-	
-	* ENTITY stops at a SLOPE as if it's completely SOLID.
-	Fix: Specified the points needed at each particular side within y_overlap_amt.
-	Tested for rd, ld
+* ENTITY falls through U-ANCHORED SLOPES.
+	Fix: Slope-locking now exclusive to d-anchored slopes.
 
-	* Test STRAIGHTENING again in TEST2
-	rd, ld
-	* Fixed ru, lu
+
 
 -
 SLOPE bugs
