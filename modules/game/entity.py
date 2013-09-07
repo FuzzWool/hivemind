@@ -295,10 +295,14 @@ class Entity(object):
 			if x_tile.collision in ["da","db"]:
 				x, y = x_tile.x, x_tile.y
 				extra_tile = Room.tiles[x+1][y]
+				if extra_tile.collision not in ["ea","eb"]:
+					extra_tile = None
 
 			if x_tile.collision in ["ga","gb"]:
 				x, y = x_tile.x, x_tile.y
 				extra_tile = Room.tiles[x-1][y]
+				if extra_tile.collision not in ["ha","hb"]:
+					extra_tile = None
 		#
 
 		collidable_tiles = [x_tile, y_tile, extra_tile]
@@ -364,7 +368,6 @@ class Entity(object):
 				self.can_jump = True
 				self.in_air = False
 
-				tile.sprite.color = sf.Color(255,255,255)
 
 			if collision.top_to_bottom(s):
 				if self.yVel < 0: self.yVel = 0
@@ -378,6 +381,10 @@ class Entity(object):
 				if collision.left_to_right(s)\
 				and s.slope_collision.anchor_x=="l":
 					self.xVel = 0
+					
+					#
+					tile.sprite.color = sf.Color(255,255,255)
+					#
 
 				if collision.right_to_left(s)\
 				and s.slope_collision.anchor_x=="r":

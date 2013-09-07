@@ -421,12 +421,12 @@ class collision:
 
 				#TWO-TILE SLOPES
 				if tile.collision == "da":
-					b = (sprite.x1+GRID, sprite.y1+(GRID/2))
-					a = (sprite.x1, sprite.y1+GRID)
+					a = (sprite.x1+GRID, sprite.y1+(GRID/2))
+					b = (sprite.x1, sprite.y1+GRID)
 					anchor = "rd"
 				if tile.collision == "ea":
-					b = (sprite.x1+GRID, sprite.y1)
-					a = (sprite.x1, sprite.y1+(GRID/2))
+					a = (sprite.x1+GRID, sprite.y1)
+					b = (sprite.x1, sprite.y1+(GRID/2))
 					anchor = "rd"
 
 				if tile.collision == "fa":

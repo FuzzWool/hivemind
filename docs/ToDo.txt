@@ -49,20 +49,14 @@ Check collisions tile-per-tile.
 
 -
 
-GOAL: TEST all one-tile SLOPES.
+GOAL: TEST all 2-tile SLOPES.
 
-* ENTITY falls through U-ANCHORED SLOPES.
-	Fix: Slope-locking now exclusive to d-anchored slopes.
+* CRASHING when around FIRST HALF of the SLOPE.
+Problem: tried extra_checking a non-slope next to it.
+Fix: Specified slope tiles to be used.
 
+! ENTITY stutters when SLOPE LOCKING down rd-SLOPE.
 
-
--
-SLOPE bugs
-! When JUMPING to the side of a SLOPE, the ENTITY locks on TOP
-! Can't JUMP while going LEFT on TOP of a SLOPE.
-
-
-! Slopes 'leading' to the ground cause the entity to spaz.
 -
 
 ! Holding both directional keys causes weird Nut walking.

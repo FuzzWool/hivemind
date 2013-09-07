@@ -156,33 +156,25 @@ class slope_collision(object):
 	#wip
 	@property
 	def left_point(self):
-		if self.a[0] < self.b[0]:
-			return self.a
+		if self.a[0] < self.b[0]: return self.a
 		return self.b
-
 	@property
 	def right_point(self):
-		if self.a[0] > self.b[0]:
-			return self.a
+		if self.a[0] > self.b[0]: return self.a
 		return self.b
-
 	@property
 	def up_point(self):
-		if self.a[1] < self.b[1]:
-			return self.a
+		if self.a[1] < self.b[1]: return self.a
 		return self.b
-
 	@property
 	def down_point(self):
-		if self.a[1] > self.b[1]:
-			return self.a
+		if self.a[1] > self.b[1]: return self.a
 		return self.b
 
 
 	@property
 	def h(self):
 		return self.down_point[1] - self.up_point[1]
-
 	@property
 	def w(self):
 		return self.right_point[0] - self.right_point[1]
@@ -317,11 +309,6 @@ class slope_collision(object):
 			#sloped
 			if b.slope_collision.anchor_y == "u":
 				if a.y2 == b.y1: return True
-
-			# #UNIQUE FIX
-			# if b.slope_collision.anchor_x == "r":
-			# 	if  b.x2 <= a.x2 and a.y2 == b.y1:
-			# 		return True
 
 		return False
 
