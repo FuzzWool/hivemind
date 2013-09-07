@@ -324,11 +324,11 @@ class Entity(object):
 					y = c.slope_collision.y_overlap_amt(t)
 					if t.slope_collision.anchor_x == "l":
 						if tx > 0:
-							c.collision.next.y_move = -y
+							c.collision.next.y_move = -y+abs(tx)
 					#
 					if t.slope_collision.anchor_x == "r":
 						if tx < 0:
-							c.collision.next.y_move = -y
+							c.collision.next.y_move = -y+abs(tx)
 
 
 		#FIRST - for pushback

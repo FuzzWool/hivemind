@@ -397,8 +397,8 @@ class collision:
 				#ONE-TILE SLOPES
 				#rd
 				if tile.collision == "ba":
-					a = (sprite.x1+GRID, sprite.y1)
-					b = (sprite.x1, sprite.y1+GRID)
+					b = (sprite.x1+GRID, sprite.y1)
+					a = (sprite.x1, sprite.y1+GRID)
 					anchor = "rd"
 
 				#ld

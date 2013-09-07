@@ -177,6 +177,16 @@ class slope_collision(object):
 		if self.a[1] > self.b[1]:
 			return self.a
 		return self.b
+
+
+	@property
+	def h(self):
+		return self.down_point[1] - self.up_point[1]
+
+	@property
+	def w(self):
+		return self.right_point[0] - self.right_point[1]
+
 	#
 
 
@@ -236,43 +246,48 @@ class slope_collision(object):
 	def y_overlap_amt(self, Slope, predict=True):
 	#Returns a positive value.
 		that = Slope.slope_collision
-
-		#WIP
 		if predict:		tx,ty = self.next.stored_move
 		if not predict: tx,ty = 0,0
-		#
 
 		#Gradient
-		w = that.b[0] - that.a[0]; w = abs(w)
-		h = that.b[1] - that.a[1]; h = abs(h)
+		w = that.right_point[0] - that.left_point[0]
+		w = abs(w)
+		h = that.down_point[1] - that.up_point[1]
+		h = abs(h)
 		ratio = h/w
 
 		#X from origin
-		y_lowering = self._.x2 - that.a[0] + tx
+		y_lowering = self._.x2 - that.left_point[0] + tx
 		y_lowering *= ratio
 
+		#Straighten.
+		if y_lowering < 0: y_lowering = 0
+		if that.h < y_lowering: y_lowering = that.h
+
 		if that.anchor == "rd":
-			if 0 <= y_lowering: y_lowering = 0
-			gap = self._.y2 - that.a[1] + ty
+
+			gap = self._.y2 - that.down_point[1] + ty
 			return (gap + y_lowering)
 
 		if that.anchor == "ru":
-			if 0 <= y_lowering: y_lowering = 0
-			gap = self._.y1 - that.a[1] + ty
+			gap = self._.y1 - that.up_point[1] + ty
 			return (gap - y_lowering)
 
 
-		y_lowering = self._.x1 - Slope.x1 + tx
+		#
+
+		y_lowering = self._.x1 - that.right_point[0] + tx
 		y_lowering *= ratio
+		
+		if 0 < y_lowering: y_lowering = 0
+		if y_lowering < -that.h: y_lowering = -that.h
 
 		if that.anchor == "ld":
-			if y_lowering <= 0: y_lowering = 0
-			gap = self._.y2 - that.a[1] + ty
+			gap = self._.y2 - that.down_point[1] + ty
 			return (gap - y_lowering)
 
 		if that.anchor == "lu":
-			if y_lowering <= 0: y_lowering = 0
-			gap = self._.y1 - that.a[1] + ty
+			gap = self._.y1 - that.up_point[1] + ty
 			return (gap + y_lowering)
 	#
 
@@ -303,10 +318,10 @@ class slope_collision(object):
 			if b.slope_collision.anchor_y == "u":
 				if a.y2 == b.y1: return True
 
-			#UNIQUE FIX
-			if b.slope_collision.anchor_x == "r":
-				if  b.x2 <= a.x2 and a.y2 == b.y1:
-					return True
+			# #UNIQUE FIX
+			# if b.slope_collision.anchor_x == "r":
+			# 	if  b.x2 <= a.x2 and a.y2 == b.y1:
+			# 		return True
 
 		return False
 
