@@ -143,7 +143,7 @@ class slope_collision(object):
 		self.overlap = self._.overlap
 
 		#Slope
-		self.a, self.b = 0, 0
+		self.a, self.b = None, None
 		self.anchor = "rd"
 
 	@property

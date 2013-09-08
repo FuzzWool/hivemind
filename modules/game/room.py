@@ -60,6 +60,11 @@ class Room(object):
 		def x(self): return int(self.sprite.x/GRID)
 		@property
 		def y(self): return int(self.sprite.y/GRID)
+
+		def is_slope(self):
+			if self.sprite.slope_collision.a != None:
+				return True
+			return False
 	#
 
 	def change_tile(self, pos, clip):

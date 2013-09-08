@@ -290,22 +290,24 @@ class Entity(object):
 		#
 
 		#For 2-tile slopes
-		extra_tile = None
+		extra_tile1 = None
+		extra_tile2 = None
 		if x_tile != None:
-			if x_tile.collision in ["da","db"]:
+			if x_tile.is_slope():
 				x, y = x_tile.x, x_tile.y
-				extra_tile = Room.tiles[x+1][y]
-				if extra_tile.collision not in ["ea","eb"]:
-					extra_tile = None
+				extra_tile1 = Room.tiles[x+1][y]
+				if extra_tile1.is_slope() == False:
+					extra_tile1 = None
 
-			if x_tile.collision in ["ga","gb"]:
+			if x_tile.is_slope():
 				x, y = x_tile.x, x_tile.y
-				extra_tile = Room.tiles[x-1][y]
-				if extra_tile.collision not in ["ha","hb"]:
-					extra_tile = None
+				extra_tile2 = Room.tiles[x-1][y]
+				if extra_tile2.is_slope() == False:
+					extra_tile2 = None
 		#
 
-		collidable_tiles = [x_tile, y_tile, extra_tile]
+		collidable_tiles = \
+		[x_tile, y_tile, extra_tile1, extra_tile2]
 		collidable_tiles[:] = \
 		[tile for tile in collidable_tiles if tile != None]
 
@@ -332,13 +334,12 @@ class Entity(object):
 						if t.slope_collision.anchor_x == "l":
 							if tx > 0:
 								c.collision.next.y_move \
-								= -y+abs(tx)
+								= abs(tx)
 						#
 						if t.slope_collision.anchor_x == "r":
 							if tx < 0:
 								c.collision.next.y_move \
-								= -y+abs(tx)
-
+								= abs(tx)
 
 		#FIRST - for pushback
 		for tile in collidable_tiles:
@@ -354,6 +355,11 @@ class Entity(object):
 
 		#SECOND - for states
 		for tile in collidable_tiles:
+
+			#
+			tile.sprite.color = sf.Color(255,255,255)
+			#
+
 
 			s = tile.sprite
 
@@ -381,10 +387,6 @@ class Entity(object):
 				if collision.left_to_right(s)\
 				and s.slope_collision.anchor_x=="l":
 					self.xVel = 0
-					
-					#
-					tile.sprite.color = sf.Color(255,255,255)
-					#
 
 				if collision.right_to_left(s)\
 				and s.slope_collision.anchor_x=="r":
