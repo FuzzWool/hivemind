@@ -51,17 +51,7 @@ Check collisions tile-per-tile.
 
 -
 
-GOAL: FIX all 2-tile SLOPES.
-
-* ENTITY stutters when SLOPE LOCKING down 2-tile-SLOPE.
-
-Fix1: extra_tiles now checked for both directions, and apply if the tile is_slope().
-
-Fix2: Forces an absolute tx movement downwards.
-
-
-
-
+GOAL: Test all upper 2-tile slopes.
 
 ---
 Test TILES, 1-TILE SLOPES, 2-TILE SLOPES, and 3-TILE SLOPES once more when everything works.

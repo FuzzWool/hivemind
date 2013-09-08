@@ -425,6 +425,7 @@ class collision:
 					anchor = "lu"
 
 				#TWO-TILE SLOPES
+				#horizontal
 				if tile.collision == "da":
 					a = (sprite.x1+GRID, sprite.y1+(GRID/2))
 					b = (sprite.x1, sprite.y1+GRID)
@@ -461,6 +462,41 @@ class collision:
 					b = (sprite.x1, sprite.y1+GRID)
 					anchor = "lu"
 
+				#vertical
+				x1, x2 = sprite.x1, sprite.x1+GRID
+				y1, y2 = sprite.y1, sprite.y2+GRID
+				xc = sprite.x1+(GRID/2)
+				yc = sprite.y1+(GRID/2)
+
+				if tile.collision == "ec":
+					a, b = (x2, y1),(xc, y2)
+					anchor = "rd"
+				if tile.collision == "ed":
+					a, b = (xc, y1),(x1, y2)
+					anchor = "rd"
+
+				if tile.collision == "ee":
+					a, b = (x1, y1),(xc,y2)
+					anchor = "ld"
+				if tile.collision == "ef":
+					a,b = (xc,y1),(x2,y2)
+					anchor = "ld"
+
+				if tile.collision == "fc":
+					a, b = (x1,y1),(xc,y2)
+					anchor = "ru"
+				if tile.collision == "fd":
+					a,b = (xc,y1),(x2,y2)
+					anchor = "ru"
+
+				if tile.collision == "fe":
+					a,b = (x2,y1),(xc,y2)
+					anchor = "lu"
+				if tile.collision == "ff":
+					a,b = (xc, y1),(x1, y2)
+					anchor = "lu"
+
+				#
 
 				if anchor:
 					sprite.slope_collision.a = a
