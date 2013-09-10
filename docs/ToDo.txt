@@ -53,13 +53,13 @@ Check collisions tile-per-tile.
 
 GOAL: Test all upper 2-tile slopes.
 
-* SLIPS underneath the BOTTOM EDGES of slopes when JUMPING
-Bottom left edges.
+* Gets STUCK in bottom-right of WIDE SECTION
+	Problem: An uneven intersection doesn't cover the entire tile's height or width, leading to premature cut offs.
 
-	* Optional arg for SLOPES in OVERLAP class.
-	x_tile and y_tile checks now focus only on tile size.
+	Solution: Extended coordinate if it isn't as far-going as the original (anchored) side.
 
-! Gets STUCK in bottom-right of WIDE SECTION
+! Entity SPAZZES inbetween the GAP between TWO SLOPES.
+Solution: Make extra up tile and extra down tiles.
 
 
 ---

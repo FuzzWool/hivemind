@@ -202,14 +202,33 @@ class slope_collision(object):
 
 	@property
 	def points(self): s = self; return s.x1,s.y1,s.x2,s.y2 
+	
+	#Extend the Slope's points should the anchored section
+	#be longer.
 	@property
-	def x1(self): return self.left_point[0]
+	def x1(self):
+		if self.anchor_x == "l":
+			if self._.x1 < self.left_point[0]:
+				return self._.x1
+		return self.left_point[0]
 	@property
-	def x2(self): return self.right_point[0]
+	def x2(self):
+		if self.anchor_x == "r":
+			if self._.x2 > self.right_point[0]:
+				return self._.x2
+		return self.right_point[0]
 	@property
-	def y1(self): return self.up_point[1]
+	def y1(self):
+		if self.anchor_y == "u":
+			if self._.y1 < self.up_point[1]:
+				return self._.y1
+		return self.up_point[1]
 	@property
-	def y2(self): return self.down_point[1]
+	def y2(self):
+		if self.anchor_y == "d":
+			if self._.y2 > self.down_point[1]:
+				return self._.y2
+		return self.down_point[1]
 
 
 	@property
@@ -441,7 +460,6 @@ class overlap:
 		else:
 			stx, sty, btx, bty = 0, 0, 0, 0
 
-		#
 		#Slope
 		if slope:
 			if small.slope_collision.is_slope():
