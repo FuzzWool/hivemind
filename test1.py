@@ -32,6 +32,7 @@ while running:
 	# #WIP###
 	Nut.handle_controls(key)
 	Nut.handle_physics()
+	Nut.collide_with_WorldMap(worldmap)
 	# ###
 
 	#Animation
@@ -40,9 +41,6 @@ while running:
 	#Video
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
-	#
 	worldmap.draw()
 	Nut.draw()
-	Nut.collide_with_WorldMap(worldmap)
-	#
 	window.display()

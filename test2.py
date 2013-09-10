@@ -1,4 +1,4 @@
-#SLOPE LOCKING
+#TEST overlapping with slopes.
 
 import modules.pysfml_game.key as key
 from modules.pysfml_game import quit, window, sf
@@ -12,17 +12,17 @@ Camera.x, Camera.y = 0, 0
 #Box
 box_tex = MyTexture("img/characters/nut/cbox.png")
 box = MySprite(box_tex)
-box.goto = 25, 25
+box.goto = 25, 100
 
 #TRIANGLE
 triangle_tex = MyTexture("img/tilemaps/_collision.png")
 triangle = MySprite(triangle_tex)
 triangle.clip.set(25,25)
 triangle.clip.use(1,0)
-triangle.goto = 100,100
+triangle.goto = 100,200
 #####
 
-hypo = "lu"
+hypo = "rd"
 
 t = triangle
 if hypo == "rd":
@@ -58,15 +58,18 @@ running = True
 while running:
 	#Logic
 	if quit(): running = False
-	if key.RETURN.held():
-		y = box.slope_collision.y_overlap_amt(triangle)
-		box.collision.next.store_move(y= -y)
+	if key.RETURN.pressed():
+		print triangle.slope_collision.points
+		print triangle.slope_collision.w
+		print triangle.slope_collision.h
+
+		
 
 	amt = 2
-	if key.A.held(): box.collision.next.store_move(x= -amt)
-	if key.D.held(): box.collision.next.store_move(x= +amt)
-	if key.W.held(): box.collision.next.store_move(y= -amt)
-	if key.S.held(): box.collision.next.store_move(y= +amt)
+	if key.LEFT.held(): box.collision.next.store_move(x= -amt)
+	if key.RIGHT.held(): box.collision.next.store_move(x= +amt)
+	if key.UP.held(): box.collision.next.store_move(y= -amt)
+	if key.DOWN.held(): box.collision.next.store_move(y= +amt)
 
 	box.slope_collision.pushback(triangle)
 	box.collision.next.confirm_move()

@@ -53,6 +53,13 @@ Check collisions tile-per-tile.
 
 GOAL: Test all upper 2-tile slopes.
 
+* ENTITY hangs on to the BOTTOM of a 2-TILE SLOPE.
+	* Room tile values were incorrect. Fixed.
+	* OVERLAP now uses SLOPE POINTS.
+	* w fixed
+
+
+
 ---
 Test TILES, 1-TILE SLOPES, 2-TILE SLOPES, and 3-TILE SLOPES once more when everything works.
 ---

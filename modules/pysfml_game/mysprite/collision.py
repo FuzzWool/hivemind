@@ -79,6 +79,10 @@ class collision:
 		p = []
 
 		x1, x2 = ThatSprite.x1, ThatSprite.x2
+		if ThatSprite.slope_collision.is_slope():
+			ts_sc = ThatSprite.slope_collision
+			x1, x2 = ts_sc.x1, ts_sc.x2
+
 		if x1 <= a.x1+tx <= x2: p.append(x2 - a.x1)
 		if x1 <= a.x2+tx <= x2: p.append(x1 - a.x2)
 		if a.x1+tx <= x1 <= a.x2+tx: p.append(a.x1 - x2)
@@ -97,6 +101,10 @@ class collision:
 		p = []
 		
 		y1, y2 = ThatSprite.y1, ThatSprite.y2
+		if ThatSprite.slope_collision.is_slope():
+			ts_sc = ThatSprite.slope_collision
+			y1, y2 = ts_sc.y1, ts_sc.y2
+
 		if y1 <= a.y1+ty <= y2: p.append(y2 - a.y1)
 		if y1 <= a.y2+ty <= y2: p.append(y1 - a.y2)
 		if a.y1+ty <= y1 <= a.y2+ty: p.append(a.y1 - y2)
@@ -135,6 +143,9 @@ class collision:
 
 ####
 
+
+# SLOPE COLLISION
+
 from modules.pysfml_game import Dot
 class slope_collision(object):
 	def __init__(self, MySprite):
@@ -146,10 +157,18 @@ class slope_collision(object):
 		self.a, self.b = None, None
 		self.anchor = "rd"
 
+	#	STATES
+
 	@property
 	def anchor_x(self): return self.anchor[0]
 	@property
 	def anchor_y(self): return self.anchor[1]
+
+	def is_slope(self):
+		if self.a != None and self.b != None:
+			return True
+		return False
+
 
 	#	POSITION
 
@@ -174,11 +193,26 @@ class slope_collision(object):
 
 	@property
 	def h(self):
-		return self.down_point[1] - self.up_point[1]
+		return self.y2 - self.y1
 	@property
 	def w(self):
-		return self.right_point[0] - self.right_point[1]
+		return self.x2 - self.x1
 
+	@property
+	def points(self): s = self; return s.x1,s.y1,s.x2,s.y2 
+	@property
+	def x1(self): return self.left_point[0]
+	@property
+	def x2(self): return self.right_point[0]
+	@property
+	def y1(self): return self.up_point[1]
+	@property
+	def y2(self): return self.down_point[1]
+
+
+	@property
+	def center(self):
+		return (self.x1+(self.w/2)), (self.y1+(self.h/2))
 	#
 
 
@@ -225,9 +259,11 @@ class slope_collision(object):
 				self.next.x_move -= small
 
 
-	def is_z(self, Slope):
-		z = self.y_overlap_amt(Slope)
-		that = Slope.slope_collision
+	def is_z(self, ThatSprite):
+		Slope = ThatSprite.slope_collision
+
+		z = self.y_overlap_amt(ThatSprite)
+		that = ThatSprite.slope_collision
 		if that.anchor in ["rd", "ld"]:
 			return bool(0 < z)
 
@@ -264,7 +300,6 @@ class slope_collision(object):
 		if that.anchor == "ru":
 			gap = self._.y1 - that.up_point[1] + ty
 			return (gap - y_lowering)
-
 
 		#
 
@@ -404,6 +439,15 @@ class overlap:
 		else:
 			stx, sty, btx, bty = 0, 0, 0, 0
 
+		#
+		#Slope
+		if small.slope_collision.is_slope():
+			small = small.slope_collision
+		if big.slope_collision.is_slope():
+			big = big.slope_collision
+		#
+
+
 		#Choose which SIDE to return based on the CENTER.
 		o = small.center[0]+stx - big.center[0]+bty
 
@@ -431,7 +475,15 @@ class overlap:
 			btx, bty = big.collision.next.stored_move
 		else:
 			stx, sty, btx, bty = 0, 0, 0, 0
-		
+
+		#
+		#Slope
+		if small.slope_collision.is_slope():
+			small = small.slope_collision
+		if big.slope_collision.is_slope():
+			big = big.slope_collision
+		#
+
 		o = small.center[1]+sty - big.center[1]+bty
 
 		if o <= 0:

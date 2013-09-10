@@ -464,7 +464,7 @@ class collision:
 
 				#vertical
 				x1, x2 = sprite.x1, sprite.x1+GRID
-				y1, y2 = sprite.y1, sprite.y2+GRID
+				y1, y2 = sprite.y1, sprite.y1+GRID
 				xc = sprite.x1+(GRID/2)
 				yc = sprite.y1+(GRID/2)
 
