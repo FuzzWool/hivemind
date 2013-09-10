@@ -263,19 +263,19 @@ class Entity(object):
 		x_tile, y_tile = None, None
 		for x in range(x1, x2):
 			for y in range(y1, y2):
-				
+
 				tile = Room.tiles[x][y]
 				if tile.collision != "__":
 					if x_tile == None: x_tile = tile
 					if y_tile == None: y_tile = tile
 
-					new_x = tile.sprite.overlap.x(self.cbox)
-					new_y = tile.sprite.overlap.y(self.cbox)
-					x_x =  x_tile.sprite.overlap.x(self.cbox)
-					x_y =  x_tile.sprite.overlap.y(self.cbox)
-					y_x =  y_tile.sprite.overlap.x(self.cbox)
-					y_y =  y_tile.sprite.overlap.y(self.cbox)
-					
+					new_x = tile.sprite.overlap.x(self.cbox, slope=False)
+					new_y = tile.sprite.overlap.y(self.cbox, slope=False)
+					x_x =  x_tile.sprite.overlap.x(self.cbox, slope=False)
+					x_y =  x_tile.sprite.overlap.y(self.cbox, slope=False)
+					y_x =  y_tile.sprite.overlap.x(self.cbox, slope=False)
+					y_y =  y_tile.sprite.overlap.y(self.cbox, slope=False)
+
 					if new_y >= x_y:
 						if new_y > x_y: x_tile = tile
 						if new_x > x_x: x_tile = tile
@@ -356,10 +356,9 @@ class Entity(object):
 		#SECOND - for states
 		for tile in collidable_tiles:
 
-			#
+			###DEBUG
 			tile.sprite.color = sf.Color(255,255,255)
-			#
-
+			###
 
 			s = tile.sprite
 

@@ -78,6 +78,7 @@ class collision:
 		tx = self.next.x_move
 		p = []
 
+		#Slope points
 		x1, x2 = ThatSprite.x1, ThatSprite.x2
 		if ThatSprite.slope_collision.is_slope():
 			ts_sc = ThatSprite.slope_collision
@@ -100,6 +101,7 @@ class collision:
 		ty = self.next.y_move
 		p = []
 		
+		#Slope points
 		y1, y2 = ThatSprite.y1, ThatSprite.y2
 		if ThatSprite.slope_collision.is_slope():
 			ts_sc = ThatSprite.slope_collision
@@ -423,7 +425,7 @@ class slope_collision(object):
 class overlap:
 	def __init__ (self, MySprite): self._ = MySprite
 
-	def x(self, ThatSprite, predict=True):
+	def x(self, ThatSprite, predict=True, slope=True):
 
 
 		sprite1, sprite2 = self._, ThatSprite
@@ -441,10 +443,11 @@ class overlap:
 
 		#
 		#Slope
-		if small.slope_collision.is_slope():
-			small = small.slope_collision
-		if big.slope_collision.is_slope():
-			big = big.slope_collision
+		if slope:
+			if small.slope_collision.is_slope():
+				small = small.slope_collision
+			if big.slope_collision.is_slope():
+				big = big.slope_collision
 		#
 
 
@@ -461,7 +464,7 @@ class overlap:
 			return right_gap
 
 
-	def y(self, ThatSprite, predict=True):
+	def y(self, ThatSprite, predict=True, slope=True):
 		sprite1, sprite2 = self._, ThatSprite
 
 		if sprite2.h > sprite1.h:
@@ -469,20 +472,18 @@ class overlap:
 		else:
 			big, small = sprite1, sprite2
 		
-		#Next move.
 		if predict:
 			stx, sty = small.collision.next.stored_move
 			btx, bty = big.collision.next.stored_move
 		else:
 			stx, sty, btx, bty = 0, 0, 0, 0
 
-		#
-		#Slope
-		if small.slope_collision.is_slope():
-			small = small.slope_collision
-		if big.slope_collision.is_slope():
-			big = big.slope_collision
-		#
+		if slope:
+			if small.slope_collision.is_slope():
+				small = small.slope_collision
+			if big.slope_collision.is_slope():
+				big = big.slope_collision
+
 
 		o = small.center[1]+sty - big.center[1]+bty
 

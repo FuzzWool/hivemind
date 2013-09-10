@@ -53,11 +53,13 @@ Check collisions tile-per-tile.
 
 GOAL: Test all upper 2-tile slopes.
 
-* ENTITY hangs on to the BOTTOM of a 2-TILE SLOPE.
-	* Room tile values were incorrect. Fixed.
-	* OVERLAP now uses SLOPE POINTS.
-	* w fixed
+* SLIPS underneath the BOTTOM EDGES of slopes when JUMPING
+Bottom left edges.
 
+	* Optional arg for SLOPES in OVERLAP class.
+	x_tile and y_tile checks now focus only on tile size.
+
+! Gets STUCK in bottom-right of WIDE SECTION
 
 
 ---
