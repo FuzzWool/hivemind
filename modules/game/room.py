@@ -495,7 +495,6 @@ class collision:
 				if tile.collision == "ff":
 					a,b = (xc, y1),(x1, y2)
 					anchor = "lu"
-
 				#
 
 				if anchor:

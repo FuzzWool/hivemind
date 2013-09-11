@@ -219,13 +219,13 @@ class slope_collision(object):
 		return self.right_point[0]
 	@property
 	def y1(self):
-		if self.anchor_y == "u":
+		if self.anchor_y == "d":
 			if self._.y1 < self.up_point[1]:
 				return self._.y1
 		return self.up_point[1]
 	@property
 	def y2(self):
-		if self.anchor_y == "d":
+		if self.anchor_y == "u":
 			if self._.y2 > self.down_point[1]:
 				return self._.y2
 		return self.down_point[1]
@@ -317,7 +317,6 @@ class slope_collision(object):
 		if that.h < y_lowering: y_lowering = that.h
 
 		if that.anchor == "rd":
-
 			gap = self._.y2 - that.down_point[1] + ty
 			return (gap + y_lowering)
 
@@ -349,7 +348,7 @@ class slope_collision(object):
 	#Side checks.
 	def bottom_to_top(self, ThatSprite):
 	#If a's bottom is colliding with b's top.
-		a, b = self._, ThatSprite
+		a, b = self._, ThatSprite.slope_collision
 
 		#Instant Cancels
 		if self.next.y_move < 0: return False
@@ -357,77 +356,77 @@ class slope_collision(object):
 		if b.x2 == a.x1: return False
 		#
 
-		if self.overlap.x(b, predict=False) > 0:
+		if self.overlap.x(ThatSprite, predict=False) > 0:
 
 			#straight
-			if b.slope_collision.anchor_y == "d":
+			if ThatSprite.slope_collision.anchor_y == "d":
 				if int(self.y_overlap_amt\
-					(b, predict=False)) == 0:
+					(ThatSprite, predict=False)) == 0:
 					return True
 
 			#sloped
-			if b.slope_collision.anchor_y == "u":
+			if ThatSprite.slope_collision.anchor_y == "u":
 				if a.y2 == b.y1: return True
-
+				
 		return False
 
 
 	def top_to_bottom(self, ThatSprite):
-		a, b = self._, ThatSprite
+		a, b = self._, ThatSprite.slope_collision
 
 		#Instant Cancels
 		if a.x2 == b.x1: return False
 		if b.x2 == a.x1: return False
 		#
 
-		if self.overlap.x(b, predict=False) > 0:
+		if self.overlap.x(ThatSprite, predict=False) > 0:
 
-			if b.slope_collision.anchor_y == "d":
+			if ThatSprite.slope_collision.anchor_y == "d":
 				if a.y1 == b.y2: return True
 
-			if b.slope_collision.anchor_y == "u":
+			if ThatSprite.slope_collision.anchor_y == "u":
 				if int(self.y_overlap_amt\
-				(b, predict=False)) == 0:
+				(ThatSprite, predict=False)) == 0:
 					return True
 		return False
 
 
 	def left_to_right(self, ThatSprite):
-		a, b = self._, ThatSprite
+		a, b = self._, ThatSprite.slope_collision
 
 		#Instant Cancels
 		if a.y2 == b.y1: return False
 		if b.y2 == a.y1: return False
 		#
 
-		if self.overlap.y(b, predict=False) > 0:
+		if self.overlap.y(ThatSprite, predict=False) > 0:
 
-			if b.slope_collision.anchor_x == "l":
+			if ThatSprite.slope_collision.anchor_x == "l":
 				if a.x2 == b.x1: return True
 
-			if b.slope_collision.anchor_x == "r":
+			if ThatSprite.slope_collision.anchor_x == "r":
 				if int(self.y_overlap_amt\
-				(b, predict=False)) == 0:
+				(ThatSprite, predict=False)) == 0:
 					return True
 		return False
 
 
 	def right_to_left(self, ThatSprite):
-		a, b = self._, ThatSprite
+		a, b = self._, ThatSprite.slope_collision
 
 		#Instant Cancels
 		if a.y2 == b.y1: return False
 		if b.y2 == a.y1: return False
 		#
 
-		if self.overlap.y(b, predict=False) > 0:
+		if self.overlap.y(ThatSprite, predict=False) > 0:
 
-			if b.slope_collision.anchor_x == "l":
+			if ThatSprite.slope_collision.anchor_x == "l":
 				if int(self.y_overlap_amt\
-				(b, predict=False)) == 0:
+				(ThatSprite, predict=False)) == 0:
 					return True
 
-			if b.slope_collision.anchor_x == "r":
+			if ThatSprite.slope_collision.anchor_x == "r":
 				if a.x1 == b.x2: return True
 		return False
 	#

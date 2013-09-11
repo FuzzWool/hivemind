@@ -45,21 +45,19 @@ Check collisions tile-per-tile.
 		x Filled in all of the collision cells.
 			x 1-tile slopes
 			x 2-tile slopes
-			* upper 2-tile slopes
-			* 3-tile slopes
-			* lower 3-tile slopes
-
+			x upper 2-tile slopes
 -
 
-. Preparing to test 3-TILE SLOPES.
+GOAL: Test ALL sloped tiles again. Look for any bugs.
 
-GOAL: Test all upper 2-tile slopes.
-*rd *ld *ru *lu
-* Fix: UPPER 2-TILES were set INCORRECTLY in ROOM.
-! Slopes CANNOT LEAD to GROUND.
+* tiles
+* 1-tile slopes
+2-tile hori
+2-tile vert
 
----
-Test TILES, 1-TILE SLOPES, 2-TILE SLOPES, and 3-TILE SLOPES once more when everything works.
+* 2-TILE's TOP doesn't allow JUMPS.
+	~ Switched anchor for y1 and y2 in SLOPE_COLLISION.
+
 ---
 
 ! Holding both directional keys causes weird Nut walking.

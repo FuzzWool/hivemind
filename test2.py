@@ -28,7 +28,7 @@ t = triangle
 if hypo == "rd":
 	\
 					  c = (t.x2, t.y1)
-	a = (t.x1, t.y2)
+	a = (t.x1, t.y2-10)
 
 if hypo == "ru":
 	\
@@ -59,11 +59,13 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		print triangle.slope_collision.points
-		print triangle.slope_collision.w
-		print triangle.slope_collision.h
-
-		
+		print box.slope_collision.y_overlap_amt(triangle)
+		print "####"
+		t_sc = triangle.slope_collision
+		# print t_sc.left_point[0], t_sc.right_point[0]
+		# print t_sc.x1, t_sc.x2
+		print t_sc.up_point[1], t_sc.down_point[1]
+		print t_sc.y1, t_sc.y2		
 
 	amt = 2
 	if key.LEFT.held(): box.collision.next.store_move(x= -amt)

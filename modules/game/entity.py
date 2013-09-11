@@ -383,7 +383,6 @@ class Entity(object):
 				self.can_jump = True
 				self.in_air = False
 
-
 			if collision.top_to_bottom(s):
 				if self.yVel < 0: self.yVel = 0
 
