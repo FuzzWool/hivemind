@@ -289,25 +289,34 @@ class Entity(object):
 			elif x_tile.x == y_tile.x: x_tile = None
 		#
 
-		#For 2-tile slopes
+		# EXTRA TILES
+		#2-tile slopes need extra checks for their
+		#connectors.
+
 		extra_tile1 = None
 		extra_tile2 = None
+		extra_tile3 = None
+		extra_tile4 = None
 		if x_tile != None:
 			if x_tile.is_slope():
 				x, y = x_tile.x, x_tile.y
 				extra_tile1 = Room.tiles[x+1][y]
+				extra_tile2 = Room.tiles[x-1][y]
+				extra_tile3 = Room.tiles[x][y+1]
+				extra_tile4 = Room.tiles[x][y-1]
+
 				if extra_tile1.is_slope() == False:
 					extra_tile1 = None
-
-			if x_tile.is_slope():
-				x, y = x_tile.x, x_tile.y
-				extra_tile2 = Room.tiles[x-1][y]
 				if extra_tile2.is_slope() == False:
 					extra_tile2 = None
-		#
+				if extra_tile3.is_slope() == False:
+					extra_tile3 = None
+				if extra_tile4.is_slope() == False:
+					extra_tile4 = None
 
 		collidable_tiles = \
-		[x_tile, y_tile, extra_tile1, extra_tile2]
+		[x_tile, y_tile,\
+		extra_tile1, extra_tile2, extra_tile3, extra_tile4]
 		collidable_tiles[:] = \
 		[tile for tile in collidable_tiles if tile != None]
 
@@ -357,6 +366,7 @@ class Entity(object):
 		for tile in collidable_tiles:
 
 			###DEBUG
+			# if tile == x_tile:
 			tile.sprite.color = sf.Color(255,255,255)
 			###
 

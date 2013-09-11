@@ -53,13 +53,8 @@ Check collisions tile-per-tile.
 
 GOAL: Test all upper 2-tile slopes.
 
-* Gets STUCK in bottom-right of WIDE SECTION
-	Problem: An uneven intersection doesn't cover the entire tile's height or width, leading to premature cut offs.
-
-	Solution: Extended coordinate if it isn't as far-going as the original (anchored) side.
-
-! Entity SPAZZES inbetween the GAP between TWO SLOPES.
-Solution: Make extra up tile and extra down tiles.
+* Entity SPAZZES inbetween the GAP between TWO SLOPES.
+	+ Added extra up and down checks for slopes.
 
 
 ---
