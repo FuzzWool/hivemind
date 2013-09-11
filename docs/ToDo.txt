@@ -51,11 +51,12 @@ Check collisions tile-per-tile.
 
 -
 
+. Preparing to test 3-TILE SLOPES.
+
 GOAL: Test all upper 2-tile slopes.
-
-* Entity SPAZZES inbetween the GAP between TWO SLOPES.
-	+ Added extra up and down checks for slopes.
-
+*rd *ld *ru *lu
+* Fix: UPPER 2-TILES were set INCORRECTLY in ROOM.
+! Slopes CANNOT LEAD to GROUND.
 
 ---
 Test TILES, 1-TILE SLOPES, 2-TILE SLOPES, and 3-TILE SLOPES once more when everything works.

@@ -477,17 +477,17 @@ class collision:
 
 				if tile.collision == "ee":
 					a, b = (x1, y1),(xc,y2)
-					anchor = "ld"
+					anchor = "ru"
 				if tile.collision == "ef":
 					a,b = (xc,y1),(x2,y2)
-					anchor = "ld"
+					anchor = "ru"
 
 				if tile.collision == "fc":
 					a, b = (x1,y1),(xc,y2)
-					anchor = "ru"
+					anchor = "ld"
 				if tile.collision == "fd":
 					a,b = (xc,y1),(x2,y2)
-					anchor = "ru"
+					anchor = "ld"
 
 				if tile.collision == "fe":
 					a,b = (x2,y1),(xc,y2)
