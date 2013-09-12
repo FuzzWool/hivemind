@@ -174,7 +174,7 @@ class slope_collision(object):
 
 	#	POSITION
 
-	#wip
+	# The POINTS size, concerning itself with only the hypotenuse.
 	@property
 	def left_point(self):
 		if self.a[0] < self.b[0]: return self.a
@@ -192,6 +192,15 @@ class slope_collision(object):
 		if self.a[1] > self.b[1]: return self.a
 		return self.b
 
+	@property
+	def point_w(self): return self.right_point[0]-self.left_point[0]
+
+	@property
+	def point_h(self): return self.down_point[1]-self.up_point[1]
+
+
+
+	# The ENTIRE size, combining both slope points and the rect.
 
 	@property
 	def h(self):
@@ -219,13 +228,13 @@ class slope_collision(object):
 		return self.right_point[0]
 	@property
 	def y1(self):
-		if self.anchor_y == "d":
+		if self.anchor_y == "u":
 			if self._.y1 < self.up_point[1]:
 				return self._.y1
 		return self.up_point[1]
 	@property
 	def y2(self):
-		if self.anchor_y == "u":
+		if self.anchor_y == "d":
 			if self._.y2 > self.down_point[1]:
 				return self._.y2
 		return self.down_point[1]
@@ -314,8 +323,10 @@ class slope_collision(object):
 
 		#Straighten.
 		if y_lowering < 0: y_lowering = 0
-		if that.h < y_lowering: y_lowering = that.h
+		if y_lowering > that.point_h: y_lowering = that.point_h
 
+		# GAP calculates x using y.
+		# y_lowering calculates y using x.
 		if that.anchor == "rd":
 			gap = self._.y2 - that.down_point[1] + ty
 			return (gap + y_lowering)
@@ -330,7 +341,7 @@ class slope_collision(object):
 		y_lowering *= ratio
 		
 		if 0 < y_lowering: y_lowering = 0
-		if y_lowering < -that.h: y_lowering = -that.h
+		if y_lowering < -that.point_h: y_lowering = -that.point_h
 
 		if that.anchor == "ld":
 			gap = self._.y2 - that.down_point[1] + ty

@@ -55,8 +55,16 @@ GOAL: Test ALL sloped tiles again. Look for any bugs.
 2-tile hori
 2-tile vert
 
-* 2-TILE's TOP doesn't allow JUMPS.
-	~ Switched anchor for y1 and y2 in SLOPE_COLLISION.
+
+From this, I learned: Be very careful with the distinction between the SLOPE size and the OVERALL size.
+
+* ENTITY gets STUCK trying to move DOWN the SLOPE.
+* ENTITY INTERSECTS with the BOTTOM of the SLOPE.
+	fix: y1, y2 anchor conditions swapped.
+
+	* ENTITY cannot JUMP at the TOP of a SLOPE. (b>t)
+	y_overlap_amt is thrown off.
+		fix: y_lowering now takes SLOPE height into account instead of OVERALL height.
 
 ---
 

@@ -61,11 +61,10 @@ while running:
 	if key.RETURN.pressed():
 		print box.slope_collision.y_overlap_amt(triangle)
 		print "####"
-		t_sc = triangle.slope_collision
-		# print t_sc.left_point[0], t_sc.right_point[0]
-		# print t_sc.x1, t_sc.x2
-		print t_sc.up_point[1], t_sc.down_point[1]
-		print t_sc.y1, t_sc.y2		
+
+		# t_sc = triangle.slope_collision
+		# print "points		",t_sc.up_point[1], t_sc.down_point[1]
+		# print "slope_size	",t_sc.y1, t_sc.y2		
 
 	amt = 2
 	if key.LEFT.held(): box.collision.next.store_move(x= -amt)

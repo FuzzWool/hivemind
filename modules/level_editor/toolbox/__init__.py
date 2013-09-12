@@ -60,7 +60,7 @@ class ToolBox:
 				else:
 					if mouse.left.held():
 						self.Tile.place(Level, grid_pos)
-					if mouse.right.held():
+					if key.Z.held():
 						self.Tile.remove(Level, grid_pos)
 					if mouse.left.pressed():
 						self.Tile.Selector.select\
