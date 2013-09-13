@@ -7,10 +7,16 @@ from modules.pysfml_game import GRID
 class Entity(object):
 #Stuff the Player, NPCS and enemies all have in common.
 
+# Is loaded from a CHARACTER FILE.
+# Handles COLLISIONS against the WORLD.
+# WIP - Contains VALUES for MOVEMENT.
+
 	name = None
 	folder_dir = None
 
-#	SPRITE LOADING
+
+	#	SPRITE LOADING
+	#Initializes graphics and collisions.
 
 	def __init__ (self, name="nobody"):
 		#Location
@@ -26,6 +32,7 @@ class Entity(object):
 
 	def make_sprite(self):
 	#Create the main sprite.
+	#Loaded from a character folder.
 
 		#Set the image (load sheet)
 		self.image = sf.Image\
@@ -82,14 +89,17 @@ class Entity(object):
 
 
 	def draw(self):
-		# self.sprite.draw()
-		self.cbox.draw()
+		self.sprite.draw()
+		# self.cbox.draw()
+
 
 #	MOVEMENT
+#Game physics.
 
 	xVel, yVel = 0, 0
 	xLim, yLim = 8, 8
 	gravity = 0.5
+
 
 	def handle_physics(self):
 	#Gravity and Vel movements.
@@ -134,114 +144,63 @@ class Entity(object):
 			else: self.xVel += amt
 
 
-#	CONTROLS
-
-	def handle_controls(self, key):
-	#Keyboard controls for the player character.
-
-		amt = 0.5
-		walkLim = 3 #Walking speed limit.
-		if key.LEFT.held() or key.RIGHT.held():
-
-			if key.LEFT.held():
-				self.facing_left = True
-				if -walkLim <= self.xVel - amt:
-					self.move(-amt, 0)
-				self.right_slowdown(amt)
-
-			if key.RIGHT.held():
-				self.facing_right = True
-				if self.xVel + amt <= walkLim:
-					self.move(+amt, 0)
-				self.left_slowdown(amt)
-
-		else:
-			self.x_slowdown(amt)
-
-
-		if key.Z.pressed(): self.jump()
-
-
-	def jump(self):
-	#Jumps if the entity is able to.
-		if self.can_jump: self.yVel -= 8
-
 #	COLLISIONS
+# Performs pushback and state handling.
 
-	#Forwards to cboxes.
-	def is_colliding(self, x1=0, y1=0, x2=0, y2=0):
-		if  type(x1) != int\
-		and type(x1) != float: 
-			return self.cbox.collision(x1.cbox)
-		else:
-			return self.cbox.collision(x1, y1, x2, y2)
-
-	def collision_pushback(self, x1=0, y1=0, x2=0, y2=0):
-		if  type(x1) != int\
-		and type(x1) != float: 
-			self.cbox.collision.pushback(x1.cbox)
-		else:
-			self.cbox.collision.pushback(x1, y1, x2, y2)
-	#
-
-	def collide_with_WorldMap(self, WorldMap):
-	#Checks every room inside of the WorldMap.
+	def reset_states(self):
 		self.in_air = True
 		self.can_jump = False
 
+
+	def collide_with_WorldMap(self, WorldMap):
+	#Checks every room inside of the WorldMap.
+
+		self.reset_states()
 		for x in WorldMap.Rooms:
 			for y in x:
 				if y != None:
 					self.collide_with_Room(y, True)
 
+
 	def collide_with_Room(self, Room,
 						  called_directly=False):
 	#Handles pushback and states in response to platforms.
 	#State handling performed here.
-		if not called_directly:
-			self.in_air = True
-			self.can_jump = False
+		if not called_directly: self.reset_states()
 
 		collision = Room.collision
 
-		#Get the range to perform collision checks.
+		#Get the RANGE of checking.
 		x1, y1, x2, y2 = self.cbox.points
 		coat = 1
 		x1 = int(round(x1/GRID))-coat;
 		y1 = int(round(y1/GRID))-coat
 		x2 = int(round(x2/GRID))+coat;
 		y2 = int(round(y2/GRID))+coat
-
-		#Fix the range
 		x1 -= Room.x; x2 -= Room.x
 		y1 -= Room.y; y2 -= Room.y
-		if x1 < 0: x1 = 0
-		if y1 < 0: y1 = 0
-		if x2 > Room.w: x2 = Room.w
-		if y2 > Room.h: y2 = Room.h
 
-		#CHANGE THIS.
-		if Room.name != "aa": return 
 
-		#Scan the range
+		#FIX the range
+		def fix_x(x):
+			if x < 0: x = 0
+			if x > Room.w: x = Room.w
+			return x
+
+		def fix_y(y):
+			if y < 0: y = 0
+			if y > Room.h: y = Room.h
+			return y
+
+		x1, x2 = fix_x(x1), fix_x(x2)
+		y1, y2 = fix_y(y1), fix_y(y2)
+
 
 		##########
-		#ZERO - pruning
 
-		#Find the closest collidable tile which the
-		#based on width and height area.
-		c = self.cbox.center
-		tx, ty = self.cbox.collision.next.position
-		cx, cy = c[0]+tx, c[1]+ty
-		cx = int((cx/GRID)); cy = int((cy/GRID))
-
-		#wip
-		cbox_next = self.cbox.collision.next
-		lx, rx = cbox_next.x1, cbox_next.x2
-		lx, rx = int(lx/GRID), int(rx/GRID)
-		uy, dy = cbox_next.y1, cbox_next.y2
-		uy, dy = int(uy/GRID), int(dy/GRID)
-		#
+		#	PRUNING
+		# From the range, select only the usable
+		# collisions.
 
 		###debug
 		#Any tile not in range is transparent.
@@ -251,13 +210,6 @@ class Entity(object):
 				if sprite.texture != None:
 					sprite.color = sf.Color(255,255,255,100)
 
-		x_tile, y_tile = None, None
-
-		if tx <= 0: left, right = True, False
-		if tx >  0: left, right = False, True
-		if ty <= 0: up, down = True, False
-		if ty >  0: up, down = False, True
-		
 
 		#Look for the closest x and y tiles in the range.
 		x_tile, y_tile = None, None
@@ -293,26 +245,31 @@ class Entity(object):
 		#2-tile slopes need extra checks for their
 		#connectors.
 
-		extra_tile1 = None
-		extra_tile2 = None
-		extra_tile3 = None
-		extra_tile4 = None
+		extra_tile1 = None; extra_tile2 = None
+		extra_tile3 = None; extra_tile4 = None
 		if x_tile != None:
 			if x_tile.is_slope():
 				x, y = x_tile.x, x_tile.y
-				extra_tile1 = Room.tiles[x+1][y]
-				extra_tile2 = Room.tiles[x-1][y]
-				extra_tile3 = Room.tiles[x][y+1]
-				extra_tile4 = Room.tiles[x][y-1]
 
-				if extra_tile1.is_slope() == False:
-					extra_tile1 = None
-				if extra_tile2.is_slope() == False:
-					extra_tile2 = None
-				if extra_tile3.is_slope() == False:
-					extra_tile3 = None
-				if extra_tile4.is_slope() == False:
-					extra_tile4 = None
+				if x+1 < Room.w:
+					extra_tile1 = Room.tiles[x+1][y]
+					if extra_tile1.is_slope() == False:
+						extra_tile1 = None
+
+				if x-1 >= 0:
+					extra_tile2 = Room.tiles[x-1][y]
+					if extra_tile2.is_slope() == False:
+						extra_tile2 = None
+				
+				if y+1 < Room.h:
+					extra_tile3 = Room.tiles[x][y+1]
+					if extra_tile3.is_slope() == False:
+						extra_tile3 = None
+				
+				if y-1 >= 0:
+					extra_tile4 = Room.tiles[x][y-1]
+					if extra_tile4.is_slope() == False:
+						extra_tile4 = None
 
 		collidable_tiles = \
 		[x_tile, y_tile,\
@@ -322,9 +279,8 @@ class Entity(object):
 
 		##########
 
-		coll = self.cbox.collision
+		# PRE-COLLISION STATES
 
-		# Pre-collision states
 		for tile in collidable_tiles:
 
 			#Slope Lock
@@ -350,7 +306,7 @@ class Entity(object):
 								c.collision.next.y_move \
 								= abs(tx)
 
-		#FIRST - for pushback
+		# PUSHBACK
 		for tile in collidable_tiles:
 
 			s = tile.sprite
@@ -362,11 +318,11 @@ class Entity(object):
 
 		self.cbox.collision.next.confirm_move()
 
-		#SECOND - for states
+
+		# POST-COLLISION STATES
 		for tile in collidable_tiles:
 
 			###DEBUG
-			# if tile == x_tile:
 			tile.sprite.color = sf.Color(255,255,255)
 			###
 
@@ -424,7 +380,39 @@ class Entity(object):
 
 
 class Player(Entity):
-# Nut's functionality.
+
+	#	CONTROLS
+
+	def handle_controls(self, key):
+	#Keyboard controls for the player character.
+		self.walk(key.LEFT, key.RIGHT)
+		self.jump(key.Z)
+
+
+	def jump(self, jump_key):
+		if jump_key.pressed():
+			if self.can_jump: self.yVel -= 8
+
+	def walk(self, left_key, right_key):
+		amt = 0.5
+		walkLim = 3
+		if left_key.held() or right_key.held():
+
+			if left_key.held():
+				self.facing_left = True
+				if -walkLim <= self.xVel - amt:
+					self.move(-amt, 0)
+				self.right_slowdown(amt)
+
+			if right_key.held():
+				self.facing_right = True
+				if self.xVel + amt <= walkLim:
+					self.move(+amt, 0)
+				self.left_slowdown(amt)
+
+		else:
+			self.x_slowdown(amt)
+
 
 	#GRAPHICS
 

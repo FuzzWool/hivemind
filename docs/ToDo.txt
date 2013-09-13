@@ -51,10 +51,8 @@ Check collisions tile-per-tile.
 ! GOAL: CLEAN Entity and Collision.
 
 * Clean COLLISION.
-! Clean ENTITY.
-
-
-
+* Clean ENTITY.
+~ extra_tiles can no longer go out of bounds.
 
 -
 
