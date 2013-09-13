@@ -11,7 +11,9 @@ class Room(object):
 	 "h","i","j","k","l","m","n","o","p","q",\
 	 "q","r","s","t","u","v","w","x","y","z"]
 
- 	#Size / Position
+
+
+ 	#SIZE/POSITION
 	x, y = 0, 0
 
 	@property
@@ -37,8 +39,8 @@ class Room(object):
 	
 	#
 
+	#Grabs ROOM DATA and generates TILES.
 	def __init__ (self, room_dir, room_x=0, room_y=0):
-	#Grabs Room data and creates tiles.
 
 		self.room_x, self.room_y = room_x, room_y
 

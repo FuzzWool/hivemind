@@ -48,56 +48,15 @@ Check collisions tile-per-tile.
 			x upper 2-tile slopes
 -
 
-* GOAL: Test ALL sloped tiles again. Look for any bugs.
+! GOAL: CLEAN Entity and Collision.
 
-* tiles
-* 1-tile slopes
-* 2-tile hori
-* 2-tile vert
+* Clean COLLISION.
+! Clean ENTITY.
 
 
-Strengths/Weaknesses
-=
-+ Slopes are tile-by-tile, and are consistant in code.
-	+ Slopes can fluidly lead from one to another.
-	+ Slopes can handle an intersection from any 'chunk' of the tile.
 
-- Upward Slopes
-	- Entity attempts to move up upward slopes, and gets jammed in the center.
-	- Entity cannot snap to upward slopes.
 
-- Slopes leading downwards
-	- Entities may be lead downwards into the ground, causing them to SPAZ EVERYWHERE in an attempt to find a safe place.
-		* Suggested fix: Collisions also compare against OTHER collisions to check that their pushback doesn't overlap with them.
-
-CONSIDERATIONS
-=
-
-Pushback Prediction
 -
-* Single-place check ejections are messy, and cannot accurately pushback
-Collisions NEVER physically overlap with each other.
-Movements which result in a collision are cut back.
-* Prior and post checks allow a collision to work out where to pushback
-
-
-Pushback Priorities
--
-* Pushbacks putting the collidable into small gaps causes it to spaz.
-It has no sense of priority compared to other objects.
-
-
-Slope Chunks
--
-* Be VERY careful about the differences of the SLOPE and the ENTIRETY.
-There have been numerous issues in coding based around using the wrong sizing for calculation
-Particularly:
-pushback for the hypotenuse: uses SLOPE sizing.
-prioritizing distance:		 uses ENTIRE sizing.
-
-
-
----
 
 ! Holding both directional keys causes weird Nut walking.
 

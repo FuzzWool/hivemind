@@ -1,47 +1,6 @@
-class next:
-#Collision is DEPENDANT.
-#Provides positioning information about the next movement.
-	
-	def __init__(self, MySprite):
-		self.x_move, self.y_move = 0, 0
-		self._ = MySprite
-
-	# STORE THEN CONFIRM
-	x_move, y_move = 0, 0
-
-	def store_move(self, x=None, y=None):
-	#Store movement for later.
-		if x == None: x = self.x_move
-		if y == None: y = self.y_move
-		self.x_move, self.y_move = x, y
-
-	def confirm_move(self):
-		self._.move(self.x_move, self.y_move)
-		self.y_move, self.x_move = 0, 0
-	#
-
-
-	# POSITIONING (read-only)
-
-	@property
-	def stored_move(self): return self.x_move, self.y_move
-
-	@property
-	def x1(self): return self._.x1 + self.x_move
-	@property
-	def x2(self): return self._.x2 + self.x_move
-	@property
-	def y1(self): return self._.y1 + self.y_move
-	@property
-	def y2(self): return self._.y2 + self.y_move
-
-	@property
-	def position(self): return self.x1, self.y1
-	@property
-	def points(self):
-		return self.x1, self.y1, self.x2, self.y2
-
-
+##########
+#	MAIN CLASSES
+##########
 
 class collision:
 #Handles basic AABB collision checking.
@@ -119,8 +78,9 @@ class collision:
 		return ty - lowest
 
 
-#####	Side Checks
-#For resetting jumps, etc.
+	#STATE CHECKS
+	#After collisions take place.
+	#For resetting jumps, etc.
 
 	def bottom_to_top(self, ThatSprite):
 		if self.overlap.x(ThatSprite) > 0:
@@ -141,15 +101,16 @@ class collision:
 		if self.overlap.y(ThatSprite) >= 0:
 			if self._.x2 == ThatSprite.x1: return True
 		return False
-	#
-
-####
 
 
-# SLOPE COLLISION
+
 
 from modules.pysfml_game import Dot
+
 class slope_collision(object):
+#Set an intersection (a,b) and an anchor.
+#Intersections may be defined at any point of the 'slab'.
+
 	def __init__(self, MySprite):
 		self._ = MySprite
 		self.next = self._.collision.next
@@ -158,6 +119,7 @@ class slope_collision(object):
 		#Slope
 		self.a, self.b = None, None
 		self.anchor = "rd"
+
 
 	#	STATES
 
@@ -174,7 +136,15 @@ class slope_collision(object):
 
 	#	POSITION
 
-	# The POINTS size, concerning itself with only the hypotenuse.
+	# The POINTS, only the intersection sizes.
+	@property
+	def point_w(self):
+		return self.right_point[0]-self.left_point[0]
+
+	@property
+	def point_h(self):
+		return self.down_point[1]-self.up_point[1]
+
 	@property
 	def left_point(self):
 		if self.a[0] < self.b[0]: return self.a
@@ -192,16 +162,8 @@ class slope_collision(object):
 		if self.a[1] > self.b[1]: return self.a
 		return self.b
 
-	@property
-	def point_w(self): return self.right_point[0]-self.left_point[0]
 
-	@property
-	def point_h(self): return self.down_point[1]-self.up_point[1]
-
-
-
-	# The ENTIRE size, combining both slope points and the rect.
-
+	# The ENTIRE size. (Points + Anchored Rect)
 	@property
 	def h(self):
 		return self.y2 - self.y1
@@ -212,8 +174,8 @@ class slope_collision(object):
 	@property
 	def points(self): s = self; return s.x1,s.y1,s.x2,s.y2 
 	
-	#Extend the Slope's points should the anchored section
-	#be longer.
+	#(Extends the Slope's points should the anchored
+	#section be longer).
 	@property
 	def x1(self):
 		if self.anchor_x == "l":
@@ -239,7 +201,6 @@ class slope_collision(object):
 				return self._.y2
 		return self.down_point[1]
 
-
 	@property
 	def center(self):
 		return (self.x1+(self.w/2)), (self.y1+(self.h/2))
@@ -252,18 +213,17 @@ class slope_collision(object):
 	#	COLLISION
 
 	def pushback(self, Slope):
-	#Against a slope with it's A and B set.
-	#Borrows from MySprite.collision
-		x1, y1, x2, y2 = Slope.points
-		AABB = self._.collision
+	#Pushback the NEXT MOVE.
+		next = self.next
+		old_collision = self._.collision
 
 		is_x = bool(self.overlap.x(Slope) > 0)
 		is_y = bool(self.overlap.y(Slope) > 0)
 		is_z = self.is_z(Slope)
 
 		if is_x and is_y and is_z:
-			ox1 = AABB.x_pushback(Slope) #has tx/ty
-			oy1 = AABB.y_pushback(Slope) #has tx/ty
+			ox1 = old_collision.x_pushback(Slope)
+			oy1 = old_collision.y_pushback(Slope)
 
 			#The slope's pushback's positivity depends
 			#on anchor.
@@ -271,7 +231,7 @@ class slope_collision(object):
 			oy2 = self.y_overlap_amt(Slope)
 
 			#FIND the smallest pushback.
-			nx, ny = self.next.stored_move
+			nx, ny = next.stored_move
 			small = oy2
 			if abs(ox1) < abs(oy2):
 				small = ox1
@@ -284,16 +244,14 @@ class slope_collision(object):
 					small = oy1
 
 			#MOVE BY the smallest pushback.
-			if small == oy1:
-				self.next.y_move -= small
-			elif small == oy2:
-				self.next.y_move -= small
-			else:
-				self.next.x_move -= small
+			if small == oy1: 	next.y_move -= small
+			elif small == oy2:  next.y_move -= small
+			else: 				next.x_move -= small
 
 
 	def is_z(self, ThatSprite):
-		Slope = ThatSprite.slope_collision
+	#If the intersection is being overlapped in it's
+	#anchored direction.
 
 		z = self.y_overlap_amt(ThatSprite)
 		that = ThatSprite.slope_collision
@@ -305,12 +263,13 @@ class slope_collision(object):
 
 
 	def y_overlap_amt(self, Slope, predict=True):
-	#Returns a positive value.
+	#The amount the intersection is being... intersected.
+
 		that = Slope.slope_collision
 		if predict:		tx,ty = self.next.stored_move
 		if not predict: tx,ty = 0,0
 
-		#Gradient
+		# The GRADIENT of the line.
 		w = that.right_point[0] - that.left_point[0]
 		w = abs(w)
 		h = that.down_point[1] - that.up_point[1]
@@ -323,7 +282,8 @@ class slope_collision(object):
 
 		#Straighten.
 		if y_lowering < 0: y_lowering = 0
-		if y_lowering > that.point_h: y_lowering = that.point_h
+		if y_lowering > that.point_h:
+			y_lowering = that.point_h
 
 		# GAP calculates x using y.
 		# y_lowering calculates y using x.
@@ -341,7 +301,8 @@ class slope_collision(object):
 		y_lowering *= ratio
 		
 		if 0 < y_lowering: y_lowering = 0
-		if y_lowering < -that.point_h: y_lowering = -that.point_h
+		if y_lowering < -that.point_h:
+			y_lowering = -that.point_h
 
 		if that.anchor == "ld":
 			gap = self._.y2 - that.down_point[1] + ty
@@ -350,13 +311,11 @@ class slope_collision(object):
 		if that.anchor == "lu":
 			gap = self._.y1 - that.up_point[1] + ty
 			return (gap + y_lowering)
-	#
 
 
-	#####	Extra checks
-	#For resetting jumps, etc.
 
-	#Side checks.
+	# SIDE CHECKS
+
 	def bottom_to_top(self, ThatSprite):
 	#If a's bottom is colliding with b's top.
 		a, b = self._, ThatSprite.slope_collision
@@ -440,7 +399,7 @@ class slope_collision(object):
 			if ThatSprite.slope_collision.anchor_x == "r":
 				if a.x1 == b.x2: return True
 		return False
-	#
+
 
 	# VISUAL DEBUG
 	
@@ -454,26 +413,92 @@ class slope_collision(object):
 		self.adot.draw(); self.bdot.draw()
 
 
+
+##########
+#	UTILITIES
+##########
+
+class next:
+#Collision-relevant movements must be calculated here.
+
+#Provides positioning information about the next movement.
+#Collisions are DEPENDANT on this knowledge to function.
+
+	def __init__(self, MySprite):
+		self.x_move, self.y_move = 0, 0
+		self._ = MySprite
+
+
+	#MOVE STORAGE
+	#Movement has to be processed here,
+	#for accurate collision detection.
+
+	x_move, y_move = 0, 0
+	
+	def store_move(self, x=None, y=None):
+	#Store movement for later.
+		if x == None: x = self.x_move
+		if y == None: y = self.y_move
+		self.x_move, self.y_move = x, y
+
+	def confirm_move(self):
+		self._.move(self.x_move, self.y_move)
+		self.y_move, self.x_move = 0, 0
+
+
+	# POSITION
+
+	@property
+	def stored_move(self):
+		return self.x_move, self.y_move
+
+	@property
+	def x1(self): return self._.x1 + self.x_move
+	@property
+	def x2(self): return self._.x2 + self.x_move
+	@property
+	def y1(self): return self._.y1 + self.y_move
+	@property
+	def y2(self): return self._.y2 + self.y_move
+
+	@property
+	def position(self): return self.x1, self.y1
+	@property
+	def points(self):
+		return self.x1, self.y1, self.x2, self.y2
+
+
+
+
 class overlap:
+#How much the SMALLEST sprite is covering the BIGGEST.
+#Measures only COVERAGE, not direction.
 	def __init__ (self, MySprite): self._ = MySprite
 
+
+	# SIDES
+
 	def x(self, ThatSprite, predict=True, slope=True):
+	#Return the x coverage.
+
+		sprite1, sprite2 = self._, ThatSprite		
 
 
-		sprite1, sprite2 = self._, ThatSprite
+		#	Find the BIGGEST and SMALLEST sprites.
 		if sprite2.w > sprite1.w:
 			big, small = sprite2, sprite1
 		else:
 			big, small = sprite1, sprite2
+		sprite1, sprite2 = self._, ThatSprite
 		
-		#Next move.
+		#	Work out their NEXT POSITION.
 		if predict:
 			stx, sty = small.collision.next.stored_move
 			btx, bty = big.collision.next.stored_move
 		else:
 			stx, sty, btx, bty = 0, 0, 0, 0
 
-		#Slope
+		#Use the complete SLOPE size if possible.
 		if slope:
 			if small.slope_collision.is_slope():
 				small = small.slope_collision
@@ -481,21 +506,26 @@ class overlap:
 				big = big.slope_collision
 		#
 
-
 		#Choose which SIDE to return based on the CENTER.
 		o = small.center[0]+stx - big.center[0]+bty
 
 		if o <= 0:
 			left_gap = small.x2+stx - big.x1-btx
 			if left_gap > small.w: left_gap = small.w
+			
 			return left_gap
+		
 		if o >  0:
 			right_gap = big.x2+btx - small.x1-stx
 			if right_gap > small.w: right_gap = small.w
+			
 			return right_gap
 
 
 	def y(self, ThatSprite, predict=True, slope=True):
+	#Return the y coverage.
+	#* See x for notes.
+
 		sprite1, sprite2 = self._, ThatSprite
 
 		if sprite2.h > sprite1.h:
