@@ -5,8 +5,7 @@ Interaction with NPCs and enemies.
 
 Goals:
 x Make Nut with basic left and right controls.
-
-Allow Nut to run across 1/2-block slopes.
+x Allow Nut to run across 1/2-block slopes.
 
 Make an enemy which moves left and right and hits Nut.
 
@@ -15,26 +14,6 @@ Allow the NPC to provide Nut with an option which activates a flag.
 Allow Nut to select an action with an NPC which makes it turn hostile.
 
 =====
-x Entities may run with progressive speed.
-
-~ sheet_pos is now sheet_config
-Contains Move and Clip.
-
-x Make jump animation.
-x Make walk animation.
-+ Sprites are flipped when facing another direction.
-
-+ Added vertical and horizontal flipping to MySprite.clip
-+ Added Dot to geometry for debugging purposes
-+ Added MySprite.slope_collision
-
-~ Ported from pysfml2-cython to pySFML 1.3.
-======
-+ Loads collision data from a tileset.
-Converts the tileset collisions into room collisions.
-
-x Entity collides with any aa tiles.
-=
 
 GOAL: Add slope collisions to the game.
 Check collisions tile-per-tile.
@@ -48,19 +27,15 @@ Check collisions tile-per-tile.
 			x upper 2-tile slopes
 -
 
-! GOAL: CLEAN Entity and Collision.
-
-* Clean COLLISION.
-* Clean ENTITY.
-~ extra_tiles can no longer go out of bounds.
+! Fix SLOPE LOCKING for UPPER SLOPES.
+! Fix SLOPES leading DOWN causing SPAZZES.
 
 -
 
 ! Holding both directional keys causes weird Nut walking.
 
+
 ! Fix lag issue while moving around the WorldMap.
 	* Investigate the stress empty MySprites put on.
 
 ! Add a system for assigning collision data to a tilemap.
-
-! Center Nut's sprite properly within her cbox.

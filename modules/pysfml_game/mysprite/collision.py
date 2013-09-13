@@ -146,6 +146,10 @@ class slope_collision(object):
 		return self.down_point[1]-self.up_point[1]
 
 	@property
+	def ratio(self):
+		return self.point_w/self.point_h
+
+	@property
 	def left_point(self):
 		if self.a[0] < self.b[0]: return self.a
 		return self.b
@@ -224,10 +228,6 @@ class slope_collision(object):
 		if is_x and is_y and is_z:
 			ox1 = old_collision.x_pushback(Slope)
 			oy1 = old_collision.y_pushback(Slope)
-
-			#The slope's pushback's positivity depends
-			#on anchor.
-			that = Slope.slope_collision
 			oy2 = self.y_overlap_amt(Slope)
 
 			#FIND the smallest pushback.
@@ -244,16 +244,19 @@ class slope_collision(object):
 					small = oy1
 
 			#MOVE BY the smallest pushback.
-			if small == oy1: 	next.y_move -= small
-			elif small == oy2:  next.y_move -= small
-			else: 				next.x_move -= small
+			if small == oy1:
+				next.y_move -= small
+			elif small == oy2: 
+				next.y_move -= small
+			else:
+				next.x_move -= small
 
 
-	def is_z(self, ThatSprite):
+	def is_z(self, ThatSprite, predict=True):
 	#If the intersection is being overlapped in it's
 	#anchored direction.
 
-		z = self.y_overlap_amt(ThatSprite)
+		z = self.y_overlap_amt(ThatSprite, predict)
 		that = ThatSprite.slope_collision
 		if that.anchor in ["rd", "ld"]:
 			return bool(0 < z)

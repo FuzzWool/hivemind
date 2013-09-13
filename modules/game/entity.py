@@ -89,8 +89,8 @@ class Entity(object):
 
 
 	def draw(self):
-		self.sprite.draw()
-		# self.cbox.draw()
+		# self.sprite.draw()
+		self.cbox.draw()
 
 
 #	MOVEMENT
@@ -299,12 +299,12 @@ class Entity(object):
 						if t.slope_collision.anchor_x == "l":
 							if tx > 0:
 								c.collision.next.y_move \
-								= abs(tx)
+								= abs(y) + abs(tx)
 						#
 						if t.slope_collision.anchor_x == "r":
 							if tx < 0:
 								c.collision.next.y_move \
-								= abs(tx)
+								= abs(y) + abs(tx)
 
 		# PUSHBACK
 		for tile in collidable_tiles:
