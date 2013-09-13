@@ -1,36 +1,28 @@
-Let there be People
+Let there be Cool Moves
 ===========
 Nut is born, and she has basic controls.
-Interaction with NPCs and enemies.
+She can walk across slopes.
 
 Goals:
 x Make Nut with basic left and right controls.
 x Allow Nut to run across 1/2-block slopes.
 
-Make an enemy which moves left and right and hits Nut.
 
-Make an NPC to interact with Nut.
-Allow the NPC to provide Nut with an option which activates a flag.
-Allow Nut to select an action with an NPC which makes it turn hostile.
+! Add variable jumps.
+
+! Add a wall jump.
+! Add a slide.
+! Add punching. (with an attack box)
 
 =====
 
-GOAL: Add slope collisions to the game.
-Check collisions tile-per-tile.
+GOAL: Add a variable jump.
 
-* Add collisions for every tile in the slope collisions tilemap.
-	* Define these collision types in advance.
+The jump, if the jump button is not held, ends pre-maturely.
 
-		x Filled in all of the collision cells.
-			x 1-tile slopes
-			x 2-tile slopes
-			x upper 2-tile slopes
--
 
-! Fix SLOPE LOCKING for UPPER SLOPES.
-! Fix SLOPES leading DOWN causing SPAZZES.
 
--
+=====
 
 ! Holding both directional keys causes weird Nut walking.
 

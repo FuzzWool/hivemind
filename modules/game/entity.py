@@ -89,8 +89,8 @@ class Entity(object):
 
 
 	def draw(self):
-		# self.sprite.draw()
 		self.cbox.draw()
+		self.sprite.draw()
 
 
 #	MOVEMENT
@@ -387,11 +387,25 @@ class Player(Entity):
 	#Keyboard controls for the player character.
 		self.walk(key.LEFT, key.RIGHT)
 		self.jump(key.Z)
+		self.dive(key.DOWN)
 
 
 	def jump(self, jump_key):
+
+		#JUMP off the ground.
 		if jump_key.pressed():
 			if self.can_jump: self.yVel -= 8
+
+
+	def dive(self, dive_key):
+		#DIVE in the air.
+		if self.in_air:
+			if dive_key.held():
+				self.gravity = 1
+		#
+		if not self.in_air:
+			self.gravity = 0.5
+
 
 	def walk(self, left_key, right_key):
 		amt = 0.5
