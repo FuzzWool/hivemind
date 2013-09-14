@@ -8,19 +8,23 @@ x Make Nut with basic left and right controls.
 x Allow Nut to run across 1/2-block slopes.
 
 
-! Add variable jumps.
+x Add a DIVE.
+x Add a WALL JUMP.
 
-! Add a wall jump.
+! Add crawling.
 ! Add a slide.
+
 ! Add punching. (with an attack box)
 
 =====
 
-GOAL: Add a variable jump.
+* Added a WALL JUMP.
+	+ Can be used to scale walls.
+	+ Can be used to build up speed to RUN.
+	+ SLOWDOWN upon impact with a wall.
 
-The jump, if the jump button is not held, ends pre-maturely.
-
-
+~ Made the controls 'floatier'.
+~ DIVING and CLINGING make gravity changes. Be careful!
 
 =====
 

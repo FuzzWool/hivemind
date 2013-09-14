@@ -93,64 +93,8 @@ class Entity(object):
 		self.sprite.draw()
 
 
-#	MOVEMENT
-#Game physics.
-
-	xVel, yVel = 0, 0
-	xLim, yLim = 8, 8
-	gravity = 0.5
-
-
-	def handle_physics(self):
-	#Gravity and Vel movements.
-		self.cbox.collision\
-		.next.store_move(self.xVel, self.yVel)
-
-		#Gravity
-		self.move(0, self.gravity)
-
-	def move(self, x=0, y=0):
-	#Doesn't move directly. Impacts the Vel.
-	#Needs physics to be handled.
-
-		#Speed limits. Cannot ever be exceeded.
-		if   self.xVel + x > +self.xLim:
-			self.xVel = self.xLim
-		elif self.xVel + x < -self.xLim:
-			self.xVel = -self.xLim
-		else:
-			self.xVel += x
-
-		if   self.yVel + y > +self.yLim:
-			self.yVel = self.yLim
-		elif self.yVel + y < -self.yLim:
-			self.yVel = -self.yLim
-		else:
-			self.yVel += y
-
-	def x_slowdown(self, amt=1):
-	#Slowdown the xVel to nothingness.
-		self.right_slowdown(amt)
-		self.left_slowdown(amt)
-		#
-	def right_slowdown(self, amt=1):
-		if self.xVel > 0:
-			if self.xVel - amt < 0: self.xVel = 0
-			else: self.xVel -= amt
-		#
-	def left_slowdown(self, amt=1):
-		if self.xVel < 0:
-			if self.xVel + amt > 0: self.xVel = 0
-			else: self.xVel += amt
-
-
 #	COLLISIONS
 # Performs pushback and state handling.
-
-	def reset_states(self):
-		self.in_air = True
-		self.can_jump = False
-
 
 	def collide_with_WorldMap(self, WorldMap):
 	#Checks every room inside of the WorldMap.
@@ -343,9 +287,13 @@ class Entity(object):
 				if self.yVel < 0: self.yVel = 0
 
 			if tile.collision == "aa":
-				if collision.left_to_right(s)\
-				or collision.right_to_left(s):
+				if collision.left_to_right(s):
 					self.xVel = 0
+					self.hit_right_wall = True
+
+				if collision.right_to_left(s):
+					self.xVel = 0
+					self.hit_left_wall = True
 
 			else:
 				if collision.left_to_right(s)\
@@ -358,8 +306,17 @@ class Entity(object):
 
 #	STATES
 
+	def reset_states(self):
+		self.in_air = True
+		self.can_jump = False
+		#
+		self.hit_left_wall = False
+		self.hit_right_wall = False
+
+
 	can_jump = False
 	in_air = True
+
 
 	facing_left = False
 	@property
@@ -376,35 +333,147 @@ class Entity(object):
 	@property
 	def moving(self): return bool(self.xVel != 0)
 
+	hit_left_wall = False
+	hit_right_wall = False
+
+
+
+
+
+
+
+
 
 
 
 class Player(Entity):
 
+	#	MOVEMENT
+	#Game physics.
+
+	xVel, yVel = 0, 0
+	xLim, yLim = 10, 10
+
+	gravity = 0.3
+	default_gravity = gravity
+
+	def handle_physics(self):
+	#Gravity and Vel movements.
+		self.cbox.collision\
+		.next.store_move(self.xVel, self.yVel)
+
+		self.move(0, self.gravity)
+
+
+
+	def move(self, x=0, y=0):
+	#Needs handle_physics
+	#Only impacts Vel movement.
+
+		#Speed limits. Cannot ever be exceeded.
+		if   self.xVel + x > +self.xLim:
+			self.xVel = self.xLim
+		elif self.xVel + x < -self.xLim:
+			self.xVel = -self.xLim
+		else:
+			self.xVel += x
+
+		if   self.yVel + y > +self.yLim:
+			self.yVel = self.yLim
+		elif self.yVel + y < -self.yLim:
+			self.yVel = -self.yLim
+		else:
+			self.yVel += y
+
+	def x_slowdown(self, amt=1):
+	#Slowdown the xVel to nothingness.
+		self.right_slowdown(amt)
+		self.left_slowdown(amt)
+		#
+	def right_slowdown(self, amt=1):
+		if self.xVel > 0:
+			if self.xVel - amt < 0: self.xVel = 0
+			else: self.xVel -= amt
+		#
+	def left_slowdown(self, amt=1):
+		if self.xVel < 0:
+			if self.xVel + amt > 0: self.xVel = 0
+			else: self.xVel += amt
+
+
+
 	#	CONTROLS
+
+	diving = False
+	clinging = False
 
 	def handle_controls(self, key):
 	#Keyboard controls for the player character.
+
+		jump_flag = key.Z.pressed()
+		left_flag = key.LEFT.held()
+		right_flag = key.RIGHT.held()
+
 		self.walk(key.LEFT, key.RIGHT)
-		self.jump(key.Z)
+		self.jump(jump_flag)
 		self.dive(key.DOWN)
+		
+		self.cling(left_flag, right_flag)
+		self.wall_jump(jump_flag)
+
+	#
+
+	#WALL JUMPING
+
+	def cling(self, left_flag, right_flag):
+	#Cling to a wall.
+		was_clinging = self.clinging
+		self.clinging = False
+
+		#EXTERNAL Gravity priority.
+		if self.diving == False:
+			self.gravity = self.default_gravity
+
+		if self.in_air:
+			if self.hit_right_wall and self.facing_left\
+			or self.hit_left_wall and self.facing_right:
+				self.clinging = True
+
+				#Adjust gravity.
+				if self.diving == False:
+					if self.falling:
+						self.gravity = 0.02
+						if not was_clinging:
+							self.yVel = 0
 
 
-	def jump(self, jump_key):
+	def wall_jump(self, jump_flag):
+		if self.clinging and jump_flag:
+			if self.facing_left:
+				self.xVel = 5
+				self.facing_right = True
+			elif self.facing_right:
+				self.xVel = -5
+				self.facing_left = True
+			self.yVel = -5
 
-		#JUMP off the ground.
-		if jump_key.pressed():
-			if self.can_jump: self.yVel -= 8
+	#
+
+	def jump(self, jump_flag):
+		if jump_flag:
+			if self.can_jump: self.yVel = -5.3
 
 
 	def dive(self, dive_key):
-		#DIVE in the air.
+		self.diving = False
+		#
 		if self.in_air:
 			if dive_key.held():
-				self.gravity = 1
+				self.gravity = 0.5
+				self.diving = True
 		#
 		if not self.in_air:
-			self.gravity = 0.5
+			self.gravity = self.default_gravity
 
 
 	def walk(self, left_key, right_key):
@@ -413,18 +482,20 @@ class Player(Entity):
 		if left_key.held() or right_key.held():
 
 			if left_key.held():
+
 				self.facing_left = True
 				if -walkLim <= self.xVel - amt:
 					self.move(-amt, 0)
 				self.right_slowdown(amt)
 
 			if right_key.held():
+				
 				self.facing_right = True
 				if self.xVel + amt <= walkLim:
 					self.move(+amt, 0)
 				self.left_slowdown(amt)
 
-		else:
+		elif not self.in_air:
 			self.x_slowdown(amt)
 
 
@@ -454,6 +525,12 @@ class Player(Entity):
 				self.sprite.animation.clip_interval = 0.1
 			else:
 				self.sprite.clip.use(0, 0)
+
+
+		#WALL
+		if self.clinging:
+			self.sprite.clip.use(0,2)
+
 
 		#Drawing
 		Entity.draw(self)
