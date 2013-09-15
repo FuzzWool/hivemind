@@ -280,11 +280,12 @@ class Entity(object):
 
 			if collision.bottom_to_top(s):
 				if self.yVel > 0: self.yVel = 0
-				self.can_jump = True
 				self.in_air = False
+				self.hit_top_wall = True
 
 			if collision.top_to_bottom(s):
 				if self.yVel < 0: self.yVel = 0
+				self.hit_bottom_wall = True 
 
 			if tile.collision == "aa":
 				if collision.left_to_right(s):
@@ -308,15 +309,14 @@ class Entity(object):
 
 	def reset_states(self):
 		self.in_air = True
-		self.can_jump = False
 		#
 		self.hit_left_wall = False
 		self.hit_right_wall = False
+		self.hit_top_wall = False
+		self.hit_bottom_wall = False
 
 
-	can_jump = False
 	in_air = True
-
 
 	facing_left = False
 	@property
@@ -335,7 +335,8 @@ class Entity(object):
 
 	hit_left_wall = False
 	hit_right_wall = False
-
+	hit_bottom_wall = False
+	hit_top_wall = False
 
 
 
@@ -404,26 +405,120 @@ class Player(Entity):
 
 	#	CONTROLS
 
+	# STATES
+	walking = False
 	diving = False
 	clinging = False
+	crouching = False
 
+	@property
+	def can_jump(self):
+		return self.hit_top_wall
+
+
+	# HANDLERS
 	def handle_controls(self, key):
-	#Keyboard controls for the player character.
 
 		jump_flag = key.Z.pressed()
 		left_flag = key.LEFT.held()
 		right_flag = key.RIGHT.held()
+		down_flag = key.DOWN.held()
 
-		self.walk(key.LEFT, key.RIGHT)
+		#General
+		if not self.crouching:
+			self.walk(key.LEFT, key.RIGHT)
 		self.jump(jump_flag)
-		self.dive(key.DOWN)
-		
+		self.dive(down_flag)
+		self.crouch(down_flag)
+		self.crouch_walk(left_flag, right_flag)
+
+
+		#Wall
 		self.cling(left_flag, right_flag)
 		self.wall_jump(jump_flag)
 
-	#
 
-	#WALL JUMPING
+	#General
+
+
+	def walk(self, left_key, right_key):
+
+		self.walking = False
+		amt = 0.5
+		walkLim = 3
+		if left_key.held() or right_key.held():
+			
+			self.walking = True
+
+			if left_key.held():
+
+				self.facing_left = True
+				if -walkLim <= self.xVel - amt:
+					self.move(-amt, 0)
+				self.right_slowdown(amt)
+
+			if right_key.held():
+				
+				self.facing_right = True
+				if self.xVel + amt <= walkLim:
+					self.move(+amt, 0)
+				self.left_slowdown(amt)
+
+		elif not self.in_air:
+			self.x_slowdown()
+
+
+	def jump(self, jump_flag):
+		if jump_flag:
+			if self.can_jump: self.yVel = -5.3
+
+
+	def dive(self, dive_flag):
+		self.diving = False
+		#
+		if self.in_air:
+			if dive_flag:
+				self.gravity = 0.5
+				self.diving = True
+		#
+		if not self.in_air:
+			self.gravity = self.default_gravity
+
+
+	def crouch(self, down_flag):
+		was_crouching = self.crouching
+		self.crouching = False
+		if down_flag and not self.in_air:
+			self.crouching = True
+
+			if not was_crouching:
+				self.xVel = 0
+	#
+	def crouch_walk(self, left_flag, right_flag):
+		if self.crouching:
+			
+			speed = 1
+			limit = 1
+
+			#Copy and pasted from walk.
+			if left_flag:	
+				self.facing_left = True
+				if -limit <= self.xVel - speed:
+					self.move(-speed, 0)
+				self.right_slowdown(speed)
+
+			elif right_flag:
+				self.facing_right = True
+				if self.xVel + speed <= limit:
+					self.move(+speed, 0)
+				self.left_slowdown(speed)
+			#
+			else:
+				self.x_slowdown()
+
+
+
+	#Wall
 
 	def cling(self, left_flag, right_flag):
 	#Cling to a wall.
@@ -457,46 +552,6 @@ class Player(Entity):
 				self.facing_left = True
 			self.yVel = -5
 
-	#
-
-	def jump(self, jump_flag):
-		if jump_flag:
-			if self.can_jump: self.yVel = -5.3
-
-
-	def dive(self, dive_key):
-		self.diving = False
-		#
-		if self.in_air:
-			if dive_key.held():
-				self.gravity = 0.5
-				self.diving = True
-		#
-		if not self.in_air:
-			self.gravity = self.default_gravity
-
-
-	def walk(self, left_key, right_key):
-		amt = 0.5
-		walkLim = 3
-		if left_key.held() or right_key.held():
-
-			if left_key.held():
-
-				self.facing_left = True
-				if -walkLim <= self.xVel - amt:
-					self.move(-amt, 0)
-				self.right_slowdown(amt)
-
-			if right_key.held():
-				
-				self.facing_right = True
-				if self.xVel + amt <= walkLim:
-					self.move(+amt, 0)
-				self.left_slowdown(amt)
-
-		elif not self.in_air:
-			self.x_slowdown(amt)
 
 
 	#GRAPHICS
@@ -511,13 +566,14 @@ class Player(Entity):
 			if not self.sprite.clip.flipped:
 				self.sprite.clip.flip()
 
-		#Animation
+		#Jumping
 		if self.in_air:
 			if self.rising:
 				self.sprite.clip.use(2, 0)
 			if self.falling:
 				self.sprite.clip.use(4, 0)
 
+		#Walking
 		else:
 			if self.moving:
 				sequence = ((1,1),(0,1),(3,1),(2,1))
@@ -526,10 +582,20 @@ class Player(Entity):
 			else:
 				self.sprite.clip.use(0, 0)
 
+		#
 
-		#WALL
 		if self.clinging:
 			self.sprite.clip.use(0,2)
+
+		if self.crouching:
+			if self.moving:
+				sequence = []
+				for i in range(6): sequence.append((i,3))
+				self.sprite.animation.clips = sequence
+				self.sprite.animation.clip_interval = 0.05
+			else:		
+				self.sprite.clip.use(0,3)
+
 
 
 		#Drawing

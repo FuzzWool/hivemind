@@ -1,30 +1,17 @@
 ======
 TO MAKE
 
-Let there be People
+Player Controls
 ===========
 Nut is born, and she has basic controls.
-Interaction with NPCs and enemies.
+She can walk across slopes.
 
 Goals:
-Make Nut with basic left and right controls.
-Allow Nut to run across 1/2-block slopes.
-
-Make an enemy which moves left and right and hits Nut.
-
-Make an NPC to interact with Nut.
-Allow the NPC to provide Nut with an option which activates a flag.
-Allow Nut to select an action with an NPC which makes it turn hostile.
+x Make Nut with basic left and right controls.
+x Allow Nut to run across 1/2-block slopes.
 
 
-Let there be Saving
-============
-The game is able to save...
-NPC flagging
-Nut's positoning
-
-
-Let there be a Camera
+Game Camera
 ============
 A dynamic, zooming camera for focusing on special events.
 *Relies on the game's 2x ratio for zooming out.
@@ -34,15 +21,18 @@ TU-styled camera positioning for level sections.
 Camera may zoom in and out within certain boundaries.
 
 
-Let there be... Cool Controls?
-=============
-Nut wants some cool moves, now.
 
-Goals:
-Make a wall-hang: when Nut just misses a platform, she grabs on to it.
-	(Automatically pulls herself up quickly, Galaxy-style)
-Test ledge-kicking: when wall-hanging, Nut may perform a push-jump from it.
-	(Facing the opposite direction and jumping)
+Collectables
+============
+Nut may collect Puppies splewn across the map.
+Collect the puppies in every room!
+
+
+
+*****
+DEMO #1 (CONTROLS) RELEASE
+******
+
 
 
 Let there be Pain and Death
@@ -53,7 +43,6 @@ Add (100) health to each Entity by default.
 Add an attack for Nut (a slap) and the enemy (running in to her).
 When Nut dies (0), add a death transition which resets the level.
 When the enemy dies, make it disappear.
-
 
 
 ====

@@ -10,26 +10,23 @@ x Allow Nut to run across 1/2-block slopes.
 
 x Add a DIVE.
 x Add a WALL JUMP.
+x Add CRAWLING.
 
-! Add crawling.
-! Add a slide.
+! Add a SLIDE.
+! Add WALL HANGING.
+! Add WALL VAULTING.
 
-! Add punching. (with an attack box)
+! Add PUNCHING.
 
-=====
 
-* Added a WALL JUMP.
-	+ Can be used to scale walls.
-	+ Can be used to build up speed to RUN.
-	+ SLOWDOWN upon impact with a wall.
+====
 
-~ Made the controls 'floatier'.
-~ DIVING and CLINGING make gravity changes. Be careful!
+* GOAL: Add crawling.
++ Can CRAWL left and right at a slower speed than walking.
 
-=====
+====
 
 ! Holding both directional keys causes weird Nut walking.
-
 
 ! Fix lag issue while moving around the WorldMap.
 	* Investigate the stress empty MySprites put on.

@@ -250,17 +250,20 @@ class animation:
 		self.clipClock = sf.Clock()
 		self.clip_index = 0
 		self.clip_init = True
+		#
+		self.old_clips = []
 
 	def play(self):
-
+		has_clips = bool(len(self.clips) > 0)
 
 		#Keep resetting if there's no clips.
-		if len(self.clips) == 0:
+		if not has_clips\
+		or self.old_clips != self.clips:
 			self.clip_init = True
 			self.clip_index = 0
 
 		#Change clip
-		if len(self.clips) != 0:
+		if has_clips:
 
 			#Immediately if it's just been initialized
 			ticks = self.clipClock\
@@ -287,5 +290,7 @@ class animation:
 		x, y = self._.clip.x, self._.clip.y
 		if (x, y) not in self.clips:
 			self.clips = []
+
+		self.old_clips = self.clips
 	#
 
