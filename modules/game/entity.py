@@ -409,6 +409,7 @@ class Player(Entity):
 	walking = False
 	diving = False
 	clinging = False
+	slide_kicking = False
 	crouching = False
 
 	@property
@@ -425,10 +426,14 @@ class Player(Entity):
 		down_flag = key.DOWN.held()
 
 		#General
-		if not self.crouching:
-			self.walk(key.LEFT, key.RIGHT)
-		self.jump(jump_flag)
+		if not self.slide_kicking:
+			self.jump(jump_flag)
+			if not self.crouching:
+				self.walk(key.LEFT, key.RIGHT)
+
 		self.dive(down_flag)
+
+		self.slide_kick(down_flag)
 		self.crouch(down_flag)
 		self.crouch_walk(left_flag, right_flag)
 
@@ -446,6 +451,7 @@ class Player(Entity):
 		self.walking = False
 		amt = 0.5
 		walkLim = 3
+
 		if left_key.held() or right_key.held():
 			
 			self.walking = True
@@ -485,9 +491,36 @@ class Player(Entity):
 			self.gravity = self.default_gravity
 
 
+
+	def slide_kick(self, down_flag):
+
+		was_slide_kicking = self.slide_kicking
+
+		if self.xVel == 0:
+			self.slide_kicking = False
+
+		#Activate STATE.
+		if down_flag and self.moving:
+			if not self.in_air:
+				if not self.crouching:
+					self.slide_kicking = True
+
+		#Increase SPEED.
+		if self.slide_kicking and not was_slide_kicking:
+			if self.facing_left:  self.move(x= -4)
+			if self.facing_right: self.move(x= +4)
+
+		#Use a DECAYED SLOWDOWN.
+		if self.slide_kicking:
+			if not self.in_air:
+				self.x_slowdown(0.25)
+
+
 	def crouch(self, down_flag):
 		was_crouching = self.crouching
 		self.crouching = False
+
+		if self.slide_kicking: return
 		if down_flag and not self.in_air:
 			self.crouching = True
 
@@ -586,6 +619,9 @@ class Player(Entity):
 
 		if self.clinging:
 			self.sprite.clip.use(0,2)
+
+		if self.slide_kicking:
+			self.sprite.clip.use(0,4)
 
 		if self.crouching:
 			if self.moving:

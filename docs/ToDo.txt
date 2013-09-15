@@ -7,12 +7,12 @@ Goals:
 x Make Nut with basic left and right controls.
 x Allow Nut to run across 1/2-block slopes.
 
-
 x Add a DIVE.
 x Add a WALL JUMP.
 x Add CRAWLING.
 
-! Add a SLIDE.
+x Add a SLIDE KICK.
+
 ! Add WALL HANGING.
 ! Add WALL VAULTING.
 
@@ -21,8 +21,10 @@ x Add CRAWLING.
 
 ====
 
-* GOAL: Add crawling.
-+ Can CRAWL left and right at a slower speed than walking.
++ GOAL: Add a SLIDE KICK.
+	~ Lessens RESISTANCE.
+	~ Provides a SPEED BOOST.
+	- Cannot use CONTROLS while sliding.
 
 ====
 
