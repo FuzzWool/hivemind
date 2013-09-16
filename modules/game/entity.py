@@ -480,12 +480,15 @@ class Player(Entity):
 
 
 	def dive(self, dive_flag):
+		was_diving = self.diving
 		self.diving = False
 		#
 		if self.in_air:
 			if dive_flag:
-				self.gravity = 0.5
-				self.diving = True
+				if not was_diving:
+					# self.gravity = 0.5
+					self.move(y= 1)
+					self.diving = True
 		#
 		if not self.in_air:
 			self.gravity = self.default_gravity

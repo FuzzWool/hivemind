@@ -10,7 +10,6 @@ x Allow Nut to run across 1/2-block slopes.
 x Add a DIVE.
 x Add a WALL JUMP.
 x Add CRAWLING.
-
 x Add a SLIDE KICK.
 
 ! Add WALL HANGING.
@@ -21,10 +20,11 @@ x Add a SLIDE KICK.
 
 ====
 
-+ GOAL: Add a SLIDE KICK.
-	~ Lessens RESISTANCE.
-	~ Provides a SPEED BOOST.
-	- Cannot use CONTROLS while sliding.
++ GOAL: Add WALL HANGING.
+
+~ Changed DIVE to be a BOOST of SPEED.
+(Instead of being a CHANGE of RESISTANCE.)
+
 
 ====
 
