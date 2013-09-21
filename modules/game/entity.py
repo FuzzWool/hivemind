@@ -359,19 +359,18 @@ class Player(Entity):
 	default_gravity = gravity
 
 	def handle_physics(self):
-	#Gravity and Vel movements.
+	#Processes movements for COLLISION.
+	#Handles GRAVITY.
 		self.cbox.collision\
 		.next.store_move(self.xVel, self.yVel)
 
 		self.move(0, self.gravity)
 
 
-
 	def move(self, x=0, y=0):
-	#Needs handle_physics
-	#Only impacts Vel movement.
+	#All movements are forwarded here
+	#to keep within SPEED LIMITS.
 
-		#Speed limits. Cannot ever be exceeded.
 		if   self.xVel + x > +self.xLim:
 			self.xVel = self.xLim
 		elif self.xVel + x < -self.xLim:
@@ -386,8 +385,9 @@ class Player(Entity):
 		else:
 			self.yVel += y
 
+
+	#Automatically SLOWS DOWN the xVel to nothingness.
 	def x_slowdown(self, amt=1):
-	#Slowdown the xVel to nothingness.
 		self.right_slowdown(amt)
 		self.left_slowdown(amt)
 		#
@@ -400,6 +400,8 @@ class Player(Entity):
 		if self.xVel < 0:
 			if self.xVel + amt > 0: self.xVel = 0
 			else: self.xVel += amt
+	#
+
 
 
 
@@ -412,24 +414,24 @@ class Player(Entity):
 	slide_kicking = False
 	crouching = False
 
-	@property
-	def can_jump(self):
-		return self.hit_top_wall
-
 
 	# HANDLERS
 	def handle_controls(self, key):
 
-		jump_flag = key.Z.pressed()
+		#Flags
 		left_flag = key.LEFT.held()
 		right_flag = key.RIGHT.held()
+		up_flag = key.UP.held() #UNUSED
 		down_flag = key.DOWN.held()
+		jump_flag = key.Z.pressed()
+		action_flag = key.X.pressed() #UNUSED
 
-		#General
+
+		#Controls
 		if not self.slide_kicking:
 			self.jump(jump_flag)
 			if not self.crouching:
-				self.walk(key.LEFT, key.RIGHT)
+				self.walk(left_flag, right_flag)
 
 		self.dive(down_flag)
 
@@ -437,33 +439,32 @@ class Player(Entity):
 		self.crouch(down_flag)
 		self.crouch_walk(left_flag, right_flag)
 
-
 		#Wall
 		self.cling(left_flag, right_flag)
 		self.wall_jump(jump_flag)
 
 
-	#General
 
+	# Control definitions
+	
+	def walk(self, left_flag, right_flag):
 
-	def walk(self, left_key, right_key):
-
+		#Effect
 		self.walking = False
 		amt = 0.5
 		walkLim = 3
 
-		if left_key.held() or right_key.held():
-			
-			self.walking = True
+		if left_flag or right_flag:
 
-			if left_key.held():
+			if left_flag:
 
 				self.facing_left = True
 				if -walkLim <= self.xVel - amt:
 					self.move(-amt, 0)
 				self.right_slowdown(amt)
 
-			if right_key.held():
+
+			if right_flag:
 				
 				self.facing_right = True
 				if self.xVel + amt <= walkLim:
@@ -475,68 +476,75 @@ class Player(Entity):
 
 
 	def jump(self, jump_flag):
+
+		#Effect
 		if jump_flag:
-			if self.can_jump: self.yVel = -5.3
+			if self.hit_top_wall: self.yVel = -5.3
 
 
 	def dive(self, dive_flag):
+
+		#Stop
 		was_diving = self.diving
 		self.diving = False
-		#
-		if self.in_air:
-			if dive_flag:
-				if not was_diving:
-					# self.gravity = 0.5
-					self.move(y= 1)
-					self.diving = True
-		#
-		if not self.in_air:
-			self.gravity = self.default_gravity
+		
+		#Start
+		if self.in_air and dive_flag: self.diving = True
+		
+		#Effect
+		if self.diving: self.move(y= +1)
 
 
 
 	def slide_kick(self, down_flag):
 
+		#Stop
 		was_slide_kicking = self.slide_kicking
+		if self.xVel == 0: self.slide_kicking = False
 
-		if self.xVel == 0:
-			self.slide_kicking = False
-
-		#Activate STATE.
+		#Start
 		if down_flag and self.moving:
 			if not self.in_air:
 				if not self.crouching:
 					self.slide_kicking = True
 
-		#Increase SPEED.
+		#Effect (2)
+
+			#Increase SPEED.
 		if self.slide_kicking and not was_slide_kicking:
 			if self.facing_left:  self.move(x= -4)
 			if self.facing_right: self.move(x= +4)
 
-		#Use a DECAYED SLOWDOWN.
+			#Use a DECAYED SLOWDOWN.
 		if self.slide_kicking:
 			if not self.in_air:
 				self.x_slowdown(0.25)
 
 
 	def crouch(self, down_flag):
+
+		#Stop
 		was_crouching = self.crouching
 		self.crouching = False
 
+		#Start
 		if self.slide_kicking: return
 		if down_flag and not self.in_air:
 			self.crouching = True
 
-			if not was_crouching:
-				self.xVel = 0
+		#Effect
+		if self.crouching and not was_crouching:
+			self.xVel = 0
+	
 	#
 	def crouch_walk(self, left_flag, right_flag):
+
+		#Effect
 		if self.crouching:
 			
-			speed = 1
-			limit = 1
+			speed, limit = 1, 1
 
-			#Copy and pasted from walk.
+			#! Crudely COPY AND PASTED from walk.
 			if left_flag:	
 				self.facing_left = True
 				if -limit <= self.xVel - speed:
@@ -557,28 +565,30 @@ class Player(Entity):
 	#Wall
 
 	def cling(self, left_flag, right_flag):
-	#Cling to a wall.
+
+		#Stop
 		was_clinging = self.clinging
 		self.clinging = False
-
-		#EXTERNAL Gravity priority.
 		if self.diving == False:
 			self.gravity = self.default_gravity
 
+		#Start
 		if self.in_air:
 			if self.hit_right_wall and self.facing_left\
 			or self.hit_left_wall and self.facing_right:
 				self.clinging = True
 
-				#Adjust gravity.
-				if self.diving == False:
-					if self.falling:
-						self.gravity = 0.02
-						if not was_clinging:
-							self.yVel = 0
+		#Effect
+		if self.clinging:
+			if not self.diving and self.falling:
+				self.gravity = 0.02
+				if not was_clinging: self.yVel = 0
+
 
 
 	def wall_jump(self, jump_flag):
+
+		#Effect
 		if self.clinging and jump_flag:
 			if self.facing_left:
 				self.xVel = 5

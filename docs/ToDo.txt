@@ -12,18 +12,18 @@ x Add a WALL JUMP.
 x Add CRAWLING.
 x Add a SLIDE KICK.
 
-! Add WALL HANGING.
-! Add WALL VAULTING.
+! Clean STATE HANDLING.
+
 
 ! Add PUNCHING.
 
 
 ====
 
-+ GOAL: Add WALL HANGING.
+GOAL: Clean STATE HANDLING.
 
-~ Changed DIVE to be a BOOST of SPEED.
-(Instead of being a CHANGE of RESISTANCE.)
+* All states in the format (Stop, Start, Effect)
+
 
 
 ====
