@@ -12,18 +12,19 @@ x Add a WALL JUMP.
 x Add CRAWLING.
 x Add a SLIDE KICK.
 
-! Clean STATE HANDLING.
-
-
 ! Add PUNCHING.
+
+
 
 
 ====
 
-GOAL: Clean STATE HANDLING.
+GOAL: Clean up ROOM and WORLDMAP code.
+ROOM and WORLDMAP has become unruly.
 
-* All states in the format (Stop, Start, Effect)
-
+Room
+* Load tiles covering an entire ROOM.
+* Create MULTIPLE ROOMS with clean positioning.
 
 
 ====
