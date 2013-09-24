@@ -26,6 +26,14 @@ Room
 * Load tiles covering an entire ROOM.
 * Create MULTIPLE ROOMS with clean positioning.
 
++ Access TILES globally from WORLDMAP.
+	Uses:
+	* Collision detection batching. (Multi-slope checks)
+	* Drawing only ON-SCREEN tiles from WorldMap.
+
+! Loading MULTIPLE ROOMS at once.
+	Draw only the tiles which're on-screen.
+	Stress test.
 
 ====
 
