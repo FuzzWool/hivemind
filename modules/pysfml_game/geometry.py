@@ -1,7 +1,10 @@
 #	VIRTUAL
 class Rectangle(object):
+#Used by MYSPRITE.
+
 #A class designed to be used with pySFML's transformable.
-#Goto is used instead of position, because position cannot be overriden.
+#Goto is used instead of position, 
+#because position cannot be overriden.
 	
 	position = [0, 0]
 	w, h = 0, 0
@@ -77,6 +80,110 @@ class Rectangle(object):
 	def y2(self): return self.y + self.h
 	@y2.setter
 	def y2(self, arg): self.y = arg - self.h
+
+
+
+
+
+
+from window import GRID
+from window import ROOM_WIDTH, ROOM_HEIGHT
+
+class GameRectangle:
+	#Used by CAMERA.
+	
+	#Positioning based on TILES and ROOMS.
+
+	# TILE POSITIONS
+
+	@property
+	def tile_x(self): return int(self.x/GRID)
+	@tile_x.setter
+	def tile_x(self, x): self.x = x * GRID
+
+	@property
+	def tile_y(self): return int(self.y/GRID)
+	@tile_y.setter
+	def tile_y(self, y): self.y = y * GRID
+
+	@property
+	def tile_w(self): return int(self.w/GRID)
+	@property
+	def tile_h(self): return int(self.h/GRID)
+
+
+	@property
+	def tile_x1(self): return self.tile_x
+	@property
+	def tile_x2(self): return self.tile_x+self.tile_w+1
+	@property
+	def tile_y1(self): return self.tile_y
+	@property
+	def tile_y2(self): return self.tile_y+self.tile_h+1
+
+
+
+	# ROOM POSITIONS
+
+	@property
+	def room_x(self):
+		return int(self.x/ROOM_WIDTH)
+	@room_x.setter
+	def room_x(self, arg):
+		self.x = arg * ROOM_WIDTH
+		self.y = int(self.y/ROOM_HEIGHT) * ROOM_HEIGHT
+
+	@property
+	def room_y(self):
+		return int(self.y/ROOM_HEIGHT)
+	@room_y.setter
+	def room_y(self, arg):
+		self.x = int(self.x/ROOM_WIDTH) * ROOM_WIDTH
+		self.y = arg * ROOM_HEIGHT
+
+	@property
+	def room_w(self): return int(self.w/ROOM_WIDTH)
+	@property
+	def room_h(self): return int(self.h/ROOM_HEIGHT)
+
+
+
+	#
+
+	@property
+	def tile_center(self):
+		x, y = self.center
+		x = int(x/GRID); y = int(y/GRID)
+		return x, y
+
+	@property
+	def room_center(self):
+		x, y = self.center
+		x = int(x/ROOM_WIDTH); y = int(y/ROOM_HEIGHT)
+		return x, y
+
+	#
+
+	@property
+	def points(self):
+		x1, y1 = self.x, self.y
+		x2, y2 = x1 + self.size[0], y1 + self.size[1]
+		return x1, y1, x2, y2
+
+	@property
+	def tile_points(self):
+		x1, y1, x2, y2 = self.points
+		x1 = int(x1/GRID); y1 = int(y1/GRID)
+		x2 = int(x2/GRID); y2 = int(y2/GRID)
+		return x1, y1, x2, y2
+
+	@property
+	def room_points(self):
+		x1, y1, x2, y2 = self.points
+		x1 = int(x1/ROOM_WIDTH); y1 = int(y1/ROOM_HEIGHT)
+		x2 = int(x2/ROOM_WIDTH); y2 = int(y2/ROOM_HEIGHT)
+
+
 
 
 #	PHYSICAL

@@ -84,7 +84,7 @@ class WorldMap:
 	
 	def __init__(self):
 	#Load all of the ROOMS.
-		self.rooms = self.load(2,2)
+		self.rooms = self.load(10,10)
 
 
 	# TILE DRAWING
@@ -103,10 +103,20 @@ class WorldMap:
 	#Draws all of the ROOMS in the game.
 	#! Draw only ROOMS shown by a Camera.
 
-		for x in self.rooms:
-			for y in x:
-				y.draw()
+		if camera == None:
+			x1, x2 = 0, self.tiles_w
+			y1, y2 = 0, self.tiles_h
+		else:
+			x1, x2 = camera.tile_x1, camera.tile_x2
+			y1, y2 = camera.tile_y1, camera.tile_y2 
+			if x1 < 0: x1 = 0
+			if x2 < 0: x2 = 0
+			if y1 < 0: y1 = 0
+			if y2 < 0: y2 = 0
 
+		for x in self.tiles[x1:x2]:
+			for y in x[y1:y2]:
+				y.draw()
 
 
 	# TILE ACCESS
@@ -161,10 +171,9 @@ while running:
 	#VIDEO
 	window.clear(sf.Color.WHITE)
 	window.view = Camera
-	
 
 	#
-	worldmap.draw(10)
+	worldmap.draw(Camera)
 	#
 
 
