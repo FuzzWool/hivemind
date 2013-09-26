@@ -9,18 +9,32 @@ Camera = MyCamera()
 Camera.zoom = 1
 Camera.x, Camera.y = 0,0
 
-
 #####
+
 from modules.pysfml_game import\
  RENDER_WIDTH, RENDER_HEIGHT
 from modules.pysfml_game import GRID
 
+# STATIC - Load ALL of the textures in advance.
+textures = {}
+
+import glob
+import os
+directory = "img/tilemaps"
+os.chdir(directory)
+for filename in glob.glob("*.png"):
+	texture = MyTexture(filename)
+	textures[filename] = texture
+os.chdir("../../")
+# 
+
 class Room(object):
+
 
 	# SPRITE HANDLING
 
-	def __init__(self, x=0, y=0):
-		self.texture = MyTexture("img/tilemaps/level.png")
+	def __init__(self, x=0, y=0, texture="level.png"):
+		self.texture = textures[texture]
 		self.x, self.y = x, y
 		self.tiles = self.load(self.x, self.y)
 
@@ -150,7 +164,7 @@ class WorldMap:
 
 
 worldmap = WorldMap()
-
+print "Loaded."
 
 #########################################################
 

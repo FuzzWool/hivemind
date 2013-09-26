@@ -29,6 +29,13 @@ Room
 	Tested SHEET LOADING. (100 sheets = 2 secs)
 
 ! Load TILESHEETS in advance. No redundant loading!
+	Loading images is QUICK.
+	Loading tile sprites is SLOW.
+		! MySprites' extra bulk adds to the wait.
+
+		! Even loading EMPTY TILES is slow.
+			First, use empty streamlined MySprites.
+			If that doesn't work, make and use IgnoreSprite.
 
 ====
 
