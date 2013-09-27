@@ -29,8 +29,6 @@ Room
 	  Sprites loaded later.
 
 	~ WorldMap.tiles generated ONCE. (saves 5% CPU)
-
-	! MEMORY builds up as tiles are stored.
 	! STUTTER while going through the map.
 
 

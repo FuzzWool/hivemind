@@ -95,6 +95,7 @@ class Room(object):
 		# SPRITE HANDLING
 
 		def load(self):
+		#Load the SPRITE. Sync it's coords.
 			if self.sprite == None:
 				self.sprite = MySprite(self.texture)
 				self.sprite.clip.set(GRID,GRID)
@@ -103,6 +104,11 @@ class Room(object):
 		def draw(self):
 			if self.sprite != None:
 				self.sprite.draw()
+
+		def unload(self):
+		#Unload the SPRITE. Preserve data.
+			self.sprite = None
+
 
 
 		# POSITION
@@ -144,7 +150,7 @@ class WorldMap:
 		if y == None: y = 1
 		self.rooms = self._init_rooms(x, y)
 		self.init_tile_access()
-
+		self.init_unload()
 
 
 	# ROOM LOADING
@@ -161,7 +167,6 @@ class WorldMap:
 				rooms[-1].append(room)
 		return rooms
 
-	#* Loading is handled in draw.
 
 	def draw(self, camera=None):
 	#Draws all of the ROOMS in the game.
@@ -183,9 +188,40 @@ class WorldMap:
 				y.load()
 				y.draw()
 
+		self.unload(x1,y1,x2,y2)
 
 
-	# TILE ACCESS
+	# * Loading handled in draw.
+
+	def init_unload(self): #(init)
+		self.old_x1,self.old_y1,self.old_x2,self.old_y2,\
+		 = 0,0,0,0
+
+	def unload(self, x1,y1,x2,y2):
+	#unload tiles which were in the last screen,
+	#but not the current screen.
+		
+		if x1 < 0 or x1 >= self.tiles_w: return
+		if y1 < 0 or y1 >= self.tiles_h: return
+		if x2 < 0 or x2 >= self.tiles_w: return
+		if y2 < 0 or y2 >= self.tiles_h: return
+
+		for x in [self.old_x1, self.old_x2]:
+			for y in [self.old_y1, self.old_y2]:
+
+				if x1 < x < x2 and y1 < y < y2:
+					pass
+				else:
+					self.tiles[x][y].unload()
+
+		self.old_x1, self.old_y1 = x1, y1
+		self.old_x2, self.old_y2 = x2, y2
+
+
+
+
+
+
 	# Updated whenether the Rooms' tiles change memory.
 
 	def init_tile_access(self):
@@ -229,7 +265,7 @@ class WorldMap:
 
 ####
 
-worldmap = WorldMap(30,30)
+worldmap = WorldMap(1,1)
 print "WorldMap INITIALIZED."
 
 #########################################################
