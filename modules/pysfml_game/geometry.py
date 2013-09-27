@@ -182,8 +182,7 @@ class GameRectangle:
 		x1, y1, x2, y2 = self.points
 		x1 = int(x1/ROOM_WIDTH); y1 = int(y1/ROOM_HEIGHT)
 		x2 = int(x2/ROOM_WIDTH); y2 = int(y2/ROOM_HEIGHT)
-
-
+		return x1, y1, x2, y2
 
 
 #	PHYSICAL

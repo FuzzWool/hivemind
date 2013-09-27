@@ -6,7 +6,7 @@ from modules.pysfml_game import MySprite, MyTexture
 from modules.pysfml_game import MyCamera
 
 Camera = MyCamera()
-Camera.zoom = 1
+Camera.zoom = 2
 Camera.x, Camera.y = 0,0
 
 #####
@@ -33,15 +33,29 @@ class Room(object):
 
 	# SPRITE HANDLING
 
-	def __init__(self, x=0, y=0, texture="level.png"):
-		self.texture = textures[texture]
+	def __init__(self, x=0, y=0, texture="level.png",\
+		load_immediately=True):
+		#Grab the Room's POSITION.
+		#Grab the TEXTURE for all the sprites.
+
+		#TEST
+		if (x % 2 == 0 and y % 2 != 0)\
+		or (x % 2 != 0 and y % 2 == 0):
+			self.texture =textures["level.png"]
+		else: self.texture =textures["level2.png"]
+		# 
+		
+		# self.texture = textures[texture]
 		self.x, self.y = x, y
-		self.tiles = self.load(self.x, self.y)
+		self.tiles = self.init_tiles(self.x, self.y)
+		if load_immediately: self.load_tiles()
 
-	def load(self, room_x=0, room_y=0):
-		#LOAD and POSITION the tiles.
+
+
+	def init_tiles(self, room_x=0, room_y=0):
+	#Create the QUICK data for the Tile. (NO Sprites!)
+
 		#Consider the ROOM OFFSET.
-
 		tiles = []
 		w, h = RENDER_WIDTH/GRID, RENDER_HEIGHT/GRID
 		room_x *= RENDER_WIDTH/GRID
@@ -50,11 +64,17 @@ class Room(object):
 		for x in range(w):
 			tiles.append([])
 			for y in range(h):
-				tile = self.Tile()
-				tile.load(self.texture)
+				tile = self.Tile(self.texture)
 				tile.x, tile.y = room_x+x, room_y+y
 				tiles[-1].append(tile)
 		return tiles
+
+
+	def load_tiles(self): #(unused by WorldMap)
+	#Create the SLOW data for the Tile. (Sprite)
+		for x in self.tiles:
+			for tile in x:
+				tile.load()
 
 	def draw(self):
 		for x in self.tiles:
@@ -62,32 +82,54 @@ class Room(object):
 				y.draw()
 
 
+	# TILE
 
 	class Tile(object):
 
-		def __init__(self):
+		def __init__(self, texture):
 			self.sprite = None
+			self.texture = texture
+			self._position_init()
+
 
 		# SPRITE HANDLING
 
-		def load(self, texture):
-			self.sprite = MySprite(texture)
-			self.sprite.clip.set(GRID,GRID)
+		def load(self):
+			if self.sprite == None:
+				self.sprite = MySprite(self.texture)
+				self.sprite.clip.set(GRID,GRID)
+				self._sync_sprite() #
 
 		def draw(self):
-			self.sprite.draw()
+			if self.sprite != None:
+				self.sprite.draw()
+
 
 		# POSITION
+		# Saved as an absolute value.
+		# Returned as a grid value.
+
+		def _position_init(self):
+			self._x, self._y = 0, 0
+
+		def _sync_sprite(self):
+			#Update the sprite with every position change.
+			if self.sprite != None:
+				self.sprite.goto = self._x, self._y
 
 		@property
-		def x(self): return self.sprite.x/GRID
+		def x(self): return self._x/GRID
 		@x.setter
-		def x(self, x): self.sprite.x = x*GRID
+		def x(self, x):
+			self._x = x*GRID
+			self._sync_sprite()
 		#
 		@property
-		def y(self): return self.sprite.y/GRID
+		def y(self): return self._y/GRID
 		@y.setter
-		def y(self, y): self.sprite.y = y*GRID
+		def y(self, y):
+			self._y = y*GRID
+			self._sync_sprite()
 
 
 ####
@@ -96,22 +138,30 @@ class WorldMap:
 #Loads MULTIPLE ROOMS.
 #Provides shorthands for accessing all the rooms as one.
 	
-	def __init__(self):
+	def __init__(self, x=None, y=None):
 	#Load all of the ROOMS.
-		self.rooms = self.load(10,10)
+		if x == None: x = 1
+		if y == None: y = 1
+		self.rooms = self._init_rooms(x, y)
+		self.init_tile_access()
 
 
-	# TILE DRAWING
 
-	def load(self, w=0, h=0):
-	#Specify the AMOUNT of rooms to be loaded.
+	# ROOM LOADING
+	#Initializes all QUICK data.
+	#Gradually loads all SLOW data.
+
+	def _init_rooms(self, w=0, h=0): #(init)
+	#Specify the AMOUNT of rooms to be initialized.
 		rooms = []
 		for x in range(w):
 			rooms.append([])
 			for y in range(h):
-				room = Room(x,y)
+				room = Room(x,y, load_immediately=False)
 				rooms[-1].append(room)
 		return rooms
+
+	#* Loading is handled in draw.
 
 	def draw(self, camera=None):
 	#Draws all of the ROOMS in the game.
@@ -130,16 +180,17 @@ class WorldMap:
 
 		for x in self.tiles[x1:x2]:
 			for y in x[y1:y2]:
+				y.load()
 				y.draw()
 
 
-	# TILE ACCESS
 
-	@property
-	def tiles(self):
-	#An xy-list of the tiles of every single room.
+	# TILE ACCESS
+	# Updated whenether the Rooms' tiles change memory.
+
+	def init_tile_access(self):
+		self.tiles = []
 		
-		tiles = []
 		#Grab every ROOM in a COLUMN.
 		for room_x in self.rooms:
 
@@ -151,20 +202,35 @@ class WorldMap:
 				column = []
 				for room_y in room_x:
 					column += room_y.tiles[tile_x]
-				tiles.append(column)
+				
+				self.tiles.append(column)
 
-		return tiles
+	@property
+	def tiles(self):
+	#An xy-list of the tiles of every single room.
+		return self._tiles
+
+
+	# DEBUG
 
 	@property
 	def tiles_w(self): return len(self.tiles)
 	@property
 	def tiles_h(self): return len(self.tiles[0])
+	@property
+	def tiles_amt(self): return self.tiles_w*self.tiles_h
+
+	@property
+	def rooms_w(self): return len(self.rooms)
+	@property
+	def rooms_h(self): return len(self.rooms[0])
+	@property
+	def rooms_amt(self): return self.rooms_w*self.rooms_h
 
 ####
 
-
-worldmap = WorldMap()
-print "Loaded."
+worldmap = WorldMap(30,30)
+print "WorldMap INITIALIZED."
 
 #########################################################
 
