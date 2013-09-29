@@ -147,6 +147,17 @@ class GameRectangle:
 	def room_h(self): return int(self.h/ROOM_HEIGHT)
 
 
+	@property
+	def room_x1(self): return self.room_x
+	@property
+	def room_x2(self): return self.room_x+self.room_w+1
+	@property
+	def room_y1(self): return self.room_y
+	@property
+	def room_y2(self): return self.room_y+self.room_h+1
+
+
+
 
 	#
 

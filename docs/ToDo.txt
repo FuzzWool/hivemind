@@ -24,18 +24,24 @@ ROOM and WORLDMAP has become unruly.
 
 Room
 
-+ Load the Sprites only when the camera pans to them.	
-	+ Tiles initialized without sprites.
-	  Sprites loaded later.
 
-	~ WorldMap.tiles generated ONCE. (saves 5% CPU)
-	! STUTTER while going through the map.
++ Super-speedy VertexArray rendering and drawing!
+Fix: Loading Tiles individually causes lag.
+
+	+ Vertex Arrays have the benefit of only needing to be DRAWN ONCE using a SINGLE TEXTURE.
+	
+	* Implement a VERTEXARRAY into ROOM.
+		* Performs very well with 30,30.
+
+			1 second loading
+			0.2 GB of RAM usage
+			1-5% CPU Usage
 
 
----30x30 Init Rooms (900)---
-0.5 secs loading
-0.1 GB of RAM usage
-5% CPU usage
+Next...
+! Load tiles based on .txt files.
+
+
 
 ====
 
