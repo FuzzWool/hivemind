@@ -23,17 +23,16 @@ GOAL: Clean up ROOM and WORLDMAP code.
 ROOM and WORLDMAP has become unruly.
 
 
-~ Changed the names of directories.
-	modules > code
-	img > assets
-	docs > _docs
-	test > _test_code
-
-
++ Loads tiles based on .txt files.
+	* In an xxyy numerical format. (goes up to 9999)
 
 Next...
-! Load tiles based on .txt files.
 
+! Try adding it to the main game again.
+w/ test1, test3 and level_editor.
+
+! Make collision independant of a sprite.
+Instead, collisions can be assigned to a rect.
 
 
 ====

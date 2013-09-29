@@ -6,7 +6,7 @@ from code.pysfml_game import MySprite, MyTexture
 from code.pysfml_game import MyCamera
 
 Camera = MyCamera()
-Camera.zoom = 2
+Camera.zoom = 1
 Camera.x, Camera.y = 0,0
 
 #####
@@ -22,16 +22,20 @@ textures = {}
 
 import glob
 import os
-directory = "assets/levels"
+directory = "assets/levels/same"
 os.chdir(directory)
 for filename in glob.glob("*.png"):
 	texture = MyTexture(filename)
 	textures[filename] = texture
-os.chdir("../../")
+os.chdir("../../../")
 # 
 
 class Room(object):
 #Handles TILE positioning and BATCHING.
+
+# * May be positioned in different areas of a WORLD MAP.
+# * Can load different TEXTURES.
+# ! Can load different TILE LAYOUTS.
 
 
 	def __init__(self, x=0, y=0, texture="level.png"):
@@ -49,8 +53,8 @@ class Room(object):
 
 		#Logic
 		self.x, self.y = x, y
-		self.load_room_file()
 		self.tiles = self.init_tiles(self.x, self.y)
+		self.tiles = self.load_tile_data(self.tiles)
 
 		#Graphics
 		self.vertex_array = self.init_vertex_array()
@@ -61,20 +65,58 @@ class Room(object):
 
 	# TILE DATA
 
-	def load_room_file(self):
-	#Load the TILE DATA from a TEXT FILE.
+	def load_tile_data(self, tiles): #(init)
+	#Load the TILE DATA from the UNIQUE ROOM FILE.
 		
-		#load file
-		directory = "outside/levels"
+		#find KEY.
+		x, y = str(self.x), str(self.y)
+		if len(x) == 1: x = "0"+x
+		if len(y) == 1: y = "0"+y
+		key = x+y
+
+		#load FILE DATA.
+		directory = "assets/levels/unique/"
+		location = directory+key+".txt"
+		try:
+			f = open(location,"r+")
+			file_data = f.read()
+		except:
+			#Create DATA to use.
+			file_data = ""
+			for x in range(self.tiles_w):
+				column = "____"*self.tiles_h
+				file_data = file_data + column + "\n"
+			file_data = file_data[:-1]
 
 
-		# text_file = open()
+			f = open(location,"w")
+			f.write(file_data)
+		f.close()
+
+		#format FILE DATA for use as a GRID.
+		formatted_data = [[]]
+
+		s = 0
+		while s < len(file_data):
+			if file_data[s] == "\n":
+				s += 1
+				formatted_data.append([])
+			tile = file_data[s:s+4]
+			formatted_data[-1].append(tile)
+			s += 4
+
+		#apply to all TILES.
+		for x, _x in enumerate(tiles):
+			for y, _y in enumerate(tiles[x]):
+				tiles[x][y].data = formatted_data[x][y]
+
+		return tiles
 
 
 	#
 
 	def init_tiles(self, room_x=0, room_y=0): #(init)
-	#Create the QUICK data for the Tile. (NO Sprites!)
+	#Create EMPTY SLOTS for the tiles...
 
 		#Consider the ROOM OFFSET.
 		tiles = []
@@ -85,10 +127,12 @@ class Room(object):
 		for x in range(w):
 			tiles.append([])
 			for y in range(h):
-				tile = self.Tile(self.texture)
+				tile = self.Tile()
 				tile.x, tile.y = room_x+x, room_y+y
 				tiles[-1].append(tile)
 		return tiles
+
+
 
 
 	# GRAPHICS
@@ -111,17 +155,24 @@ class Room(object):
 		window.draw(self.vertex_array, self.render_states)
 
 
+	#POSITION
+
+	@property
+	def tiles_h(self): return len(self.tiles[0])
+	@property
+	def tiles_w(self): return len(self.tiles)
+
 
 
 	# TILE
 
 	class Tile(object):
 
-		def __init__(self, texture):
-			self.texture = texture
-			self.vertices = []
-
+		def __init__(self):
+			self.data = "0000" #clip in xxyy format
 			self._position_init()
+			
+			self.vertices = []
 
 
 		# GRAPHIC
@@ -133,6 +184,7 @@ class Room(object):
 			point2 = sf.Vertex()
 			point3 = sf.Vertex()
 			point4 = sf.Vertex()
+			points = [point1,point2,point3,point4]
 
 			#position
 			x1, y1 = self.x*GRID, self.y*GRID
@@ -143,16 +195,26 @@ class Room(object):
 			point4.position = x1,y2
 
 			#clip
-			point1.tex_coords = 0,0
-			point2.tex_coords = 0,GRID
-			point3.tex_coords = GRID,GRID
-			point4.tex_coords = GRID,0
+			if not self.is_empty():
+				clip_x = int(self.data[0:2])
+				clip_y = int(self.data[2:4])
 
-			self.vertices.append(point1)
-			self.vertices.append(point2)
-			self.vertices.append(point3)
-			self.vertices.append(point4)
+				x1 = (clip_x+0)*GRID
+				y1 = (clip_y+0)*GRID
+				x2 = (clip_x+1)*GRID
+				y2 = (clip_y+1)*GRID
 
+				point1.tex_coords = x1,y1
+				point2.tex_coords = x2,y1
+				point3.tex_coords = x2,y2
+				point4.tex_coords = x1,y2
+
+			else:
+				for point in points:
+					point.color = sf.Color(0,0,0,0)
+
+			for point in points:
+				self.vertices.append(point)
 
 		# POSITION
 		# Saved as an absolute value.
@@ -170,6 +232,11 @@ class Room(object):
 		def y(self): return self._y/GRID
 		@y.setter
 		def y(self, y): self._y = y*GRID
+
+		#STATES
+
+		def is_empty(self):
+			return bool(self.data == "____")
 
 
 ####
@@ -265,7 +332,7 @@ class WorldMap:
 ####
 
 #30,30
-worldmap = WorldMap(1,1)
+worldmap = WorldMap(30,30)
 print "WorldMap INITIALIZED."
 
 #########################################################
