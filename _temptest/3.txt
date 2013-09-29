@@ -1,1 +1,0 @@
-A test of opening all the files in a directory.

@@ -1,26 +1,28 @@
 #Make a new ROOM class from scratch.
 
-import modules.pysfml_game.key as key
-from modules.pysfml_game import quit, window, sf
-from modules.pysfml_game import MySprite, MyTexture
-from modules.pysfml_game import MyCamera
+import code.pysfml_game.key as key
+from code.pysfml_game import quit, window, sf
+from code.pysfml_game import MySprite, MyTexture
+from code.pysfml_game import MyCamera
 
 Camera = MyCamera()
-Camera.zoom = 1
+Camera.zoom = 2
 Camera.x, Camera.y = 0,0
 
 #####
 
-from modules.pysfml_game import\
+from code.pysfml_game import\
  RENDER_WIDTH, RENDER_HEIGHT
-from modules.pysfml_game import GRID
+from code.pysfml_game import GRID
+
+
 
 # STATIC - Load ALL of the textures in advance.
 textures = {}
 
 import glob
 import os
-directory = "img/tilemaps"
+directory = "assets/levels"
 os.chdir(directory)
 for filename in glob.glob("*.png"):
 	texture = MyTexture(filename)
@@ -31,28 +33,47 @@ os.chdir("../../")
 class Room(object):
 #Handles TILE positioning and BATCHING.
 
-	# SPRITE HANDLING
 
-	def __init__(self, x=0, y=0, texture="level.png",\
-		load_immediately=True):
+	def __init__(self, x=0, y=0, texture="level.png"):
 		#Grab the Room's POSITION.
 		#Grab the TEXTURE for all the sprites.
 
-		#TEST
-		if (x % 2 == 0 and y % 2 != 0)\
-		or (x % 2 != 0 and y % 2 == 0):
-			self.texture =textures["level.png"]
-		else: self.texture =textures["level2.png"]
-		# 
+		# #TEST
+		# if (x % 2 == 0 and y % 2 != 0)\
+		# or (x % 2 != 0 and y % 2 == 0):
+		# 	self.texture =textures["level.png"]
+		# else: self.texture =textures["level2.png"]
+		# # 
 		
-		# self.texture = textures[texture]
+		self.texture = textures["level.png"]
+
+		#Logic
 		self.x, self.y = x, y
+		self.load_room_file()
 		self.tiles = self.init_tiles(self.x, self.y)
-		if load_immediately: self.load_tiles()
+
+		#Graphics
+		self.vertex_array = self.init_vertex_array()
+		self.render_states = sf.graphics.RenderStates()
+		self.render_states.texture = self.texture
 
 
 
-	def init_tiles(self, room_x=0, room_y=0):
+	# TILE DATA
+
+	def load_room_file(self):
+	#Load the TILE DATA from a TEXT FILE.
+		
+		#load file
+		directory = "outside/levels"
+
+
+		# text_file = open()
+
+
+	#
+
+	def init_tiles(self, room_x=0, room_y=0): #(init)
 	#Create the QUICK data for the Tile. (NO Sprites!)
 
 		#Consider the ROOM OFFSET.
@@ -70,16 +91,26 @@ class Room(object):
 		return tiles
 
 
-	# def load_tiles(self): #(unused by WorldMap)
-	# #Create the SLOW data for the Tile. (Sprite)
-	# 	for x in self.tiles:
-	# 		for tile in x:
-	# 			tile.load()
+	# GRAPHICS
+	#Create a VERTEX ARRAY carrying all of the
+	#TILES in a single drawable. 
 
-	# def draw(self): #(unused by WorldMap)
-	# 	for x in self.tiles:
-	# 		for y in x:
-	# 			y.draw()
+	def init_vertex_array(self): #(init)
+		shape = sf.PrimitiveType.QUADS
+		vertex_array = sf.VertexArray(shape)
+
+		for column in self.tiles:
+			for tile in column:
+				
+				tile.init_vertices()
+				for point in tile.vertices:
+					vertex_array.append(point)
+		return vertex_array
+
+	def draw(self):
+		window.draw(self.vertex_array, self.render_states)
+
+
 
 
 	# TILE
@@ -87,28 +118,40 @@ class Room(object):
 	class Tile(object):
 
 		def __init__(self, texture):
-			self.sprite = None
 			self.texture = texture
+			self.vertices = []
+
 			self._position_init()
 
 
-		# SPRITE HANDLING
+		# GRAPHIC
+		#Coordinates saved for generation by ROOM.
 
-		def load(self):
-		#Load the SPRITE. Sync it's coords.
-			if self.sprite == None:
-				self.sprite = MySprite(self.texture)
-				self.sprite.clip.set(GRID,GRID)
-				self._sync_sprite() #
+		def init_vertices(self): #Room: init_vertex_array
+			#points
+			point1 = sf.Vertex()
+			point2 = sf.Vertex()
+			point3 = sf.Vertex()
+			point4 = sf.Vertex()
 
-		def draw(self):
-			if self.sprite != None:
-				self.sprite.draw()
+			#position
+			x1, y1 = self.x*GRID, self.y*GRID
+			x2, y2 = (self.x+1)*GRID, (self.y+1)*GRID
+			point1.position = x1,y1
+			point2.position = x2,y1
+			point3.position = x2,y2
+			point4.position = x1,y2
 
-		def unload(self):
-		#Unload the SPRITE. Preserve data.
-			self.sprite = None
+			#clip
+			point1.tex_coords = 0,0
+			point2.tex_coords = 0,GRID
+			point3.tex_coords = GRID,GRID
+			point4.tex_coords = GRID,0
 
+			self.vertices.append(point1)
+			self.vertices.append(point2)
+			self.vertices.append(point3)
+			self.vertices.append(point4)
 
 
 		# POSITION
@@ -118,24 +161,15 @@ class Room(object):
 		def _position_init(self):
 			self._x, self._y = 0, 0
 
-		def _sync_sprite(self):
-			#Update the sprite with every position change.
-			if self.sprite != None:
-				self.sprite.goto = self._x, self._y
-
 		@property
 		def x(self): return self._x/GRID
 		@x.setter
-		def x(self, x):
-			self._x = x*GRID
-			self._sync_sprite()
+		def x(self, x): self._x = x*GRID
 		#
 		@property
 		def y(self): return self._y/GRID
 		@y.setter
-		def y(self, y):
-			self._y = y*GRID
-			self._sync_sprite()
+		def y(self, y): self._y = y*GRID
 
 
 ####
@@ -150,7 +184,6 @@ class WorldMap:
 		if y == None: y = 1
 		self.rooms = self._init_rooms(x, y)
 		self.init_tile_access()
-		self.init_unload()
 
 
 	# ROOM LOADING
@@ -163,7 +196,7 @@ class WorldMap:
 		for x in range(w):
 			rooms.append([])
 			for y in range(h):
-				room = Room(x,y, load_immediately=False)
+				room = Room(x,y)
 				rooms[-1].append(room)
 		return rooms
 
@@ -173,53 +206,19 @@ class WorldMap:
 	#! Draw only ROOMS shown by a Camera.
 
 		if camera == None:
-			x1, x2 = 0, self.tiles_w
-			y1, y2 = 0, self.tiles_h
+			x1, x2 = 0, self.rooms_w
+			y1, y2 = 0, self.rooms_h
 		else:
-			x1, x2 = camera.tile_x1, camera.tile_x2
-			y1, y2 = camera.tile_y1, camera.tile_y2 
+			x1, x2 = camera.room_x1, camera.room_x2
+			y1, y2 = camera.room_y1, camera.room_y2
 			if x1 < 0: x1 = 0
 			if x2 < 0: x2 = 0
 			if y1 < 0: y1 = 0
 			if y2 < 0: y2 = 0
 
-		for x in self.tiles[x1:x2]:
-			for tile in x[y1:y2]:
-				tile.load()
-				tile.draw()
-
-		self._unload(x1,y1,x2,y2)
-
-
-	# * Loading handled in draw.
-
-	def init_unload(self): #(init)
-		self.old_x1,self.old_y1,self.old_x2,self.old_y2,\
-		 = 0,0,0,0
-
-	def _unload(self, x1,y1,x2,y2): #(draw)
-	#unload tiles which were in the last screen,
-	#but not the current screen.
-		
-		if x1 < 0 or x1 >= self.tiles_w: return
-		if y1 < 0 or y1 >= self.tiles_h: return
-		if x2 < 0 or x2 >= self.tiles_w: return
-		if y2 < 0 or y2 >= self.tiles_h: return
-
-		for x in [self.old_x1, self.old_x2]:
-			for y in [self.old_y1, self.old_y2]:
-
-				if x1 < x < x2 and y1 < y < y2:
-					pass
-				else:
-					self.tiles[x][y].unload()
-
-		self.old_x1, self.old_y1 = x1, y1
-		self.old_x2, self.old_y2 = x2, y2
-
-
-
-
+		for column in self.rooms[x1:x2]:
+			for room in column[y1:y2]:
+				room.draw()
 
 
 	# Updated whenether the Rooms' tiles change memory.
@@ -265,7 +264,8 @@ class WorldMap:
 
 ####
 
-worldmap = WorldMap(30,30)
+#30,30
+worldmap = WorldMap(1,1)
 print "WorldMap INITIALIZED."
 
 #########################################################

@@ -1,0 +1,46 @@
+Let there be Cool Moves
+===========
+Nut is born, and she has basic controls.
+She can walk across slopes.
+
+Goals:
+x Make Nut with basic left and right controls.
+x Allow Nut to run across 1/2-block slopes.
+
+x Add a DIVE.
+x Add a WALL JUMP.
+x Add CRAWLING.
+x Add a SLIDE KICK.
+
+! Add PUNCHING.
+
+
+
+
+====
+
+GOAL: Clean up ROOM and WORLDMAP code.
+ROOM and WORLDMAP has become unruly.
+
+
+~ Changed the names of directories.
+	modules > code
+	img > assets
+	docs > _docs
+	test > _test_code
+
+
+
+Next...
+! Load tiles based on .txt files.
+
+
+
+====
+
+! Holding both directional keys causes weird Nut walking.
+
+! Fix lag issue while moving around the WorldMap.
+	* Investigate the stress empty MySprites put on.
+
+! Add a system for assigning collision data to a tilemap.
