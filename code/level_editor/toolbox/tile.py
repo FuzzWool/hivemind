@@ -1,6 +1,6 @@
 #LevelEditor > ToolBox > Tile tool
-from modules.pysfml_game import MySprite
-from modules.pysfml_game import GRID
+from code.pysfml_game import MySprite
+from code.pysfml_game import GRID
 
 class Tile:
 #A tool for changing and removing tiles.
@@ -19,7 +19,7 @@ class Tile:
 			Level.change_tile((x, y), tile_data)
 
 	def remove(self, Level, grid_pos):
-		self.place(Level, grid_pos, "__")
+		self.place(Level, grid_pos, "____")
 
 	def draw(self):
 		self.Selector.draw()
@@ -30,7 +30,7 @@ class _Selector:
 	
 	#Logic
 	visible = False
-	selected_tile = "aa"
+	selected_tile = "0000"
 
 	#Graphics
 	b_sprite = None; tiles = []
@@ -78,8 +78,10 @@ class _Selector:
 				return True
 
 			def change_select(Level, x, y):
-				a = Level.alphabet[int(y)]
-				b = Level.alphabet[int(x)]
+				a = str(int(x))
+				b = str(int(y))
+				if len(a) == 1: a = "0"+a
+				if len(b) == 1: b = "0"+b
 				self.selected_tile = a+b
 				
 			def move_cursor(x, y):
@@ -88,8 +90,7 @@ class _Selector:
 				self.cursor.move(x, y)
 			
 			x, y = grid_relative(grid_pos)
-			if not in_bounds(x, y):
-				return
+			if not in_bounds(x, y): return
 			change_select(Level, x, y)
 			move_cursor(x, y)
 

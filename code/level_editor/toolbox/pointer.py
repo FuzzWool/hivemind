@@ -25,7 +25,7 @@ class _LevelProperties:
 	#Opens the properties window.
 	#Passes over the values.
 		self.root = Tk()
-		self.root.wm_title(Level.name)
+		self.root.wm_title(Level.texture_name)
 		self.lp1 = self.LevelProperties_1(self.root, Level)
 
 		def save():

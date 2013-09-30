@@ -11,12 +11,8 @@ Camera = MyCamera()
 Camera.zoom = 1
 Camera.x, Camera.y = 0,0
 
-#####
-####
-####
 
-#30,30
-worldmap = WorldMap(30,30)
+worldmap = WorldMap(1,1)
 print "WorldMap INITIALIZED."
 
 #########################################################

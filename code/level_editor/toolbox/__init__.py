@@ -1,7 +1,7 @@
-from modules.pysfml_game import MyTexture, MySprite
-from modules.pysfml_game import SCREEN_HEIGHT
-from modules.pysfml_game import GRID
-from modules.pysfml_game import sf
+from code.pysfml_game import MyTexture, MySprite
+from code.pysfml_game import SCREEN_HEIGHT
+from code.pysfml_game import GRID
+from code.pysfml_game import sf
 
 from tile import Tile
 from pointer import Pointer
@@ -40,8 +40,10 @@ class ToolBox:
 
 		hovering_level = False
 		x, y = mouse.position(camera)
-		lx = Level.x*GRID; lw = lx + Level.w*GRID
-		ly = Level.y*GRID; lh = ly + Level.h*GRID
+		lx = Level.tiles_x*GRID
+		lw = lx + Level.tiles_w*GRID
+		ly = Level.tiles_y*GRID
+		lh = ly + Level.tiles_h*GRID
 		if (lx < x < lw)\
 		and (ly < y < lh):
 			hovering_level = True
@@ -74,7 +76,7 @@ class _ui:
 #The side panel for selecting tools.
 #May return a selected tool for event handling.
 	b_sprite = None
-	tex = MyTexture("img/level_editor/toolbox.png")
+	tex = MyTexture("assets/level_editor/toolbox.png")
 
 	_selected_tool = (1, 0)
 	tools = []

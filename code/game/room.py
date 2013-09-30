@@ -5,18 +5,25 @@ from code.pysfml_game import sf
 from code.pysfml_game import window
 
 
-# STATIC - Load ALL of the textures in advance.
+# STATIC - Load ALL of the shared assets in advance.
 textures = {}
+collisions = {}
 
 import glob
 import os
-directory = "assets/levels/same"
+directory = "assets/levels/shared"
 os.chdir(directory)
+
 for filename in glob.glob("*.png"):
 	texture = MyTexture(filename)
 	textures[filename] = texture
+
+for filename in glob.glob("*.txt"):
+	collision = open(filename).read()
+	collisions[filename] = collision
+
 os.chdir("../../../")
-# 
+#
 
 class Room(object):
 #Handles TILE positioning and BATCHING.
@@ -24,9 +31,10 @@ class Room(object):
 # * May be positioned in different areas of a WORLD MAP.
 # * Can load different TEXTURES.
 # * Can load different TILE LAYOUTS.
+# !WIP: Can load COLLISION INFORMATION.
 
 
-	def __init__(self, x=0, y=0, texture="level.png"):
+	def __init__(self, x=0, y=0, texture="level"):
 		#Grab the Room's POSITION.
 		#Grab the TEXTURE for all the sprites.
 		
@@ -35,16 +43,33 @@ class Room(object):
 		self.x, self.y = x, y
 		self.tiles = self.init_tiles(self.x, self.y)
 		self.tiles = self.load_tile_data(self.tiles)
+		self.tiles = self.load_tile_collisions(self.tiles)
 
 		#Graphics
-		self.texture = textures["level.png"]
-		self.vertex_array = self.init_vertex_array()
-		self.render_states = sf.graphics.RenderStates()
-		self.render_states.texture = self.texture
+		self.change_texture(texture, init=True)
+		self.render_graphics()
 
 
 
-	# TILE DATA
+	# Loading TILE DATA
+
+	def init_tiles(self, room_x=0, room_y=0): #(init)
+	#Create EMPTY SLOTS for the tiles...
+
+		#Consider the ROOM OFFSET.
+		tiles = []
+		w, h = RENDER_WIDTH/GRID, RENDER_HEIGHT/GRID
+		room_x *= RENDER_WIDTH/GRID
+		room_y *= RENDER_HEIGHT/GRID
+
+		for x in range(w):
+			tiles.append([])
+			for y in range(h):
+				tile = self.Tile()
+				tile.x, tile.y = room_x+x, room_y+y
+				tiles[-1].append(tile)
+		return tiles
+
 
 	def load_tile_data(self, tiles): #(init)
 	#Load the TILE DATA from the UNIQUE ROOM FILE.
@@ -94,25 +119,17 @@ class Room(object):
 		return tiles
 
 
-	#
+	def load_tile_collisions(self, tiles): #init
+	#Load the COLLISION DATA for each tile.
 
-	def init_tiles(self, room_x=0, room_y=0): #(init)
-	#Create EMPTY SLOTS for the tiles...
+		# #load the FILE DATA.
+		# key = self.texture_name+"_collision.txt"
+		# print collisions[key]
 
-		#Consider the ROOM OFFSET.
-		tiles = []
-		w, h = RENDER_WIDTH/GRID, RENDER_HEIGHT/GRID
-		room_x *= RENDER_WIDTH/GRID
-		room_y *= RENDER_HEIGHT/GRID
+		# #format the FILE DATA.
 
-		for x in range(w):
-			tiles.append([])
-			for y in range(h):
-				tile = self.Tile()
-				tile.x, tile.y = room_x+x, room_y+y
-				tiles[-1].append(tile)
+
 		return tiles
-
 
 
 
@@ -139,9 +156,70 @@ class Room(object):
 	#POSITION
 
 	@property
+	def tiles_x(self): return self.x
+	@property
+	def tiles_y(self): return self.y
+	@property
 	def tiles_h(self): return len(self.tiles[0])
 	@property
 	def tiles_w(self): return len(self.tiles)
+
+
+
+	# ROOM EDITING
+	#Functions designed for use by Level Editors.
+	#Graphics need to be re-rendered along with changes
+	#in logic.
+
+	#level_editor
+	def change_tile(self, position=(), data=""):
+		x, y = position
+		self.tiles[x][y].data = data
+		self.render_graphics()
+
+	#init, level_editor
+	def change_texture(self, texture,
+		init=False):
+
+		directory = "assets/levels/shared/%s.png" \
+		% texture
+
+		self.texture_name = texture
+		self.texture = MyTexture(directory)
+		if not init: self.render_graphics()
+
+	#init, change_tile, change_texture
+	def render_graphics(self): 
+		self.vertex_array = self.init_vertex_array()
+		self.render_states = sf.graphics.RenderStates()
+		self.render_states.texture = self.texture
+
+	#
+
+	#level_editor
+	def save(self):
+	#Save the UNIQUE LEVEL DATA back to the file.
+		
+		#grab data
+		save_data = ""
+		for column in self.tiles:
+			if save_data != "":
+				save_data = save_data+"\n"
+			for tile in column:
+				save_data = save_data+tile.data
+
+		#save data to file
+		x = str(self.x)
+		y = str(self.y)
+		if len(x) == 1: x = "0"+x
+		if len(y) == 1: y = "0"+y
+		key = x+y
+
+		directory = "assets/levels/unique/%s.txt"\
+		% key
+		open_file = open(directory, "w")
+		open_file.write(save_data)
+		open_file.close()
 
 
 
@@ -150,7 +228,7 @@ class Room(object):
 	class Tile(object):
 
 		def __init__(self):
-			self.data = "0000" #clip in xxyy format
+			self.data = "0000"
 			self._position_init()
 			
 			self.vertices = []
@@ -160,6 +238,8 @@ class Room(object):
 		#Coordinates saved for generation by ROOM.
 
 		def init_vertices(self): #Room: init_vertex_array
+			self.vertices = []
+
 			#points
 			point1 = sf.Vertex()
 			point2 = sf.Vertex()
@@ -192,6 +272,7 @@ class Room(object):
 
 			else:
 				for point in points:
+					point.tex_coords = 0,0
 					point.color = sf.Color(0,0,0,0)
 
 			for point in points:

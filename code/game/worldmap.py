@@ -29,7 +29,7 @@ class WorldMap:
 
 	def draw(self, camera=None):
 	#Draws all of the ROOMS in the game.
-	#! Draw only ROOMS shown by a Camera.
+	#Draw only ROOMS shown by a Camera.
 
 		if camera == None:
 			x1, x2 = 0, self.rooms_w
@@ -70,6 +70,17 @@ class WorldMap:
 	def tiles(self):
 	#An xy-list of the tiles of every single room.
 		return self._tiles
+
+
+	# LEVEL EDITING
+
+	#level_editor
+	def save(self):
+
+		for column in self.rooms:
+			for room in column:
+				room.save()
+		print "%s Room(s) saved." % self.rooms_amt
 
 
 	# DEBUG

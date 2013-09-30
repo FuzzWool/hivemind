@@ -1,6 +1,6 @@
-import modules as mo
-import modules.pysfml_game.key as key
-import modules.level_editor as le
+import code as mo
+import code.pysfml_game.key as key
+import code.level_editor as le
 
 mouse = mo.MyMouse()
 
@@ -17,7 +17,7 @@ while running:
 	if mo.quit(): running = False
 
 	if key.RETURN.pressed():
-		LevelEditor.WorldMap.say_Rooms()
+		pass
 
 	LevelEditor.camera_controls(key, Camera)
 	LevelEditor.handle_controls(key, mouse, Camera)

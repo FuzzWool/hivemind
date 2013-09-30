@@ -25,9 +25,22 @@ ROOM and WORLDMAP has become unruly.
 
 ! WIP - Ported ROOM and WORLDMAP to the main game.
 	~ Quick and crude, doesn't work with:
-		! Player collisions
 		! Level Editor
+			* placing tiles
+			* removing tiles
+			* changing the texture
 
+			! saving levels
+
+			! Test MULTIPLE rooms.
+			! Save TEXTURE, too.
+
+
+
+		! Player collisions
+
+
+! Clean up ROOM and WORLDMAP.
 
 -
 

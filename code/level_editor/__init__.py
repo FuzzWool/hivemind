@@ -2,8 +2,10 @@
 from toolbox import ToolBox
 #####
 
-import modules as mo
-from modules.pysfml_game import GRID
+import code as mo
+from code.pysfml_game import GRID
+from code.game import WorldMap
+
 
 class LevelEditor:
 #Alters the data of the WorldMap and all of it's Levels.
@@ -13,19 +15,17 @@ class LevelEditor:
 	WorldMap = None
 
 	#Sprites
-	cursor_tex = mo.texture("img/level_editor/cursor.png")
+	cursor_tex \
+	= mo.MyTexture("assets/level_editor/cursor.png")
 	cursor = mo.MySprite(cursor_tex)
 
 	def __init__(self, Camera):
-		self.WorldMap = EWorldMap()
-		# self.WorldMap.load_all()
+		self.WorldMap = WorldMap()
 		self.ToolBox = ToolBox(self.cursor_tex)
 
 	def draw(self, mouse, camera):
 
-		self.WorldMap.load_around\
-		(camera.room_points, camera.tile_points)
-		self.WorldMap.draw()
+		self.WorldMap.draw(camera)
 
 		#Move the cursor.
 		x, y = mouse.grid_position(camera)
@@ -34,8 +34,6 @@ class LevelEditor:
 
 		self.cursor.draw()
 		self.ToolBox.draw()
-
-		#
 
 	#
 
@@ -71,17 +69,17 @@ class LevelEditor:
 		level_selected = None
 
 		mouse_x, mouse_y = mouse.position(camera)
-		for x in self.WorldMap.Rooms:
+		for x in self.WorldMap.rooms:
 			for Room in x:
-				if Room != None:
-					x1, y1 = Room.x*GRID, Room.y*GRID
-					x2 = x1 + Room.w*GRID
-					y2 = y1 + Room.h*GRID
+				x1 = Room.tiles_x*GRID
+				y1 = Room.tiles_y*GRID
+				x2 = x1 + Room.tiles_w*GRID
+				y2 = y1 + Room.tiles_h*GRID
 
-					if (x1 < mouse_x < x2)\
-					and (y1 < mouse_y < y2):
-						level_selected = Room
-						break
+				if (x1 < mouse_x < x2)\
+				and (y1 < mouse_y < y2):
+					level_selected = Room
+					break
 
 		#Events
 
@@ -95,10 +93,4 @@ class LevelEditor:
 
 			self.ToolBox.level_controls\
 				(key, mouse, camera, level_selected)
-
-			if mouse.right.double_clicked():
-				#Find the Level.
-				
-				print "remove level"
-
 	#
