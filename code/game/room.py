@@ -1,505 +1,220 @@
-from code.pysfml_game import MySprite, MyTexture
+from code.pysfml_game import MyTexture
+from code.pysfml_game import RENDER_WIDTH, RENDER_HEIGHT
 from code.pysfml_game import GRID
-from code.pysfml_game import ROOM_WIDTH, ROOM_HEIGHT
+from code.pysfml_game import sf
+from code.pysfml_game import window
+
+
+# STATIC - Load ALL of the textures in advance.
+textures = {}
+
+import glob
+import os
+directory = "assets/levels/same"
+os.chdir(directory)
+for filename in glob.glob("*.png"):
+	texture = MyTexture(filename)
+	textures[filename] = texture
+os.chdir("../../../")
+# 
 
 class Room(object):
-	name = ""
-	texture_name = ""
-	texture = None
-	tiles = []
-	alphabet = ["a","b","c","d","e","f","g",\
-	 "h","i","j","k","l","m","n","o","p","q",\
-	 "q","r","s","t","u","v","w","x","y","z"]
+#Handles TILE positioning and BATCHING.
 
+# * May be positioned in different areas of a WORLD MAP.
+# * Can load different TEXTURES.
+# * Can load different TILE LAYOUTS.
 
 
- 	#SIZE/POSITION
-	x, y = 0, 0
+	def __init__(self, x=0, y=0, texture="level.png"):
+		#Grab the Room's POSITION.
+		#Grab the TEXTURE for all the sprites.
+		
 
-	@property
-	def w(self): return len(self.tiles)
+		#Logic
+		self.x, self.y = x, y
+		self.tiles = self.init_tiles(self.x, self.y)
+		self.tiles = self.load_tile_data(self.tiles)
 
-	@property
-	def h(self): return len(self.tiles[0])
+		#Graphics
+		self.texture = textures["level.png"]
+		self.vertex_array = self.init_vertex_array()
+		self.render_states = sf.graphics.RenderStates()
+		self.render_states.texture = self.texture
 
-	@property
-	def room_x(self): return int(self.x*GRID / ROOM_WIDTH)
-	@room_x.setter
-	def room_x(self, arg): self.x = arg*(ROOM_WIDTH/GRID)
 
-	@property
-	def room_y(self): return int(self.y*GRID / ROOM_HEIGHT)
-	@room_y.setter
-	def room_y(self, arg): self.y = arg*(ROOM_HEIGHT/GRID)
 
-	@property
-	def room_w(self): return int(self.w*GRID / ROOM_WIDTH)
-	@property
-	def room_h(self): return int(self.h*GRID / ROOM_HEIGHT)
-	
-	#
+	# TILE DATA
 
-	#Grabs ROOM DATA and generates TILES.
-	def __init__ (self, room_dir, room_x=0, room_y=0):
+	def load_tile_data(self, tiles): #(init)
+	#Load the TILE DATA from the UNIQUE ROOM FILE.
+		
+		#find KEY.
+		x, y = str(self.x), str(self.y)
+		if len(x) == 1: x = "0"+x
+		if len(y) == 1: y = "0"+y
+		key = x+y
 
-		self.room_x, self.room_y = room_x, room_y
-
-		data = self._load_room(room_dir)
-		self.tiles = self._initialize_tiles(data)
-
-		#Collisions.
-		self.collision = collision(self)
-		self.collision.filler()
-
-	#
-	class Tile:
-		def __init__(self):
-			self.data = "__"
-			self.sprite = MySprite(None)
-			self.collision = "__"
-
-		@property
-		def x(self): return int(self.sprite.x/GRID)
-		@property
-		def y(self): return int(self.sprite.y/GRID)
-
-		def is_slope(self):
-			if self.sprite.slope_collision.a != None:
-				return True
-			return False
-	#
-
-	def change_tile(self, pos, clip):
-	#Changes a tile, updates the Room and tiles.
-
-		def make_tile(pos=(), clip=()):
-		#Make a new tile. Requires filler to be in place.
-
-			if clip == "__":
-				return self.empty_tile(pos)
-			#
-			sprite = self.tiles[pos[0]][pos[1]].sprite
-			# print sprite
-			sprite.texture = self.texture
-
-			# sprite = MySprite(self.texture)
-			sprite.clip.set(GRID, GRID)
-			cx = self.alphabet.index(clip[0])
-			cy = self.alphabet.index(clip[1])
-			sprite.clip.use(cy, cx)
-
-			x, y = pos[0]*GRID, pos[1]*GRID
-			x += self.x*GRID; y += self.y*GRID
-			sprite.goto = x, y
-			return sprite
-
-		x, y = pos[0], pos[1]
-		tile = make_tile(pos, clip)
-		self.tiles[x][y].sprite = tile
-		self.tiles[x][y].data = clip
-
-	def empty_tile(self, pos=(), clip=()):
-	#I exist entirely for ERoom's sake.
-		return None
-
-	def draw(self):
-		for x in self.tiles:
-			for y in x:
-				if y.sprite.texture != None:
-					y.sprite.draw()
-
-
-#	LOADING DATA
-
-	def _load_room(self, room_dir):
-	#Loads and formats the Room for usage.
-
-		def get_data(room_dir):
-		#Grab Room data from text file.
-			self.name = room_dir
-			room_dir = "outside/levels/%s.txt" % room_dir
-			
-			try: #loading the file...
-				f = open(room_dir)
-				room = f.read()
-				f.close()
-			except: #If that fails, use a generic template.
-				room = "_template"
-
-			return room
-
-		def grab_texture(data):
-		#Load the texture from the first data data line.
-			#Grab and remove the texture line.
-			self.texture_name = data.split("\n")[0]
-			tex_dir = "img/tilemaps/%s.png" \
-			% self.texture_name
-			self.texture = MyTexture(tex_dir)
-
-			lvl = ""
-			for line in data.split("\n")[1:]:
-				lvl += str(line) + "\n"
-
-			return lvl[:-1]
-
-		def format_data(data):
-		#The data is now in an [x][y] format.
-			rows = data.split("\n")
-			format = []
-			i = 0
-			while i < len(rows[0])-1:
-				format.append([c[i]+c[i+1] for c in rows])
-				i += 2
-			return format
-
-		def room_off_data(data):
-		#The data should be room-sized.
-			def room_w():
-				room = ROOM_WIDTH/GRID
-				w = room
-				while w < len(data)-1:
-					w += room
-				return w
-			def room_h(x):
-				room = ROOM_HEIGHT/GRID
-				h = room
-				while h < len(data[0])-1:
-					h += room
-				return h
-			#
-			data_w = lambda: len(data)
-			data_h = lambda x: len(data[x])
-
-			#Append pre-existing columns.
-			x = 0
-			while x < room_w():
-
-				#Add new column if needed.
-				if x >= data_w():
-					data.append([])
-
-				y = data_h(x)
-				while y < room_h(x):
-					data[x].append("__")
-					y += 1
-				y = 0
-				x += 1
-
-			return data
-
-		data = get_data(room_dir)
-		data = grab_texture(data)
-		data = format_data(data)
-		data = room_off_data(data)
-		return data
-
-#	TILE CREATION
-
-	def _initialize_tiles(self, data):
-	#Make spaces for the tiles to reside in.
-		tiles = []
-		x = 0
-		while x < len(data):
-			tiles.append([])
-
-			y = 0
-			while y < len(data[x]):
-				tiles[x].append(self.Tile())
-				tiles[x][y].sprite.goto = x*GRID, y*GRID
-				tiles[x][y].data = data[x][y]
-				y += 1
-
-			y = 0
-			x += 1
-
-		# return tiles
-		return [tile[:] for tile in tiles]
-
-
-#	TILE DRAWING
-
-	def _make_all_tiles(self, data):
-	#Make ALL of the tiles in the data.
-		for ix, x in enumerate(data):
-			for iy, y in enumerate(x):
-				y = "aa"
-				self.change_tile((ix, iy), y)
-		return self.tiles
-
-
-	def load_around(self, x1, y1, x2, y2):
-	#Load only the tiles within a certain AREA.
-
-		def keep_in_bounds(x=0, y=0):
-			if self.w < x: x = self.w
-			if self.h < y: y = self.h
-			if x < 0: x = 0
-			if y < 0: y = 0
-			return x, y
-
-		x1 -= self.x; x2 -= self.x
-		y1 -= self.y; y2 -= self.y
-		x1, y1 = keep_in_bounds(x1, y1)
-		x2, y2 = keep_in_bounds(x2, y2)
-
-		for x in range(self.w):
-			for y in range(self.h):
-
-				#Make a tile within the area.
-				if  x1 <= x <= x2\
-				and y1 <= y <= y2:
-					if self.tiles[x][y].sprite.texture\
-					 == None\
-					and self.tiles[x][y].data != "__":
-
-						self.change_tile((x, y),\
-						 self.tiles[x][y].data)
-
-				#Remove any tiles outside of the area.
-				if x < x1 or x2 < x\
-				or y < y1 or y2 < y:
-
-					self.tiles[x][y].sprite.texture = None
-
-# DEBUGGING
-
-	def data_ascii(self, data=None):
-	#Return the data in an ASCII-kinda style.
-		if data == None: data = self.data
-		text = ""
-		text += self.texture_name+"\n"
-		for iy, y in enumerate(data[0]):
-			for ix, x in enumerate(data):
-				text += str(data[ix][iy])
-			text += "\n"
-		text = text[:-1]
-		return text
-
-	@property
-	def filled_data(self):
-	#How many tiles are solid, and not empty.
-		amt = 0
-		for x in self.data:
-			for y in x:
-				if y != "__":
-					amt += 1
-		return amt
-
-	@property
-	def tiles_loaded(self):
-	#Return all the loaded tiles.
-		loaded = []
-		for x in self.tiles:
-			for y in x:
-				if y != None:
-					loaded.append(y)
-		return loaded
-
-	def say_tiles(self):
-	#Say how many tiles are loaded out of the room's
-	#potential total.
-		total = self.w * self.h
-		loaded = len(self.tiles_loaded)
-
-		string = "%s loaded (%s/%s) tiles."\
-		% (self.name, loaded, total)
-		print string
-
-	def say_textures(self):
-	#Say the amount of individual textures being used
-	#by the tiles.
-		amt = 0
-		old = None
-		for x in self.tiles:
-			for y in x:
-				if y.texture != old:
-					amt += 1
-				old = y.texture
-
-
-
-#
-
-class collision:
-#Alters tile.collision data.
-	def __init__ (self, Room): self._ = Room
-
-	# TILE COLLISION
-	#For reading a %name%_collision.txt to interpret
-	#what tiles have what kind of collision.
-
-	def filler(self):
-		tileset = self.read_collisions()
-		self.apply_collision_settings(tileset)
-
-	def read_collisions(self):
-	#READ the data from a file.
-		collision_dir = "img/tilemaps/%s_collision.txt"\
-		 % self._.texture_name
+		#load FILE DATA.
+		directory = "assets/levels/unique/"
+		location = directory+key+".txt"
 		try:
-			f = open(collision_dir,"r+")
-			_raw = f.read()
+			f = open(location,"r+")
+			file_data = f.read()
 		except:
-			#Make and save as the DEFAULT.
-			f = open(collision_dir,"w")
-			w = self._.texture.width/GRID
-			h = self._.texture.height/GRID
-			txt = ""
-			for x in range(w):
-				if txt != "": txt = txt+"\n"
-				for y in range(h):
-					txt = txt+"aa"
-			f.write(txt)
-			_raw = txt
+			#Create DATA to use.
+			file_data = ""
+			for x in range(self.tiles_w):
+				column = "____"*self.tiles_h
+				file_data = file_data + column + "\n"
+			file_data = file_data[:-1]
 
-		raw = _raw
+
+			f = open(location,"w")
+			f.write(file_data)
 		f.close()
 
-		#CONVERT into usable collision data.
-		tileset = []
-		raw = raw.split("\n")
-		for line in raw:
-			tileset.append([])
-			c = 0
-			while c < len(line):
-				tileset[-1].append(line[c:c+2])
-				c += 2
+		#format FILE DATA for use as a GRID.
+		formatted_data = [[]]
 
-		return tileset
+		s = 0
+		while s < len(file_data):
+			if file_data[s] == "\n":
+				s += 1
+				formatted_data.append([])
+			tile = file_data[s:s+4]
+			formatted_data[-1].append(tile)
+			s += 4
+
+		#apply to all TILES.
+		for x, _x in enumerate(tiles):
+			for y, _y in enumerate(tiles[x]):
+				tiles[x][y].data = formatted_data[x][y]
+
+		return tiles
 
 
-	def apply_collision_settings(self, tileset):
+	#
 
-		#USE tileset data to make room DATA.
+	def init_tiles(self, room_x=0, room_y=0): #(init)
+	#Create EMPTY SLOTS for the tiles...
+
+		#Consider the ROOM OFFSET.
+		tiles = []
+		w, h = RENDER_WIDTH/GRID, RENDER_HEIGHT/GRID
+		room_x *= RENDER_WIDTH/GRID
+		room_y *= RENDER_HEIGHT/GRID
+
+		for x in range(w):
+			tiles.append([])
+			for y in range(h):
+				tile = self.Tile()
+				tile.x, tile.y = room_x+x, room_y+y
+				tiles[-1].append(tile)
+		return tiles
+
+
+
+
+	# GRAPHICS
+	#Create a VERTEX ARRAY carrying all of the
+	#TILES in a single drawable. 
+
+	def init_vertex_array(self): #(init)
+		shape = sf.PrimitiveType.QUADS
+		vertex_array = sf.VertexArray(shape)
+
+		for column in self.tiles:
+			for tile in column:
+				
+				tile.init_vertices()
+				for point in tile.vertices:
+					vertex_array.append(point)
+		return vertex_array
+
+	def draw(self):
+		window.draw(self.vertex_array, self.render_states)
+
+
+	#POSITION
+
+	@property
+	def tiles_h(self): return len(self.tiles[0])
+	@property
+	def tiles_w(self): return len(self.tiles)
+
+
+
+	# TILE
+
+	class Tile(object):
+
+		def __init__(self):
+			self.data = "0000" #clip in xxyy format
+			self._position_init()
+			
+			self.vertices = []
+
+
+		# GRAPHIC
+		#Coordinates saved for generation by ROOM.
+
+		def init_vertices(self): #Room: init_vertex_array
+			#points
+			point1 = sf.Vertex()
+			point2 = sf.Vertex()
+			point3 = sf.Vertex()
+			point4 = sf.Vertex()
+			points = [point1,point2,point3,point4]
+
+			#position
+			x1, y1 = self.x*GRID, self.y*GRID
+			x2, y2 = (self.x+1)*GRID, (self.y+1)*GRID
+			point1.position = x1,y1
+			point2.position = x2,y1
+			point3.position = x2,y2
+			point4.position = x1,y2
+
+			#clip
+			if not self.is_empty():
+				clip_x = int(self.data[0:2])
+				clip_y = int(self.data[2:4])
+
+				x1 = (clip_x+0)*GRID
+				y1 = (clip_y+0)*GRID
+				x2 = (clip_x+1)*GRID
+				y2 = (clip_y+1)*GRID
+
+				point1.tex_coords = x1,y1
+				point2.tex_coords = x2,y1
+				point3.tex_coords = x2,y2
+				point4.tex_coords = x1,y2
+
+			else:
+				for point in points:
+					point.color = sf.Color(0,0,0,0)
+
+			for point in points:
+				self.vertices.append(point)
+
+		# POSITION
+		# Saved as an absolute value.
+		# Returned as a grid value.
+
+		def _position_init(self):
+			self._x, self._y = 0, 0
+
+		@property
+		def x(self): return self._x/GRID
+		@x.setter
+		def x(self, x): self._x = x*GRID
 		#
-		tiles_data = []
-		for x in self._.tiles:
-			tiles_data.append([])
-			for y in x:
-				tiles_data[-1].append(y.data)
-		#
+		@property
+		def y(self): return self._y/GRID
+		@y.setter
+		def y(self, y): self._y = y*GRID
 
-		for ix, x in enumerate(tiles_data):
-			for iy, y in enumerate(x):
-				#Using the data character, get the
-				#position on the collision tileset.
-				if y == "__":
-					self._.tiles[ix][iy].collision = "__"
-				else:
-					c1, c2 = y
-					cx = self._.alphabet.index(c1)
-					cy = self._.alphabet.index(c2)
-					tileset_data = tileset[cx][cy]
-					self._.tiles[ix][iy].collision\
-					= (tileset_data)
+		#STATES
 
-		#APPLY slope collisions to tile SPRITES.
-		for x in self._.tiles:
-			for y in x:
-				tile = y
-				sprite = tile.sprite
-
-				anchor = None
-
-				#ONE-TILE SLOPES
-				#rd
-				if tile.collision == "ba":
-					b = (sprite.x1+GRID, sprite.y1)
-					a = (sprite.x1, sprite.y1+GRID)
-					anchor = "rd"
-
-				#ld
-				if tile.collision == "ca":
-					a = (sprite.x1, sprite.y1)
-					b = (sprite.x1+GRID, sprite.y1+GRID)
-					anchor = "ld"
-
-				#ru
-				if tile.collision == "bb":
-					a = (sprite.x1+GRID, sprite.y1+GRID)
-					b = (sprite.x1, sprite.y1)
-					anchor = "ru"
-
-				#lu
-				if tile.collision == "cb":
-					a = (sprite.x1, sprite.y1+GRID)
-					b = (sprite.x1+GRID, sprite.y1)
-					anchor = "lu"
-
-				#TWO-TILE SLOPES
-				#horizontal
-				if tile.collision == "da":
-					a = (sprite.x1+GRID, sprite.y1+(GRID/2))
-					b = (sprite.x1, sprite.y1+GRID)
-					anchor = "rd"
-				if tile.collision == "ea":
-					a = (sprite.x1+GRID, sprite.y1)
-					b = (sprite.x1, sprite.y1+(GRID/2))
-					anchor = "rd"
-
-				if tile.collision == "fa":
-					a = (sprite.x1+GRID, sprite.y1)
-					b = (sprite.x1, sprite.y1+(GRID/2))
-					anchor = "ld"
-				if tile.collision == "ga":
-					a = (sprite.x1+GRID, sprite.y1+(GRID/2))
-					b = (sprite.x1, sprite.y1+GRID)
-					anchor = "ld"
-
-				if tile.collision == "db":
-					b = (sprite.x1, sprite.y1)
-					a = (sprite.x1+GRID, sprite.y1+(GRID/2))
-					anchor = "ru"
-				if tile.collision == "eb":
-					b = (sprite.x1, sprite.y1+(GRID/2))
-					a = (sprite.x1+GRID, sprite.y1+GRID)
-					anchor = "ru"
-
-				if tile.collision == "gb":
-					a = (sprite.x1+GRID, sprite.y1)
-					b = (sprite.x1, sprite.y1+(GRID/2))
-					anchor = "lu"
-				if tile.collision == "fb":
-					a = (sprite.x1+GRID, sprite.y1+(GRID/2))
-					b = (sprite.x1, sprite.y1+GRID)
-					anchor = "lu"
-
-				#vertical
-				x1, x2 = sprite.x1, sprite.x1+GRID
-				y1, y2 = sprite.y1, sprite.y1+GRID
-				xc = sprite.x1+(GRID/2)
-				yc = sprite.y1+(GRID/2)
-
-				if tile.collision == "ec":
-					a, b = (x2, y1),(xc, y2)
-					anchor = "rd"
-				if tile.collision == "ed":
-					a, b = (xc, y1),(x1, y2)
-					anchor = "rd"
-
-				if tile.collision == "ee":
-					a, b = (x1, y1),(xc,y2)
-					anchor = "ru"
-				if tile.collision == "ef":
-					a,b = (xc,y1),(x2,y2)
-					anchor = "ru"
-
-				if tile.collision == "fc":
-					a, b = (x1,y1),(xc,y2)
-					anchor = "ld"
-				if tile.collision == "fd":
-					a,b = (xc,y1),(x2,y2)
-					anchor = "ld"
-
-				if tile.collision == "fe":
-					a,b = (x2,y1),(xc,y2)
-					anchor = "lu"
-				if tile.collision == "ff":
-					a,b = (xc, y1),(x1, y2)
-					anchor = "lu"
-				#
-
-				if anchor:
-					sprite.slope_collision.a = a
-					sprite.slope_collision.b = b
-					sprite.slope_collision.anchor = anchor
+		def is_empty(self):
+			return bool(self.data == "____")

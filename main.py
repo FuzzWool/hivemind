@@ -1,16 +1,15 @@
 #Run WorldMap inside the main app.
-from modules.pysfml_game import sf
-from modules.level_editor import *
-from modules.pysfml_game import quit
-from modules.pysfml_game import window
-from modules.pysfml_game import key
-from modules.pysfml_game import MyCamera
+from code.pysfml_game import sf
+from code.pysfml_game import quit
+from code.pysfml_game import window
+from code.pysfml_game import key
+from code.pysfml_game import MyCamera
 
 Camera = MyCamera()
 Camera.zoom = 2
 Camera.x, Camera.y = 0, 0
 
-from modules.worldmap import WorldMap
+from code.game import WorldMap
 worldmap = WorldMap()
 #########################################################
 
@@ -19,10 +18,7 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		worldmap.say_Rooms()
-
-	worldmap.load_around\
-	(Camera.room_points, Camera.tile_points)
+		pass
 
 	#Video
 	window.view = Camera

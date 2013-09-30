@@ -23,13 +23,13 @@ GOAL: Clean up ROOM and WORLDMAP code.
 ROOM and WORLDMAP has become unruly.
 
 
-+ Loads tiles based on .txt files.
-	* In an xxyy numerical format. (goes up to 9999)
+! WIP - Ported ROOM and WORLDMAP to the main game.
+	~ Quick and crude, doesn't work with:
+		! Player collisions
+		! Level Editor
 
-Next...
 
-! Try adding it to the main game again.
-w/ test1, test3 and level_editor.
+-
 
 ! Make collision independant of a sprite.
 Instead, collisions can be assigned to a rect.

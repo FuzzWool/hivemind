@@ -7,13 +7,8 @@ from code.pysfml_game import GRID
 class Entity(object):
 #Stuff the Player, NPCS and enemies all have in common.
 
-# Is loaded from a CHARACTER FILE.
-# Handles COLLISIONS against the WORLD.
-# WIP - Contains VALUES for MOVEMENT.
-
 	name = None
 	folder_dir = None
-
 
 	#	SPRITE LOADING
 	#Initializes graphics and collisions.
@@ -21,7 +16,7 @@ class Entity(object):
 	def __init__ (self, name="nobody"):
 		#Location
 		self.name = name
-		char_dir = "img/characters/"
+		char_dir = "assets/characters/"
 		self.folder_dir = char_dir + self.name + "/"
 		self.make_sprite()
 		self.make_cbox()
@@ -97,21 +92,8 @@ class Entity(object):
 # Performs pushback and state handling.
 
 	def collide_with_WorldMap(self, WorldMap):
-	#Checks every room inside of the WorldMap.
-
+		
 		self.reset_states()
-		for x in WorldMap.Rooms:
-			for y in x:
-				if y != None:
-					self.collide_with_Room(y, True)
-
-
-	def collide_with_Room(self, Room,
-						  called_directly=False):
-	#Handles pushback and states in response to platforms.
-	#State handling performed here.
-		if not called_directly: self.reset_states()
-
 		collision = Room.collision
 
 		#Get the RANGE of checking.
