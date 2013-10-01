@@ -24,18 +24,13 @@ ROOM and WORLDMAP has become unruly.
 
 
 ! WIP - Ported ROOM and WORLDMAP to the main game.
-	~ Quick and crude, doesn't work with:
-		
-		* Level Editor
 
-			* Tested MULTIPLE rooms.
-				~ Fixed crashes with boundaries.
+	! Support for COLLISIONS.
+		load and bind collision data.
 
-			* Load and Save TEXTURES.
-				* Loads from _texture.txt
-				* Saves to _texture.txt
-
-		! Player collisions
+		COLLISIONS are LOADED (and have a default otherwise)
+		* Static loads/creates shared collision data.
+		* Rooms position shared data to match unique layout.
 
 
 ! Clean up ROOM and WORLDMAP.

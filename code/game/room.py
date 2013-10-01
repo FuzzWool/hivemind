@@ -6,6 +6,7 @@ from code.pysfml_game import window
 
 
 # STATIC - Load ALL of the shared assets in advance.
+_filenames = []
 textures = {}
 collisions = {}
 
@@ -17,9 +18,28 @@ os.chdir(directory)
 for filename in glob.glob("*.png"):
 	texture = MyTexture(filename)
 	textures[filename] = texture
+	_filenames.append(filename[:-4])
 
-for filename in glob.glob("*.txt"):
-	collision = open(filename).read()
+for filename in _filenames:
+	
+	file_dir = filename+"_collision.txt"
+	try:
+		f = open(file_dir)
+		collision = f.read()
+	except:
+		#Create default data.
+		w, h = RENDER_WIDTH/GRID, RENDER_HEIGHT/GRID
+		collision = ""
+		for x in range(w):
+			if collision != "": collision = collision+"\n"
+			for y in range(h):
+				collision = collision+"0000"
+
+		#Save it.
+		f = open(file_dir, "w+")
+		f.write(collision)
+
+	f.close()
 	collisions[filename] = collision
 
 os.chdir("../../../")
@@ -38,13 +58,13 @@ class Room(object):
 		#Grab the Room's POSITION.
 		#Grab the TEXTURE for all the sprites.
 		
-
 		#LOGIC
 		self.x, self.y = x, y
 		self.tiles = self.init_tiles(self.x, self.y)
 
 		#assets
 		if not texture: texture = self.load_room_texture()
+		self.texture_name = texture
 		self.tiles = self.load_tile_data(self.tiles)
 		self.tiles = self.load_tile_collisions(self.tiles)
 
@@ -72,7 +92,6 @@ class Room(object):
 				tile.x, tile.y = room_x+x, room_y+y
 				tiles[-1].append(tile)
 		return tiles
-
 
 
 	#Load ASSETS
@@ -107,8 +126,8 @@ class Room(object):
 	#Load the TILE DATA from the UNIQUE ROOM FILE.
 		
 		#load FILE DATA.
-		directory = "assets/levels/unique/"
 		key = self.key()
+		directory = "assets/levels/unique/"
 		location = directory+key+".txt"
 		try:
 			f = open(location,"r+")
@@ -150,12 +169,34 @@ class Room(object):
 	def load_tile_collisions(self, tiles): #init
 	#Load the COLLISION DATA for each tile.
 
-		# #load the FILE DATA.
-		# key = self.texture_name+"_collision.txt"
-		# print collisions[key]
+		#Grab SHARED COLLISION data for the tileset
+		#and merge it with UNIQUE POSITIONING.
 
-		# #format the FILE DATA.
+		file_data = collisions[self.texture_name]
 
+		#format the FILE DATA.
+		formatted_data = [[]]
+		s = 0
+		while s < len(file_data):
+			if file_data[s] == "\n":
+				s+=1
+				formatted_data.append([])
+			collision = file_data[s:s+4]
+			formatted_data[-1].append(collision)
+			s += 4
+
+		#Apply the DATA.
+		for x, _x in enumerate(tiles):
+			for y, _y in enumerate(tiles[x]):
+				
+				#Apply collisions based on tile data.
+				key = tiles[x][y].data
+				if key != "____":
+					kx, ky = int(key[0:2]), int(key[2:4])
+					collision = formatted_data[kx][ky]
+				else:
+					collision = "____"
+				tiles[x][y].collision = collision
 
 		return tiles
 
@@ -268,10 +309,12 @@ class Room(object):
 	class Tile(object):
 
 		def __init__(self):
-			self.data = "0000"
-			self._position_init()
+			self.data = "____"
+			self.collision = "____"
 			
+			self._position_init()
 			self.vertices = []
+			
 
 
 		# GRAPHIC

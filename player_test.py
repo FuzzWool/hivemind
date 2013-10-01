@@ -16,7 +16,7 @@ from code.game import Player
 Nut = Player("nut")
 
 from code.game import WorldMap
-worldmap = WorldMap()
+worldmap = WorldMap(1,1)
 #########################################################
 
 running = True
