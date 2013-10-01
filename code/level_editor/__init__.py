@@ -20,7 +20,7 @@ class LevelEditor:
 	cursor = mo.MySprite(cursor_tex)
 
 	def __init__(self, Camera):
-		self.WorldMap = WorldMap()
+		self.WorldMap = WorldMap(2,2)
 		self.ToolBox = ToolBox(self.cursor_tex)
 
 	def draw(self, mouse, camera):
@@ -53,10 +53,11 @@ class LevelEditor:
 
 		else:
 			#Move Camera
-			if key.A.held(): Camera.x -= mo.GRID
-			if key.D.held(): Camera.x += mo.GRID
-			if key.W.held(): Camera.y -= mo.GRID
-			if key.S.held(): Camera.y += mo.GRID
+			amt = mo.GRID
+			if key.A.held(): Camera.x -= amt
+			if key.D.held(): Camera.x += amt
+			if key.W.held(): Camera.y -= amt
+			if key.S.held(): Camera.y += amt
 
 	def handle_controls(self, key, mouse, camera):
 	#Forwards a level for editing to the ToolBox.
@@ -66,20 +67,15 @@ class LevelEditor:
 		self.ToolBox.ui_controls(mouse)
 
 		#Event conditions
-		level_selected = None
+		x, y = mouse.room_position(camera)
 
-		mouse_x, mouse_y = mouse.position(camera)
-		for x in self.WorldMap.rooms:
-			for Room in x:
-				x1 = Room.tiles_x*GRID
-				y1 = Room.tiles_y*GRID
-				x2 = x1 + Room.tiles_w*GRID
-				y2 = y1 + Room.tiles_h*GRID
+		if x >= 0 and y >= 0 \
+		and x < self.WorldMap.rooms_w\
+		and y < self.WorldMap.rooms_h:
+			level_selected = self.WorldMap.rooms[x][y]
+		else:
+			level_selected = None
 
-				if (x1 < mouse_x < x2)\
-				and (y1 < mouse_y < y2):
-					level_selected = Room
-					break
 
 		#Events
 

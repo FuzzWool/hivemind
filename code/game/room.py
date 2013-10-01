@@ -34,18 +34,21 @@ class Room(object):
 # !WIP: Can load COLLISION INFORMATION.
 
 
-	def __init__(self, x=0, y=0, texture="level"):
+	def __init__(self, x=0, y=0, texture=None):
 		#Grab the Room's POSITION.
 		#Grab the TEXTURE for all the sprites.
 		
 
-		#Logic
+		#LOGIC
 		self.x, self.y = x, y
 		self.tiles = self.init_tiles(self.x, self.y)
+
+		#assets
+		if not texture: texture = self.load_room_texture()
 		self.tiles = self.load_tile_data(self.tiles)
 		self.tiles = self.load_tile_collisions(self.tiles)
 
-		#Graphics
+		#GRAPHIC
 		self.change_texture(texture, init=True)
 		self.render_graphics()
 
@@ -71,17 +74,41 @@ class Room(object):
 		return tiles
 
 
-	def load_tile_data(self, tiles): #(init)
-	#Load the TILE DATA from the UNIQUE ROOM FILE.
-		
-		#find KEY.
+
+	#Load ASSETS
+
+	def key(self):
+	#For locating the ROOM in UNIQUE ASSETS.
 		x, y = str(self.x), str(self.y)
 		if len(x) == 1: x = "0"+x
 		if len(y) == 1: y = "0"+y
-		key = x+y
+		return x+y
 
+
+	def load_room_texture(self): #init
+		key = self.key()
+		directory = "assets/levels/unique/"
+		file_dir = directory+key+"_texture.txt"
+
+		#Open FILE.
+		try:
+			open_file = open(file_dir, "r")
+		except:
+			open_file = open(file_dir, "w+")
+			open_file.write("level1")
+
+		read_data = open_file.read()
+		open_file.close()
+
+		return read_data
+
+
+	def load_tile_data(self, tiles): #(init)
+	#Load the TILE DATA from the UNIQUE ROOM FILE.
+		
 		#load FILE DATA.
 		directory = "assets/levels/unique/"
+		key = self.key()
 		location = directory+key+".txt"
 		try:
 			f = open(location,"r+")
@@ -98,6 +125,7 @@ class Room(object):
 			f = open(location,"w")
 			f.write(file_data)
 		f.close()
+
 
 		#format FILE DATA for use as a GRID.
 		formatted_data = [[]]
@@ -133,6 +161,7 @@ class Room(object):
 
 
 
+
 	# GRAPHICS
 	#Create a VERTEX ARRAY carrying all of the
 	#TILES in a single drawable. 
@@ -156,9 +185,9 @@ class Room(object):
 	#POSITION
 
 	@property
-	def tiles_x(self): return self.x
+	def tiles_x(self): return self.x*self.tiles_w
 	@property
-	def tiles_y(self): return self.y
+	def tiles_y(self): return self.y*self.tiles_h
 	@property
 	def tiles_h(self): return len(self.tiles[0])
 	@property
@@ -198,8 +227,20 @@ class Room(object):
 
 	#level_editor
 	def save(self):
-	#Save the UNIQUE LEVEL DATA back to the file.
-		
+		self.save_room_texture()
+		self.save_tile_data()
+		self.save_collision_data()
+	#
+	def save_room_texture(self): #save
+		key = self.key()
+		directory = "assets/levels/unique/"
+		file_dir = directory+key+"_texture.txt"
+		f = open(file_dir, "w+")
+		f.write(self.texture_name)
+		f.close()
+	#
+	def save_tile_data(self): #save
+
 		#grab data
 		save_data = ""
 		for column in self.tiles:
@@ -209,17 +250,16 @@ class Room(object):
 				save_data = save_data+tile.data
 
 		#save data to file
-		x = str(self.x)
-		y = str(self.y)
-		if len(x) == 1: x = "0"+x
-		if len(y) == 1: y = "0"+y
-		key = x+y
+		key = self.key()
 
-		directory = "assets/levels/unique/%s.txt"\
-		% key
+		directory = "assets/levels/unique/%s.txt" % key
 		open_file = open(directory, "w")
 		open_file.write(save_data)
 		open_file.close()
+	#
+	def save_collision_data(self): #save
+		pass
+
 
 
 
