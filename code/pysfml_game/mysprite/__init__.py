@@ -2,12 +2,12 @@ from collision import *
 #=======================
 
 from code.pysfml_game.window import sf, window
-from code.pysfml_game.geometry import Rectangle
+from code.pysfml_game.geometry import GameRectangle
 
 texture = sf.Texture.from_file
 MyTexture = sf.Texture.from_file
 
-class MySprite(sf.Sprite, Rectangle):
+class MySprite(sf.Sprite, GameRectangle):
 #Provides additional functionality for sf.Sprite.
 	def __init__ (self, arg):
 		sf.Sprite.__init__(self, arg)
@@ -24,50 +24,33 @@ class MySprite(sf.Sprite, Rectangle):
 		self.collision = collision(self)
 		self.slope_collision = slope_collision(self)
 
-	#Positioning is handled by goto instead of position.
-	#Position can't be overriden, but it needs to be for children.
+	def draw(self): window.draw(self)
+
+
+	#POSITIONING - linking inheritance + moving children
+
 	@property
-	def goto(self):
-		return self.position[0], self.position[1]
-				# - (self.origin[0] * self.scale(0)),\
-				# - (self.origin[1] * self.scale[1])
-	@goto.setter
-	def goto(self, args):
-		self.children_class.goto(args)
-		args = args[0] + self.origin[0],\
-			   args[1] + self.origin[1]
-		self.position = args
+	def x(self): return self.position[0]
+	@x.setter
+	def x(self, x):
+		self.position = x, self.y
+		for child in self.children: child.x += x
+
+	@property
+	def y(self): return self.position[1]
+	@y.setter
+	def y(self, y):
+		self.position = self.x, y
+		for child in self.children: child.y += y
+
+	@property
+	def w(self): return self.texture.size[0]
+	@property
+	def h(self): return self.texture.size[1]
+	
 	#
 
-	@property
-	def x(self): return self.goto[0]
-	@x.setter
-	def x(self, x): self.goto = x, self.y
 
-	@property
-	def y(self): return self.goto[1]
-	@y.setter
-	def y(self, y): self.goto = self.x, y
-
-	@property
-	def w(self): return self.global_bounds.width
-	@w.setter
-	def w(self, arg):
-		self.children_class.w(arg)
-		self.resize.w(arg, False)
-
-	@property
-	def h(self): return self.global_bounds.height
-	@h.setter
-	def h(self, arg):
-		self.children_class.h(arg)
-		self.resize.h(arg, False)
-
-	def move(self, x=0, y=0):
-		x, y = x + self.x, y + self.y
-		self.goto = x, y
-
-	def draw(self): window.draw(self)
 
 
 class resize: #PRIVATE
@@ -187,7 +170,7 @@ class children_class: #PRIVATE
 				s.h = p * s.h
 	#
 
-class box(Rectangle):
+class box(GameRectangle):
 #Handles the sprite's proportional positioning.
 	def __init__ (self, mysprite):
 		self._ = mysprite

@@ -40,8 +40,9 @@ ROOM and WORLDMAP has become unruly.
 				x Tile
 				x Room
 
-			! Clean-up old Rectangle class.
-				! Test MySprite.
+			* + GameRectangle has replaced Rectangle.
+				* Test MySprite.
+				* Fix Children following.
 
 
 			! Make the following classes independant,

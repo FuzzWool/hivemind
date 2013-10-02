@@ -65,7 +65,7 @@ class Entity(object):
 			x, y = 0, 0
 			w, h = 0, 0
 
-		self.sprite.move(x, y)
+		self.sprite.move((x, y))
 		self.sprite.clip(w, h)
 
 	cbox_tex = None
