@@ -4,48 +4,53 @@ from code.pysfml_game import GRID
 from code.pysfml_game import sf
 from code.pysfml_game import window
 
+from code.pysfml_game import GameRectangle
+
 
 # STATIC - Load ALL of the shared assets in advance.
-_filenames = []
-textures = {}
-collisions = {}
+class load:
+	_filenames = []
+	textures = {}
+	collisions = {}
 
-import glob
-import os
-directory = "assets/levels/shared"
-os.chdir(directory)
+	import glob
+	import os
+	directory = "assets/levels/shared"
+	os.chdir(directory)
 
-for filename in glob.glob("*.png"):
-	texture = MyTexture(filename)
-	textures[filename] = texture
-	_filenames.append(filename[:-4])
+	for filename in glob.glob("*.png"):
+		texture = MyTexture(filename)
+		textures[filename] = texture
+		_filenames.append(filename[:-4])
 
-for filename in _filenames:
-	
-	file_dir = filename+"_collision.txt"
-	try:
-		f = open(file_dir)
-		collision = f.read()
-	except:
-		#Create default data.
-		w, h = RENDER_WIDTH/GRID, RENDER_HEIGHT/GRID
-		collision = ""
-		for x in range(w):
-			if collision != "": collision = collision+"\n"
-			for y in range(h):
-				collision = collision+"0000"
+	for filename in _filenames:
+		
+		file_dir = filename+"_collision.txt"
+		try:
+			f = open(file_dir)
+			collision = f.read()
+		except:
+			#Create default data.
+			w, h = RENDER_WIDTH/GRID, RENDER_HEIGHT/GRID
+			collision = ""
+			for x in range(w):
+				if collision != "":
+					collision = collision+"\n"
+				for y in range(h):
+					collision = collision+"0000"
 
-		#Save it.
-		f = open(file_dir, "w+")
-		f.write(collision)
+			print collision
+			#Save it.
+			f = open(file_dir, "w+")
+			f.write(collision)
 
-	f.close()
-	collisions[filename] = collision
+		f.close()
+		collisions[filename] = collision
 
-os.chdir("../../../")
+	os.chdir("../../../")
 #
 
-class Room(object):
+class Room(GameRectangle):
 #Handles TILE positioning and BATCHING.
 
 # * May be positioned in different areas of a WORLD MAP.
@@ -58,12 +63,15 @@ class Room(object):
 		#Grab the Room's POSITION.
 		#Grab the TEXTURE for all the sprites.
 		
-		#LOGIC
-		self.x, self.y = x, y
-		self.tiles = self.init_tiles(self.x, self.y)
+		#GameRectangle
+		self.x, self.y = x*RENDER_WIDTH, y*RENDER_HEIGHT
+		self.w, self.h = RENDER_WIDTH, RENDER_HEIGHT
 
-		#assets
-		if not texture: texture = self.load_room_texture()
+		#LOGIC (load assets)
+		self.tiles\
+		= self.init_tiles(self.room_x, self.room_y)
+		if texture == None:
+			texture = self.load_room_texture()
 		self.texture_name = texture
 		self.tiles = self.load_tile_data(self.tiles)
 		self.tiles = self.load_tile_collisions(self.tiles)
@@ -89,7 +97,8 @@ class Room(object):
 			tiles.append([])
 			for y in range(h):
 				tile = self.Tile()
-				tile.x, tile.y = room_x+x, room_y+y
+				tile.x = (room_x+x)*GRID
+				tile.y = (room_y+y)*GRID
 				tiles[-1].append(tile)
 		return tiles
 
@@ -98,7 +107,7 @@ class Room(object):
 
 	def key(self):
 	#For locating the ROOM in UNIQUE ASSETS.
-		x, y = str(self.x), str(self.y)
+		x, y = str(self.room_x), str(self.room_y)
 		if len(x) == 1: x = "0"+x
 		if len(y) == 1: y = "0"+y
 		return x+y
@@ -112,11 +121,12 @@ class Room(object):
 		#Open FILE.
 		try:
 			open_file = open(file_dir, "r")
+			read_data = open_file.read()
 		except:
 			open_file = open(file_dir, "w+")
 			open_file.write("level1")
+			read_data = "level1"
 
-		read_data = open_file.read()
 		open_file.close()
 
 		return read_data
@@ -172,7 +182,7 @@ class Room(object):
 		#Grab SHARED COLLISION data for the tileset
 		#and merge it with UNIQUE POSITIONING.
 
-		file_data = collisions[self.texture_name]
+		file_data = load.collisions[self.texture_name]
 
 		#format the FILE DATA.
 		formatted_data = [[]]
@@ -221,18 +231,6 @@ class Room(object):
 
 	def draw(self):
 		window.draw(self.vertex_array, self.render_states)
-
-
-	#POSITION
-
-	@property
-	def tiles_x(self): return self.x*self.tiles_w
-	@property
-	def tiles_y(self): return self.y*self.tiles_h
-	@property
-	def tiles_h(self): return len(self.tiles[0])
-	@property
-	def tiles_w(self): return len(self.tiles)
 
 
 
@@ -306,9 +304,14 @@ class Room(object):
 
 	# TILE
 
-	class Tile(object):
+	class Tile(GameRectangle):
 
 		def __init__(self):
+			self.x, self.y = 0, 0
+			self.w, self.h = GRID, GRID
+
+			#
+
 			self.data = "____"
 			self.collision = "____"
 			
@@ -331,8 +334,7 @@ class Room(object):
 			points = [point1,point2,point3,point4]
 
 			#position
-			x1, y1 = self.x*GRID, self.y*GRID
-			x2, y2 = (self.x+1)*GRID, (self.y+1)*GRID
+			x1, y1, x2, y2 = self.points
 			point1.position = x1,y1
 			point2.position = x2,y1
 			point3.position = x2,y2

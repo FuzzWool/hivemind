@@ -28,9 +28,28 @@ ROOM and WORLDMAP has become unruly.
 	! Support for COLLISIONS.
 		load and bind collision data.
 
-		COLLISIONS are LOADED (and have a default otherwise)
-		* Static loads/creates shared collision data.
-		* Rooms position shared data to match unique layout.
+		* COLLISIONS are LOADED (and have a default otherwise)
+			* Static loads/creates shared collision data.
+			* Rooms position shared data to match layout
+
+		! ENTITIES may collide with WORLDMAP.
+			
+			* Create a standard for POSITIONED OBJECTS.
+			x/y is absolute, other values are otherwise noted
+			apply to:
+				x Tile
+				x Room
+
+			! Clean-up old Rectangle class.
+				! Test MySprite.
+
+
+			! Make the following classes independant,
+			from MYSPRITE to POSITIONED OBJECT:
+				! next
+				! collision
+				! slope_collision
+
 
 
 ! Clean up ROOM and WORLDMAP.

@@ -12,7 +12,7 @@ Camera.zoom = 1
 Camera.x, Camera.y = 0,0
 
 
-worldmap = WorldMap(1,1)
+worldmap = WorldMap(2,2)
 print "WorldMap INITIALIZED."
 
 #########################################################
@@ -23,7 +23,9 @@ while running:
 	#LOGIC
 	if quit(): running = False
 	if key.RETURN.pressed():
-		pass
+		room = worldmap.rooms[0][0]
+		tile = room.tiles[2][1]
+
 
 	amt = 5
 	if key.LEFT.held(): Camera.x -= amt

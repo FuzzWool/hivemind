@@ -94,7 +94,7 @@ class Entity(object):
 	def collide_with_WorldMap(self, WorldMap):
 		
 		self.reset_states()
-		collision = Room.collision
+		# collision = Room.collision
 
 		#Get the RANGE of checking.
 		x1, y1, x2, y2 = self.cbox.points

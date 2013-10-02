@@ -1,3 +1,6 @@
+
+
+#####WIP#####
 #	VIRTUAL
 class Rectangle(object):
 #Used by MYSPRITE.
@@ -41,7 +44,8 @@ class Rectangle(object):
 		self.w, self.h = args
 
 	@property
-	def points(self): return self.goto[0], self.goto[1], self.goto[0] + self.w, self.goto[1] + self.h
+	def points(self):
+		return self.goto[0], self.goto[1], self.goto[0] + self.w, self.goto[1] + self.h
 	@points.setter
 	def points(self, args):
 		self.goto = args[0], args[1]
@@ -80,7 +84,7 @@ class Rectangle(object):
 	def y2(self): return self.y + self.h
 	@y2.setter
 	def y2(self, arg): self.y = arg - self.h
-
+#####WIP#####
 
 
 
@@ -89,12 +93,38 @@ class Rectangle(object):
 from window import GRID
 from window import ROOM_WIDTH, ROOM_HEIGHT
 
-class GameRectangle:
-	#Used by CAMERA.
-	
-	#Positioning based on TILES and ROOMS.
+#camera, room
+class GameRectangle: #virtual
+#Positioning based on TILES and ROOMS.
 
-	# TILE POSITIONS
+	# * RELIES ON x, y, w, h
+
+
+
+	# ABSOLUTE
+
+	@property
+	def x1(self): return self.x
+	@property
+	def y1(self): return self.y
+	@property
+	def x2(self): return self.x + self.w
+	@property
+	def y2(self): return self.y + self.h
+
+	@property
+	def position(self): return self.x, self.y
+	@property
+	def size(self): return self.w, self.h
+	@property
+	def points(self): s=self; return s.x1, s.y1, s.x2, s.y2
+	@property
+	def center(self): s=self; return s.x+(s.w/2),s.y+(s.h/2)
+
+
+
+
+	# TILE
 
 	@property
 	def tile_x(self): return int(self.x/GRID)
@@ -122,8 +152,28 @@ class GameRectangle:
 	def tile_y2(self): return self.tile_y+self.tile_h+1
 
 
+	@property
+	def tile_position(self):
+		pass
+	@property
+	def tile_size(self):
+		pass
+	@property
+	def tile_points(self):
+		x1, y1, x2, y2 = self.points
+		x1 = int(x1/GRID); y1 = int(y1/GRID)
+		x2 = int(x2/GRID); y2 = int(y2/GRID)
+		return x1, y1, x2, y2
+	@property
+	def tile_center(self):
+		x, y = self.center
+		x = int(x/GRID); y = int(y/GRID)
+		return x, y
 
-	# ROOM POSITIONS
+
+
+
+	# ROOM
 
 	@property
 	def room_x(self):
@@ -157,43 +207,20 @@ class GameRectangle:
 	def room_y2(self): return self.room_y+self.room_h+1
 
 
-
-
-	#
-
 	@property
-	def tile_center(self):
-		x, y = self.center
-		x = int(x/GRID); y = int(y/GRID)
-		return x, y
-
+	def room_position(self):return self.room_x,self.room_y
+	@property
+	def room_size(self):return self.room_w, self.room_h
 	@property
 	def room_center(self):
-		x, y = self.center
-		x = int(x/ROOM_WIDTH); y = int(y/ROOM_HEIGHT)
-		return x, y
-
-	#
-
-	@property
-	def points(self):
-		x1, y1 = self.x, self.y
-		x2, y2 = x1 + self.size[0], y1 + self.size[1]
-		return x1, y1, x2, y2
-
-	@property
-	def tile_points(self):
-		x1, y1, x2, y2 = self.points
-		x1 = int(x1/GRID); y1 = int(y1/GRID)
-		x2 = int(x2/GRID); y2 = int(y2/GRID)
-		return x1, y1, x2, y2
-
+		s = self
+		return s.room_x+(s.room_w/2),s.room_y+(s.room_h/2)
 	@property
 	def room_points(self):
-		x1, y1, x2, y2 = self.points
-		x1 = int(x1/ROOM_WIDTH); y1 = int(y1/ROOM_HEIGHT)
-		x2 = int(x2/ROOM_WIDTH); y2 = int(y2/ROOM_HEIGHT)
-		return x1, y1, x2, y2
+		s = self
+		return s.room_x1, s.room_y1, s.room_x2, s.room_y2
+
+
 
 
 #	PHYSICAL
