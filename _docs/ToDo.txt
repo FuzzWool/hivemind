@@ -34,15 +34,8 @@ ROOM and WORLDMAP has become unruly.
 
 		! ENTITIES may collide with WORLDMAP.
 			
-			* Create a standard for POSITIONED OBJECTS.
-			x/y is absolute, other values are otherwise noted
-			apply to:
-				x Tile
-				x Room
 
-			* + GameRectangle has replaced Rectangle.
-				* Test MySprite.
-				* Fix Children following.
+			* Fix LevelEditor crashes
 
 
 			! Make the following classes independant,
@@ -54,6 +47,7 @@ ROOM and WORLDMAP has become unruly.
 
 
 ! Clean up ROOM and WORLDMAP.
+! Create a new LEVEL EDITOR.
 
 -
 

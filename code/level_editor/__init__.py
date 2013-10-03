@@ -30,10 +30,10 @@ class LevelEditor:
 		#Move the cursor.
 		x, y = mouse.grid_position(camera)
 		x *= mo.GRID; y *= mo.GRID
-		self.cursor.goto = x, y
+		self.cursor.position = x, y
 
-		self.cursor.draw()
 		self.ToolBox.draw()
+		self.cursor.draw()
 
 	#
 

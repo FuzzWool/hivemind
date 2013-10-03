@@ -40,10 +40,10 @@ class ToolBox:
 
 		hovering_level = False
 		x, y = mouse.position(camera)
-		lx = Level.tiles_x*GRID
-		lw = lx + Level.tiles_w*GRID
-		ly = Level.tiles_y*GRID
-		lh = ly + Level.tiles_h*GRID
+		lx = Level.tile_x*GRID
+		lw = lx + Level.tile_w*GRID
+		ly = Level.tile_y*GRID
+		lh = ly + Level.tile_h*GRID
 		if (lx < x < lw)\
 		and (ly < y < lh):
 			hovering_level = True
@@ -64,7 +64,7 @@ class ToolBox:
 				else:
 					if mouse.left.held():
 						self.Tile.place(Level, grid_pos)
-					if mouse.right.held():
+					if key.Z.held():
 						self.Tile.remove(Level, grid_pos)
 					if mouse.left.pressed():
 						self.Tile.Selector.select\
@@ -100,11 +100,13 @@ class _ui:
 			
 			#Create the base sprite.
 			self.b_sprite = MySprite(None)
-			self.b_sprite.box.size = 50, SCREEN_HEIGHT
+			self.b_sprite.box.w = 50
+			self.b_sprite.box.h = SCREEN_HEIGHT
 
 			#Create the empty slots.
 			h = self.b_sprite.box.h / GRID
 			w = self.b_sprite.box.w / GRID
+
 
 			for x in range(w):
 				self.tools_sprites.append([])
@@ -126,6 +128,7 @@ class _ui:
 
 			self.tools_sprites[1][0].clip.use(2, 0)
 			self.tools[1][0] = "tile"
+			
 			self.tools_sprites[1][0].color \
 			= sf.Color(255,255,255,255)
 

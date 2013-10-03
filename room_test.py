@@ -8,11 +8,11 @@ from code.game import WorldMap
 
 
 Camera = MyCamera()
-Camera.zoom = 1
+Camera.zoom = 2
 Camera.x, Camera.y = 0,0
 
 
-worldmap = WorldMap(2,2)
+worldmap = WorldMap(4,4)
 print "WorldMap INITIALIZED."
 
 #########################################################

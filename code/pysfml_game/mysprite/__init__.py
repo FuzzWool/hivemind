@@ -11,7 +11,8 @@ class MySprite(sf.Sprite, GameRectangle):
 #Provides additional functionality for sf.Sprite.
 	def __init__ (self, arg):
 		sf.Sprite.__init__(self, arg)
-		
+		self._w, self._h = 0, 0
+
 		#General sub-classes.
 		self.resize = resize(self)
 		self.clip = clip(self)
@@ -44,10 +45,13 @@ class MySprite(sf.Sprite, GameRectangle):
 		for child in self.children: child.y += y
 
 	@property
-	def w(self): return self.texture.size[0]
+	def w(self):
+		if self.texture: return self.texture.size[0]
+		else: return self._w
 	@property
-	def h(self): return self.texture.size[1]
-	
+	def h(self):
+		if self.texture: return self.texture.size[1]
+		else: return self._h
 	#
 
 
@@ -176,6 +180,8 @@ class box(GameRectangle):
 		self._ = mysprite
 		self.rect = None
 
+		self.x, self.y, self.w, self.h = 0, 0, 0, 0
+
 	#Box me! Centers the sprite within the box.
 	def me(self):
 		self._.center = self.center
@@ -214,7 +220,7 @@ class box(GameRectangle):
 
 		if self.rect == None: make_rect()
 		if self.rect.size != self.size: make_rect()
-		if self.rect.position != self.goto: make_rect()
+		if self.rect.position != self.position: make_rect()
 		window.draw(self.rect)
 
 ###

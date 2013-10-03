@@ -15,7 +15,7 @@ class Tile:
 			if tile_data == None:
 				tile_data = self.Selector.selected_tile
 
-			x -= Level.tiles_x; y -= Level.tiles_y
+			x -= Level.tile_x; y -= Level.tile_y
 			Level.change_tile((x, y), tile_data)
 
 	def remove(self, Level, grid_pos):
