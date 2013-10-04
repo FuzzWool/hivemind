@@ -13,6 +13,9 @@ class MySprite(sf.Sprite, GameRectangle):
 		sf.Sprite.__init__(self, arg)
 		self._w, self._h = 0, 0
 
+		#States
+		self.clip_enabled = False
+
 		#General sub-classes.
 		self.resize = resize(self)
 		self.clip = clip(self)
@@ -24,6 +27,7 @@ class MySprite(sf.Sprite, GameRectangle):
 		self.overlap = overlap(self)
 		self.collision = collision(self)
 		self.slope_collision = slope_collision(self)
+
 
 	def draw(self): window.draw(self)
 
@@ -46,10 +50,12 @@ class MySprite(sf.Sprite, GameRectangle):
 
 	@property
 	def w(self):
+		if self.clip_enabled: return self.clip.w
 		if self.texture: return self.texture.size[0]
 		else: return self._w
 	@property
 	def h(self):
+		if self.clip_enabled: return self.clip.h
 		if self.texture: return self.texture.size[1]
 		else: return self._h
 	#
@@ -89,11 +95,14 @@ class clip:
 #Set grid size, chooses grid position. For spritesheets.
 	def __init__ (self, MySprite):
 		self._ = MySprite
+		
 		self.ox, self.oy, self.w, self.h = 0, 0, 0, 0
 		self.x, self.y = 0, 0
 
 		self.set(self._.w, self._.h)
 		self.use(0, 0)
+
+		self._.clip_enabled = True
 
 	def __call__ (self, *args): self.set(*args)
 	def set(self, w, h, x=0, y=0): #Absolute

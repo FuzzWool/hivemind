@@ -6,22 +6,29 @@ class collision:
 #Handles basic AABB collision checking.
 #Checks X and Y individually.
 
-	def __init__(self, MySprite):
-		self._ = MySprite
+	# Utility class.
+	# Needs to be passed an object with x, y, w, h
+
+
+	def __init__(self, Rect):
+		self._ = Rect
+		self.overlap = overlap(self._)
 		self.next = next(self._)
-		self.overlap = self._.overlap
+		self._.is_slope = False
+
+
 
 	#PUSHBACK
 	# Clip any movements back which will result in a
 	# collision.
 
-	def pushback(self, ThatSprite):
-		is_x = bool(self.overlap.x(ThatSprite) > 0)
-		is_y = bool(self.overlap.y(ThatSprite) > 0)
+	def pushback(self, ThatRect):
+		is_x =bool(self.overlap.x(ThatRect,slope=False)>0)
+		is_y =bool(self.overlap.y(ThatRect,slope=False)>0)
 
 		if is_x and is_y:
-			ox = self.x_pushback(ThatSprite)
-			oy = self.y_pushback(ThatSprite)
+			ox = self.x_pushback(ThatRect)
+			oy = self.y_pushback(ThatRect)
 
 			nx, ny = self.next.stored_move
 			if abs(ox)-abs(nx) < abs(oy)-abs(ny):
@@ -32,15 +39,15 @@ class collision:
 	#
 
 	#Works out the shortest pushback.
-	def x_pushback(self, ThatSprite):
+	def x_pushback(self, ThatRect):
 		a = self._
 		tx = self.next.x_move
 		p = []
 
 		#Slope points
-		x1, x2 = ThatSprite.x1, ThatSprite.x2
-		if ThatSprite.slope_collision.is_slope():
-			ts_sc = ThatSprite.slope_collision
+		x1, x2 = ThatRect.x1, ThatRect.x2
+		if ThatRect.is_slope:
+			ts_sc = ThatRect.slope_collision
 			x1, x2 = ts_sc.x1, ts_sc.x2
 
 		if x1 <= a.x1+tx <= x2: p.append(x2 - a.x1)
@@ -55,15 +62,15 @@ class collision:
 		if lowest != None:
 			return tx - lowest
 
-	def y_pushback(self, ThatSprite):
+	def y_pushback(self, ThatRect):
 		a = self._
 		ty = self.next.y_move
 		p = []
 		
 		#Slope points
-		y1, y2 = ThatSprite.y1, ThatSprite.y2
-		if ThatSprite.slope_collision.is_slope():
-			ts_sc = ThatSprite.slope_collision
+		y1, y2 = ThatRect.y1, ThatRect.y2
+		if ThatRect.is_slope:
+			ts_sc = ThatRect.slope_collision
 			y1, y2 = ts_sc.y1, ts_sc.y2
 
 		if y1 <= a.y1+ty <= y2: p.append(y2 - a.y1)
@@ -82,24 +89,24 @@ class collision:
 	#After collisions take place.
 	#For resetting jumps, etc.
 
-	def bottom_to_top(self, ThatSprite):
-		if self.overlap.x(ThatSprite) > 0:
-			if self._.y2 == ThatSprite.y1: return True
+	def bottom_to_top(self, ThatRect):
+		if self.overlap.x(ThatRect) > 0:
+			if self._.y2 == ThatRect.y1: return True
 		return False
 
-	def top_to_bottom(self, ThatSprite):
-		if self.overlap.x(ThatSprite) > 0:
-			if self._.y1 == ThatSprite.y2: return True
+	def top_to_bottom(self, ThatRect):
+		if self.overlap.x(ThatRect) > 0:
+			if self._.y1 == ThatRect.y2: return True
 		return False
 
-	def left_to_right(self, ThatSprite):
-		if self.overlap.y(ThatSprite) >= 0:
-			if self._.x1 == ThatSprite.x2: return True
+	def left_to_right(self, ThatRect):
+		if self.overlap.y(ThatRect) >= 0:
+			if self._.x1 == ThatRect.x2: return True
 		return False
 
-	def right_to_left(self, ThatSprite):
-		if self.overlap.y(ThatSprite) >= 0:
-			if self._.x2 == ThatSprite.x1: return True
+	def right_to_left(self, ThatRect):
+		if self.overlap.y(ThatRect) >= 0:
+			if self._.x2 == ThatRect.x1: return True
 		return False
 
 
@@ -427,25 +434,24 @@ class next:
 #Provides positioning information about the next movement.
 #Collisions are DEPENDANT on this knowledge to function.
 
-	def __init__(self, MySprite):
-		self.x_move, self.y_move = 0, 0
-		self._ = MySprite
-
-
 	#MOVE STORAGE
 	#Movement has to be processed here,
 	#for accurate collision detection.
 
-	x_move, y_move = 0, 0
+
+	def __init__(self, Rect):
+		self.x_move, self.y_move = 0, 0
+		self._ = Rect
+
 	
 	def store_move(self, x=None, y=None):
-	#Store movement for later.
 		if x == None: x = self.x_move
 		if y == None: y = self.y_move
 		self.x_move, self.y_move = x, y
 
 	def confirm_move(self):
-		self._.move(self.x_move, self.y_move)
+		self._.x += self.x_move
+		self._.y += self.y_move
 		self.y_move, self.x_move = 0, 0
 
 
@@ -454,6 +460,7 @@ class next:
 	@property
 	def stored_move(self):
 		return self.x_move, self.y_move
+
 
 	@property
 	def x1(self): return self._.x1 + self.x_move

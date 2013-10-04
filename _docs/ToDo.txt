@@ -33,16 +33,18 @@ ROOM and WORLDMAP has become unruly.
 			* Rooms position shared data to match layout
 
 		! ENTITIES may collide with WORLDMAP.
-			
-
-			* Fix LevelEditor crashes
 
 
-			! Make the following classes independant,
-			from MYSPRITE to POSITIONED OBJECT:
-				! next
-				! collision
+			! Make the following classes independant.
+				* next
+				* collision
 				! slope_collision
+
+				next + collision
+				* Test as a standalone class.
+				* Link to MySprite. (don't embed)
+					* Incorrect w/h used
+
 
 
 
