@@ -8,7 +8,7 @@ from code.game import WorldMap
 
 
 Camera = MyCamera()
-Camera.zoom = 2
+Camera.zoom = 1
 Camera.x, Camera.y = 0,0
 
 

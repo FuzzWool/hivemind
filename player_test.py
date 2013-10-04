@@ -30,9 +30,10 @@ while running:
 	if key.RETURN.pressed():
 		pass
 
-	# Nut.handle_controls(key)
-	# Nut.handle_physics()
-	# Nut.collide_with_WorldMap(worldmap)
+
+	Nut.handle_controls(key)
+	Nut.handle_physics()
+	Nut.collide_with_WorldMap(worldmap)
 
 	#Animation
 	Nut.play()

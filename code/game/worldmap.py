@@ -1,4 +1,5 @@
 from code.pysfml_game import GameRectangle
+from code.pysfml_game import GRID
 from code.game import Room
 
 class WorldMap:
@@ -81,7 +82,12 @@ class WorldMap:
 		print "%s Room(s) saved." % self.rooms_amt
 
 
-	# DEBUG
+	#POSITION
+
+	@property
+	def w(self): return self.tiles_w*GRID
+	@property
+	def h(self): return self.tiles_h*GRID
 
 	@property
 	def tiles_w(self): return len(self.tiles)

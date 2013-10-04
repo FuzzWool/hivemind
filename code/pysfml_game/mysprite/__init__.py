@@ -38,15 +38,17 @@ class MySprite(sf.Sprite, GameRectangle):
 	def x(self): return self.position[0]
 	@x.setter
 	def x(self, x):
+		for child in self.children:
+			child.x += (x - self.x)
 		self.position = x, self.y
-		for child in self.children: child.x += x
 
 	@property
 	def y(self): return self.position[1]
 	@y.setter
 	def y(self, y):
+		for child in self.children:
+			child.y += (y - self.y)
 		self.position = self.x, y
-		for child in self.children: child.y += y
 
 	@property
 	def w(self):

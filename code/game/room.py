@@ -6,6 +6,9 @@ from code.pysfml_game import window
 
 from code.pysfml_game import GameRectangle
 
+#tiles
+from code.pysfml_game import collision, slope_collision
+
 
 # STATIC - Load ALL of the shared assets in advance.
 class load:
@@ -206,7 +209,9 @@ class Room(GameRectangle):
 					collision = formatted_data[kx][ky]
 				else:
 					collision = "____"
-				tiles[x][y].collision = collision
+
+				tiles[x][y].apply_collision(collision)
+
 
 		return tiles
 
@@ -302,6 +307,13 @@ class Room(GameRectangle):
 
 
 
+
+	######
+
+
+
+
+
 	# TILE
 
 	class Tile(GameRectangle):
@@ -309,15 +321,112 @@ class Room(GameRectangle):
 		def __init__(self):
 			self.x, self.y = 0, 0
 			self.w, self.h = GRID, GRID
-
 			#
-
 			self.data = "____"
-			self.collision = "____"
-			
+			self.collision_data = "____"
+
+			self.collision = collision(self)
+			self.slope_collision = slope_collision(self)
+
 			self._position_init()
 			self.vertices = []
-			
+		
+
+		# COLLISION
+		#Stores generic collision information.
+
+		def apply_collision(self, data):
+		#Apply slope specific bindings if needed.
+			self.collision_data = data
+				
+			x1, x2 = self.x1, self.x2
+			y1, y2 = self.y1, self.y2
+			xc, yc = self.center
+
+			anchor = None
+
+			#ONE-TILE SLOPES
+			if data == "0100":
+				a,b = (x2, y1),(x1, y2)
+				anchor = "rd"
+			if data == "0200":
+				a,b = (x1, y1),(x2, y2)
+				anchor = "ld"
+			if data == "0101":
+				a = (x2, y2),(x1, y1)
+				anchor = "ru"
+			if data == "0201":
+				a = (x1, y2),(x2, y1)
+				anchor = "lu"
+
+			#TWO-TILE SLOPES
+			#horizontal
+			if data == "0300":
+				a = (x2, yc),(x1, y2)
+				anchor = "rd"
+			if data == "0400":
+				a = (x2, y1),(x1, yc)
+				anchor = "rd"
+
+			if data == "0500":
+				a = (x2, y1),(x1, yc)
+				anchor = "ld"
+			if data == "0600":
+				a = (x2, yc),(x1, y2)
+				anchor = "ld"
+
+			if data == "0301":
+				b = (x1, y1),(x2, yc)
+				anchor = "ru"
+			if data == "0401":
+				b = (x1, yc),(x2, y2)
+				anchor = "ru"
+
+			if data == "0501":
+				a = (x2, y1),(x1, yc)
+				anchor = "lu"
+			if data == "0601":
+				a,b = (x2, yc),(x1, y2)
+				anchor = "lu"
+
+			# #vertical
+			# if data == "ec":
+			# 	a, b = (x2, y1),(xc, y2)
+			# 	anchor = "rd"
+			# if data == "ed":
+			# 	a, b = (xc, y1),(x1, y2)
+			# 	anchor = "rd"
+
+			# if data == "ee":
+			# 	a, b = (x1, y1),(xc,y2)
+			# 	anchor = "ru"
+			# if data == "ef":
+			# 	a,b = (xc,y1),(x2,y2)
+			# 	anchor = "ru"
+
+			# if data == "fc":
+			# 	a, b = (x1,y1),(xc,y2)
+			# 	anchor = "ld"
+			# if data == "fd":
+			# 	a,b = (xc,y1),(x2,y2)
+			# 	anchor = "ld"
+
+			# if data == "fe":
+			# 	a,b = (x2,y1),(xc,y2)
+			# 	anchor = "lu"
+			# if data == "ff":
+			# 	a,b = (xc, y1),(x1, y2)
+			# 	anchor = "lu"
+			#
+
+			if anchor:
+				sprite.slope_collision.a = a
+				sprite.slope_collision.b = b
+				sprite.slope_collision.anchor = anchor
+
+
+
+
 
 
 		# GRAPHIC

@@ -103,19 +103,17 @@ class Entity(object):
 		y1 = int(round(y1/GRID))-coat
 		x2 = int(round(x2/GRID))+coat;
 		y2 = int(round(y2/GRID))+coat
-		x1 -= Room.x; x2 -= Room.x
-		y1 -= Room.y; y2 -= Room.y
 
 
 		#FIX the range
 		def fix_x(x):
 			if x < 0: x = 0
-			if x > Room.w: x = Room.w
+			if x > WorldMap.tiles_w: x = WorldMap.tiles_w
 			return x
 
 		def fix_y(y):
 			if y < 0: y = 0
-			if y > Room.h: y = Room.h
+			if y > WorldMap.tiles_h: y = WorldMap.tiles_h
 			return y
 
 		x1, x2 = fix_x(x1), fix_x(x2)
@@ -128,31 +126,23 @@ class Entity(object):
 		# From the range, select only the usable
 		# collisions.
 
-		###debug
-		#Any tile not in range is transparent.
-		for x in range(Room.w):
-			for y in range(Room.h):
-				sprite = Room.tiles[x][y].sprite
-				if sprite.texture != None:
-					sprite.color = sf.Color(255,255,255,100)
-
 
 		#Look for the closest x and y tiles in the range.
 		x_tile, y_tile = None, None
 		for x in range(x1, x2):
 			for y in range(y1, y2):
 
-				tile = Room.tiles[x][y]
-				if tile.collision != "__":
+				tile = WorldMap.tiles[x][y]
+				if tile.collision_data != "____":
 					if x_tile == None: x_tile = tile
 					if y_tile == None: y_tile = tile
 
-					new_x = tile.sprite.overlap.x(self.cbox, slope=False)
-					new_y = tile.sprite.overlap.y(self.cbox, slope=False)
-					x_x =  x_tile.sprite.overlap.x(self.cbox, slope=False)
-					x_y =  x_tile.sprite.overlap.y(self.cbox, slope=False)
-					y_x =  y_tile.sprite.overlap.x(self.cbox, slope=False)
-					y_y =  y_tile.sprite.overlap.y(self.cbox, slope=False)
+					new_x = tile.collision.overlap.x(self.cbox, slope=False)
+					new_y = tile.collision.overlap.y(self.cbox, slope=False)
+					x_x =  x_tile.collision.overlap.x(self.cbox, slope=False)
+					x_y =  x_tile.collision.overlap.y(self.cbox, slope=False)
+					y_x =  y_tile.collision.overlap.x(self.cbox, slope=False)
+					y_y =  y_tile.collision.overlap.y(self.cbox, slope=False)
 
 					if new_y >= x_y:
 						if new_y > x_y: x_tile = tile
@@ -167,80 +157,80 @@ class Entity(object):
 			elif x_tile.x == y_tile.x: x_tile = None
 		#
 
-		# EXTRA TILES
-		#2-tile slopes need extra checks for their
-		#connectors.
+		# # EXTRA TILES
+		# #2-tile slopes need extra checks for their
+		# #connectors.
 
-		extra_tile1 = None; extra_tile2 = None
-		extra_tile3 = None; extra_tile4 = None
-		if x_tile != None:
-			if x_tile.is_slope():
-				x, y = x_tile.x, x_tile.y
+		# extra_tile1 = None; extra_tile2 = None
+		# extra_tile3 = None; extra_tile4 = None
+		# if x_tile != None:
+		# 	if x_tile.collision.is_slope:
+		# 		x, y = x_tile.x, x_tile.y
 
-				if x+1 < Room.w:
-					extra_tile1 = Room.tiles[x+1][y]
-					if extra_tile1.is_slope() == False:
-						extra_tile1 = None
+		# 		if x+1 < Room.w:
+		# 			extra_tile1 = Room.tiles[x+1][y]
+		# 			if not extra_tile1.collision.is_slope:
+		# 				extra_tile1 = None
 
-				if x-1 >= 0:
-					extra_tile2 = Room.tiles[x-1][y]
-					if extra_tile2.is_slope() == False:
-						extra_tile2 = None
+		# 		if x-1 >= 0:
+		# 			extra_tile2 = Room.tiles[x-1][y]
+		# 			if not extra_tile2.collision.is_slope:
+		# 				extra_tile2 = None
 				
-				if y+1 < Room.h:
-					extra_tile3 = Room.tiles[x][y+1]
-					if extra_tile3.is_slope() == False:
-						extra_tile3 = None
+		# 		if y+1 < Room.h:
+		# 			extra_tile3 = Room.tiles[x][y+1]
+		# 			if not extra_tile3.collision.is_slope:
+		# 				extra_tile3 = None
 				
-				if y-1 >= 0:
-					extra_tile4 = Room.tiles[x][y-1]
-					if extra_tile4.is_slope() == False:
-						extra_tile4 = None
+		# 		if y-1 >= 0:
+		# 			extra_tile4 = Room.tiles[x][y-1]
+		# 			if not extra_tile4.collision.is_slope:
+		# 				extra_tile4 = None
 
 		collidable_tiles = \
-		[x_tile, y_tile,\
-		extra_tile1, extra_tile2, extra_tile3, extra_tile4]
+		[x_tile, y_tile]
+		# extra_tile1, extra_tile2, extra_tile3, extra_tile4]
 		collidable_tiles[:] = \
 		[tile for tile in collidable_tiles if tile != None]
 
 		##########
 
+
+
 		# PRE-COLLISION STATES
 
-		for tile in collidable_tiles:
+		# for tile in collidable_tiles:
 
-			#Slope Lock
-			if tile.collision not in ["__", "aa"]:
+		# 	#Slope Lock
+		# 	if tile.collision_data not in ["____", "0000"]:
 				
-				#Slope lock
-				t = tile.sprite
-				c = self.cbox
-				if c.slope_collision.bottom_to_top(t):
+		# 		#Slope lock
+		# 		c = self.cbox
+		# 		if c.slope_collision.bottom_to_top(tile):
 					
-					if t.slope_collision.anchor_y == "d":
+		# 			if tile.slope_collision.anchor_y == "d":
 
-						tx = c.collision.next.x_move
-						y = c.slope_collision.y_overlap_amt(t)
+		# 				tx = c.collision.next.x_move
+		# 				y = c.slope_collision.y_overlap_amt(t)
 
-						if t.slope_collision.anchor_x == "l":
-							if tx > 0:
-								c.collision.next.y_move \
-								= abs(y) + abs(tx)
-						#
-						if t.slope_collision.anchor_x == "r":
-							if tx < 0:
-								c.collision.next.y_move \
-								= abs(y) + abs(tx)
+		# 				if tile.slope_collision.anchor_x == "l":
+		# 					if tx > 0:
+		# 						c.collision.next.y_move \
+		# 						= abs(y) + abs(tx)
+		# 				#
+		# 				if tile.slope_collision.anchor_x == "r":
+		# 					if tx < 0:
+		# 						c.collision.next.y_move \
+		# 						= abs(y) + abs(tx)
 
 		# PUSHBACK
 		for tile in collidable_tiles:
 
-			s = tile.sprite
-			if tile.collision == "aa":
-				self.cbox.collision.pushback(s)
+			if tile.collision_data == "0000":
+				self.cbox.collision.pushback(tile)
 
-			elif tile.collision != "__":
-				self.cbox.slope_collision.pushback(s)
+			elif tile.collision_data != "____":
+				self.cbox.slope_collision.pushback(tile)
 
 		self.cbox.collision.next.confirm_move()
 
@@ -248,44 +238,39 @@ class Entity(object):
 		# POST-COLLISION STATES
 		for tile in collidable_tiles:
 
-			###DEBUG
-			tile.sprite.color = sf.Color(255,255,255)
-			###
-
-			s = tile.sprite
-
-			if tile.collision == "aa":
+			if tile.collision_data == "0000":
 				collision = self.cbox.collision
-			elif tile.collision != "__":
+			elif tile.collision_data != "____":
 				collision = self.cbox.slope_collision
 
 
-			if collision.bottom_to_top(s):
-				if self.yVel > 0: self.yVel = 0
-				self.in_air = False
-				self.hit_top_wall = True
+			if tile.collision_data != "____":
+				if collision.bottom_to_top(tile):
+					if self.yVel > 0: self.yVel = 0
+					self.in_air = False
+					self.hit_top_wall = True
 
-			if collision.top_to_bottom(s):
-				if self.yVel < 0: self.yVel = 0
-				self.hit_bottom_wall = True 
+				if collision.top_to_bottom(tile):
+					if self.yVel < 0: self.yVel = 0
+					self.hit_bottom_wall = True 
 
-			if tile.collision == "aa":
-				if collision.left_to_right(s):
-					self.xVel = 0
-					self.hit_right_wall = True
+				if tile.collision_data == "0000":
+					if collision.left_to_right(tile):
+						self.xVel = 0
+						self.hit_right_wall = True
 
-				if collision.right_to_left(s):
-					self.xVel = 0
-					self.hit_left_wall = True
+					if collision.right_to_left(tile):
+						self.xVel = 0
+						self.hit_left_wall = True
 
-			else:
-				if collision.left_to_right(s)\
-				and s.slope_collision.anchor_x=="l":
-					self.xVel = 0
+				else:
+					if collision.left_to_right(tile)\
+					and s.slope_collision.anchor_x=="l":
+						self.xVel = 0
 
-				if collision.right_to_left(s)\
-				and s.slope_collision.anchor_x=="r":
-					self.xVel = 0
+					if collision.right_to_left(tile)\
+					and s.slope_collision.anchor_x=="r":
+						self.xVel = 0
 
 #	STATES
 
