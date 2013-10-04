@@ -14,7 +14,15 @@ class collision:
 		self._ = Rect
 		self.overlap = overlap(self._)
 		self.next = next(self._)
-		self._.is_slope = False
+
+
+	@property
+	def is_slope(self):
+		try:
+			if self._.slope_collision.a != None:
+				return True
+		except: pass
+		return False
 
 
 
@@ -46,7 +54,7 @@ class collision:
 
 		#Slope points
 		x1, x2 = ThatRect.x1, ThatRect.x2
-		if ThatRect.is_slope:
+		if ThatRect.collision.is_slope:
 			ts_sc = ThatRect.slope_collision
 			x1, x2 = ts_sc.x1, ts_sc.x2
 
@@ -69,7 +77,7 @@ class collision:
 		
 		#Slope points
 		y1, y2 = ThatRect.y1, ThatRect.y2
-		if ThatRect.is_slope:
+		if ThatRect.collision.is_slope:
 			ts_sc = ThatRect.slope_collision
 			y1, y2 = ts_sc.y1, ts_sc.y2
 
@@ -120,8 +128,9 @@ class slope_collision(object):
 
 	def __init__(self, MySprite):
 		self._ = MySprite
+
 		self.next = self._.collision.next
-		self.overlap = self._.overlap
+		self.overlap = self._.collision.overlap
 
 		#Slope
 		self.a, self.b = None, None
@@ -134,12 +143,6 @@ class slope_collision(object):
 	def anchor_x(self): return self.anchor[0]
 	@property
 	def anchor_y(self): return self.anchor[1]
-
-	def is_slope(self):
-		if self.a != None and self.b != None:
-			return True
-		return False
-
 
 	#	POSITION
 
@@ -225,12 +228,14 @@ class slope_collision(object):
 
 	def pushback(self, Slope):
 	#Pushback the NEXT MOVE.
+
 		next = self.next
 		old_collision = self._.collision
 
 		is_x = bool(self.overlap.x(Slope) > 0)
 		is_y = bool(self.overlap.y(Slope) > 0)
 		is_z = self.is_z(Slope)
+
 
 		if is_x and is_y and is_z:
 			ox1 = old_collision.x_pushback(Slope)
@@ -510,9 +515,9 @@ class overlap:
 
 		#Use the complete SLOPE size if possible.
 		if slope:
-			if small.slope_collision.is_slope():
+			if small.collision.is_slope:
 				small = small.slope_collision
-			if big.slope_collision.is_slope():
+			if big.collision.is_slope:
 				big = big.slope_collision
 		#
 
@@ -550,9 +555,9 @@ class overlap:
 			stx, sty, btx, bty = 0, 0, 0, 0
 
 		if slope:
-			if small.slope_collision.is_slope():
+			if small.collision.is_slope:
 				small = small.slope_collision
-			if big.slope_collision.is_slope():
+			if big.collision.is_slope:
 				big = big.slope_collision
 
 

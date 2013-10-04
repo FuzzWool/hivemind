@@ -35,16 +35,10 @@ ROOM and WORLDMAP has become unruly.
 		! ENTITIES may collide with WORLDMAP.
 
 
-			! Make the following classes independant.
+			* Make the following classes independant.
 				* next
 				* collision
-				! slope_collision
-
-				next + collision
-				* Test as a standalone class.
-				* Link to MySprite. (don't embed)
-					* Incorrect w/h used
-
+				* slope_collision
 
 
 
