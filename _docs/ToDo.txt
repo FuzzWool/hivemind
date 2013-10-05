@@ -29,7 +29,15 @@ x Add a SLIDE KICK.
 
 GOAL: POLISH CONTROLS. Set clear rules.
 
+~ Made PHYSICS adjustments.
+	* Reduced x slowdown.
+		- Nut may no longer scale a single wall.
 
+	* Reduced vertical wall jump amount.
+		- In a 4-block gap, Nut may only make 1-block progress
+
+	* Increased jump amount.
+		+ Nut may now cleanly jump over 2-tile platforms.
 
 ====
 

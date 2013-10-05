@@ -416,7 +416,7 @@ class Player(Entity):
 
 		#Effect
 		self.walking = False
-		amt = 0.5
+		amt = 0.15
 		walkLim = 3
 
 		if left_flag or right_flag:
@@ -444,10 +444,11 @@ class Player(Entity):
 
 		#Effect
 		if jump_flag:
-			if self.hit_top_wall: self.yVel = -5.3
+			if self.hit_top_wall: self.yVel = -5.5
 
 
 	def dive(self, dive_flag):
+
 
 		#Stop
 		was_diving = self.diving
@@ -551,17 +552,18 @@ class Player(Entity):
 
 
 
+
 	def wall_jump(self, jump_flag):
 
 		#Effect
 		if self.clinging and jump_flag:
 			if self.facing_left:
-				self.xVel = 5
+				self.xVel = 4.5
 				self.facing_right = True
 			elif self.facing_right:
-				self.xVel = -5
+				self.xVel = -4.5
 				self.facing_left = True
-			self.yVel = -5
+			self.yVel = -4
 
 
 
