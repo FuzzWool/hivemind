@@ -85,11 +85,12 @@ class _Selector:
 				self.selected_tile = a+b
 				
 			def move_cursor(x, y):
-				self.cursor.goto = self.tiles[0][0].goto
+				self.cursor.position = self.tiles[0][0].position
 				x *= GRID; y *= GRID
-				self.cursor.move(x, y)
+				self.cursor.move((x, y))
 			
 			x, y = grid_relative(grid_pos)
+			x = int(round(x)); y = int(round(y))
 			if not in_bounds(x, y): return
 			change_select(Level, x, y)
 			move_cursor(x, y)
@@ -97,7 +98,7 @@ class _Selector:
 
 	def draw(self):
 		if self.visible == True:
-			self.b_sprite.box.draw()
+			# self.b_sprite.box.draw()
 			for x in self.tiles:
 				for y in x:
 					y.draw()
@@ -115,9 +116,10 @@ class _Selector:
 		def make_box(texture, w, h):
 			b_sprite = MySprite(texture)
 			b_sprite.clip.set(25, 25)
-			b_sprite.goto = 500, 200
+			b_sprite.position = b_sprite.w/2, b_sprite.h/2
 
-			b_sprite.box.size = w, h
+			b_sprite.box.w = w
+			b_sprite.box.h = h
 			b_sprite.box.center = b_sprite.center
 			self.b_sprite = b_sprite
 
@@ -133,8 +135,8 @@ class _Selector:
 					tile = MySprite(texture)
 					tile.clip.set(25, 25)
 					tile.clip.use(x, y)
-					tile.goto = self.b_sprite.box.goto
-					tile.move(x*GRID, y*GRID)
+					tile.position = self.b_sprite.box.position
+					tile.move((x*GRID, y*GRID))
 					self.b_sprite.children.append(tile)
 					self.tiles[-1].append(tile)
 
@@ -142,7 +144,7 @@ class _Selector:
 			tex = self.cursor_tex
 			cursor = MySprite(tex)
 			cursor.clip.set(25, 25)
-			cursor.goto = self.tiles[0][0].goto
+			cursor.position = self.tiles[0][0].position
 			self.cursor = cursor
 			self.b_sprite.children.append(self.cursor)
 

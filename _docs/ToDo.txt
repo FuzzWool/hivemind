@@ -34,15 +34,8 @@ ROOM and WORLDMAP has become unruly.
 
 		! ENTITIES may collide with WORLDMAP.
 
-			* Make the following classes independant.
-				* next
-				* collision
-				* slope_collision
-
-			! Add COLLISION functions to TILES.
-				* applied collision functionality
-				* tested against entity
-				~ children following is now proportional
+			! Test SLOPE COLLISIONS.
+				~ Hackily fixed LevelEditor TILE MENU.
 
 
 ! Clean up ROOM and WORLDMAP.
