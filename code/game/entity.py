@@ -161,67 +161,66 @@ class Entity(object):
 		# #2-tile slopes need extra checks for their
 		# #connectors.
 
-		# extra_tile1 = None; extra_tile2 = None
-		# extra_tile3 = None; extra_tile4 = None
-		# if x_tile != None:
-		# 	if x_tile.collision.is_slope:
-		# 		x, y = x_tile.x, x_tile.y
+		extra_tile1 = None; extra_tile2 = None
+		extra_tile3 = None; extra_tile4 = None
+		if x_tile != None:
+			if x_tile.collision.is_slope:
+				x, y = x_tile.tile_x, x_tile.tile_y
 
-		# 		if x+1 < Room.w:
-		# 			extra_tile1 = Room.tiles[x+1][y]
-		# 			if not extra_tile1.collision.is_slope:
-		# 				extra_tile1 = None
+				if x+1 < WorldMap.tiles_w:
+					extra_tile1 = WorldMap.tiles[x+1][y]
+					if not extra_tile1.collision.is_slope:
+						extra_tile1 = None
 
-		# 		if x-1 >= 0:
-		# 			extra_tile2 = Room.tiles[x-1][y]
-		# 			if not extra_tile2.collision.is_slope:
-		# 				extra_tile2 = None
+				if x-1 >= 0:
+					extra_tile2 = WorldMap.tiles[x-1][y]
+					if not extra_tile2.collision.is_slope:
+						extra_tile2 = None
 				
-		# 		if y+1 < Room.h:
-		# 			extra_tile3 = Room.tiles[x][y+1]
-		# 			if not extra_tile3.collision.is_slope:
-		# 				extra_tile3 = None
+				if y+1 < WorldMap.tiles_h:
+					extra_tile3 = WorldMap.tiles[x][y+1]
+					if not extra_tile3.collision.is_slope:
+						extra_tile3 = None
 				
-		# 		if y-1 >= 0:
-		# 			extra_tile4 = Room.tiles[x][y-1]
-		# 			if not extra_tile4.collision.is_slope:
-		# 				extra_tile4 = None
+				if y-1 >= 0:
+					extra_tile4 = WorldMap.tiles[x][y-1]
+					if not extra_tile4.collision.is_slope:
+						extra_tile4 = None
 
 		collidable_tiles = \
-		[x_tile, y_tile]
-		# extra_tile1, extra_tile2, extra_tile3, extra_tile4]
+		[x_tile, y_tile,
+		extra_tile1, extra_tile2, extra_tile3, extra_tile4]
 		collidable_tiles[:] = \
 		[tile for tile in collidable_tiles if tile != None]
 
 		##########
 
 
-
 		# PRE-COLLISION STATES
 
-		# for tile in collidable_tiles:
+		for tile in collidable_tiles:
 
-		# 	#Slope Lock
-		# 	if tile.collision_data not in ["____", "0000"]:
+			#Slope Lock
+			if tile.collision_data not in ["____", "0000"]:
 				
-		# 		#Slope lock
-		# 		c = self.cbox
-		# 		if c.slope_collision.bottom_to_top(tile):
+				#Slope lock
+				c = self.cbox
+				if c.slope_collision.bottom_to_top(tile):
 					
-		# 			if tile.slope_collision.anchor_y == "d":
+					if tile.slope_collision.anchor_y == "d":
 
-		# 				tx = c.collision.next.x_move
-		# 				y = c.slope_collision.y_overlap_amt(t)
+						tx = c.collision.next.x_move
+						y = c.slope_collision.y_overlap_amt(tile)
 
-		# 				if tile.slope_collision.anchor_x == "l":
-		# 					if tx > 0:
-		# 						c.collision.next.y_move \
-		# 						= abs(y) + abs(tx)
-		# 				#
-		# 				if tile.slope_collision.anchor_x == "r":
-		# 					if tx < 0:
-		# 						c.collision.next.y_move \
-		# 						= abs(y) + abs(tx)
+						if tile.slope_collision.anchor_x == "l":
+							if tx > 0:
+								c.collision.next.y_move \
+								= abs(y) + abs(tx)
+						#
+						if tile.slope_collision.anchor_x == "r":
+							if tx < 0:
+								c.collision.next.y_move \
+								= abs(y) + abs(tx)
 
 		# PUSHBACK
 		for tile in collidable_tiles:
@@ -242,7 +241,6 @@ class Entity(object):
 				collision = self.cbox.collision
 			elif tile.collision_data != "____":
 				collision = self.cbox.slope_collision
-
 
 			if tile.collision_data != "____":
 				if collision.bottom_to_top(tile):
@@ -265,11 +263,11 @@ class Entity(object):
 
 				else:
 					if collision.left_to_right(tile)\
-					and s.slope_collision.anchor_x=="l":
+					and tile.slope_collision.anchor_x=="l":
 						self.xVel = 0
 
 					if collision.right_to_left(tile)\
-					and s.slope_collision.anchor_x=="r":
+					and tile.slope_collision.anchor_x=="r":
 						self.xVel = 0
 
 #	STATES

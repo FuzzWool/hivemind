@@ -289,7 +289,7 @@ class slope_collision(object):
 		w = abs(w)
 		h = that.down_point[1] - that.up_point[1]
 		h = abs(h)
-		ratio = h/w
+		ratio = float(h)/float(w)
 
 		#X from origin
 		y_lowering = self._.x2 - that.left_point[0] + tx

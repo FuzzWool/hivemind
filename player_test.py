@@ -16,14 +16,14 @@ from code.game import Player
 Nut = Player("nut")
 
 from code.game import WorldMap
-worldmap = WorldMap(1,1)
+worldmap = WorldMap(2,2)
 #########################################################
 
 running = True
 while running:
 	
 	#Loading
-	# Camera.center = Nut.cbox.center
+	Camera.center = Nut.cbox.center[0], Camera.center[1]
 	
 	#Logic
 	if quit(): running = False

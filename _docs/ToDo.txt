@@ -23,20 +23,30 @@ GOAL: Clean up ROOM and WORLDMAP code.
 ROOM and WORLDMAP has become unruly.
 
 
-! WIP - Ported ROOM and WORLDMAP to the main game.
+* Ported ROOM and WORLDMAP to the main game.
 
-	! Support for COLLISIONS.
+	* Support for COLLISIONS.
 		load and bind collision data.
 
 		* COLLISIONS are LOADED (and have a default otherwise)
 			* Static loads/creates shared collision data.
 			* Rooms position shared data to match layout
 
-		! ENTITIES may collide with WORLDMAP.
+		* ENTITIES may collide with WORLDMAP.
 
-			! Test SLOPE COLLISIONS.
-				~ Hackily fixed LevelEditor TILE MENU.
+			* Test NORMAL COLLISIONS.
+				* w/ different rooms
 
+			* Test SLOPE COLLISIONS.
+				~ Generated correct shared collision data.
+				~ Fixed entity/room hiccups
+
+				* Test
+					* 1-tile
+					* 2-tile (h)
+						* Test 'cut' slope collisions.
+						* Fix Fault with rects
+							~ ratio changed to float
 
 ! Clean up ROOM and WORLDMAP.
 ! Create a new LEVEL EDITOR.

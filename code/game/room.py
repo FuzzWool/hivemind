@@ -40,7 +40,16 @@ class load:
 				if collision != "":
 					collision = collision+"\n"
 				for y in range(h):
-					collision = collision+"0000"
+
+					#Make COLLISION-LEVEL default.
+					kx, ky = str(x), str(y)
+					if len(kx) == 1: kx = "0"+kx
+					if len(ky) == 1: ky = "0"+ky
+					key = kx+ky
+					#
+
+					#key = "0000"
+					collision = collision+key
 
 			print collision
 			#Save it.
@@ -238,7 +247,6 @@ class Room(GameRectangle):
 		window.draw(self.vertex_array, self.render_states)
 
 
-
 	# ROOM EDITING
 	#Functions designed for use by Level Editors.
 	#Graphics need to be re-rendered along with changes
@@ -353,40 +361,40 @@ class Room(GameRectangle):
 				a,b = (x1, y1),(x2, y2)
 				anchor = "ld"
 			if data == "0101":
-				a = (x2, y2),(x1, y1)
+				a,b = (x2, y2),(x1, y1)
 				anchor = "ru"
 			if data == "0201":
-				a = (x1, y2),(x2, y1)
+				a,b = (x1, y2),(x2, y1)
 				anchor = "lu"
 
 			#TWO-TILE SLOPES
 			#horizontal
 			if data == "0300":
-				a = (x2, yc),(x1, y2)
+				a,b = (x1, y2),(x2, yc)
 				anchor = "rd"
 			if data == "0400":
-				a = (x2, y1),(x1, yc)
+				a,b = (x2, y1),(x1, yc)
 				anchor = "rd"
 
 			if data == "0500":
-				a = (x2, y1),(x1, yc)
+				a,b = (x2, y1),(x1, yc)
 				anchor = "ld"
 			if data == "0600":
-				a = (x2, yc),(x1, y2)
+				a,b = (x2, yc),(x1, y2)
 				anchor = "ld"
 
 			if data == "0301":
-				b = (x1, y1),(x2, yc)
+				a,b = (x1, y1),(x2, yc)
 				anchor = "ru"
 			if data == "0401":
-				b = (x1, yc),(x2, y2)
+				a,b = (x1, yc),(x2, y2)
 				anchor = "ru"
 
 			if data == "0501":
-				a = (x2, y1),(x1, yc)
+				a,b = (x2, yc),(x1, y2)
 				anchor = "lu"
 			if data == "0601":
-				a,b = (x2, yc),(x1, y2)
+				a,b = (x2, y1),(x1, yc)
 				anchor = "lu"
 
 			# #vertical
@@ -420,9 +428,9 @@ class Room(GameRectangle):
 			#
 
 			if anchor:
-				sprite.slope_collision.a = a
-				sprite.slope_collision.b = b
-				sprite.slope_collision.anchor = anchor
+				self.slope_collision.a = a
+				self.slope_collision.b = b
+				self.slope_collision.anchor = anchor
 
 
 
