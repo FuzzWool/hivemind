@@ -14,7 +14,7 @@ from code.pysfml_game import collision, slope_collision
 class load:
 	_filenames = []
 	textures = {}
-	collisions = {}
+	collisions, _collisions = {}, {}
 
 	import glob
 	import os
@@ -26,6 +26,10 @@ class load:
 		textures[filename] = texture
 		_filenames.append(filename[:-4])
 
+
+	# COLLISIONS
+
+	#grab
 	for filename in _filenames:
 		
 		file_dir = filename+"_collision.txt"
@@ -51,13 +55,30 @@ class load:
 					#key = "0000"
 					collision = collision+key
 
-			print collision
 			#Save it.
 			f = open(file_dir, "w+")
 			f.write(collision)
 
 		f.close()
-		collisions[filename] = collision
+		_collisions[filename] = collision
+
+
+	#format
+	for key in _collisions:
+
+		file_data = _collisions[key]
+
+		formatted_data = [[]]
+		s = 0
+		while s < len(file_data):
+			if file_data[s] == "\n":
+				s+=1
+				formatted_data.append([])
+			collision = file_data[s:s+4]
+			formatted_data[-1].append(collision)
+			s += 4
+
+		collisions[key] = formatted_data
 
 	os.chdir("../../../")
 #
@@ -108,7 +129,7 @@ class Room(GameRectangle):
 		for x in range(w):
 			tiles.append([])
 			for y in range(h):
-				tile = self.Tile()
+				tile = self.Tile(self)
 				tile.x = (room_x+x)*GRID
 				tile.y = (room_y+y)*GRID
 				tiles[-1].append(tile)
@@ -196,17 +217,6 @@ class Room(GameRectangle):
 
 		file_data = load.collisions[self.texture_name]
 
-		#format the FILE DATA.
-		formatted_data = [[]]
-		s = 0
-		while s < len(file_data):
-			if file_data[s] == "\n":
-				s+=1
-				formatted_data.append([])
-			collision = file_data[s:s+4]
-			formatted_data[-1].append(collision)
-			s += 4
-
 		#Apply the DATA.
 		for x, _x in enumerate(tiles):
 			for y, _y in enumerate(tiles[x]):
@@ -215,7 +225,9 @@ class Room(GameRectangle):
 				key = tiles[x][y].data
 				if key != "____":
 					kx, ky = int(key[0:2]), int(key[2:4])
-					collision = formatted_data[kx][ky]
+					collision\
+					 = load.collisions\
+					 [self.texture_name][kx][ky]
 				else:
 					collision = "____"
 
@@ -326,22 +338,47 @@ class Room(GameRectangle):
 
 	class Tile(GameRectangle):
 
-		def __init__(self):
+		def __init__(self, room):
 			self.x, self.y = 0, 0
 			self.w, self.h = GRID, GRID
+			self._ = room #used by: change
 			#
 			self.data = "____"
-			self.collision_data = "____"
-
-			self.collision = collision(self)
-			self.slope_collision = slope_collision(self)
-
 			self._position_init()
 			self.vertices = []
+
+			self.init_collision()
 		
+
+		# EDITING
+
+		def change(self, new_data): #debugging
+		#data, collision, graphics
+
+			self.data = new_data
+			#
+			key = self.data
+			if key != "____":
+				kx, ky = int(key[0:2]), int(key[2:4])
+				collision\
+				 = load.collisions\
+				 [self._.texture_name][kx][ky]
+			else:
+				collision = "____"
+			self.apply_collision(collision)
+			#
+			self._.render_graphics()
+
+
 
 		# COLLISION
 		#Stores generic collision information.
+
+		def init_collision(self): #init
+			self.collision_data = "____"
+			self.collision = collision(self)
+			self.slope_collision = slope_collision(self)
+
 
 		def apply_collision(self, data):
 		#Apply slope specific bindings if needed.
@@ -431,6 +468,9 @@ class Room(GameRectangle):
 				self.slope_collision.a = a
 				self.slope_collision.b = b
 				self.slope_collision.anchor = anchor
+
+			#Define SIDE PROPERTIES. (wall-jumping)
+
 
 
 

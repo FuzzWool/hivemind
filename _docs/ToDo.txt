@@ -20,34 +20,29 @@ x Add a SLIDE KICK.
 	~ Easier to read, split into functionality.
 
 
-! POLISH CONTROLS. Set clear rules.
+~ Made PHYSICS adjustments.
+	* Reduced x slowdown.
+		- Nut may no longer scale a single wall.
+	* Reduced vertical wall jump amount.
+		- In a 4-block gap, Nut may only make 1-block progress
+	* Increased jump amount.
+		+ Nut may now cleanly jump over 2-tile platforms.
 
-
+! Add WALL VAULTING.
+! Use less MAGIC NUMBERS in state handling.
 ! Add PUNCHING.
 
 ====
 
-GOAL: POLISH CONTROLS. Set clear rules.
+GOAL: Fix WALL HUGGING clipping to an EDGE.
 
-~ Made PHYSICS adjustments.
-	* Reduced x slowdown.
-		- Nut may no longer scale a single wall.
+* Only wall hug if completely covering a side-wall.
+	Fixed WALL HUGGING clipping to an EDGE.
 
-	* Reduced vertical wall jump amount.
-		- In a 4-block gap, Nut may only make 1-block progress
-
-	* Increased jump amount.
-		+ Nut may now cleanly jump over 2-tile platforms.
 
 ====
 
-! WALL HUGGING clips to an EDGE.
 
 ! Create a new LEVEL EDITOR.
 
 ! Holding both directional keys causes weird Nut walking.
-
-! Fix lag issue while moving around the WorldMap.
-	* Investigate the stress empty MySprites put on.
-
-! Add a system for assigning collision data to a tilemap.

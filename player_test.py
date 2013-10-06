@@ -17,6 +17,8 @@ Nut = Player("nut")
 
 from code.game import WorldMap
 worldmap = WorldMap(2,2)
+
+
 #########################################################
 
 running = True
@@ -28,7 +30,7 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		pass
+		worldmap.tiles[12][10].change("0100")
 
 
 	Nut.handle_controls(key)

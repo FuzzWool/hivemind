@@ -21,6 +21,8 @@ class Entity(object):
 		self.make_sprite()
 		self.make_cbox()
 
+		self.reset_states()
+
 	image = None
 	texture = None
 	sprite = None
@@ -193,8 +195,10 @@ class Entity(object):
 		collidable_tiles[:] = \
 		[tile for tile in collidable_tiles if tile != None]
 
-		##########
 
+
+
+		##########
 
 		# PRE-COLLISION STATES
 
@@ -270,6 +274,28 @@ class Entity(object):
 					and tile.slope_collision.anchor_x=="r":
 						self.xVel = 0
 
+
+		# SPECIAL STATE CHECKS
+		
+		#wall-hug
+		
+		if x_tile != None:
+			y1, y2 = self.cbox.tile_y1, self.cbox.tile_y2
+			x = x_tile.tile_x
+
+			for y in range(y1, y2):
+				tile = WorldMap.tiles[x][y]
+				if not tile.is_empty():
+					o = self.cbox.collision.overlap.y(tile)
+					if o > 0:
+						self._overlap_side_wall_value += o
+
+		if self._overlap_side_wall_value == self.cbox.h:
+			self.overlap_side_wall = True
+
+
+
+
 #	STATES
 
 	def reset_states(self):
@@ -280,8 +306,10 @@ class Entity(object):
 		self.hit_top_wall = False
 		self.hit_bottom_wall = False
 
+		#wall-hug
+		self._overlap_side_wall_value = 0
+		self.overlap_side_wall = False
 
-	in_air = True
 
 	facing_left = False
 	@property
@@ -297,12 +325,6 @@ class Entity(object):
 	def rising(self): return bool(self.yVel < 0)
 	@property
 	def moving(self): return bool(self.xVel != 0)
-
-	hit_left_wall = False
-	hit_right_wall = False
-	hit_bottom_wall = False
-	hit_top_wall = False
-
 
 
 
@@ -539,7 +561,7 @@ class Player(Entity):
 			self.gravity = self.default_gravity
 
 		#Start
-		if self.in_air:
+		if self.in_air and self.overlap_side_wall:
 			if self.hit_right_wall and self.facing_left\
 			or self.hit_left_wall and self.facing_right:
 				self.clinging = True
@@ -595,7 +617,7 @@ class Player(Entity):
 			else:
 				self.sprite.clip.use(0, 0)
 
-		#
+		#Special
 
 		if self.clinging:
 			self.sprite.clip.use(0,2)
