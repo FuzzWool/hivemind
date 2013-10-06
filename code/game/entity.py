@@ -278,7 +278,7 @@ class Entity(object):
 		# SPECIAL STATE CHECKS
 		
 		#wall-hug
-		
+
 		if x_tile != None:
 			y1, y2 = self.cbox.tile_y1, self.cbox.tile_y2
 			x = x_tile.tile_x

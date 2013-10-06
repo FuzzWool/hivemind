@@ -28,16 +28,29 @@ x Add a SLIDE KICK.
 	* Increased jump amount.
 		+ Nut may now cleanly jump over 2-tile platforms.
 
+! Add WALL HANG.
+	* Nut must be completely overlapping a wall to HUG.
+	! Add basic WALL HANG.
+	! Add crouching > wall hang combination.
+
+
+! Add DUST EFFECT.
+	! Dive - slamming the ground. Bigger effect if faster.
+	! Wall-jumping - trail in mid-air; hitting a surface.
+	! Walking - Greater effect depending on speed.
+
+
 ! Add WALL VAULTING.
 ! Use less MAGIC NUMBERS in state handling.
 ! Add PUNCHING.
 
 ====
 
-GOAL: Fix WALL HUGGING clipping to an EDGE.
+GOAL: Add WALL HANG.
 
-* Only wall hug if completely covering a side-wall.
-	Fixed WALL HUGGING clipping to an EDGE.
+If falling downwards,
+and Nut passes the point of managing to jump a wall,
+WALL HANG.
 
 
 ====
