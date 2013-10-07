@@ -102,3 +102,9 @@ class WorldMap:
 	def rooms_h(self): return len(self.rooms[0])
 	@property
 	def rooms_amt(self): return self.rooms_w*self.rooms_h
+
+	def in_range(self, x, y):
+	#Check to see if the tiles provided are in range.
+		if 0 < x < self.tiles_w and 0 < y < self.tiles_h:
+			return True
+		return False

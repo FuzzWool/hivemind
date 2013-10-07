@@ -72,8 +72,8 @@ WALL HANG.
 
 	~ Fix: dropping from a wall hang no longer dives too
 
-
-	! oor crash when going to the right of WorldMap
+	~ Fix: oor crash when going to the right of WorldMap
+		+ WorldMap now has in_range check.
 
 
 	-

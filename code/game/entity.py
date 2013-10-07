@@ -319,31 +319,37 @@ class Entity(object):
 
 		if y_tile != None:
 			
+			next = None
 			x, y = y_tile.tile_position
 			if self.facing_left:
-				next = WorldMap.tiles[x-1][y]
+				if WorldMap.in_range(x-1, y):
+					next = WorldMap.tiles[x-1][y]
 			if self.facing_right:
-				next = WorldMap.tiles[x+1][y]
+				if WorldMap.in_range(x+1, y):
+					next = WorldMap.tiles[x+1][y]
 
-			if next.is_empty():
+			if next != None:
+				if next.is_empty():
 
-				if self.facing_left:
-					if self.cbox.x1 < y_tile.x1:
-						self.left_passes_left_wall=True
-						self._left_passes_tile_x1\
-						= y_tile.x1
+					if self.facing_left:
+						if self.cbox.x1 < y_tile.x1:
+							self.left_passes_left_wall\
+							=True
+							self._left_passes_tile_x1\
+							= y_tile.x1
 
-						self._side_passes_tile_y1\
-						= y_tile.y1
+							self._side_passes_tile_y1\
+							= y_tile.y1
 
-				if self.facing_right:
-					if self.cbox.x2 > y_tile.x2:
-						self.right_passes_right_wall=True
-						self._right_passes_tile_x2\
-						= y_tile.x2
+					if self.facing_right:
+						if self.cbox.x2 > y_tile.x2:
+							self.right_passes_right_wall\
+							=True
+							self._right_passes_tile_x2\
+							= y_tile.x2
 
-						self._side_passes_tile_y1\
-						= y_tile.y1
+							self._side_passes_tile_y1\
+							= y_tile.y1
 
 
 
