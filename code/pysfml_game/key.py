@@ -1,28 +1,40 @@
 from code.pysfml_game.window import sf
 
-#Tracks whether or not a key is pressed, held, and the intervals it is held for.
 class KeyTracker:
+#Tracks whether or not a key is pressed or held.
+#May be locked or unlocked externally.
+
+# * Requires reset_keys call every loop.
+
+
 	def __init__ (self, key):
+		self.init_class()
+
 		self.key = key
 		self.was_pressed = False
 
-		self.timer = sf.Clock()
-		self.secs_interval = 0
-		self.intervals = 0
-		self.old_secs_interval = self.secs_interval
 
-	#Basic Events
+	# INSTANCE TRACKING
+	__all__ = set()
+	def init_class(self): self.__class__.__all__.add(self)
+
+
+	# BASIC EVENTS (w/ locking)
 	
 	def held(self):
 		return sf.Keyboard.is_key_pressed(self.key)
 
 	def pressed(self):
 		pressed = False
-		if not self.was_pressed and self.held(): pressed = True
+		if not self.was_pressed and self.held():
+			pressed = True
 		else: pressed = False
 
-		self.was_pressed = self.held()
 		return pressed
+
+	def _reset(self):
+		"""To be called as part of a global loop."""
+		self.was_pressed = self.held()
 
 
 #Create KeyTrackers for all of the sf.Keyboard keys.
@@ -36,3 +48,7 @@ for i in sf.Keyboard.__dict__:
 		if name == "R_CONTROL":
 			name = "R_CTRL"
 		vars()[name] = KeyTracker(v)
+
+
+def reset_all():
+	for i in KeyTracker.__all__: i._reset()

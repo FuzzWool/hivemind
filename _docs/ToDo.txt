@@ -54,12 +54,25 @@ If falling downwards,
 and Nut passes the point of managing to jump a wall,
 WALL HANG.
 
-! Add basic wall hang.
++ Add basic wall hang.
 	+ Added previous class to collision.
 
 	+ Added cancel for pressing buttons.
 	+ Added jump.
 	~ Dive is now a block movement.
+
+
+! Add crouching > wall hang combination.
+	* Check if Nut is at the x end of a ytile.
+
+
+	! improve state handling (divide into steps)
+	! keys sometimes fail to respond (check key module)
+	! wall hang messes up gravity
+	! fix diving lumping
+
+	-
+	remove db y_tile
 
 ====
 

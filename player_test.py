@@ -25,7 +25,7 @@ running = True
 while running:
 	
 	#Loading
-	Camera.center = Nut.cbox.center[0], Camera.center[1]
+	# Camera.center = Nut.cbox.center[0], Camera.center[1]
 	
 	#Logic
 	if quit(): running = False
@@ -37,7 +37,9 @@ while running:
 	Nut.handle_physics()
 	Nut.collide_with_WorldMap(worldmap)
 
-	#Animationz
+	key.reset_all()
+
+	#Animation
 	Nut.play()
 
 	#Video
