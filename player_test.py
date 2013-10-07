@@ -37,7 +37,7 @@ while running:
 	Nut.handle_physics()
 	Nut.collide_with_WorldMap(worldmap)
 
-	#Animation
+	#Animationz
 	Nut.play()
 
 	#Video

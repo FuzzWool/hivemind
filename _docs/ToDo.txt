@@ -29,8 +29,9 @@ x Add a SLIDE KICK.
 		+ Nut may now cleanly jump over 2-tile platforms.
 
 ! Add WALL HANG.
-	* Nut must be completely overlapping a wall to HUG.
-	! Add basic WALL HANG.
+	* Nut must be completely overlapping a wall to hug.
+	~ Dive is now a block movement.
+	+ Add basic wall hang.
 	! Add crouching > wall hang combination.
 
 
@@ -40,7 +41,8 @@ x Add a SLIDE KICK.
 	! Walking - Greater effect depending on speed.
 
 
-! Add WALL VAULTING.
+
+! clean overall state handling
 ! Use less MAGIC NUMBERS in state handling.
 ! Add PUNCHING.
 
@@ -52,6 +54,12 @@ If falling downwards,
 and Nut passes the point of managing to jump a wall,
 WALL HANG.
 
+! Add basic wall hang.
+	+ Added previous class to collision.
+
+	+ Added cancel for pressing buttons.
+	+ Added jump.
+	~ Dive is now a block movement.
 
 ====
 

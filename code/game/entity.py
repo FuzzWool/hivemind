@@ -275,10 +275,12 @@ class Entity(object):
 						self.xVel = 0
 
 
-		# SPECIAL STATE CHECKS
-		
-		#wall-hug
 
+
+		# SPECIAL STATE CHECKS
+
+		
+		#wall hug
 		if x_tile != None:
 			y1, y2 = self.cbox.tile_y1, self.cbox.tile_y2
 			x = x_tile.tile_x
@@ -294,6 +296,23 @@ class Entity(object):
 			self.overlap_side_wall = True
 
 
+		#wall hang
+		if x_tile != None:
+			x, y = x_tile.tile_position
+			tile_above = WorldMap.tiles[x][y-1]
+			tile = WorldMap.tiles[x][y]
+
+			if not tile.is_empty() \
+			and tile_above.is_empty():
+
+				old_y1=self.cbox.collision.previous.y1
+				new_y1=self.cbox.y1
+				tile_y1=tile.y1
+
+				if old_y1 < tile_y1 < new_y1:
+					self.top_passed_top_wall = True
+					self._top_passed_tile_y1 = tile_y1
+
 
 
 #	STATES
@@ -306,9 +325,14 @@ class Entity(object):
 		self.hit_top_wall = False
 		self.hit_bottom_wall = False
 
-		#wall-hug
+		#wall hug
 		self._overlap_side_wall_value = 0
 		self.overlap_side_wall = False
+
+		#wall hang
+		self.top_passed_top_wall = False
+		self._top_passed_tile_y1 = 0
+
 
 
 	facing_left = False
@@ -318,6 +342,17 @@ class Entity(object):
 	@facing_right.setter
 	def facing_right(self, arg):
 		self.facing_left = not arg
+
+	@property
+	def hit_side_wall(self):
+		if self.hit_left_wall or self.hit_right_wall:
+			return True
+		return False
+
+	# @property
+	# def hit_surface_wall(self)
+
+
 
 	@property
 	def falling(self): return bool(self.yVel > 0)
@@ -400,35 +435,36 @@ class Player(Entity):
 	clinging = False
 	slide_kicking = False
 	crouching = False
+	wall_hanging = False
 
 
 	# HANDLERS
 	def handle_controls(self, key):
 
 		#Flags
-		left_flag = key.LEFT.held()
-		right_flag = key.RIGHT.held()
-		up_flag = key.UP.held() #UNUSED
-		down_flag = key.DOWN.held()
-		jump_flag = key.Z.pressed()
-		action_flag = key.X.pressed() #UNUSED
-
+		left = key.LEFT.held()
+		right = key.RIGHT.held()
+		up = key.UP.held() #UNUSED
+		down = key.DOWN.held()
+		jump = key.Z.pressed()
+		action = key.X.pressed() #UNUSED
 
 		#Controls
 		if not self.slide_kicking:
-			self.jump(jump_flag)
+			self.jump(jump)
 			if not self.crouching:
-				self.walk(left_flag, right_flag)
+				self.walk(left, right)
 
-		self.dive(down_flag)
+		self.dive(down)
 
-		self.slide_kick(down_flag)
-		self.crouch(down_flag)
-		self.crouch_walk(left_flag, right_flag)
+		self.slide_kick(down)
+		self.crouch(down)
+		self.crouch_walk(left, right)
 
 		#Wall
-		self.cling(left_flag, right_flag)
-		self.wall_jump(jump_flag)
+		self.cling(left, right)
+		self.wall_jump(jump)
+		self.wall_hang(left, right, up, down, jump)
 
 
 
@@ -480,7 +516,8 @@ class Player(Entity):
 		if self.in_air and dive_flag: self.diving = True
 		
 		#Effect
-		if self.diving: self.move(y= +1)
+		if self.diving and not was_diving:
+			self.move(y= +5)
 
 
 
@@ -550,7 +587,7 @@ class Player(Entity):
 
 
 
-	#Wall
+	# WALL
 
 	def cling(self, left_flag, right_flag):
 
@@ -574,7 +611,6 @@ class Player(Entity):
 
 
 
-
 	def wall_jump(self, jump_flag):
 
 		#Effect
@@ -586,6 +622,31 @@ class Player(Entity):
 				self.xVel = -4.5
 				self.facing_left = True
 			self.yVel = -4
+
+
+	def wall_hang(self, left, right, up, down, jump):
+	#If the entity's top passes the wall's top.
+		
+		# self.top_passed_top_wall = False
+		# self._top_passed_tile_y1 = 0
+
+
+		#Start
+		if self.top_passed_top_wall\
+		and self.hit_side_wall:
+			self.wall_hanging = True
+			self.cbox.y = self._top_passed_tile_y1
+
+
+		#Effect
+		if self.wall_hanging:
+			self.xVel, self.yVel = 0, 0
+
+			#Cancel
+			if left or right or down or jump:
+				self.wall_hanging = False
+
+				if jump: self.wall_jump(jump)
 
 
 
@@ -634,6 +695,8 @@ class Player(Entity):
 			else:		
 				self.sprite.clip.use(0,3)
 
+		if self.wall_hanging:
+			self.sprite.clip.use(1,2)
 
 
 		#Drawing

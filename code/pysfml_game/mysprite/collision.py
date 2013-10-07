@@ -1,5 +1,7 @@
 ##########
+##########
 #	MAIN CLASSES
+##########
 ##########
 
 class collision:
@@ -11,9 +13,13 @@ class collision:
 
 
 	def __init__(self, Rect):
+
 		self._ = Rect
 		self.overlap = overlap(self._)
 		self.next = next(self._)
+
+		#optional - updated in next
+		self.previous = previous()
 
 
 	@property
@@ -429,9 +435,16 @@ class slope_collision(object):
 
 
 
+
+
+
+
 ##########
-#	UTILITIES
 ##########
+#	INTERNAL UTILITIES
+##########
+##########
+
 
 class next:
 #Collision-relevant movements must be calculated here.
@@ -450,6 +463,11 @@ class next:
 
 	
 	def store_move(self, x=None, y=None):
+
+		#previous - optional
+		self._.collision.previous.set(self.points)
+		#
+
 		if x == None: x = self.x_move
 		if y == None: y = self.y_move
 		self.x_move, self.y_move = x, y
@@ -573,3 +591,26 @@ class overlap:
 			gap = down_gap
 
 		return gap
+
+
+
+
+
+
+
+
+##########
+##########
+#	EXTERNAL UTILITIES
+##########
+##########
+
+from code.pysfml_game import GameRectangle
+
+class previous(GameRectangle):
+	def __init__(self):
+		self.x, self.y = 0, 0
+		self.w, self.h = 0, 0
+
+	def set(self, points): #next.store_move
+		self.x, self.y, self.w, self.h = points
