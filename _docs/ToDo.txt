@@ -70,9 +70,11 @@ WALL HANG.
 		~ Improved global key states.
 
 
-	! improve state handling (divide into steps)
-	! wall hang messes up gravity
-	! fix diving lumping
+	~ Fix: dropping from a wall hang no longer dives too
+
+
+	! oor crash when going to the right of WorldMap
+
 
 	-
 	remove db y_tile

@@ -513,10 +513,9 @@ class Player(Entity):
 			self.crouch_walk(left, right)
 
 			#Wall
-			self.cling(left, right)
 			self.wall_jump(jump)
 		self.wall_hang(left, right, up, down, jump)
-
+		if not self.wall_hanging: self.cling(left, right)
 
 
 	# Control definitions
@@ -564,12 +563,12 @@ class Player(Entity):
 		self.diving = False
 		
 		#Start
-		if self.in_air and down.held():
+		if self.in_air and down.pressed():
 			self.diving = True
 		
 		#Effect
 		if self.diving and not was_diving:
-			self.move(y= +5)
+			self.move(y= +8)
 
 
 

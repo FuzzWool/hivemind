@@ -25,7 +25,7 @@ running = True
 while running:
 	
 	#Loading
-	# Camera.center = Nut.cbox.center[0], Camera.center[1]
+	Camera.center = Nut.cbox.center[0], Camera.center[1]
 	
 	#Logic
 	if quit(): running = False
