@@ -12,6 +12,7 @@ class KeyTracker:
 
 		self.key = key
 		self.was_pressed = False
+		self._was_pressed = False
 
 
 	# INSTANCE TRACKING
@@ -28,13 +29,13 @@ class KeyTracker:
 		pressed = False
 		if not self.was_pressed and self.held():
 			pressed = True
-		else: pressed = False
 
+		self._was_pressed = self.held()
 		return pressed
 
 	def _reset(self):
-		"""To be called as part of a global loop."""
-		self.was_pressed = self.held()
+		self.was_pressed = self._was_pressed
+		self._was_pressed = self.held()
 
 
 #Create KeyTrackers for all of the sf.Keyboard keys.

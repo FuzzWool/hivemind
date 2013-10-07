@@ -65,9 +65,12 @@ WALL HANG.
 ! Add crouching > wall hang combination.
 	* Check if Nut is at the x end of a ytile.
 
+	~ Fix:  Nut immediately falls while wall hanging.
+		~ Improved global key resetting.
+		~ Improved global key states.
+
 
 	! improve state handling (divide into steps)
-	! keys sometimes fail to respond (check key module)
 	! wall hang messes up gravity
 	! fix diving lumping
 

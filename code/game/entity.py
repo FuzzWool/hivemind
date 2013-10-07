@@ -470,7 +470,7 @@ class Player(Entity):
 	#	CONTROLS
 
 
-	def init_controls(self): #init
+	def init_controls(self): #init, wall_hang
 
 		#States
 		self.walking = False
@@ -486,6 +486,8 @@ class Player(Entity):
 
 
 	# HANDLERS
+
+
 	def handle_controls(self, key):
 
 		#Flags
@@ -496,24 +498,24 @@ class Player(Entity):
 		jump = key.Z
 		action = key.X #UNUSED
 
+
 		#Controls
-		
 		if not self.wall_hanging:
 			if not self.slide_kicking:
 				self.jump(jump)
 				if not self.crouching:
 					self.walk(left, right)
 
-			# self.dive(down)
+			self.dive(down)
 
-			# self.slide_kick(down)
-			# self.crouch(down)
-			# self.crouch_walk(left, right)
+			self.slide_kick(down)
+			self.crouch(down)
+			self.crouch_walk(left, right)
 
-		# 	#Wall
-		# 	self.cling(left, right)
-		# 	self.wall_jump(jump)
-		# self.wall_hang(left, right, up, down, jump)
+			#Wall
+			self.cling(left, right)
+			self.wall_jump(jump)
+		self.wall_hang(left, right, up, down, jump)
 
 
 
@@ -680,16 +682,21 @@ class Player(Entity):
 		was_wall_hanging = self.wall_hanging
 
 		#Start (2)
+		def start():
+			self.init_controls()
+			self.wall_hanging = True
+
+
 		if self.top_passed_top_wall\
 		and self.hit_side_wall:
-			self.wall_hanging = True
+			start()
 			self.cbox.y = self._top_passed_tile_y1
 
 		if self.crawling:
 
 			if self.facing_left:
 				if self.left_passes_left_wall:
-					self.wall_hanging = True
+					start()
 					self.facing_right = True
 					
 					x = self._left_passes_tile_x1
@@ -700,7 +707,7 @@ class Player(Entity):
 
 			if self.facing_right:
 				if self.right_passes_right_wall:
-					self.wall_hanging = True
+					start()
 					self.facing_left = True
 					
 					x = self._right_passes_tile_x2
