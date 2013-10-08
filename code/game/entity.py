@@ -68,6 +68,7 @@ class Entity(object):
 			x, y = 0, 0
 			w, h = 0, 0
 
+		self.default_sprite_move = (x, y)
 		self.sprite.move((x, y))
 		self.sprite.clip(w, h)
 
@@ -739,6 +740,12 @@ class Player(Entity):
 
 	def draw(self):
 
+		#Sprite > Hitbox default
+		#(because of wall hanging)
+		self.sprite.position = self.cbox.position
+		self.sprite.move(self.default_sprite_move)
+
+
 		#Direction
 		if self.facing_right:
 			if self.sprite.clip.flipped:
@@ -747,45 +754,58 @@ class Player(Entity):
 			if not self.sprite.clip.flipped:
 				self.sprite.clip.flip()
 
-		#Jumping
-		if self.in_air:
-			if self.rising:
-				self.sprite.clip.use(2, 0)
-			if self.falling:
-				self.sprite.clip.use(4, 0)
 
-		#Walking
-		else:
-			if self.moving:
-				sequence = ((1,1),(0,1),(3,1),(2,1))
-				self.sprite.animation.clips = sequence
-				self.sprite.animation.clip_interval = 0.1
+		if not self.wall_hanging:
+
+			#Jumping
+			if self.in_air:
+				if self.rising:
+					self.sprite.clip.use(2, 0)
+				if self.falling:
+					self.sprite.clip.use(4, 0)
+
+			#Walking
 			else:
-				self.sprite.clip.use(0, 0)
+				if self.moving:
+					sequence = ((1,1),(0,1),(3,1),(2,1))
+					self.sprite.animation.clips = sequence
+					self.sprite.animation.clip_interval = 0.1
+				else:
+					self.sprite.clip.use(0,0)
 
-		#Special
+			#Special
 
-		if self.clinging:
-			self.sprite.clip.use(0,2)
+			if self.clinging:
+				self.sprite.clip.use(0,2)
 
-		if self.slide_kicking:
-			self.sprite.clip.use(0,4)
+			if self.slide_kicking:
+				self.sprite.clip.use(0,4)
 
-		if self.crouching:
-			if self.moving:
-				sequence = []
-				for i in range(6): sequence.append((i,3))
-				self.sprite.animation.clips = sequence
-				self.sprite.animation.clip_interval = 0.05
-			else:		
-				self.sprite.clip.use(0,3)
+			if self.crouching:
+				if self.moving:
+					sequence = []
+					for i in range(6): sequence.append((i,3))
+					self.sprite.animation.clips = sequence
+					self.sprite.animation.clip_interval = 0.05
+				else:		
+					self.sprite.clip.use(0,3)
+
 
 		if self.wall_hanging:
-			self.sprite.clip.use(1,2)
+
+			sequence = []
+			for i in range(2,6): sequence.append((i,2))
+			self.sprite.animation.clips = sequence
+			self.sprite.animation.clip_interval = 0.1
+			self.sprite.animation.loop = False
+
+			#reposition sprite > hitbox
+			self.sprite.position = self.cbox.position
+			
+			x = 0
+			if self.facing_left: x = -24
+			self.sprite.move((x,-15))
 
 
-		#Drawing
-		Entity.draw(self)
-
-	def play(self):
 		self.sprite.animation.play()
+		Entity.draw(self)

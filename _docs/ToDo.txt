@@ -64,21 +64,25 @@ WALL HANG.
 
 ! Add crouching > wall hang combination.
 	* Check if Nut is at the x end of a ytile.
-
-	~ Fix:  Nut immediately falls while wall hanging.
-		~ Improved global key resetting.
-		~ Improved global key states.
-
-
-	~ Fix: dropping from a wall hang no longer dives too
-
-	~ Fix: oor crash when going to the right of WorldMap
-		+ WorldMap now has in_range check.
-
-
-	! Dive is weaker while clinging.
+	~ Dive is weaker while clinging.
 
 	! Smooth animation for going to a wall hang.
+		! Start animation sequence when nut goes to wall hang
+			! sprite > cbox movement is ugly
+			! facing check is ugly
+
+		! Don't animate when prior loop was NOT crawling
+		
+
+		! Slide kicking spazzing
+		(broken by animation being set to play before drawing)
+			
+			! Make a brand new animation module for MySprite.
+			  Improvements for...
+			  	* Interruptions and refreshes.
+			  	* Looping.
+
+
 
 
 ====

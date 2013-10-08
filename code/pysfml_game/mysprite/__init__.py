@@ -237,60 +237,140 @@ class box(GameRectangle):
 ###
 
 
+# class animation:
+# #Define an animation in advance, then watch it play.
+
+# 	def __init__(self, MySprite):
+# 		self._ = MySprite
+
+# 		#	CLIP
+# 		self.clips = []
+# 		self.clip_interval = 0.5
+# 		#
+# 		self.clipClock = sf.Clock()
+# 		self.clip_index = 0
+# 		self.clip_init = True
+# 		#
+# 		self.old_clips = []
+
+# 		self.loop = True
+
+
+# 	def play(self):
+# 		has_clips = bool(len(self.clips) > 0)
+
+# 		#Keep resetting if there's no clips.
+# 		if not has_clips\
+# 		or self.old_clips != self.clips:
+# 			self.clip_init = True
+# 			self.clip_index = 0
+# 			self.loop = True
+
+# 		#Change clip
+# 		if has_clips:
+
+# 			#Immediately if it's just been initialized
+# 			ticks = self.clipClock\
+# 					.elapsed_time.seconds
+
+# 			if self.clip_init\
+# 			or ticks > self.clip_interval:
+
+# 				#Use the new clip.
+# 				x, y = self.clips[self.clip_index]
+# 				self._.clip.use(x, y)
+
+# 				#Change the index.
+
+# 				self.clip_index += 1
+# 				if self.clip_index >= len(self.clips):
+# 					if self.loop == True:
+# 						self.clip_index = 0
+# 					else:
+# 						self.clip_index -= 1
+
+# 				#Reset timer.
+# 				self.clipClock.restart()
+# 				self.clip_init = False
+
+# 		#Check if the clip has gone out of the animation.
+# 		#If so, stop animating.
+# 		x, y = self._.clip.x, self._.clip.y
+# 		if (x, y) not in self.clips:
+# 			self.clips = []
+
+# 		self.old_clips = self.clips
+# 	#
+
+
+
 class animation:
-#Define an animation in advance, then watch it play.
+#Plays a SEQUENCE of CLIPS.
+#Refreshes whenether the clips change,
+#but doesn't touch the CLIPS themselves.
 
 	def __init__(self, MySprite):
 		self._ = MySprite
+		self._refresh()
 
-		#	CLIP
+		self._old_clips = []
 		self.clips = []
-		self.clip_interval = 0.5
-		#
-		self.clipClock = sf.Clock()
-		self.clip_index = 0
-		self.clip_init = True
-		#
-		self.old_clips = []
+
 
 	def play(self):
-		has_clips = bool(len(self.clips) > 0)
+		if self._clips_changed():
+			self._refresh()
 
-		#Keep resetting if there's no clips.
-		if not has_clips\
-		or self.old_clips != self.clips:
-			self.clip_init = True
-			self.clip_index = 0
+		if self._interval_hit():
+			self._change_clip()
 
-		#Change clip
-		if has_clips:
-
-			#Immediately if it's just been initialized
-			ticks = self.clipClock\
-					.elapsed_time.seconds
-
-			if self.clip_init\
-			or ticks > self.clip_interval:
-
-				#Use the new clip.
-				x, y = self.clips[self.clip_index]
-				self._.clip.use(x, y)
-
-				#Change the index.
-				self.clip_index += 1
-				if self.clip_index >= len(self.clips):
-					self.clip_index = 0
-
-				#Reset timer.
-				self.clipClock.restart()
-				self.clip_init = False
-
-		#Check if the clip has gone out of the animation.
-		#If so, stop animating.
-		x, y = self._.clip.x, self._.clip.y
-		if (x, y) not in self.clips:
-			self.clips = []
-
-		self.old_clips = self.clips
 	#
 
+
+	def _clips_changed(self):
+		changed = True
+		if self._old_clips == self.clips:
+			changed = False
+		self._old_clips = self.clips
+		return changed
+
+
+
+	def _refresh(self):
+	#Restarts the animation class,
+	#but DOESN'T do anything to the actual clip.
+
+		#_may_progress
+		self.interval = 0.5
+		self._clock = sf.Clock()
+		self._clock.restart()
+		#
+		self.loop = True
+
+
+		#_change_clip
+		self._index = 0
+
+
+
+	def _interval_hit(self):
+	#TRUE every time the clock hits the interval.
+		seconds = self._clock.elapsed_time.seconds
+
+		if seconds > self.interval:
+			self._clock.restart()
+			return True
+		return False
+
+
+	def _change_clip(self):
+	#Increment the clip.
+
+		if self._index < len(self.clips)-1:
+			self._index += 1
+		else:
+			if self.loop: self._index = 0
+
+		#set
+		x, y = self.clips[self._index]
+		self._.clip.use(x,y)
