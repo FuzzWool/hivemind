@@ -245,7 +245,7 @@ class box(GameRectangle):
 
 # 		#	CLIP
 # 		self.clips = []
-# 		self.clip_interval = 0.5
+# 		self.interval = 0.5
 # 		#
 # 		self.clipClock = sf.Clock()
 # 		self.clip_index = 0
@@ -274,7 +274,7 @@ class box(GameRectangle):
 # 					.elapsed_time.seconds
 
 # 			if self.clip_init\
-# 			or ticks > self.clip_interval:
+# 			or ticks > self.interval:
 
 # 				#Use the new clip.
 # 				x, y = self.clips[self.clip_index]
@@ -334,6 +334,18 @@ class animation:
 		self._old_clips = self.clips
 		return changed
 
+	def _clip_in_clips(self): #unused
+		x, y = self._.clip.x, self._.clip.y
+		this_clip = (x,y)
+
+		verified = False
+		for correct_clip in self.clips:
+			if this_clip == correct_clip:
+				verified = True
+
+		return verified
+
+
 
 
 	def _refresh(self):
@@ -366,11 +378,13 @@ class animation:
 	def _change_clip(self):
 	#Increment the clip.
 
-		if self._index < len(self.clips)-1:
-			self._index += 1
-		else:
-			if self.loop: self._index = 0
+		if len(self.clips) != 0:
+			
+			if self._index < len(self.clips)-1:
+				self._index += 1
+			else:
+				if self.loop: self._index = 0
 
-		#set
-		x, y = self.clips[self._index]
-		self._.clip.use(x,y)
+			#set
+			x, y = self.clips[self._index]
+			self._.clip.use(x,y)

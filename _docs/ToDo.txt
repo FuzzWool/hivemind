@@ -74,14 +74,16 @@ WALL HANG.
 		! Don't animate when prior loop was NOT crawling
 		
 
-		! Slide kicking spazzing
-		(broken by animation being set to play before drawing)
+		~ Fix: Slide kicking spazzing
+		(broken by animation sequence)
 			
 			! Make a brand new animation module for MySprite.
 			  Improvements for...
 			  	* Interruptions and refreshes.
 			  	* Looping.
 
+		! Animation clock keeps ticking,
+		while clip is not in the clips.
 
 
 

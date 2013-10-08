@@ -40,6 +40,8 @@ while running:
 
 	key.reset_all()
 
+	Nut.play()
+
 	#Video
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
