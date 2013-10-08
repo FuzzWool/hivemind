@@ -574,7 +574,9 @@ class Player(Entity):
 		
 		#Effect
 		if self.diving and not was_diving:
-			self.move(y= +8)
+
+			if self.clinging: self.move(y= +2)
+			else: self.move(y = +8)
 
 
 

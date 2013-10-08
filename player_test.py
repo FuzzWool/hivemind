@@ -25,12 +25,13 @@ running = True
 while running:
 	
 	#Loading
-	Camera.center = Nut.cbox.center[0], Camera.center[1]
+	Camera.center = Nut.cbox.center
 	
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		worldmap.tiles[12][10].change("0100")
+		# worldmap.tiles[12][10].change("0100")
+		pass
 
 
 	Nut.handle_controls(key)

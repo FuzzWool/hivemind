@@ -20,6 +20,9 @@ Goals:
 TU-styled camera positioning for level sections.
 Camera may zoom in and out within certain boundaries.
 
+! Special 'smoothing' mode for popping back and forth objects.
+(eg, wall hanging)
+
 
 
 Collectables

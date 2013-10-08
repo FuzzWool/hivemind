@@ -76,8 +76,10 @@ WALL HANG.
 		+ WorldMap now has in_range check.
 
 
-	-
-	remove db y_tile
+	! Dive is weaker while clinging.
+
+	! Smooth animation for going to a wall hang.
+
 
 ====
 
