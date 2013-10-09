@@ -71,22 +71,27 @@ WALL HANG.
 			! sprite > cbox movement is ugly
 			! facing check is ugly
 
-		! Don't animate when prior loop was NOT crawling
-		
-
-		~ Fix: Slide kicking spazzing
-		(broken by animation sequence)
-			
-			! Make a brand new animation module for MySprite.
-			  Improvements for...
-			  	* Interruptions and refreshes.
-			  	* Looping.
-
-		! Animation clock keeps ticking,
-		while clip is not in the clips.
+		! Don't animate wall hang when prior loop was NOT crawling
 
 
+		! Animations jitter and get confused.
+			! Make a state priority system.
+				! Make states for every control.
+					jump
+					* crawling
+					x walk
+					x dive
+					x slide kick
+					x crouch
+					x cling
+					x wall_hang
 
+				! Explicitly choose a STATE for drawing.
+				! False all other STATES in priority.
+
+
+			Check MySprite.Animation
+			Timer?
 ====
 
 

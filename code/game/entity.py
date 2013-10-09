@@ -396,10 +396,6 @@ class Entity(object):
 			return True
 		return False
 
-	# @property
-	# def hit_surface_wall(self)
-
-
 
 	@property
 	def falling(self): return bool(self.yVel > 0)
@@ -481,15 +477,13 @@ class Player(Entity):
 
 		#States
 		self.walking = False
+		self.jumping = False ###
 		self.diving = False
 		self.clinging = False
 		self.slide_kicking = False
 		self.crouching = False
+		self.crawling = False
 		self.wall_hanging = False
-
-	@property
-	def crawling(self):
-		return self.crouching and self.moving
 
 
 	# HANDLERS
@@ -517,7 +511,7 @@ class Player(Entity):
 
 			self.slide_kick(down)
 			self.crouch(down)
-			self.crouch_walk(left, right)
+			self.crawl(left, right)
 
 			#Wall
 			self.wall_jump(jump)
@@ -622,10 +616,18 @@ class Player(Entity):
 			self.xVel = 0
 	
 	#
-	def crouch_walk(self, left, right):
+	def crawl(self, left, right):
+
+		#Stop
+		self.crawling = False
+
+		#Start
+		if self.crouching \
+		and (left.held() or right.held()):
+			self.crawling = True
 
 		#Effect
-		if self.crouching:
+		if self.crawling:
 			
 			speed, limit = 1, 1
 
@@ -750,10 +752,8 @@ class Player(Entity):
 
 		#Jumping
 		if self.in_air:
-			if self.rising:
-				self.sprite.clip.use(2, 0)
-			if self.falling:
-				self.sprite.clip.use(4, 0)
+			if self.rising: self.sprite.clip.use(2, 0)
+			if self.falling: self.sprite.clip.use(4, 0)
 
 		#Walking
 		else:
@@ -766,11 +766,8 @@ class Player(Entity):
 
 		#Special
 
-		if self.clinging:
-			self.sprite.clip.use(0,2)
-
-		if self.slide_kicking:
-			self.sprite.clip.use(0,4)
+		if self.clinging: self.sprite.clip.use(0,2)
+		if self.slide_kicking: self.sprite.clip.use(0,4)
 
 		if self.crouching:
 			if self.moving:
