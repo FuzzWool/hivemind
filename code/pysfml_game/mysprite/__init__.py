@@ -309,6 +309,10 @@ class animation:
 #Refreshes whenether the clips change,
 #but doesn't touch the CLIPS themselves.
 
+	interval = 0.5
+	clips = []
+
+
 	def __init__(self, MySprite):
 		self._ = MySprite
 		self._refresh()
@@ -318,14 +322,22 @@ class animation:
 
 
 	def play(self):
-		if self._clips_changed():
+		if self._clips_changed()\
+		or not self._are_clips():
 			self._refresh()
-
-		if self._interval_hit():
 			self._change_clip()
 
-	#
+		if self._interval_hit()\
+		and self._are_clips():
+			self._change_clip()
 
+		#
+
+		if not self._clip_in_clips():
+			self.clips = []
+
+
+	# CONDITIONS
 
 	def _clips_changed(self):
 		changed = True
@@ -334,19 +346,27 @@ class animation:
 		self._old_clips = self.clips
 		return changed
 
+	def _are_clips(self):
+		return bool(len(self.clips) > 0)
+
 	def _clip_in_clips(self): #unused
 		x, y = self._.clip.x, self._.clip.y
 		this_clip = (x,y)
-
-		verified = False
-		for correct_clip in self.clips:
-			if this_clip == correct_clip:
-				verified = True
-
-		return verified
+		return bool(this_clip in self.clips)
 
 
+	def _interval_hit(self):
+	#TRUE every time the clock hits the interval.
+		seconds = self._clock.elapsed_time.seconds
 
+		if seconds > self.interval:
+			self._clock.restart()
+			return True
+		return False
+
+
+
+	# ACTIONS
 
 	def _refresh(self):
 	#Restarts the animation class,
@@ -362,17 +382,6 @@ class animation:
 
 		#_change_clip
 		self._index = 0
-
-
-
-	def _interval_hit(self):
-	#TRUE every time the clock hits the interval.
-		seconds = self._clock.elapsed_time.seconds
-
-		if seconds > self.interval:
-			self._clock.restart()
-			return True
-		return False
 
 
 	def _change_clip(self):

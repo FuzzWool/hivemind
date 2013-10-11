@@ -74,24 +74,8 @@ WALL HANG.
 		! Don't animate wall hang when prior loop was NOT crawling
 
 
-		! Animations jitter and get confused.
-			! Make a state priority system.
-				! Make states for every control.
-					jump
-					* crawling
-					x walk
-					x dive
-					x slide kick
-					x crouch
-					x cling
-					x wall_hang
-
-				! Explicitly choose a STATE for drawing.
-				! False all other STATES in priority.
-
-
-			Check MySprite.Animation
-			Timer?
+		~ Fixed: Animations jitter and get confused.
+			~ MySprite.Animation condition/action fixes
 ====
 
 
