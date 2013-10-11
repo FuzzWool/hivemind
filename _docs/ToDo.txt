@@ -73,9 +73,8 @@ WALL HANG.
 
 		! Don't animate wall hang when prior loop was NOT crawling
 
+		! Re-add wall-hang animation.
 
-		~ Fixed: Animations jitter and get confused.
-			~ MySprite.Animation condition/action fixes
 ====
 
 

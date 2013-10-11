@@ -476,13 +476,10 @@ class Player(Entity):
 	def init_controls(self): #init, wall_hang
 
 		#States
-		self.walking = False
-		self.jumping = False ###
 		self.diving = False
 		self.clinging = False
 		self.slide_kicking = False
 		self.crouching = False
-		self.crawling = False
 		self.wall_hanging = False
 
 
@@ -524,7 +521,6 @@ class Player(Entity):
 	def walk(self, left, right):
 
 		#Effect
-		self.walking = False
 		amt = 0.15
 		walkLim = 3
 
@@ -544,6 +540,7 @@ class Player(Entity):
 				if self.xVel + amt <= walkLim:
 					self.move(+amt, 0)
 				self.left_slowdown(amt)
+
 
 		elif not self.in_air:
 			self.x_slowdown()
@@ -618,17 +615,9 @@ class Player(Entity):
 	#
 	def crawl(self, left, right):
 
-		#Stop
-		self.crawling = False
-
-		#Start
-		if self.crouching \
-		and (left.held() or right.held()):
-			self.crawling = True
-
 		#Effect
-		if self.crawling:
-			
+		if self.crouching:
+
 			speed, limit = 1, 1
 
 			#! Crudely COPY AND PASTED from walk.
@@ -702,7 +691,7 @@ class Player(Entity):
 			start()
 			self.cbox.y = self._top_passed_tile_y1
 
-		if self.crawling:
+		if self.crouching and self.moving:
 
 			if self.facing_left:
 				if self.left_passes_left_wall:
@@ -750,6 +739,7 @@ class Player(Entity):
 			if not self.sprite.clip.flipped:
 				self.sprite.clip.flip()
 
+
 		#Jumping
 		if self.in_air:
 			if self.rising: self.sprite.clip.use(2, 0)
@@ -775,15 +765,24 @@ class Player(Entity):
 				for i in range(6): sequence.append((i,3))
 				self.sprite.animation.clips = sequence
 				self.sprite.animation.interval = 0.05
-			else:		
+			else:
 				self.sprite.clip.use(0,3)
 
+
 		if self.wall_hanging:
-			self.sprite.clip.use(1,2)
+			# self.sprite.clip.use(1,2)
+
+			sequence = []
+			for i in range(2,6): sequence.append((i,2))
+			self.sprite.animation.clips = sequence
+			self.sprite.animation.interval = 0.05
+
 
 
 		#Drawing
 		Entity.draw(self)
+		self.sprite.animation.play()		
 
 	def play(self):
-		self.sprite.animation.play()
+		pass
+		# self.sprite.animation.play()
