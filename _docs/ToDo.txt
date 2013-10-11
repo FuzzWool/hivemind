@@ -74,9 +74,8 @@ WALL HANG.
 
 
 		~ Made class Entity.controls
-			* Tested each and every one of the controls.
-			! Consider making classes for other code,
-			and then cleaning them based on dependancies.
+		~ Made class Entity.physics (replacing Player child)
+
 
 
 		! Play before Draw

@@ -12,8 +12,8 @@ Camera.zoom = 2
 Camera.x, Camera.y = 0, 0
 
 
-from code.game import Player
-Nut = Player("nut")
+from code.game import Entity
+Nut = Entity("nut")
 
 from code.game import WorldMap
 worldmap = WorldMap(2,2)
@@ -34,8 +34,8 @@ while running:
 		pass
 
 
-	Nut.controls.handle(key)
-	Nut.handle_physics()
+	Nut.controls(key)
+	Nut.physics()
 	Nut.collide_with_WorldMap(worldmap)
 
 	key.reset_all()

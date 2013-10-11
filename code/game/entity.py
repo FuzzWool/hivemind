@@ -21,6 +21,7 @@ class Entity(object):
 		self.make_sprite()
 		self.make_cbox()
 
+		self.physics = physics(self.cbox)
 		self.reset_states()
 		self.controls = controls(self)
 
@@ -89,6 +90,9 @@ class Entity(object):
 
 	def draw(self):
 		self.cbox.draw()
+		
+		self.controls.change_sprite(self.sprite)
+		self.sprite.animation.play()
 		self.sprite.draw()
 
 
@@ -250,31 +254,31 @@ class Entity(object):
 
 			if tile.collision_data != "____":
 				if collision.bottom_to_top(tile):
-					if self.yVel > 0: self.yVel = 0
+					if self.physics.yVel > 0: self.physics.yVel = 0
 					self.in_air = False
 					self.hit_top_wall = True
 
 				if collision.top_to_bottom(tile):
-					if self.yVel < 0: self.yVel = 0
+					if self.physics.yVel < 0: self.physics.yVel = 0
 					self.hit_bottom_wall = True 
 
 				if tile.collision_data == "0000":
 					if collision.left_to_right(tile):
-						self.xVel = 0
+						self.physics.xVel = 0
 						self.hit_right_wall = True
 
 					if collision.right_to_left(tile):
-						self.xVel = 0
+						self.physics.xVel = 0
 						self.hit_left_wall = True
 
 				else:
 					if collision.left_to_right(tile)\
 					and tile.slope_collision.anchor_x=="l":
-						self.xVel = 0
+						self.physics.xVel = 0
 
 					if collision.right_to_left(tile)\
 					and tile.slope_collision.anchor_x=="r":
-						self.xVel = 0
+						self.physics.xVel = 0
 
 
 
@@ -398,24 +402,26 @@ class Entity(object):
 
 
 	@property
-	def falling(self): return bool(self.yVel > 0)
+	def falling(self): return bool(self.physics.yVel > 0)
 	@property
-	def rising(self): return bool(self.yVel < 0)
+	def rising(self): return bool(self.physics.yVel < 0)
 	@property
-	def moving(self): return bool(self.xVel != 0)
+	def moving(self): return bool(self.physics.xVel != 0)
 
 
 
+######################
+######################
+######################
+######################
+######################
 
 
 
-
-
-
-class Player(Entity):
-
-	#	MOVEMENT
-	#Game physics.
+class physics:
+#Every movement is *usually* processed here, first.
+#Exceptions are made for flat movements, such as
+#wall hanging.
 
 	xVel, yVel = 0, 0
 	xLim, yLim = 10, 10
@@ -423,11 +429,14 @@ class Player(Entity):
 	gravity = 0.3
 	default_gravity = gravity
 
-	def handle_physics(self):
-	#Processes movements for COLLISION.
-	#Handles GRAVITY.
-		self.cbox.collision\
-		.next.store_move(self.xVel, self.yVel)
+
+	def __init__(self, cbox):
+		self.cbox = cbox
+
+	def __call__(self): #main
+	#Processing all the movements.
+		self.cbox.collision.next\
+		.store_move(self.xVel, self.yVel)
 
 		self.move(0, self.gravity)
 
@@ -465,34 +474,32 @@ class Player(Entity):
 		if self.xVel < 0:
 			if self.xVel + amt > 0: self.xVel = 0
 			else: self.xVel += amt
-	#
-
-
-	#GRAPHICS
-
-	def draw(self):
-
-		#Drawing
-		self.controls.change_sprite(self.sprite)
-		self.sprite.animation.play()
-		Entity.draw(self)
 
 
 
 ######################
 ######################
 ######################
+######################
+######################
+
 
 
 class controls:
-#Controls for the PLAYER.
+#Awaits player key presses, performs a different action
+#based on context.
+
+#WIP
+# Need to clean dependancies.
+# Dependant on:		collision states, cbox
+#
 
 	def __init__(self, Entity):
 		self._ = Entity
 		self._reset()
 
 
-	def handle(self, key): #main
+	def __call__(self, key): #main
 	#Key presses are made into player actions.
 
 		#Flags
@@ -601,28 +608,28 @@ class controls:
 			if left.held():
 
 				self._.facing_left = True
-				if -walkLim <= self._.xVel - amt:
-					self._.move(-amt, 0)
-				self._.right_slowdown(amt)
+				if -walkLim <= self._.physics.xVel - amt:
+					self._.physics.move(-amt, 0)
+				self._.physics.right_slowdown(amt)
 
 
 			if right.held():
 				
 				self._.facing_right = True
-				if self._.xVel + amt <= walkLim:
-					self._.move(+amt, 0)
-				self._.left_slowdown(amt)
+				if self._.physics.xVel + amt <= walkLim:
+					self._.physics.move(+amt, 0)
+				self._.physics.left_slowdown(amt)
 
 
 		elif not self._.in_air:
-			self._.x_slowdown()
+			self._.physics.x_slowdown()
 
 
 	def jump(self, jump):
 
 		#Effect
 		if jump.pressed():
-			if self._.hit_top_wall: self._.yVel = -5.5
+			if self._.hit_top_wall: self._.physics.yVel = -5.5
 
 
 	def dive(self, down):
@@ -637,8 +644,8 @@ class controls:
 		
 		#Effect
 		if self.diving and not was_diving:
-			if self.clinging: self._.move(y= +2)
-			else: self._.move(y = +8)
+			if self.clinging: self._.physics.move(y= +2)
+			else: self._.physics.move(y = +8)
 
 
 
@@ -646,7 +653,7 @@ class controls:
 
 		#Stop
 		was_slide_kicking = self.slide_kicking
-		if self._.xVel == 0: self.slide_kicking = False
+		if self._.physics.xVel == 0: self.slide_kicking = False
 
 		#Start
 		if down.held() and self._.moving:
@@ -658,13 +665,13 @@ class controls:
 
 			#Increase SPEED.
 		if self.slide_kicking and not was_slide_kicking:
-			if self._.facing_left:  self._.move(x= -4)
-			if self._.facing_right: self._.move(x= +4)
+			if self._.facing_left:  self._.physics.move(x= -4)
+			if self._.facing_right: self._.physics.move(x= +4)
 
 			#Use a DECAYED SLOWDOWN.
 		if self.slide_kicking:
 			if not self._.in_air:
-				self._.x_slowdown(0.25)
+				self._.physics.x_slowdown(0.25)
 
 
 	def crouch(self, down):
@@ -680,7 +687,7 @@ class controls:
 
 		#Effect
 		if self.crouching and not was_crouching:
-			self._.xVel = 0
+			self._.physics.xVel = 0
 	
 	#
 	def crawl(self, left, right):
@@ -693,18 +700,18 @@ class controls:
 			#! Crudely COPY AND PASTED from walk.
 			if left.held():	
 				self._.facing_left = True
-				if -limit <= self._.xVel - speed:
-					self._.move(-speed, 0)
-				self._.right_slowdown(speed)
+				if -limit <= self._.physics.xVel - speed:
+					self._.physics.move(-speed, 0)
+				self._.physics.right_slowdown(speed)
 
 			elif right.held():
 				self._.facing_right = True
-				if self._.xVel + speed <= limit:
-					self._.move(+speed, 0)
-				self._.left_slowdown(speed)
+				if self._.physics.xVel + speed <= limit:
+					self._.physics.move(+speed, 0)
+				self._.physics.left_slowdown(speed)
 			#
 			else:
-				self._.x_slowdown()
+				self._.physics.x_slowdown()
 
 
 
@@ -716,7 +723,7 @@ class controls:
 		was_clinging = self.clinging
 		self.clinging = False
 		if self.diving == False:
-			self._.gravity = self._.default_gravity
+			self._.physics.gravity = self._.physics.default_gravity
 
 		#Start
 		if self._.in_air and self._.overlap_side_wall:
@@ -727,8 +734,8 @@ class controls:
 		#Effect
 		if self.clinging:
 			if not self.diving and self._.falling:
-				self._.gravity = 0.02
-				if not was_clinging: self._.yVel = 0
+				self._.physics.gravity = 0.02
+				if not was_clinging: self._.physics.yVel = 0
 
 
 
@@ -737,12 +744,12 @@ class controls:
 		#Effect
 		if self.clinging and jump.pressed():
 			if self._.facing_left:
-				self._.xVel = 4.5
+				self._.physics.xVel = 4.5
 				self._.facing_right = True
 			elif self._.facing_right:
-				self._.xVel = -4.5
+				self._.physics.xVel = -4.5
 				self._.facing_left = True
-			self._.yVel = -4
+			self._.physics.yVel = -4
 
 
 	def wall_hang(self, left, right, up, down, jump):
@@ -787,10 +794,10 @@ class controls:
 
 		#Effect
 		if self.wall_hanging:
-			self._.xVel, self._.yVel = 0, 0
+			self._.physics.xVel, self._.physics.yVel = 0, 0
 
 			#Cancel
 			if down.pressed() or jump.pressed():
 				self.wall_hanging = False
 
-				if jump.pressed(): self._.move(y=-4)
+				if jump.pressed(): self._.physics.move(y=-4)
