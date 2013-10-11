@@ -71,8 +71,12 @@ WALL HANG.
 
 		! Play before Draw
 			! Stuttering
-				! Priority system
+				* Priority system - State Dominos
 				Sprite changing states interrupt each other
+
+				~ Make every state a STATE DOMINO.
+				! Make states for every control and idle.
+				! Drawing explicitly uses state dominos.
 
 ====
 

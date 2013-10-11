@@ -532,11 +532,16 @@ class controls(object):
 
 	def _reset(self): #init, wall_hang
 		#States
-		self.diving = False
-		self.clinging = False
-		self.slide_kicking = False
-		self.crouching = False
-		self.wall_hanging = False
+		self.diving = state_domino(False)
+		self.clinging = state_domino(False)
+		self.slide_kicking = state_domino(False)
+		self.crouching = state_domino(False)
+		self.wall_hanging = state_domino(False)
+
+		dominos = (self.diving, self.clinging,\
+			self.slide_kicking, self.crouching,\
+			self.wall_hanging)
+		self.wall_hanging.dominos_before(dominos[:-1])
 
 		#Special
 		#start at wall_hang, stop at change_sprite
@@ -558,10 +563,10 @@ class controls(object):
 		action = key.X #UNUSED
 
 		#Controls
-		if not self.wall_hanging:
-			if not self.slide_kicking:
+		if not self.wall_hanging():
+			if not self.slide_kicking():
 				self.jump(jump)
-				if not self.crouching:
+				if not self.crouching():
 					self.walk(left, right)
 
 			self.dive(down)
@@ -573,7 +578,7 @@ class controls(object):
 			#Wall
 			self.wall_jump(jump)
 		self.wall_hang(left, right, up, down, jump)
-		if not self.wall_hanging: self.cling(left, right)
+		if not self.wall_hanging(): self.cling(left, right)
 
 
 	def change_sprite(self, sprite, cbox, d_move): #_.draw
@@ -593,8 +598,8 @@ class controls(object):
 				sprite.clip.flip()
 
 
-		if not self.wall_hanging:
-			if not self.slide_kicking:
+		if not self.wall_hanging():
+			if not self.slide_kicking():
 				#Jumping
 				if self.collision.in_air:
 					if self.physics.rising:
@@ -613,10 +618,10 @@ class controls(object):
 						sprite.clip.use(0, 0)
 
 				#Special
-				if self.clinging: sprite.clip.use(0,2)
-			if self.slide_kicking: sprite.clip.use(0,4)
+				if self.clinging(): sprite.clip.use(0,2)
+			if self.slide_kicking(): sprite.clip.use(0,4)
 
-			if self.crouching:
+			if self.crouching():
 				if self.physics.moving:
 					sequence = []
 					for i in range(6): sequence.append((i,3))
@@ -627,7 +632,7 @@ class controls(object):
 					sprite.clip.use(0,3)
 
 
-		if self.wall_hanging:
+		if self.wall_hanging():
 
 			if self.animate_crawl_to_hang:
 				sequence = []
@@ -687,15 +692,15 @@ class controls(object):
 	def dive(self, down):
 
 		#Stop
-		was_diving = self.diving
-		self.diving = False
+		was_diving = self.diving.state
+		self.diving(False)
 		
 		#Start
 		if self.collision.in_air and down.pressed():
-			self.diving = True
+			self.diving(True)
 		
 		#Effect
-		if self.diving and not was_diving:
+		if self.diving() and not was_diving:
 			if self.clinging: self.physics.move(y= +2)
 			else: self.physics.move(y = +8)
 
@@ -704,24 +709,25 @@ class controls(object):
 	def slide_kick(self, down):
 
 		#Stop
-		was_slide_kicking = self.slide_kicking
-		if self.physics.xVel == 0: self.slide_kicking = False
+		was_slide_kicking = self.slide_kicking.state
+		if self.physics.xVel == 0:
+			self.slide_kicking(False)
 
 		#Start
 		if down.held() and self.physics.moving:
 			if not self.collision.in_air:
-				if not self.crouching:
-					self.slide_kicking = True
+				if not self.crouching():
+					self.slide_kicking(True)
 
 		#Effect (2)
 
 			#Increase SPEED.
-		if self.slide_kicking and not was_slide_kicking:
+		if self.slide_kicking() and not was_slide_kicking:
 			if self.facing_left:  self.physics.move(x= -4)
 			if self.facing_right: self.physics.move(x= +4)
 
 			#Use a DECAYED SLOWDOWN.
-		if self.slide_kicking:
+		if self.slide_kicking():
 			if not self.collision.in_air:
 				self.physics.x_slowdown(0.25)
 
@@ -729,23 +735,23 @@ class controls(object):
 	def crouch(self, down):
 
 		#Stop
-		was_crouching = self.crouching
-		self.crouching = False
+		was_crouching = self.crouching.state
+		self.crouching(False)
 
 		#Start
-		if self.slide_kicking: return
+		if self.slide_kicking(): return
 		if down.held() and not self.collision.in_air:
-			self.crouching = True
+			self.crouching(True)
 
 		#Effect
-		if self.crouching and not was_crouching:
+		if self.crouching() and not was_crouching:
 			self.physics.xVel = 0
 	
 	#
 	def crawl(self, left, right):
 
 		#Effect
-		if self.crouching:
+		if self.crouching():
 
 			speed, limit = 1, 1
 
@@ -772,20 +778,21 @@ class controls(object):
 	def cling(self, left, right):
 
 		#Stop
-		was_clinging = self.clinging
-		self.clinging = False
-		if self.diving == False:
-			self.physics.gravity = self.physics.default_gravity
+		was_clinging = self.clinging.state
+		self.clinging(False)
+		if not self.diving():
+			self.physics.gravity\
+			= self.physics.default_gravity
 
 		#Start
 		if self.collision.in_air and self.collision.overlap_side_wall:
 			if self.collision.hit_right_wall and self.facing_left\
 			or self.collision.hit_left_wall and self.facing_right:
-				self.clinging = True
+				self.clinging(True)
 
 		#Effect
-		if self.clinging:
-			if not self.diving and self.physics.falling:
+		if self.clinging():
+			if not self.diving() and self.physics.falling:
 				self.physics.gravity = 0.02
 				if not was_clinging: self.physics.yVel = 0
 
@@ -794,7 +801,7 @@ class controls(object):
 	def wall_jump(self, jump):
 
 		#Effect
-		if self.clinging and jump.pressed():
+		if self.clinging() and jump.pressed():
 			if self.facing_left:
 				self.physics.xVel = 4.5
 				self.facing_right = True
@@ -807,12 +814,12 @@ class controls(object):
 	def wall_hang(self, left, right, up, down, jump):
 	#If the entity's top passes the wall's top.
 
-		was_wall_hanging = self.wall_hanging
+		was_wall_hanging = self.wall_hanging.state
 
 		#Start (2)
 		def start():
 			self._reset()
-			self.wall_hanging = True
+			self.wall_hanging(True)
 
 
 		if self.collision.top_passed_top_wall\
@@ -820,7 +827,7 @@ class controls(object):
 			start()
 			self.cbox.y = self.collision._top_passed_tile_y1
 
-		if self.crouching and self.physics.moving:
+		if self.crouching() and self.physics.moving:
 
 			if self.facing_left:
 				if self.collision.left_passes_left_wall:
@@ -847,11 +854,38 @@ class controls(object):
 
 
 		#Effect/Stop
-		if self.wall_hanging:
+		if self.wall_hanging():
 			self.physics.xVel, self.physics.yVel = 0, 0
 
 			#Cancel
 			if down.pressed() or jump.pressed():
-				self.wall_hanging = False
+				self.wall_hanging(False)
 
 				if jump.pressed(): self.physics.move(y=-4)
+
+
+
+class state_domino(object): #control
+#When the domino falls, so do those before it.
+#FALSE all the states before a TRUE domino.
+
+	def __init__(self, truth):
+		self.state = truth
+
+
+	def dominos_before(self, dominos):
+		self._dominos_before = dominos
+
+		#Every domino before it is given the rest,
+		#recursed until the very last domino.
+		if len(dominos) > 0:
+			dominos[-1].dominos_before(dominos[:-1])
+
+
+	def __call__(self, truth=None):
+		if truth == None: return self.state
+
+		self.state = truth
+		if truth == True:
+			for state in self._dominos_before:
+				state(False)
