@@ -22,7 +22,7 @@ class Entity(object):
 		self.make_cbox()
 
 		self.reset_states()
-		self.init_controls()
+		self.controls = controls(self)
 
 	image = None
 	texture = None
@@ -468,25 +468,32 @@ class Player(Entity):
 	#
 
 
+	#GRAPHICS
+
+	def draw(self):
+
+		#Drawing
+		self.controls.change_sprite(self.sprite)
+		self.sprite.animation.play()
+		Entity.draw(self)
 
 
-	#	CONTROLS
+
+######################
+######################
+######################
 
 
-	def init_controls(self): #init, wall_hang
+class controls:
+#Controls for the PLAYER.
 
-		#States
-		self.diving = False
-		self.clinging = False
-		self.slide_kicking = False
-		self.crouching = False
-		self.wall_hanging = False
+	def __init__(self, Entity):
+		self._ = Entity
+		self._reset()
 
 
-	# HANDLERS
-
-
-	def handle_controls(self, key):
+	def handle(self, key): #main
+	#Key presses are made into player actions.
 
 		#Flags
 		left = key.LEFT
@@ -516,7 +523,72 @@ class Player(Entity):
 		if not self.wall_hanging: self.cling(left, right)
 
 
-	# Control definitions
+	def change_sprite(self, sprite): #_.draw
+	#How the state handling affects the sprite to choose.
+		
+		#Direction
+		if self._.facing_right:
+			if sprite.clip.flipped:
+				sprite.clip.flip()
+		if self._.facing_left:
+			if not sprite.clip.flipped:
+				sprite.clip.flip()
+
+
+		#Jumping
+		if self._.in_air:
+			if self._.rising: sprite.clip.use(2, 0)
+			if self._.falling: sprite.clip.use(4, 0)
+
+		#Walking
+		else:
+			if self._.moving:
+				sequence = ((1,1),(0,1),(3,1),(2,1))
+				sprite.animation.clips = sequence
+				sprite.animation.interval = 0.1
+			else:
+				sprite.clip.use(0, 0)
+
+		#Special
+
+		if self.clinging: sprite.clip.use(0,2)
+		if self.slide_kicking: sprite.clip.use(0,4)
+
+		if self.crouching:
+			if self._.moving:
+				sequence = []
+				for i in range(6): sequence.append((i,3))
+				sprite.animation.clips = sequence
+				sprite.animation.interval = 0.05
+			else:
+				sprite.clip.use(0,3)
+
+
+		if self.wall_hanging:
+			# sprite.clip.use(1,2)
+
+			sequence = []
+			for i in range(2,6): sequence.append((i,2))
+			sprite.animation.clips = sequence
+			sprite.animation.interval = 0.05
+
+
+
+
+	# RESET
+
+	def _reset(self): #init, wall_hang
+
+		#States
+		self.diving = False
+		self.clinging = False
+		self.slide_kicking = False
+		self.crouching = False
+		self.wall_hanging = False
+
+
+
+	# ACTIONS
 	
 	def walk(self, left, right):
 
@@ -528,47 +600,45 @@ class Player(Entity):
 
 			if left.held():
 
-				self.facing_left = True
-				if -walkLim <= self.xVel - amt:
-					self.move(-amt, 0)
-				self.right_slowdown(amt)
+				self._.facing_left = True
+				if -walkLim <= self._.xVel - amt:
+					self._.move(-amt, 0)
+				self._.right_slowdown(amt)
 
 
 			if right.held():
 				
-				self.facing_right = True
-				if self.xVel + amt <= walkLim:
-					self.move(+amt, 0)
-				self.left_slowdown(amt)
+				self._.facing_right = True
+				if self._.xVel + amt <= walkLim:
+					self._.move(+amt, 0)
+				self._.left_slowdown(amt)
 
 
-		elif not self.in_air:
-			self.x_slowdown()
+		elif not self._.in_air:
+			self._.x_slowdown()
 
 
 	def jump(self, jump):
 
 		#Effect
 		if jump.pressed():
-			if self.hit_top_wall: self.yVel = -5.5
+			if self._.hit_top_wall: self._.yVel = -5.5
 
 
 	def dive(self, down):
-
 
 		#Stop
 		was_diving = self.diving
 		self.diving = False
 		
 		#Start
-		if self.in_air and down.pressed():
+		if self._.in_air and down.pressed():
 			self.diving = True
 		
 		#Effect
 		if self.diving and not was_diving:
-
-			if self.clinging: self.move(y= +2)
-			else: self.move(y = +8)
+			if self.clinging: self._.move(y= +2)
+			else: self._.move(y = +8)
 
 
 
@@ -576,11 +646,11 @@ class Player(Entity):
 
 		#Stop
 		was_slide_kicking = self.slide_kicking
-		if self.xVel == 0: self.slide_kicking = False
+		if self._.xVel == 0: self.slide_kicking = False
 
 		#Start
-		if down.held() and self.moving:
-			if not self.in_air:
+		if down.held() and self._.moving:
+			if not self._.in_air:
 				if not self.crouching:
 					self.slide_kicking = True
 
@@ -588,13 +658,13 @@ class Player(Entity):
 
 			#Increase SPEED.
 		if self.slide_kicking and not was_slide_kicking:
-			if self.facing_left:  self.move(x= -4)
-			if self.facing_right: self.move(x= +4)
+			if self._.facing_left:  self._.move(x= -4)
+			if self._.facing_right: self._.move(x= +4)
 
 			#Use a DECAYED SLOWDOWN.
 		if self.slide_kicking:
-			if not self.in_air:
-				self.x_slowdown(0.25)
+			if not self._.in_air:
+				self._.x_slowdown(0.25)
 
 
 	def crouch(self, down):
@@ -605,12 +675,12 @@ class Player(Entity):
 
 		#Start
 		if self.slide_kicking: return
-		if down.held() and not self.in_air:
+		if down.held() and not self._.in_air:
 			self.crouching = True
 
 		#Effect
 		if self.crouching and not was_crouching:
-			self.xVel = 0
+			self._.xVel = 0
 	
 	#
 	def crawl(self, left, right):
@@ -622,19 +692,19 @@ class Player(Entity):
 
 			#! Crudely COPY AND PASTED from walk.
 			if left.held():	
-				self.facing_left = True
-				if -limit <= self.xVel - speed:
-					self.move(-speed, 0)
-				self.right_slowdown(speed)
+				self._.facing_left = True
+				if -limit <= self._.xVel - speed:
+					self._.move(-speed, 0)
+				self._.right_slowdown(speed)
 
 			elif right.held():
-				self.facing_right = True
-				if self.xVel + speed <= limit:
-					self.move(+speed, 0)
-				self.left_slowdown(speed)
+				self._.facing_right = True
+				if self._.xVel + speed <= limit:
+					self._.move(+speed, 0)
+				self._.left_slowdown(speed)
 			#
 			else:
-				self.x_slowdown()
+				self._.x_slowdown()
 
 
 
@@ -646,19 +716,19 @@ class Player(Entity):
 		was_clinging = self.clinging
 		self.clinging = False
 		if self.diving == False:
-			self.gravity = self.default_gravity
+			self._.gravity = self._.default_gravity
 
 		#Start
-		if self.in_air and self.overlap_side_wall:
-			if self.hit_right_wall and self.facing_left\
-			or self.hit_left_wall and self.facing_right:
+		if self._.in_air and self._.overlap_side_wall:
+			if self._.hit_right_wall and self._.facing_left\
+			or self._.hit_left_wall and self._.facing_right:
 				self.clinging = True
 
 		#Effect
 		if self.clinging:
-			if not self.diving and self.falling:
-				self.gravity = 0.02
-				if not was_clinging: self.yVel = 0
+			if not self.diving and self._.falling:
+				self._.gravity = 0.02
+				if not was_clinging: self._.yVel = 0
 
 
 
@@ -666,13 +736,13 @@ class Player(Entity):
 
 		#Effect
 		if self.clinging and jump.pressed():
-			if self.facing_left:
-				self.xVel = 4.5
-				self.facing_right = True
-			elif self.facing_right:
-				self.xVel = -4.5
-				self.facing_left = True
-			self.yVel = -4
+			if self._.facing_left:
+				self._.xVel = 4.5
+				self._.facing_right = True
+			elif self._.facing_right:
+				self._.xVel = -4.5
+				self._.facing_left = True
+			self._.yVel = -4
 
 
 	def wall_hang(self, left, right, up, down, jump):
@@ -682,107 +752,45 @@ class Player(Entity):
 
 		#Start (2)
 		def start():
-			self.init_controls()
+			self._reset()
 			self.wall_hanging = True
 
 
-		if self.top_passed_top_wall\
-		and self.hit_side_wall:
+		if self._.top_passed_top_wall\
+		and self._.hit_side_wall:
 			start()
-			self.cbox.y = self._top_passed_tile_y1
+			self._.cbox.y = self._._top_passed_tile_y1
 
-		if self.crouching and self.moving:
+		if self.crouching and self._.moving:
 
-			if self.facing_left:
-				if self.left_passes_left_wall:
+			if self._.facing_left:
+				if self._.left_passes_left_wall:
 					start()
-					self.facing_right = True
+					self._.facing_right = True
 					
-					x = self._left_passes_tile_x1
-					y = self._side_passes_tile_y1
-					self.cbox.x = x
-					self.cbox.y = y
+					x = self._._left_passes_tile_x1
+					y = self._._side_passes_tile_y1
+					self._.cbox.x = x
+					self._.cbox.y = y
 
 
-			if self.facing_right:
-				if self.right_passes_right_wall:
+			if self._.facing_right:
+				if self._.right_passes_right_wall:
 					start()
-					self.facing_left = True
+					self._.facing_left = True
 					
-					x = self._right_passes_tile_x2
-					y = self._side_passes_tile_y1
-					self.cbox.x = x
-					self.cbox.y = y
+					x = self._._right_passes_tile_x2
+					y = self._._side_passes_tile_y1
+					self._.cbox.x = x
+					self._.cbox.y = y
 
 
 		#Effect
 		if self.wall_hanging:
-			self.xVel, self.yVel = 0, 0
+			self._.xVel, self._.yVel = 0, 0
 
 			#Cancel
 			if down.pressed() or jump.pressed():
 				self.wall_hanging = False
 
-				if jump.pressed(): self.move(y=-4)
-
-
-
-	#GRAPHICS
-
-	def draw(self):
-
-		#Direction
-		if self.facing_right:
-			if self.sprite.clip.flipped:
-				self.sprite.clip.flip()
-		if self.facing_left:
-			if not self.sprite.clip.flipped:
-				self.sprite.clip.flip()
-
-
-		#Jumping
-		if self.in_air:
-			if self.rising: self.sprite.clip.use(2, 0)
-			if self.falling: self.sprite.clip.use(4, 0)
-
-		#Walking
-		else:
-			if self.moving:
-				sequence = ((1,1),(0,1),(3,1),(2,1))
-				self.sprite.animation.clips = sequence
-				self.sprite.animation.interval = 0.1
-			else:
-				self.sprite.clip.use(0, 0)
-
-		#Special
-
-		if self.clinging: self.sprite.clip.use(0,2)
-		if self.slide_kicking: self.sprite.clip.use(0,4)
-
-		if self.crouching:
-			if self.moving:
-				sequence = []
-				for i in range(6): sequence.append((i,3))
-				self.sprite.animation.clips = sequence
-				self.sprite.animation.interval = 0.05
-			else:
-				self.sprite.clip.use(0,3)
-
-
-		if self.wall_hanging:
-			# self.sprite.clip.use(1,2)
-
-			sequence = []
-			for i in range(2,6): sequence.append((i,2))
-			self.sprite.animation.clips = sequence
-			self.sprite.animation.interval = 0.05
-
-
-
-		#Drawing
-		Entity.draw(self)
-		self.sprite.animation.play()		
-
-	def play(self):
-		pass
-		# self.sprite.animation.play()
+				if jump.pressed(): self._.move(y=-4)

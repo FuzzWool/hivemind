@@ -63,7 +63,6 @@ WALL HANG.
 
 
 ! Add crouching > wall hang combination.
-	* Check if Nut is at the x end of a ytile.
 	~ Dive is weaker while clinging.
 
 	! Smooth animation for going to a wall hang.
@@ -73,7 +72,18 @@ WALL HANG.
 
 		! Don't animate wall hang when prior loop was NOT crawling
 
-		! Re-add wall-hang animation.
+
+		~ Made class Entity.controls
+			* Tested each and every one of the controls.
+			! Consider making classes for other code,
+			and then cleaning them based on dependancies.
+
+
+		! Play before Draw
+			! Stuttering
+				! Make a PRIORTY system.
+
+
 
 ====
 

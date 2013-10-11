@@ -34,15 +34,13 @@ while running:
 		pass
 
 
-	Nut.handle_controls(key)
+	Nut.controls.handle(key)
 	Nut.handle_physics()
 	Nut.collide_with_WorldMap(worldmap)
 
 	key.reset_all()
 
-	Nut.play()
-
-	#Video
+	#Videoz
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
 	worldmap.draw(Camera)
