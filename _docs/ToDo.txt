@@ -65,27 +65,14 @@ WALL HANG.
 ! Add crouching > wall hang combination.
 	~ Dive is weaker while clinging.
 
-	! Smooth animation for going to a wall hang.
-		! Start animation sequence when nut goes to wall hang
-			! sprite > cbox movement is ugly
-			! facing check is ugly
-
-		! Don't animate wall hang when prior loop was NOT crawling
-
-
-		~ Made class Entity.controls
-		~ Made class Entity.physics (replacing Player child)
-		~ Made class Entity.collision
-
-		~ cleaned Entity sub-class dependancies (bind)
-			~ cleaned .controls dependancies
-			~ cleaned .collision dependancies
+		~ Re-added (less glitchy) wall hang.
+		~ Don't animate wall hang when prior loop was NOT crawling
+		
 
 		! Play before Draw
 			! Stuttering
-				! Make a PRIORTY system.
-
-
+				! Priority system
+				Sprite changing states interrupt each other
 
 ====
 

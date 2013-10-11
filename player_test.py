@@ -6,17 +6,17 @@ from code.pysfml_game import quit
 from code.pysfml_game import window
 from code.pysfml_game import key
 from code.pysfml_game import MyCamera
+from code.game import Entity
+from code.game import WorldMap
+
 
 Camera = MyCamera()
 Camera.zoom = 2
 Camera.x, Camera.y = 0, 0
 
-
-from code.game import Entity
 Nut = Entity("nut")
-
-from code.game import WorldMap
 worldmap = WorldMap(2,2)
+
 
 
 #########################################################

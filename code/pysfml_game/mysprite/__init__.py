@@ -244,7 +244,7 @@ class animation:
 
 	interval = 0.5
 	clips = []
-
+	loop = True
 
 	def __init__(self, MySprite):
 		self._ = MySprite
@@ -252,7 +252,15 @@ class animation:
 
 		self._old_clips = []
 		self.clips = []
+		self.loop = True
 
+
+	#
+
+
+	@property
+	def has_ended(self): #outside
+		return bool(self._index >= len(self.clips)-1)
 
 	def play(self):
 		if self._clips_changed()\
@@ -309,8 +317,6 @@ class animation:
 		self.interval = 0.5
 		self._clock = sf.Clock()
 		self._clock.restart()
-		#
-		self.loop = True
 
 
 		#_change_clip
@@ -327,6 +333,6 @@ class animation:
 			else:
 				if self.loop: self._index = 0
 
-			#set
-			x, y = self.clips[self._index]
-			self._.clip.use(x,y)
+			if not (self.has_ended and not self.loop):
+				x, y = self.clips[self._index]
+				self._.clip.use(x,y)

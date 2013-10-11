@@ -102,7 +102,8 @@ class Entity(object):
 	def draw(self):
 		self.cbox.draw()
 		
-		self.controls.change_sprite(self.sprite)
+		self.controls.change_sprite\
+		(self.sprite, self.cbox, self.default_sprite_move)
 		self.sprite.animation.play()
 		self.sprite.draw()
 
@@ -349,8 +350,8 @@ class collision:
 					self.top_passed_top_wall = True
 					self._top_passed_tile_y1 = tile_y1
 
+
 		#crawling > wall hang
-		
 
 		if y_tile != None:
 			
@@ -515,6 +516,36 @@ class controls(object):
 		self._init()
 
 
+	# STATES
+
+	def _init(self): #init
+		self._reset()
+		self.facing_left = False
+
+	@property
+	def facing_right(self):
+		return not self.facing_left
+	@facing_right.setter
+	def facing_right(self, arg):
+		self.facing_left = not arg
+
+
+	def _reset(self): #init, wall_hang
+		#States
+		self.diving = False
+		self.clinging = False
+		self.slide_kicking = False
+		self.crouching = False
+		self.wall_hanging = False
+
+		#Special
+		#start at wall_hang, stop at change_sprite
+		self.animate_crawl_to_hang = False
+
+
+
+	# METHODS
+
 	def __call__(self, key): #main
 	#Key presses are made into player actions.
 
@@ -525,7 +556,6 @@ class controls(object):
 		down = key.DOWN
 		jump = key.Z
 		action = key.X #UNUSED
-
 
 		#Controls
 		if not self.wall_hanging:
@@ -546,9 +576,14 @@ class controls(object):
 		if not self.wall_hanging: self.cling(left, right)
 
 
-	def change_sprite(self, sprite): #_.draw
+	def change_sprite(self, sprite, cbox, d_move): #_.draw
 	#How the state handling affects the sprite to choose.
 		
+		#sprite > cbox position
+		sprite.x, sprite.y = cbox.x, cbox.y
+		sprite.move(d_move)
+
+
 		#Direction
 		if self.facing_right:
 			if sprite.clip.flipped:
@@ -558,71 +593,58 @@ class controls(object):
 				sprite.clip.flip()
 
 
-		#Jumping
-		if self.collision.in_air:
-			if self.physics.rising: sprite.clip.use(2, 0)
-			if self.physics.falling: sprite.clip.use(4, 0)
+		if not self.wall_hanging:
+			if not self.slide_kicking:
+				#Jumping
+				if self.collision.in_air:
+					if self.physics.rising:
+						sprite.clip.use(2, 0)
+					if self.physics.falling:
+						sprite.clip.use(4, 0)
 
-		#Walking
-		else:
-			if self.physics.moving:
-				sequence = ((1,1),(0,1),(3,1),(2,1))
-				sprite.animation.clips = sequence
-				sprite.animation.interval = 0.1
-			else:
-				sprite.clip.use(0, 0)
+				#Walking
+				else:
+					if self.physics.moving:
+						sequence = ((1,1),(0,1),(3,1),(2,1))
+						sprite.animation.clips = sequence
+						sprite.animation.interval = 0.1
+						sprite.animation.loop = True
+					else:
+						sprite.clip.use(0, 0)
 
-		#Special
+				#Special
+				if self.clinging: sprite.clip.use(0,2)
+			if self.slide_kicking: sprite.clip.use(0,4)
 
-		if self.clinging: sprite.clip.use(0,2)
-		if self.slide_kicking: sprite.clip.use(0,4)
-
-		if self.crouching:
-			if self.physics.moving:
-				sequence = []
-				for i in range(6): sequence.append((i,3))
-				sprite.animation.clips = sequence
-				sprite.animation.interval = 0.05
-			else:
-				sprite.clip.use(0,3)
+			if self.crouching:
+				if self.physics.moving:
+					sequence = []
+					for i in range(6): sequence.append((i,3))
+					sprite.animation.clips = sequence
+					sprite.animation.interval = 0.05
+					sprite.animation.loop = True
+				else:
+					sprite.clip.use(0,3)
 
 
 		if self.wall_hanging:
-			# sprite.clip.use(1,2)
 
-			sequence = []
-			for i in range(2,6): sequence.append((i,2))
-			sprite.animation.clips = sequence
-			sprite.animation.interval = 0.05
+			if self.animate_crawl_to_hang:
+				sequence = []
+				for i in range(1,6): sequence.append((i,2))
+				sprite.animation.clips = sequence
+				sprite.animation.interval = 0.1
+				sprite.animation.loop = False
 
+				#sprite > cbox position
+				x = -12
+				if self.facing_right: x = -x
+				sprite.move((x,-1))
 
-
-
-	# STATES
-
-	def _init(self): #init
-		self._reset()
-		self.facing_left = False
-
-	@property
-	def facing_right(self):
-		return not self.facing_left
-	@facing_right.setter
-	def facing_right(self, arg):
-		self.facing_left = not arg
-
-	def _reset(self): #init, wall_hang
-
-		#States
-		self.diving = False
-		self.clinging = False
-		self.slide_kicking = False
-		self.crouching = False
-		self.wall_hanging = False
-
-
-
-
+				if sprite.animation.has_ended:
+					self.animate_crawl_to_hang = False
+			else:
+				sprite.clip.use(1,2)
 
 	# ACTIONS
 	
@@ -803,6 +825,7 @@ class controls(object):
 			if self.facing_left:
 				if self.collision.left_passes_left_wall:
 					start()
+					self.animate_crawl_to_hang = True
 					self.facing_right = True
 
 					x = self.collision._left_passes_tile_x1
@@ -814,6 +837,7 @@ class controls(object):
 			if self.facing_right:
 				if self.collision.right_passes_right_wall:
 					start()
+					self.animate_crawl_to_hang = True
 					self.facing_left = True
 					
 					x = self.collision._right_passes_tile_x2
@@ -822,7 +846,7 @@ class controls(object):
 					self.cbox.y = y
 
 
-		#Effect
+		#Effect/Stop
 		if self.wall_hanging:
 			self.physics.xVel, self.physics.yVel = 0, 0
 
