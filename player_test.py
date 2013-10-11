@@ -31,12 +31,12 @@ while running:
 	if quit(): running = False
 	if key.RETURN.pressed():
 		# worldmap.tiles[12][10].change("0100")
-		pass
+		print Entity.controls.facing_right
 
 
 	Nut.controls(key)
 	Nut.physics()
-	Nut.collide_with_WorldMap(worldmap)
+	Nut.collision(worldmap)
 
 	key.reset_all()
 

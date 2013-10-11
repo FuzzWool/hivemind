@@ -75,7 +75,7 @@ WALL HANG.
 
 		~ Made class Entity.controls
 		~ Made class Entity.physics (replacing Player child)
-
+		~ Made class Entity.collision
 
 
 		! Play before Draw
