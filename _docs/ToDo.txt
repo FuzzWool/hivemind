@@ -28,11 +28,11 @@ x Add a SLIDE KICK.
 	* Increased jump amount.
 		+ Nut may now cleanly jump over 2-tile platforms.
 
-! Add WALL HANG.
++ Add WALL HANG.
 	* Nut must be completely overlapping a wall to hug.
 	~ Dive is now a block movement.
 	+ Add basic wall hang.
-	! Add crouching > wall hang combination.
+	+ Add crouching > wall hang combination.
 
 
 ! Add DUST EFFECT.
@@ -41,34 +41,15 @@ x Add a SLIDE KICK.
 	! Walking - Greater effect depending on speed.
 
 
+! Add DYNAMIC CAMERA.
+! Add COLLECTIBLES which OPEN ROOMS.
+! Add TIMER.
 
 ! clean overall state handling
 ! Use less MAGIC NUMBERS in state handling.
 ! Add PUNCHING.
 
 ====
-
-GOAL: Add WALL HANG.
-
-If falling downwards,
-and Nut passes the point of managing to jump a wall,
-WALL HANG.
-
-+ Add basic wall hang.
-	+ Added previous class to collision.
-
-	+ Added cancel for pressing buttons.
-	+ Added jump.
-	~ Dive is now a block movement.
-
-
-+ Add crouching > wall hang combination.
-	~ Dive is weaker while clinging.
-
-		~ Re-added (less glitchy) wall hang.
-		~ Don't animate wall hang when prior loop was NOT crawling
-
-		~ Fixed ledge spaz glitch.
 
 
 ====
