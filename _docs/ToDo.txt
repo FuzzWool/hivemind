@@ -71,4 +71,9 @@ x Add a SLIDE KICK.
 		! Create BURST of particles.
 			* Create sprites in a random area.
 			! Animate them.
-				! Create Animation module
+				! Create Animation module *
+
+		! Animation
+			+ Goto (Steadily move from A to B)
+
+			! Next, add support for speeding up.
