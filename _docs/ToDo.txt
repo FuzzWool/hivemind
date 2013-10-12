@@ -62,23 +62,13 @@ WALL HANG.
 	~ Dive is now a block movement.
 
 
-! Add crouching > wall hang combination.
++ Add crouching > wall hang combination.
 	~ Dive is weaker while clinging.
 
 		~ Re-added (less glitchy) wall hang.
 		~ Don't animate wall hang when prior loop was NOT crawling
-		
 
-		! Play before Draw
-			! Stuttering
-				* Priority system - State Dominos
-				Sprite changing states interrupt each other
-
-				~ Make every state a STATE DOMINO.
-				~ Make states for every control and idle.	
-				~ Drawing explicitly uses state dominos.
-
-			! Ledge spaz glitch
+		~ Fixed ledge spaz glitch.
 
 
 ====

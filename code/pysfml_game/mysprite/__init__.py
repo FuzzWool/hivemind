@@ -254,12 +254,16 @@ class animation:
 		self.clips = []
 		self.loop = True
 
+		#
+
+		self.has_ended = False
+
 
 	#
 
 
 	@property
-	def has_ended(self): #outside
+	def last_frame(self): #change clip
 		return bool(self._index >= len(self.clips)-1)
 
 	def play(self):
@@ -290,7 +294,7 @@ class animation:
 	def _are_clips(self):
 		return bool(len(self.clips) > 0)
 
-	def _clip_in_clips(self): #unused
+	def _clip_in_clips(self):
 		x, y = self._.clip.x, self._.clip.y
 		this_clip = (x,y)
 		return bool(this_clip in self.clips)
@@ -336,3 +340,8 @@ class animation:
 			if not (self.has_ended and not self.loop):
 				x, y = self.clips[self._index]
 				self._.clip.use(x,y)
+
+			if self.last_frame and not self.loop:
+				self.has_ended = True
+			else:
+				self.has_ended = False

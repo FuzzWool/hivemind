@@ -653,15 +653,14 @@ class controls(object):
 				sprite.move((x,-1))
 
 				if sprite.animation.has_ended:
-					print 1
 					self.animate_crawl_to_hang = False
 			else:
 				sprite.clip.use(1,2)
 
+
 	# ACTIONS
 	
 	def move(self, left, right):
-
 		
 		#Stop
 		self.moving(False)
