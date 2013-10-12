@@ -75,8 +75,11 @@ WALL HANG.
 				Sprite changing states interrupt each other
 
 				~ Make every state a STATE DOMINO.
-				! Make states for every control and idle.
-				! Drawing explicitly uses state dominos.
+				~ Make states for every control and idle.	
+				~ Drawing explicitly uses state dominos.
+
+			! Ledge spaz glitch
+
 
 ====
 

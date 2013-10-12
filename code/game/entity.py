@@ -100,7 +100,7 @@ class Entity(object):
 
 
 	def draw(self):
-		self.cbox.draw()
+		# self.cbox.draw()
 		
 		self.controls.change_sprite\
 		(self.sprite, self.cbox, self.default_sprite_move)
@@ -532,16 +532,20 @@ class controls(object):
 
 	def _reset(self): #init, wall_hang
 		#States
+		self.idle = state_domino(True)
+		self.moving = state_domino(False)
 		self.diving = state_domino(False)
 		self.clinging = state_domino(False)
-		self.slide_kicking = state_domino(False)
 		self.crouching = state_domino(False)
+		self.crawling = state_domino(False)
+		self.slide_kicking = state_domino(False)
 		self.wall_hanging = state_domino(False)
 
-		dominos = (self.diving, self.clinging,\
-			self.slide_kicking, self.crouching,\
-			self.wall_hanging)
-		self.wall_hanging.dominos_before(dominos[:-1])
+		self.dominos = [self.idle, self.moving,\
+			self.diving, self.clinging,\
+			self.crouching, self.crawling,\
+			self.slide_kicking, self.wall_hanging]
+		self.wall_hanging.dominos_before(self.dominos[:-1])
 
 		#Special
 		#start at wall_hang, stop at change_sprite
@@ -562,12 +566,15 @@ class controls(object):
 		jump = key.Z
 		action = key.X #UNUSED
 
+
 		#Controls
+		if self.dominos[-1].all_false(): self.idle(True)
+
 		if not self.wall_hanging():
 			if not self.slide_kicking():
 				self.jump(jump)
 				if not self.crouching():
-					self.walk(left, right)
+					self.move(left, right)
 
 			self.dive(down)
 
@@ -598,38 +605,37 @@ class controls(object):
 				sprite.clip.flip()
 
 
-		if not self.wall_hanging():
-			if not self.slide_kicking():
-				#Jumping
-				if self.collision.in_air:
-					if self.physics.rising:
-						sprite.clip.use(2, 0)
-					if self.physics.falling:
-						sprite.clip.use(4, 0)
 
-				#Walking
-				else:
-					if self.physics.moving:
-						sequence = ((1,1),(0,1),(3,1),(2,1))
-						sprite.animation.clips = sequence
-						sprite.animation.interval = 0.1
-						sprite.animation.loop = True
-					else:
-						sprite.clip.use(0, 0)
+		# Jumping/Standing/Walking
+		if self.idle() or self.moving():
+			if self.collision.in_air:
+				if self.physics.rising:
+					sprite.clip.use(2, 0)
+				if self.physics.falling:
+					sprite.clip.use(4, 0)
 
-				#Special
-				if self.clinging(): sprite.clip.use(0,2)
-			if self.slide_kicking(): sprite.clip.use(0,4)
+			elif self.idle():
+				sprite.clip.use(0, 0)
 
-			if self.crouching():
-				if self.physics.moving:
-					sequence = []
-					for i in range(6): sequence.append((i,3))
-					sprite.animation.clips = sequence
-					sprite.animation.interval = 0.05
-					sprite.animation.loop = True
-				else:
-					sprite.clip.use(0,3)
+			elif self.moving():
+				sequence = ((1,1),(0,1),(3,1),(2,1))
+				sprite.animation.clips = sequence
+				sprite.animation.interval = 0.1
+				sprite.animation.loop = True
+
+		#Special
+		if self.clinging(): sprite.clip.use(0,2)
+		if self.slide_kicking(): sprite.clip.use(0,4)
+
+		if self.crouching():
+			if self.physics.moving:
+				sequence = []
+				for i in range(6): sequence.append((i,3))
+				sprite.animation.clips = sequence
+				sprite.animation.interval = 0.05
+				sprite.animation.loop = True
+			else:
+				sprite.clip.use(0,3)
 
 
 		if self.wall_hanging():
@@ -647,19 +653,28 @@ class controls(object):
 				sprite.move((x,-1))
 
 				if sprite.animation.has_ended:
+					print 1
 					self.animate_crawl_to_hang = False
 			else:
 				sprite.clip.use(1,2)
 
 	# ACTIONS
 	
-	def walk(self, left, right):
+	def move(self, left, right):
+
+		
+		#Stop
+		self.moving(False)
+
+		#Start
+		if left.held() or right.held():
+			self.moving(True)
 
 		#Effect
 		amt = 0.15
 		walkLim = 3
 
-		if left.held() or right.held():
+		if self.moving():
 
 			if left.held():
 
@@ -675,7 +690,6 @@ class controls(object):
 				if self.physics.xVel + amt <= walkLim:
 					self.physics.move(+amt, 0)
 				self.physics.left_slowdown(amt)
-
 
 		elif not self.collision.in_air:
 			self.physics.x_slowdown()
@@ -889,3 +903,14 @@ class state_domino(object): #control
 		if truth == True:
 			for state in self._dominos_before:
 				state(False)
+
+
+
+	#Utilities
+
+	def all_false(self):
+		truth = True
+		for state in self._dominos_before + [self]:
+			if state() == True:
+				truth = False
+		return truth

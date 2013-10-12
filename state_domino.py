@@ -25,10 +25,17 @@ class state_domino(object):
 			for state in self._dominos_before:
 				state(False)
 
+	def all_false(self):
+		truth = True
+		for state in self._dominos_before + [self]:
+			if state() == True:
+				truth = False
+		return truth
+
 
 dominos = []
 for i in range(5):
-	domino = state_domino(True)
+	domino = state_domino(False)
 	dominos.append(domino)
 
 dominos[-1].dominos_before(dominos[:-1])
@@ -36,7 +43,10 @@ dominos[-1].dominos_before(dominos[:-1])
 # for domino in dominos:
 # 	print domino._dominos_before
 
-dominos[3](True)
+# dominos[3](True)
 
-for domino in dominos:
-	print domino()
+# for domino in dominos:
+# 	print domino()
+
+
+print dominos[-1].all_false()
