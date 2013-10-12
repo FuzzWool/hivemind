@@ -20,36 +20,67 @@ class TestAnimation:
 #Provides short-hands for calculating easy physics.
 
 	def __init__(self, MySprite):
-		self._ = MySprite
-		self.A, self.B = (0,0),(0,0)
-		self._reset_values()
+		self._ = MySprite		
+		self.goto = goto(self)
+
+		self._reset_all()
 
 	####
+	#public
 
 	xSpeed, ySpeed = 1, 1
 	xVel, yVel = 0, 0
 
-	def goto(self, x=0, y=0): #call once
-	#Steadily move from A to B.
-		self.A = self._.position
-		self.B = x, y
-		self._reset_values()
-
-	#
+	goto = None
 
 	def play(self):
 	#Continue operations.
 	#Will be idle if not called every loop.
+		if self.goto.enabled:
+			self.goto.play()
 
-		this_x, that_x = self._.x, self.B[0]
-		this_y, that_y = self._.y, self.B[1]
+	####
+	#private
+
+	def _reset_all(self): #init, goto
+		self._reset_values()
+		self._reset_modes()
+
+	def _reset_values(self): #_reset_all
+		self.xSpeed, self.ySpeed = 1, 1
+		self.xVel, self.yVel = 0, 0
+
+	def _reset_modes(self): #_reset_all
+		self.goto.enabled = False
+
+
+# ANIMATION MODES
+
+class goto:
+# Go from position A to position B
+# The user may set Speed and Velocity
+# Once the end has been reached, it abruptly cuts off
+	def __init__(self, Animation): self._ = Animation
+
+	def __call__(self, x, y):
+		self._._reset_all()
+		self.enabled = True
+		self.A = self._._.position
+		self.B = x, y
+	#
+
+	enabled = False
+
+	def play(self): #_.play
+		this_x, that_x = self._._.x, self.B[0]
+		this_y, that_y = self._._.y, self.B[1]
 
 		#Get closer...
 		x, y = 0,0
-		if this_x < that_x: x = +self.xSpeed
-		if this_x > that_x: x = -self.xSpeed
-		if this_y < that_y: y = +self.ySpeed
-		if this_y > that_y: y = -self.ySpeed
+		if this_x < that_x: x = +self._.xSpeed
+		if this_x > that_x: x = -self._.xSpeed
+		if this_y < that_y: y = +self._.ySpeed
+		if this_y > that_y: y = -self._.ySpeed
 
 		#...but don't overshoot!
 		if 0 < x:
@@ -66,21 +97,11 @@ class TestAnimation:
 				y = that_y - this_y
 
 		#Speed up.
-		self.xSpeed += self.xVel
-		self.ySpeed += self.yVel
+		self._.xSpeed += self._.xVel
+		self._.ySpeed += self._.yVel
 
 		# if (x,y) != (0,0): print x,y
-		self._.move((x,y))
-
-	####
-
-	def _reset_values(self): #init, goto
-		self.xSpeed, self.ySpeed = 1, 1
-		self.xVel, self.yVel = 0, 0
-
-
-
-
+		self._._.move((x,y))
 
 
 #####

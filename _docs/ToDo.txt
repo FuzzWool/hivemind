@@ -75,5 +75,9 @@ x Add a SLIDE KICK.
 
 		! Animation
 			+ Goto (Steadily move from A to B)
+			+ Speed, Vel
+			~ Changed goto into it's own toggled mode.
 
-			! Next, add support for speeding up.
+			! Create hop mode,
+			a mode which starts from A and ends when A passes
+			it again.
