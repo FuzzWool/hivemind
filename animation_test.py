@@ -22,26 +22,63 @@ class TestAnimation:
 	def __init__(self, MySprite):
 		self._ = MySprite
 		self.A, self.B = (0,0),(0,0)
+		self._reset_values()
 
+	####
 
-	def play(self): #loop
+	xSpeed, ySpeed = 1, 1
+	xVel, yVel = 0, 0
+
+	def goto(self, x=0, y=0): #call once
+	#Steadily move from A to B.
+		self.A = self._.position
+		self.B = x, y
+		self._reset_values()
+
+	#
+
+	def play(self):
 	#Continue operations.
 	#Will be idle if not called every loop.
 
-		#move
-		x, y = 0, 0
-		if self._.x < self.B[0]: x = +1
-		if self._.x > self.B[0]: x = -1
-		if self._.y < self.B[1]: y = +1
-		if self._.y > self.B[1]: y = -1
+		this_x, that_x = self._.x, self.B[0]
+		this_y, that_y = self._.y, self.B[1]
 
+		#Get closer...
+		x, y = 0,0
+		if this_x < that_x: x = +self.xSpeed
+		if this_x > that_x: x = -self.xSpeed
+		if this_y < that_y: y = +self.ySpeed
+		if this_y > that_y: y = -self.ySpeed
+
+		#...but don't overshoot!
+		if 0 < x:
+			if this_x < that_x < this_x + x:
+				x = that_x - this_x
+		if x < 0:
+			if this_x + x < that_x < this_x:
+				x = that_x - this_x
+		if 0 < y:
+			if this_y < that_y < this_y + y:
+				y = that_y - this_y
+		if y < 0:
+			if this_y < that_y < this_y + y:
+				y = that_y - this_y
+
+		#Speed up.
+		self.xSpeed += self.xVel
+		self.ySpeed += self.yVel
+
+		# if (x,y) != (0,0): print x,y
 		self._.move((x,y))
 
 	####
 
-	def goto(self, x=None, y=None): #call once
-	#Steadily move from A to B.
-		self.A = self._.position
+	def _reset_values(self): #init, goto
+		self.xSpeed, self.ySpeed = 1, 1
+		self.xVel, self.yVel = 0, 0
+
+
 
 
 
@@ -53,7 +90,9 @@ sprite = TestSprite(texture)
 sprite.clip.set(40,40)
 sprite.position = 100,100
 
-sprite.testanimation.goto(200,200)
+sprite.testanimation.goto(500,100)
+sprite.testanimation.xSpeed = 0
+sprite.testanimation.xVel = 0.1
 
 running = True
 while running:
