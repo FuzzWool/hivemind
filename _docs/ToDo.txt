@@ -48,13 +48,27 @@ x Add a SLIDE KICK.
 ! clean overall state handling
 ! Use less MAGIC NUMBERS in state handling.
 ! Add PUNCHING.
-
-====
-
-
-====
-
-
 ! Create a new LEVEL EDITOR.
-
 ! Holding both directional keys causes weird Nut walking.
+
+====
+
+! Add DUST EFFECT.
+	! Dive - slamming the ground. Bigger effect if faster.
+	! Wall-jumping - trail in mid-air; hitting a surface.
+	! Walking - Greater effect depending on speed.
+
+
+	! Add PARTICLE GENERATOR
+		! Area to spawn
+		! Amount to spawn
+
+		! Add PARTICLES for...
+			! Disappearing (cover the whole sprite)
+			! Impact
+
+
+		! Create BURST of particles.
+			* Create sprites in a random area.
+			! Animate them.
+				! Create Animation module
