@@ -80,10 +80,13 @@ x Add a SLIDE KICK.
 
 			~ Movement is now changed by 'special movements' methods.
 
+			+ Animation cleanliness functionality
+			~ Animation split into public/private model
+			~ Animation given optional configs and public-only states in seperate class
+
 			+ Added a bounce condition
 			! Added an oscillate condition
 
-			! Include states for...
 			! Chaining animations
 				x/y
 				in a sequence
