@@ -34,15 +34,16 @@ class TestAnimation(object):
 	speed, vel = 1,0
 
 
-	#States - (@property details in private)
+	#States
 
 	#stopped when
 	stop_when_positive = True
 	stop_when_negative = True
 
-	#when stopped
-	cut_off = True
-	bounce = False
+	#when stopped (@property details in private)
+	cut_off = True 		#Stop immediately
+	bounce = False		#Bounce off the target like a wall
+	oscillate = False	#Move back and forth the target
 
 
 	#Method
@@ -57,8 +58,12 @@ class TestAnimation(object):
 
 			#SPECIAL MOVEMENT
 			if self._end_passed(move):
-				if self.cut_off: move = self.f_cut_off()
-				if self.bounce: move = self.m_bounce(move)
+				if self.cut_off:
+					move = self.f_cut_off()
+				if self.bounce:
+					move = self.m_bounce(move)
+				if self.oscillate:
+					move = self.m_oscillate(move)
 
 			#Speed up.
 			self.speed += self.vel
@@ -113,7 +118,18 @@ class TestAnimation(object):
 		self.speed += self.vel
 		move = self.speed
 
-		print self.speed, self.vel, move
+		return move
+
+	def m_oscillate(self, move):
+	#rock back and forth the target
+		vel_mlt = self.config.oscillate_vel_multiply
+		vel_stop = self.config.oscillate_vel_stop
+		self.vel = -(self.vel*vel_mlt)
+
+		#Stop
+		if abs(self.vel) > vel_stop:
+			self.vel = 0
+			move = self.f_cut_off()
 
 		return move
 
@@ -143,10 +159,12 @@ class TestAnimation(object):
 
 	_cut_off = True
 	_bounce = False
+	_oscillate = False
 
 	def _reset_states(self): #reset, 'states' below
 		self._cut_off = False
 		self._bounce = False
+		self._oscillate = False
 
 	@property
 	def cut_off(self): return self._cut_off
@@ -159,6 +177,12 @@ class TestAnimation(object):
 	@bounce.setter
 	def bounce(self, truth):
 		self._reset_states(); self._bounce = truth
+
+	@property
+	def oscillate(self): return self._oscillate
+	@oscillate.setter
+	def oscillate(self, truth):
+		self._reset_states(); self._oscillate = truth
 
 	#
 
@@ -187,6 +211,9 @@ class config(object):
 		self.bounce_speed_cut = 2
 		self.bounce_vel_cut = 1.5
 		#
+		self.oscillate_vel_multiply = 2
+		self.oscillate_vel_stop = 2
+		#
 		self.loop_reset()
 
 	def loop_reset(self):
@@ -211,6 +238,17 @@ class config(object):
 		else: pass
 
 
+	@property
+	def oscillate_infinitely(self):
+		return bool(self.oscillate_vel_multiply == 1)
+	@oscillate_infinitely.setter
+	def oscillate_infinitely(self, truth):
+		if truth:
+			self._.oscillate = True
+			self.oscillate_vel_multiply = 1
+		else: pass
+
+
 #####
 
 texture = MyTexture("assets/characters/nut/cbox.png")
@@ -220,11 +258,10 @@ sprite.position = 200,200
 
 
 def animate():
-	sprite.animation_x.target = sprite.x
-	sprite.animation_x.vel = float(-0.1)
-	sprite.animation_x.speed = float(1)
-	sprite.animation_x.stop_when_positive = False
-	sprite.animation_x.config.bounce_infinitely = True
+	sprite.animation_x.target = sprite.x+1
+	sprite.animation_x.vel = 0.1
+	sprite.animation_x.speed = 5
+	sprite.animation_x.config.oscillate_infinitely = True
 #
 
 running = True
@@ -233,10 +270,8 @@ while running:
 	if quit(): running = False
 	if key.RETURN.pressed():
 		if sprite.animation_x.stopped:
+			sprite.x = 200
 			animate()
-
-		else:
-			sprite.animation_x.cut_off = True
 
 
 	key.reset_all()

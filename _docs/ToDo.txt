@@ -77,12 +77,12 @@ x Add a SLIDE KICK.
 		~ Remade again, split by axis.
 			
 			+ Add stop_when_positive and stop_when_negative
-
 			+ Added Bounce Infinitely
-				+ may infinitely bounce if vel/speed cut is 1
 
-			! Add oscillate state
-			! Add oscillate infinitely
+			+ Added Oscillate
+				. oscillations have to tighten to stop
+				. osicllations stop when vel becomes too large
+				+ Added oscillate infinitely
 
 			! Bind other animations to the total length
 			of the frames... such as
