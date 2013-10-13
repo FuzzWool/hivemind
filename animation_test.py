@@ -17,14 +17,14 @@ class TestSprite(MySprite):
 		self.animation_y = TestAnimation(self, "y")
 
 
-class TestAnimation:
+class TestAnimation(object):
 #Provides short-hands for calculating easy physics.
 #One for each axis: x and y.
 
 	def __init__(self, MySprite, axis):
 		self._ = MySprite
 		self.axis = axis
-		self.config = config()
+		self.config = config(self)
 
 
 	# PUBLIC
@@ -110,7 +110,11 @@ class TestAnimation:
 			self.speed = self.f_cut_off()
 			self.vel = 0
 
+		self.speed += self.vel
 		move = self.speed
+
+		print self.speed, self.vel, move
+
 		return move
 
 
@@ -168,11 +172,12 @@ class TestAnimation:
 		return False
 
 
-class config:
+class config(object):
 #States and values which change how Animation
 #operates, but aren't absolutely vital.
 
-	def __init__(self):
+	def __init__(self, Animation):
+		self._ = Animation
 		self.full_reset()
 
 	def full_reset(self):
@@ -188,30 +193,51 @@ class config:
 		#Public Only
 		self.bounced = False
 
+
+	#SHORT-HANDS
+
+	@property
+	def bounce_infinitely(self):
+		if self.bounce_speed_cut == 1\
+		and self.bounce_vel_cut == 1:
+			return True
+		return False
+	@bounce_infinitely.setter
+	def bounce_infinitely(self, truth):
+		if truth:
+			self._.bounce = True
+			self.bounce_speed_cut = 1
+			self.bounce_vel_cut = 1
+		else: pass
+
+
 #####
 
 texture = MyTexture("assets/characters/nut/cbox.png")
 sprite = TestSprite(texture)
 sprite.clip.set(40,40)
-sprite.position = 0,0
+sprite.position = 200,200
 
 
 def animate():
 	sprite.animation_x.target = sprite.x
-	sprite.animation_x.vel = -0.5
-	sprite.animation_x.speed = 10
-	sprite.animation_x.bounce = True
+	sprite.animation_x.vel = float(-0.1)
+	sprite.animation_x.speed = float(1)
 	sprite.animation_x.stop_when_positive = False
-
+	sprite.animation_x.config.bounce_infinitely = True
 #
 
 running = True
 while running:
 	#Logic
 	if quit(): running = False
-	if key.RETURN.held():
+	if key.RETURN.pressed():
 		if sprite.animation_x.stopped:
 			animate()
+
+		else:
+			sprite.animation_x.cut_off = True
+
 
 	key.reset_all()
 
