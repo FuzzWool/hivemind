@@ -2,7 +2,7 @@ from code.pysfml_game import quit, window, key, sf
 #########################################################
 from code.pysfml_game import MyCamera
 Camera = MyCamera()
-Camera.zoom = 1
+Camera.zoom = 2
 Camera.x, Camera.y = 0, 0
 
 #####
@@ -26,8 +26,10 @@ class TestAnimation:
 
 	#
 
+	#Movement settings
 	target = None
 	speed, vel = 1,0
+
 
 	def goto(self, z):
 	#Define the target.
@@ -35,14 +37,17 @@ class TestAnimation:
 
 	def play(self):
 	#Move closer to the target.
-		if self.axis == "x": position = self._.x
-		if self.axis == "y": position = self._.y
+		position = self.position()
 
 		#Move towards the target.
 		if position != self.target\
 		and self.target != None:
 			move = self.speed
-			move = self._cut_off(move)
+
+			#SPECIAL MOVEMENT
+			if self._end_passed(move):
+				# move = self._cut_off()
+				move = self._bounce(move)
 
 			#Speed up.
 			self.speed += self.vel
@@ -54,20 +59,47 @@ class TestAnimation:
 
 	#
 
-	def _cut_off(self, move):
-	#Returns move, cuts off if the target is exceeded.
-		if self.axis == "x": position = self._.x
-		if self.axis == "y": position = self._.y
+	# SPECIAL MOVEMENT
+
+	def _end_passed(self, move): #play
+	#True if the end has just been moved passed.
+		position = self.position()
 
 		if 0 < move:
-			if position < self.target < position + move:
-				move = self.target - position
+			if position <= self.target <= position + move:
+				return True
 
 		if move < 0:
-			if position + move < self.target < position:
-				move = self.target - position
+			if position + move <= self.target <= position:
+				return True
 
+		return False
+
+	def _cut_off(self): #play
+	#Halt the sprite as soon as it reaches the target.
+		return self.target - self.position()
+
+	def _bounce(self, move): #play
+	#Bounce the sprite against the 'wall' of the target.
+		self.speed = -(self.speed/2)
+		self.vel = abs(self.vel/1.5)
+
+		#Stop doing this.
+		frames_since = self.speed + (self.vel*10)
+		if abs(self.speed) < frames_since:
+			self.speed = self._cut_off()
+			self.vel = 0
+
+		move = self.speed
 		return move
+
+
+	# utilities
+
+	def position(self): #play
+		if self.axis == "x": return self._.x
+		if self.axis == "y": return self._.y
+
 
 #####
 
@@ -77,8 +109,9 @@ sprite.clip.set(40,40)
 sprite.position = 100,100
 
 
-sprite.animation_x.goto(500)
-sprite.animation_x.vel = 0.1
+sprite.animation_x.goto(300)
+sprite.animation_x.vel = 0.5
+sprite.animation_x.speed = 0.1
 
 #
 

@@ -76,3 +76,14 @@ x Add a SLIDE KICK.
 		!! Animation
 		~ Remade again, split by axis.
 			* Keep moving until the point is reached.
+
+
+			~ Movement is now changed by 'special movements' methods.
+
+			+ Added a bounce condition
+			! Added an oscillate condition
+
+			! Include states for...
+			! Chaining animations
+				x/y
+				in a sequence
