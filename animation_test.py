@@ -35,6 +35,12 @@ class TestAnimation:
 
 
 	#States - (@property details in private)
+
+	#stopped when
+	stop_when_positive = True
+	stop_when_negative = True
+
+	#when stopped
 	cut_off = True
 	bounce = False
 
@@ -43,7 +49,7 @@ class TestAnimation:
 	def play(self):
 	#Move closer to the target.
 		self.config.loop_reset()
-		position = self.position()
+		position = self.position
 
 		#Move towards the target.
 		if not self.stopped:
@@ -72,13 +78,13 @@ class TestAnimation:
 
 	def _end_passed(self, move): #play
 	#True if the end has just been moved passed.
-		position = self.position()
+		position = self.position
 
-		if 0 < move:
+		if 0 < move and self.stop_when_positive:
 			if position <= self.target <= position + move:
 				return True
 
-		if move < 0:
+		if move < 0 and self.stop_when_negative:
 			if position + move <= self.target <= position:
 				return True
 
@@ -86,7 +92,7 @@ class TestAnimation:
 
 	def f_cut_off(self): #play
 	#Halt the sprite as soon as it reaches the target.
-		return self.target - self.position()
+		return self.target - self.position
 
 	def m_bounce(self, move): #play
 	#Bounce the sprite against the 'wall' of the target.
@@ -96,11 +102,11 @@ class TestAnimation:
 
 		#Bounce back.
 		self.speed = -(self.speed/speed_cut)
-		self.vel = abs(self.vel/vel_cut)
+		self.vel = (self.vel/vel_cut)
 
 		#Stop doing this.
 		frames_since = self.speed + (self.vel*10)
-		if abs(self.speed) < frames_since:
+		if abs(self.speed) < abs(frames_since):
 			self.speed = self.f_cut_off()
 			self.vel = 0
 
@@ -117,10 +123,13 @@ class TestAnimation:
 		self.target = None
 		self.speed, self.vel = 1,0
 		#
+		self.stop_when_positive = True
+		self.stop_when_negative = True
 		self._reset_states()
 		#
 		self.config.full_reset()
 
+	@property
 	def position(self): #play
 		if self.axis == "x": return self._.x
 		if self.axis == "y": return self._.y
@@ -151,9 +160,11 @@ class TestAnimation:
 
 	@property
 	def stopped(self): #play
-		if self.position() == self.target\
+		if self.position == self.target\
 		or self.target == None:
-			return True
+			if (self.speed<0 and self.stop_when_negative)\
+			or (0<self.speed and self.stop_when_positive):
+				return True
 		return False
 
 
@@ -179,16 +190,18 @@ class config:
 
 #####
 
-texture = MyTexture("assets/characters/nut/sheet.png")
+texture = MyTexture("assets/characters/nut/cbox.png")
 sprite = TestSprite(texture)
 sprite.clip.set(40,40)
-sprite.position = 100,100
+sprite.position = 0,0
 
 
-sprite.animation_x.target = 300
-sprite.animation_x.vel = 0.5
-sprite.animation_x.speed = 0.1
-sprite.animation_x.bounce = True
+def animate():
+	sprite.animation_x.target = sprite.x
+	sprite.animation_x.vel = -0.5
+	sprite.animation_x.speed = 10
+	sprite.animation_x.bounce = True
+	sprite.animation_x.stop_when_positive = False
 
 #
 
@@ -196,14 +209,17 @@ running = True
 while running:
 	#Logic
 	if quit(): running = False
-	if key.RETURN.pressed(): pass
+	if key.RETURN.held():
+		if sprite.animation_x.stopped:
+			animate()
+
 	key.reset_all()
 
 	#Video
 	sprite.animation_x.play()
-	sprite.animation_y.play()
+	# sprite.animation_y.play()
 	
-	window.clear(sf.Color(255,200,200))
+	window.clear(sf.Color(0,0,0))
 	sprite.draw()
 	window.view = Camera
 	window.display()
