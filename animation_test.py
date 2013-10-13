@@ -13,96 +13,61 @@ class TestSprite(MySprite):
 	def __init__ (self, args):
 		MySprite.__init__(self, args)
 
-		self.testanimation = TestAnimation(self)
+		self.animation_x = TestAnimation(self, "x")
+		self.animation_y = TestAnimation(self, "y")
 
 
 class TestAnimation:
 #Provides short-hands for calculating easy physics.
+#One for each axis: x and y.
+	def __init__(self, MySprite, axis):
+		self._ = MySprite
+		self.axis = axis
 
-	def __init__(self, MySprite):
-		self._ = MySprite		
-		self.goto = goto(self)
-
-		self._reset_all()
-
-	####
-	#public
-
-	xSpeed, ySpeed = 1, 1
-	xVel, yVel = 0, 0
-
-	goto = None
-
-	def play(self):
-	#Continue operations.
-	#Will be idle if not called every loop.
-		if self.goto.enabled:
-			self.goto.play()
-
-	####
-	#private
-
-	def _reset_all(self): #init, goto
-		self._reset_values()
-		self._reset_modes()
-
-	def _reset_values(self): #_reset_all
-		self.xSpeed, self.ySpeed = 1, 1
-		self.xVel, self.yVel = 0, 0
-
-	def _reset_modes(self): #_reset_all
-		self.goto.enabled = False
-
-
-# ANIMATION MODES
-
-class goto:
-# Go from position A to position B
-# The user may set Speed and Velocity
-# Once the end has been reached, it abruptly cuts off
-	def __init__(self, Animation): self._ = Animation
-
-	def __call__(self, x, y):
-		self._._reset_all()
-		self.enabled = True
-		self.A = self._._.position
-		self.B = x, y
 	#
 
-	enabled = False
+	target = None
+	speed, vel = 1,0
 
-	def play(self): #_.play
-		this_x, that_x = self._._.x, self.B[0]
-		this_y, that_y = self._._.y, self.B[1]
+	def goto(self, z):
+	#Define the target.
+		self.target = z
 
-		#Get closer...
-		x, y = 0,0
-		if this_x < that_x: x = +self._.xSpeed
-		if this_x > that_x: x = -self._.xSpeed
-		if this_y < that_y: y = +self._.ySpeed
-		if this_y > that_y: y = -self._.ySpeed
+	def play(self):
+	#Move closer to the target.
+		if self.axis == "x": position = self._.x
+		if self.axis == "y": position = self._.y
 
-		#...but don't overshoot!
-		if 0 < x:
-			if this_x < that_x < this_x + x:
-				x = that_x - this_x
-		if x < 0:
-			if this_x + x < that_x < this_x:
-				x = that_x - this_x
-		if 0 < y:
-			if this_y < that_y < this_y + y:
-				y = that_y - this_y
-		if y < 0:
-			if this_y < that_y < this_y + y:
-				y = that_y - this_y
+		#Move towards the target.
+		if position != self.target\
+		and self.target != None:
+			move = self.speed
+			move = self._cut_off(move)
 
-		#Speed up.
-		self._.xSpeed += self._.xVel
-		self._.ySpeed += self._.yVel
+			#Speed up.
+			self.speed += self.vel
 
-		# if (x,y) != (0,0): print x,y
-		self._._.move((x,y))
+			#Confirm movement.
+			if self.axis == "x": self._.move((move, 0))
+			if self.axis == "y": self._.move((0, move))
 
+
+	#
+
+	def _cut_off(self, move):
+	#Returns move, cuts off if the target is exceeded.
+		if self.axis == "x": position = self._.x
+		if self.axis == "y": position = self._.y
+
+		if 0 < move:
+			if position < self.target < position + move:
+				move = self.target - position
+
+		if move < 0:
+			if position + move < self.target < position:
+				move = self.target - position
+
+		return move
 
 #####
 
@@ -111,9 +76,11 @@ sprite = TestSprite(texture)
 sprite.clip.set(40,40)
 sprite.position = 100,100
 
-sprite.testanimation.goto(500,100)
-sprite.testanimation.xSpeed = 0
-sprite.testanimation.xVel = 0.1
+
+sprite.animation_x.goto(500)
+sprite.animation_x.vel = 0.1
+
+#
 
 running = True
 while running:
@@ -124,10 +91,10 @@ while running:
 
 
 	#Video
+	sprite.animation_x.play()
+	sprite.animation_y.play()
+	
 	window.clear(sf.Color(255,200,200))
-
-	sprite.testanimation.play()
 	sprite.draw()
-
 	window.view = Camera
 	window.display()

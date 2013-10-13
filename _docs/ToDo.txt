@@ -71,13 +71,8 @@ x Add a SLIDE KICK.
 		! Create BURST of particles.
 			* Create sprites in a random area.
 			! Animate them.
-				! Create Animation module *
+				! Create Animation module !!
 
-		! Animation
-			+ Goto (Steadily move from A to B)
-			+ Speed, Vel
-			~ Changed goto into it's own toggled mode.
-
-			! Create hop mode,
-			a mode which starts from A and ends when A passes
-			it again.
+		!! Animation
+		~ Remade again, split by axis.
+			* Keep moving until the point is reached.
