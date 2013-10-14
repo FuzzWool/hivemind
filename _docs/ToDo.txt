@@ -73,22 +73,13 @@ x Add a SLIDE KICK.
 			! Animate them.
 				! Create Animation module !!
 
-		!! Animation
-		~ Remade again, split by axis.
+
+		!! new axis_animation /w subclasses
+		A bare class with fleshed out sub-classes.
+
+			* Basic animation which starts and then stops.
 			
-			+ Add stop_when_positive and stop_when_negative
-			+ Added Bounce Infinitely
-
-			+ Added Oscillate
-				. oscillations have to tighten to stop
-				. osicllations stop when vel becomes too large
-				+ Added oscillate infinitely
-
-			! Bind other animations to the total length
-			of the frames... such as
-				transparency
-
-			To compute movements in advance (to reduce lag),
-			make them independant of a sprite binding.
-			
-				Play until stoppped, record results.
+			! Bouncing sub-class.
+				! Fix stopping.
+				! Test infinite bouncing.
+				! Add bounce distance predicting.
