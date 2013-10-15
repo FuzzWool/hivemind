@@ -14,8 +14,13 @@ class Particle_Generator:
 #Makes lots of little particles.
 #Has a few handy presets.
 
+# WIP - only catered for dust effects.
+
 	def __init__(self):
 		self.particles = []
+
+
+	# MAKE (public)
 
 	def create(self, amt=1, area=(0,0,0,0)):
 	#Randomly speckle the sprites within an area.
@@ -24,6 +29,10 @@ class Particle_Generator:
 		for i in range(amt):
 			sprite = MySprite(texture)
 			sprite.clip.set(10,10)
+
+			#random CLIP
+			c = random_int(0,3)
+			sprite.clip.use(c,0)
 
 			#Random AREA.
 			x1, y1, x2, y2 = area
@@ -37,18 +46,40 @@ class Particle_Generator:
 			sprite.x, sprite.y = x, y
 			#
 
+			#animate
+			self._jump(sprite)
+			self._fade(sprite)
+			#
+
 			self.particles.append(sprite)
 
 
 	def draw(self):
+	#Animate, Draw, Delete
 		self._play()
-		for particle in self.particles:
+		for i, particle in enumerate(self.particles):
 			particle.draw()
 
-	#
+			if particle.color.a == 0:
+				del self.particles[i]
+
+
+	# ANIMATE (private)
 
 	def _play(self): #draw
-		pass
+		for particle in self.particles:
+			particle.animation.play()
+
+	def _jump(self, particle): #create
+		s = random_int(8,12)
+		s = float(s/10)
+		particle.animation.y.speed = -s
+		particle.animation.y.vel = 0.1
+
+	def _fade(self, particle): #create
+		particle.animation.alpha.vel = -1
+
+
 
 
 ####
@@ -60,9 +91,10 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		pg.create(area=(100,100,120,120))
+		pg.create(amt=3, area=(100,100,120,120))
 
 	key.reset_all()
+
 
 	#Video
 	window.clear(sf.Color(255,200,200))

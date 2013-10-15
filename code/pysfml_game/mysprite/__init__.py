@@ -266,16 +266,17 @@ class animation:
 	#Play all animations.
 
 		#Position
-		pass
+		self._.x += self.x.play(self._.x)
+		self._.y += self.y.play(self._.y)
 
 		#Clipping
 		self.clip.play()
 
 		#Colors
 		r,g,b,a = self._.color
-		r += self.alpha.play(r)
-		g += self.alpha.play(g)
-		b += self.alpha.play(b)
+		r += self.red.play(r)
+		g += self.green.play(g)
+		b += self.blue.play(b)
 		a += self.alpha.play(a)
 
 		#don't go out of bounds

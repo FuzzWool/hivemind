@@ -74,7 +74,15 @@ x Add a SLIDE KICK.
 				! Create Animation module !!
 
 
-		!! new axis_animation /w subclasses
+			=
+			+ Generic Dust animation for Particle Generator.
+				+ Animates jump and fading, dels once faded
+				~ Randomizes clip
+				~ Randomizes jump height
+
+
+
+		+ new axis_animation /w subclasses
 		A bare class with fleshed out sub-classes.
 
 			* Basic animation which starts and then stops.
