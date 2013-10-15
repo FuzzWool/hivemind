@@ -88,3 +88,10 @@ x Add a SLIDE KICK.
 				changed end events to be "just"
 				+ infinite oscillation
 				+ Stop when vel gets too high
+
+
+			! new animation sub-class for MySprite
+				~ tested physics_animation with
+				camera pos, zoom, color
+
+				! cleanly replace animation for clipping
