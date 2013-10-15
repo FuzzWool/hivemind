@@ -67,19 +67,30 @@ class axis_animation(object):
 
 
 class bounce(axis_animation):
+#Bounce when the end has been reached.
 
 	vel_divide = 1
 	speed_divide = 1
 
 	def passed_end_event(self, point):
 
-		if self.speed != 0:
-			
-			#Bounce back.
-			self.speed = \
-			-(self.speed-self.vel/self.speed_divide)
-			self.vel = self.vel/self.vel_divide
 
+		#Bounce back.
+		self.speed = \
+		-(self.speed-self.vel/self.speed_divide)
+		self.vel = self.vel/self.vel_divide
+
+		#Stopping when vel divides.
+		if abs(self.speed) < 0.1:
+			self.cut_off(point)
+
+		#Stopping when vel multiplies.
+		if abs(self.vel) > abs(self.speed):
+			self.cut_off(point)
+
+
+		#Ended.
+		if self.vel == 0: self.cut_off(point)
 
 #####
 
@@ -91,10 +102,11 @@ sprite.position = 200,200
 
 def animate():
 	sprite.animation_x.bounce.speed = 0
-	sprite.animation_x.bounce.vel = 0.5
+	sprite.animation_x.bounce.vel = 0.1
 	sprite.animation_x.bounce.end = 300
 
 	sprite.animation_x.bounce.vel_divide = 0.5
+	sprite.animation_x.bounce.speed_divide = 1
 
 animate()
 
