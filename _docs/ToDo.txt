@@ -79,8 +79,12 @@ x Add a SLIDE KICK.
 
 			* Basic animation which starts and then stops.
 			
-			! Bouncing sub-class.
+			+ Bouncing sub-class.
 				~ Stops when vel divides.
 				~ Stops when vel increases.
 				* Test infinite bouncing.
-				! Add bounce distance predicting.
+
+			+ oscillate sub-class
+				changed end events to be "just"
+				+ infinite oscillation
+				+ Stop when vel gets too high

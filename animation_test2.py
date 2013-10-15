@@ -29,6 +29,7 @@ class axis_animation(object):
 		if called_directly:
 			args = Rectangle, axis, False
 			self.bounce = bounce(*args)
+			self.oscillate = oscillate(*args)
 
 
 	#Public
@@ -38,15 +39,15 @@ class axis_animation(object):
 
 	def play(self, point):
 
-		if self._passed_end(point, self.speed):
-			self.passed_end_event(point)
+		if self._just_passed_end(point, self.speed):
+			self.just_passed_end_event(point)
 		self._ugly_move()
 
 
 
 	# Overridables
 
-	def passed_end_event(self, point): #void
+	def just_passed_end_event(self, point): #void
 		self.cut_off(point)
 
 	def cut_off(self, point): #void
@@ -56,8 +57,10 @@ class axis_animation(object):
 
 	# Private
 
-	def _passed_end(self, point, move): #bool
-		return bool(abs(self.end)<= abs(point+move))
+	def _just_passed_end(self, point, move): #bool
+		if point <= self.end <= point+move: return True
+		if point >= self.end >= point+move: return True
+		return False
 
 	def _ugly_move(self): #void
 		if self.axis == "x": self._.x += self.speed
@@ -72,8 +75,7 @@ class bounce(axis_animation):
 	vel_divide = 1
 	speed_divide = 1
 
-	def passed_end_event(self, point):
-
+	def just_passed_end_event(self, point):
 
 		#Bounce back.
 		self.speed = \
@@ -92,6 +94,21 @@ class bounce(axis_animation):
 		#Ended.
 		if self.vel == 0: self.cut_off(point)
 
+
+
+class oscillate(axis_animation):
+#When the end is passed, it gradually changes direction.
+	
+	vel_divide = 1
+
+	def just_passed_end_event(self, point):
+		self.vel = -(self.vel/self.vel_divide)
+
+		#Stopping
+		if abs(self.vel) > abs(self.speed):
+			self.cut_off(point)
+		if self.vel == 0: self.cut_off(point)
+
 #####
 
 texture = MyTexture("assets/characters/nut/cbox.png")
@@ -101,12 +118,11 @@ sprite.position = 200,200
 
 
 def animate():
-	sprite.animation_x.bounce.speed = 0
-	sprite.animation_x.bounce.vel = 0.1
-	sprite.animation_x.bounce.end = 300
+	sprite.animation_x.oscillate.speed = -2
+	sprite.animation_x.oscillate.vel = 0.1
+	sprite.animation_x.oscillate.end = sprite.x+0.1
 
-	sprite.animation_x.bounce.vel_divide = 0.5
-	sprite.animation_x.bounce.speed_divide = 1
+	sprite.animation_x.oscillate.vel_divide = 1
 
 animate()
 
@@ -123,7 +139,7 @@ while running:
 	key.reset_all()
 
 	#Video
-	sprite.animation_x.bounce.play(sprite.x)
+	sprite.animation_x.oscillate.play(sprite.x)
 	# sprite.animation_y.play()
 	
 	window.clear(sf.Color(0,0,0))
