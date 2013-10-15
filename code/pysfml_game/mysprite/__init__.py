@@ -1,8 +1,8 @@
-from collision import *
-#=======================
 
 from code.pysfml_game.window import sf, window
 from code.pysfml_game.geometry import GameRectangle
+from code.pysfml_game import physics_animation
+from collision import *
 
 texture = sf.Texture.from_file
 MyTexture = sf.Texture.from_file
@@ -27,6 +27,7 @@ class MySprite(sf.Sprite, GameRectangle):
 		self.overlap = overlap(self)
 		self.collision = collision(self)
 		self.slope_collision = slope_collision(self)
+
 
 
 	def draw(self): window.draw(self)
@@ -237,7 +238,59 @@ class box(GameRectangle):
 ###
 
 
+
+
+
+
 class animation:
+#Contains everything which may be animated.
+	
+	def __init__ (self, MySprite):
+		self._ = MySprite
+
+		#Position
+		self.x = physics_animation()
+		self.y = physics_animation()
+
+		#Clipping
+		self.clip = clip_animation(self._)
+
+		#Colors
+		self.red = physics_animation()
+		self.green = physics_animation()
+		self.blue = physics_animation()
+		self.alpha = physics_animation()
+
+
+	def play(self):
+	#Play all animations.
+
+		#Position
+		pass
+
+		#Clipping
+		self.clip.play()
+
+		#Colors
+		r,g,b,a = self._.color
+		r += self.alpha.play(r)
+		g += self.alpha.play(g)
+		b += self.alpha.play(b)
+		a += self.alpha.play(a)
+
+		#don't go out of bounds
+		def no_oob(color):
+			if color < 0: color = 0
+			if color > 255: color = 255
+			return color
+		r=no_oob(r); g=no_oob(g); b=no_oob(g); a=no_oob(a)
+
+		self._.color = sf.Color(r,g,b,a)
+
+
+
+
+class clip_animation:
 #Plays a SEQUENCE of CLIPS.
 #Refreshes whenether the clips change,
 #but doesn't touch the CLIPS themselves.
@@ -253,9 +306,7 @@ class animation:
 		self._old_clips = []
 		self.clips = []
 		self.loop = True
-
 		#
-
 		self.has_ended = False
 
 
@@ -263,7 +314,7 @@ class animation:
 
 
 	@property
-	def last_frame(self): #change clip
+	def last_clip(self): #change clip
 		return bool(self._index >= len(self.clips)-1)
 
 	def play(self):
@@ -341,7 +392,7 @@ class animation:
 				x, y = self.clips[self._index]
 				self._.clip.use(x,y)
 
-			if self.last_frame and not self.loop:
+			if self.last_clip and not self.loop:
 				self.has_ended = True
 			else:
 				self.has_ended = False

@@ -90,8 +90,10 @@ x Add a SLIDE KICK.
 				+ Stop when vel gets too high
 
 
-			! new animation sub-class for MySprite
+			+ moved new Animation sub-class to MySprite.
 				~ tested physics_animation with
 				camera pos, zoom, color
 
-				! cleanly replace animation for clipping
+				~ cleanly replace animation for clipping
+				~ tested clipping in-game
+				~ removed .pyc cache & tested

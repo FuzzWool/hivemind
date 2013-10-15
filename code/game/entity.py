@@ -591,71 +591,72 @@ class controls(object):
 	def change_sprite(self, sprite, cbox, d_move): #_.draw
 	#How the state handling affects the sprite to choose.
 		
+		#shorthands
+		clip = sprite.clip
+		animation = sprite.animation.clip
+
 		#sprite > cbox position
 		sprite.x, sprite.y = cbox.x, cbox.y
 		sprite.move(d_move)
 
 
-		#Direction
-		if self.facing_right:
-			if sprite.clip.flipped:
-				sprite.clip.flip()
-		if self.facing_left:
-			if not sprite.clip.flipped:
-				sprite.clip.flip()
 
+		#direction
+		if self.facing_right and clip.flipped:
+			clip.flip()
+		if self.facing_left and not clip.flipped:
+			clip.flip()
 
 
 		# Jumping/Standing/Walking
 		if self.idle() or self.moving():
 			if self.collision.in_air:
-				if self.physics.rising:
-					sprite.clip.use(2, 0)
-				if self.physics.falling:
-					sprite.clip.use(4, 0)
+				if self.physics.rising: clip.use(2, 0)
+				if self.physics.falling: clip.use(4, 0)
 
 			elif self.idle():
-				sprite.clip.use(0, 0)
+				clip.use(0, 0)
 
 			elif self.moving():
-				sequence = ((1,1),(0,1),(3,1),(2,1))
-				sprite.animation.clips = sequence
-				sprite.animation.interval = 0.1
-				sprite.animation.loop = True
+				clips = ((1,1),(0,1),(3,1),(2,1))
+				animation.clips = clips
+				animation.interval = 0.1
+				animation.loop = True
 
 		#Special
-		if self.clinging(): sprite.clip.use(0,2)
-		if self.slide_kicking(): sprite.clip.use(0,4)
+		if self.clinging(): clip.use(0,2)
+		if self.slide_kicking(): clip.use(0,4)
 
 		if self.crouching():
 			if self.physics.moving:
-				sequence = []
-				for i in range(6): sequence.append((i,3))
-				sprite.animation.clips = sequence
-				sprite.animation.interval = 0.05
-				sprite.animation.loop = True
+				clips = []
+				for i in range(6): clips.append((i,3))
+				animation.clips = clips
+				animation.interval = 0.05
+				animation.loop = True
 			else:
-				sprite.clip.use(0,3)
+				clip.use(0,3)
 
 
 		if self.wall_hanging():
 
 			if self.animate_crawl_to_hang:
-				sequence = []
-				for i in range(1,6): sequence.append((i,2))
-				sprite.animation.clips = sequence
-				sprite.animation.interval = 0.1
-				sprite.animation.loop = False
+				clips = []
+				for i in range(1,6): clips.append((i,2))
+				animation.clips = clips
+				animation.interval = 0.1
+				animation.loop = False
 
 				#sprite > cbox position
 				x = -12
 				if self.facing_right: x = -x
 				sprite.move((x,-1))
 
-				if sprite.animation.has_ended:
+				if animation.has_ended:
 					self.animate_crawl_to_hang = False
 			else:
-				sprite.clip.use(1,2)
+				clip.use(1,2)
+
 
 
 	# ACTIONS

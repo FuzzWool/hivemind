@@ -1,6 +1,5 @@
 # Testing the PLAYER's collisions with the WORLD.
 
-
 from code.pysfml_game import sf
 from code.pysfml_game import quit
 from code.pysfml_game import window
