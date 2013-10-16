@@ -963,7 +963,16 @@ class graphics:
 		p2 = self.foreground_pg
 		frame = sprite.clip.x, sprite.clip.y
 		
+		x_dist = \
+		self.cbox.x - self.cbox.collision.previous.x
+		y_dist = \
+		self.cbox.y - self.cbox.collision.previous.y
 
+
+		#set interval
+		p1.interval = 0
+		p2.interval = 0
+		#
 
 		#walking
 		step_frames = ((1,1),(3,1))
@@ -971,24 +980,34 @@ class graphics:
 			if sprite.animation.clip.interval_hit:
 				p1.create(amt=1, area=area_under_nut)
 
-		#sliding
+		#slide kicking
 		if self.controls.slide_kicking():
+			p1.interval = 0.1
+			p2.interval = 0.1
 			p1.create(amt=1, area=area_under_nut)
 			p2.create(amt=1, area=area_under_nut)
 
 
-		if self.collision.hit_side_wall:
-			p1.create(area=area_under_nut)
+		#clinging
+		if self.collision.hit_side_wall\
+		and y_dist != 0:
+			p1.interval = 0.1
+			p1.create(amt=3, area=area_under_nut)
 			
 
 		#hit ground
-		fall_dist = \
-		self.cbox.y - self.cbox.collision.previous.y
+		if self.collision.hit_top_wall\
+		and y_dist != 0:
 
-		if self.collision.hit_top_wall:
-			if fall_dist > 0:
-				p1.create(amt=3, area=area_under_nut)
-				p2.create(amt=6, area=area_under_nut)
+			#adjusts based on speed
+			t_x1 = x1 - int(y_dist*2)
+			t_x2 = x2 + int(y_dist*2)
+
+			area = (t_x1,y1,t_x2,y2)
+			amt = int(y_dist)+1
+
+			p1.create(amt=amt, area=area)
+			p2.create(amt=amt, area=area)
 
 
 	def draw(self, sprite):

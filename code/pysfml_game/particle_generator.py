@@ -1,5 +1,6 @@
 from code.pysfml_game import MyTexture, MySprite
 from random import randint as random_int
+from sfml import Clock
 
 class particle_generator:
 #Makes lots of little particles.
@@ -10,12 +11,21 @@ class particle_generator:
 	def __init__(self):
 		self.particles = []
 
+		self.clock = Clock()
+		self.interval = 0
 
 	# MAKE (public)
 
 	def create(self, amt=1, area=(0,0,0,0)):
 	#Randomly speckle the sprites within an area.
 		
+		#Only allow it to do so in the proper intervals.
+		if self.clock.elapsed_time.seconds < self.interval:
+			return
+
+		self.clock.restart()
+
+		#Create the particles.
 		texture = MyTexture("assets/effects/dust.PNG")
 		for i in range(amt):
 			sprite = MySprite(texture)

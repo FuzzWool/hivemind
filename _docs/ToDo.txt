@@ -72,24 +72,21 @@ x Add a SLIDE KICK.
 		+ Amount to spawn
 
 
-	! Add DUST for...
+	+ Add DUST for...
 		===
 		+ running
-			! varies on speed
 			+ Only make once per frame.
 
-		! slide kicking
+		+ slide kicking
 			+ foreground/background pg
-			! particle generation timer
+			=+ particle generation timer
 
-		! landing
-			! varies on speed
-			! a wider radius for an impact
+		+ landing
+			+ varies on speed
+			+ a wider radius for an impact
 
-		! clinging
-			! limit by speed
-
-		! wall jumping > hitting a wall
+		+ clinging
+		+ wall jumping > hitting a wall
 
 
 	! Complete the GRAPHICS sub-class.
