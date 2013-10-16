@@ -352,13 +352,17 @@ class clip_animation:
 		return bool(this_clip in self.clips)
 
 
+	interval_hit = False
+	#
 	def _interval_hit(self):
 	#TRUE every time the clock hits the interval.
 		seconds = self._clock.elapsed_time.seconds
 
 		if seconds > self.interval:
 			self._clock.restart()
+			self.interval_hit = True
 			return True
+		self.interval_hit = False
 		return False
 
 

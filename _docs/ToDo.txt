@@ -36,6 +36,14 @@ x Add a SLIDE KICK.
 
 
 ! Add DUST EFFECT.
+
+	+ new axis_animation /w subclasses
+	A bare class with fleshed out sub-classes.
+		* Basic animation which starts and then stops.
+		+ Bouncing sub-class.
+		+ oscillate sub-class
+
+
 	! Dive - slamming the ground. Bigger effect if faster.
 	! Wall-jumping - trail in mid-air; hitting a surface.
 	! Walking - Greater effect depending on speed.
@@ -59,49 +67,31 @@ x Add a SLIDE KICK.
 	! Walking - Greater effect depending on speed.
 
 
-	! Add PARTICLE GENERATOR
-		! Area to spawn
-		! Amount to spawn
-
-		! Add PARTICLES for...
-			! Disappearing (cover the whole sprite)
-			! Impact
+	+ Add PARTICLE GENERATOR
+		+ Area to spawn
+		+ Amount to spawn
 
 
-		! Create BURST of particles.
-			* Create sprites in a random area.
-			! Animate them.
-				! Create Animation module !!
+	! Add DUST for...
+		===
+		+ running
+			! varies on speed
+			+ Only make once per frame.
+
+		! slide kicking
+			+ foreground/background pg
+			! particle generation timer
+
+		! landing
+			! varies on speed
+			! a wider radius for an impact
+
+		! clinging
+			! limit by speed
+
+		! wall jumping > hitting a wall
 
 
-			=
-			+ Generic Dust animation for Particle Generator.
-				+ Animates jump and fading, dels once faded
-				~ Randomizes clip
-				~ Randomizes jump height
-
-
-
-		+ new axis_animation /w subclasses
-		A bare class with fleshed out sub-classes.
-
-			* Basic animation which starts and then stops.
-			
-			+ Bouncing sub-class.
-				~ Stops when vel divides.
-				~ Stops when vel increases.
-				* Test infinite bouncing.
-
-			+ oscillate sub-class
-				changed end events to be "just"
-				+ infinite oscillation
-				+ Stop when vel gets too high
-
-
-			+ moved new Animation sub-class to MySprite.
-				~ tested physics_animation with
-				camera pos, zoom, color
-
-				~ cleanly replace animation for clipping
-				~ tested clipping in-game
-				~ removed .pyc cache & tested
+	! Complete the GRAPHICS sub-class.
+		Sprite
+		State Bindings

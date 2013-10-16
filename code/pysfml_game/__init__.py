@@ -7,3 +7,5 @@ from geometry import *
 from animation import *
 
 from mysprite import *
+
+from particle_generator import *

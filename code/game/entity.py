@@ -28,12 +28,13 @@ class Entity(object):
 		self.physics = physics()
 		self.collision = collision()
 		self.controls = controls()
+		self.graphics = graphics()
 
 		s=self
 		s.physics.bind(s.cbox)
 		s.collision.bind(s.controls, s.physics, s.cbox)
 		s.controls.bind(s.physics, s.collision, s.cbox)
-
+		s.graphics.bind(s.cbox, s.collision, s.controls)
 
 
 	image = None
@@ -100,13 +101,11 @@ class Entity(object):
 
 
 	def draw(self):
-		# self.cbox.draw()
+	#Will eventually be replaced by graphics
 		
 		self.controls.change_sprite\
 		(self.sprite, self.cbox, self.default_sprite_move)
-		self.sprite.animation.play()
-		self.sprite.draw()
-
+		self.graphics.draw(self.sprite)
 
 
 
@@ -503,6 +502,7 @@ class physics:
 ######################
 
 
+from code.pysfml_game import particle_generator
 
 class controls(object):
 #Awaits player key presses, performs a different action
@@ -914,3 +914,89 @@ class state_domino(object): #control
 			if state() == True:
 				truth = False
 		return truth
+
+
+
+
+######################
+######################
+######################
+######################
+######################
+
+
+
+class graphics:
+#WIP - Holds the main sprite
+#WIP - Handles binding states to the sprite
+#WIP - Generates particles
+	
+	def __init__(self):
+
+		#Particle Generators
+		self.background_pg = particle_generator()
+		self.foreground_pg = particle_generator()
+
+	def bind(self, cbox, collision, controls):
+		#References
+		self.cbox = cbox
+		self.collision = collision
+		self.controls = controls
+
+
+	# Sprite
+	pass
+
+	# State Bindings
+	pass
+
+
+	# Particle Generators
+
+	def _handle_pg(self, sprite): #draw
+		
+		x1, y1, x2, y2 = self.cbox.points
+		x1=int(x1);y1=int(y1);x2=int(x2);y2=int(y2)
+		area_under_nut = (x1,y2-10,x2,y2-10)
+		
+		p1 = self.background_pg
+		p2 = self.foreground_pg
+		frame = sprite.clip.x, sprite.clip.y
+		
+
+
+		#walking
+		step_frames = ((1,1),(3,1))
+		if frame in step_frames:
+			if sprite.animation.clip.interval_hit:
+				p1.create(amt=1, area=area_under_nut)
+
+		#sliding
+		if self.controls.slide_kicking():
+			p1.create(amt=1, area=area_under_nut)
+			p2.create(amt=1, area=area_under_nut)
+
+
+		if self.collision.hit_side_wall:
+			p1.create(area=area_under_nut)
+			
+
+		#hit ground
+		fall_dist = \
+		self.cbox.y - self.cbox.collision.previous.y
+
+		if self.collision.hit_top_wall:
+			if fall_dist > 0:
+				p1.create(amt=3, area=area_under_nut)
+				p2.create(amt=6, area=area_under_nut)
+
+
+	def draw(self, sprite):
+	#Draws sprites, plays animations.
+
+		self._handle_pg(sprite)
+
+		self.background_pg.draw()
+		sprite.animation.play()
+		sprite.draw()
+		self.foreground_pg.draw()
