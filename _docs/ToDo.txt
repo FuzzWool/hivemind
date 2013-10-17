@@ -66,14 +66,20 @@ x Add a SLIDE KICK.
 
 	! Remake ToolBox.
 
-		General
-			save
+		+ General
+			+ save
 		Pointer
 			change texture
-		Tile
-			place
-			remove
-			select
+		+ Tile
+			+ place
+			+ remove
+			+ select
 
 	! Make Camera sub-module for room
 	! Make Camera tool
+
+
+	! Improve GameRectangle
+		setters
+		keep_in functions
+		...for every function.

@@ -33,6 +33,14 @@ class KeyTracker:
 		self._was_pressed = self.held()
 		return pressed
 
+	def released(self):
+		released = False
+		if self.was_pressed and not self.held():
+			released = True
+
+		self._was_pressed = self.held()
+		return released
+
 	def _reset(self):
 		self.was_pressed = self._was_pressed
 		self._was_pressed = self.held()

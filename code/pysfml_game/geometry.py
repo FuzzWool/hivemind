@@ -87,12 +87,26 @@ class GameRectangle: #virtual
 		x1 = int(x1/GRID); y1 = int(y1/GRID)
 		x2 = int(x2/GRID); y2 = int(y2/GRID)
 		return x1, y1, x2, y2
+	
 	@property
 	def tile_center(self):
 		x, y = self.center
 		x = int(x/GRID); y = int(y/GRID)
 		return x, y
 
+	#
+
+	def keep_in_tile_size(self, w=None, h=None):
+		if w != None:
+			if w < 0: w = 0
+			if w > self.tile_w: w = self.tile_w
+		if h != None:
+			if h < 0: h = 0
+			if h > self.tile_h: h = self.tile_h
+
+		if w != None and h != None: return w,h
+		if w != None: return w
+		if h != None: return h
 
 
 
