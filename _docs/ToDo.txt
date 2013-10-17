@@ -35,8 +35,7 @@ x Add a SLIDE KICK.
 	+ Add crouching > wall hang combination.
 
 
-! Add DUST EFFECT.
-
++ Added DUST EFFECT.
 	+ new axis_animation /w subclasses
 	A bare class with fleshed out sub-classes.
 		* Basic animation which starts and then stops.
@@ -44,14 +43,15 @@ x Add a SLIDE KICK.
 		+ oscillate sub-class
 
 
-	! Dive - slamming the ground. Bigger effect if faster.
-	! Wall-jumping - trail in mid-air; hitting a surface.
-	! Walking - Greater effect depending on speed.
+	+ Dive - slamming the ground. Bigger effect if faster.
+	+ Wall-jumping - trail in mid-air; hitting a surface.
+	+ Walking - Greater effect depending on speed.
 
 
 ! Add DYNAMIC CAMERA.
 ! Add COLLECTIBLES which OPEN ROOMS.
 ! Add TIMER.
+! Add REPLAYS.
 
 ! clean overall state handling
 ! Use less MAGIC NUMBERS in state handling.
@@ -61,34 +61,4 @@ x Add a SLIDE KICK.
 
 ====
 
-! Add DUST EFFECT.
-	! Dive - slamming the ground. Bigger effect if faster.
-	! Wall-jumping - trail in mid-air; hitting a surface.
-	! Walking - Greater effect depending on speed.
-
-
-	+ Add PARTICLE GENERATOR
-		+ Area to spawn
-		+ Amount to spawn
-
-
-	+ Add DUST for...
-		===
-		+ running
-			+ Only make once per frame.
-
-		+ slide kicking
-			+ foreground/background pg
-			=+ particle generation timer
-
-		+ landing
-			+ varies on speed
-			+ a wider radius for an impact
-
-		+ clinging
-		+ wall jumping > hitting a wall
-
-
-	! Complete the GRAPHICS sub-class.
-		Sprite
-		State Bindings
+~ Fixed DIVING.

@@ -23,7 +23,6 @@ class Entity(object):
 		self.make_cbox()
 
 
-
 		#Sub-classes
 		self.physics = physics()
 		self.collision = collision()
@@ -712,12 +711,13 @@ class controls(object):
 		#Start
 		if self.collision.in_air and down.pressed():
 			self.diving(True)
-		
+
 		#Effect
 		if self.diving() and not was_diving:
-			if self.clinging: self.physics.move(y= +2)
-			else: self.physics.move(y = +8)
-
+			if self.clinging():
+				self.physics.move(y= +2)
+			else:
+				self.physics.move(y = +8)
 
 
 	def slide_kick(self, down):
@@ -929,7 +929,7 @@ class state_domino(object): #control
 class graphics:
 #WIP - Holds the main sprite
 #WIP - Handles binding states to the sprite
-#WIP - Generates particles
+# Generates particles
 	
 	def __init__(self):
 
