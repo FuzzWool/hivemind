@@ -74,6 +74,10 @@ class GameRectangle: #virtual
 	@property
 	def tile_position(self): 
 		return self.tile_x, self.tile_y
+	@tile_position.setter
+	def tile_position(self, pos):
+		self.tile_x, self.tile_y = pos
+
 	@property
 	def tile_size(self):
 		return self.tile_w, self.tile_h

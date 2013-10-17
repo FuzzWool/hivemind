@@ -16,8 +16,9 @@ def quit():
 
 from code.pysfml_game import GRID
 from code.pysfml_game import ROOM_WIDTH, ROOM_HEIGHT
+from code.pysfml_game import GameRectangle
 
-class MyMouse:
+class MyMouse(GameRectangle):
 	def __init__(self):
 		def left_held(self):
 			return sf.Mouse.is_button_pressed\
@@ -62,19 +63,19 @@ class MyMouse:
 
 	#
 
-	def grid_position(self, Camera=None):
-	#Return the mouse position as small grid coordinates.
-		x, y = self.position(Camera)
-		x /= GRID
-		y /= GRID
-		return x, y
+	# def grid_position(self, Camera=None):
+	# #Return the mouse position as small grid coordinates.
+	# 	x, y = self.position(Camera)
+	# 	x /= GRID
+	# 	y /= GRID
+	# 	return x, y
 
-	def room_position(self, Camera=None):
-	#Return the mouse as tiny room coordinates.
-		x, y = self.position(Camera)
-		x = int(x/ROOM_WIDTH)
-		y = int(y/ROOM_HEIGHT)
-		return x, y
+	# def room_position(self, Camera=None):
+	# #Return the mouse as tiny room coordinates.
+	# 	x, y = self.position(Camera)
+	# 	x = int(x/ROOM_WIDTH)
+	# 	y = int(y/ROOM_HEIGHT)
+	# 	return x, y
 
 
 class Button:

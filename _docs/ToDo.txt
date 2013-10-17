@@ -61,4 +61,19 @@ x Add a SLIDE KICK.
 
 ====
 
-~ Fixed DIVING.
+
+! Add DYNAMIC CAMERA.
+
+	! Remake ToolBox.
+
+		General
+			save
+		Pointer
+			change texture
+		Tile
+			place
+			remove
+			select
+
+	! Make Camera sub-module for room
+	! Make Camera tool
