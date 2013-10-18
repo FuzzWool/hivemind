@@ -14,9 +14,14 @@ class toolbox:
 		#
 		self.pointer = pointer()
 		self.tile = tile()
+		self.camera = camera()
 
 	def draw(self, camera, mouse):
-		self.tile.draw()
+
+		if self.ui.selected == "tile":
+			self.tile.draw()
+		if self.ui.selected == "camera":
+			self.camera.draw()
 		self._draw_cursor(camera, mouse)
 
 	def static_draw(self):
@@ -27,13 +32,18 @@ class toolbox:
 		self.ui.controls(mouse)
 
 		if not self.ui.is_hovering(mouse):
-			if self.ui.selected == "tile":
-				self.tile.controls\
-				(worldmap, mouse, key, self.cursor)
 
 			if self.ui.selected == "pointer":
 				self.pointer.controls\
 				(worldmap, mouse, self.cursor)
+			
+			if self.ui.selected == "tile":
+				self.tile.controls\
+				(worldmap, mouse, key, self.cursor)
+
+			if self.ui.selected == "camera":
+				self.camera.controls()
+
 
 		if key.L_CTRL.held():
 			if key.S.pressed():
@@ -125,6 +135,7 @@ class ui: #toolbox
 		#Tools
 		self.icons[0][0].tool = "pointer"
 		self.icons[1][0].tool = "tile"
+		self.icons[0][1].tool = "camera"
 
 		#default
 		self._select(x=1,y=0)
@@ -162,7 +173,7 @@ class icon(object): #toolbox.ui
 		self._tool = name
 		if name == "pointer": self.sprite.clip.use(1,0)
 		if name == "tile": self.sprite.clip.use(2,0)
-
+		if name == "camera": self.sprite.clip.use(3,0)
 
 	#
 
@@ -359,14 +370,16 @@ class _LevelProperties:
 	#Passes over the values.
 		self.root = Tk()
 		self.root.wm_title(Level.texture_name)
-		self.lp1 = self.LevelProperties_1(self.root, Level)
+		self.lp1 = \
+		self.LevelProperties_1(self.root, Level)
 
 		def save():
 			tileset = self.lp1.tileset.get()
 			Level.change_texture(tileset)
 			self.root.destroy()
 
-		self.butt = self.ConfirmButtons(self.root, save)
+		self.butt = \
+		self.ConfirmButtons(self.root, save)
 		self.lp1.focus_force()
 		self.root.mainloop()
 
@@ -418,12 +431,97 @@ class _LevelProperties:
 	class ConfirmButtons(MyFrame):
 
 		def initUI(self, arg=None):
-			frame = Frame(self, relief=RAISED, borderwidth=1)
+			frame = Frame(self, relief=RAISED,\
+			 borderwidth=1)
 			frame.pack(fill=BOTH, expand=1)
 
-			Bclose = Button(self, text="Nah.", command=self.parent.destroy)
+			Bclose = Button(self, text="Nah.",\
+			 command=self.parent.destroy)
 			Bclose.pack(side=RIGHT, padx=5, pady=5)
 			Bok = Button(self, text="Okay!", command=arg)
 			Bok.pack(side=RIGHT)
 
 			self.pack(fill=BOTH, expand=1)
+
+
+
+
+
+############################
+############################
+############################
+############################
+############################
+############################
+
+
+from code.pysfml_game import RENDER_HEIGHT, RENDER_WIDTH
+
+class camera:
+#WIP - Sets camera locks for each side.
+
+#WIP - Created for each room.
+#Rendered ON-THE-FLY.
+
+	def __init__(self):
+		
+		#sides
+		self.left = self.side("left")
+		self.right = self.side("right")
+		self.up = self.side("up")
+		self.down = self.side("down")
+		#
+		self.sides \
+		= [self.left, self.right, self.up, self.down]
+
+
+		#lock
+		texture = MyTexture\
+		("assets/level_editor/camera/lock.png")
+		self.lock = MySprite(texture)
+		self.lock.clip.set(100,120)
+		self.lock.center = RENDER_WIDTH/2, RENDER_HEIGHT/2
+
+	def draw(self):
+		for side in self.sides:
+			side.draw()
+		self.lock.draw()
+
+	def controls(self):
+		pass
+
+
+	class side:
+		#Sprite/State class
+
+		x_texture = MyTexture\
+		("assets/level_editor/camera/x_side.png")
+		y_texture = MyTexture\
+		("assets/level_editor/camera/y_side.png")
+
+		def __init__(self, pos):
+		#create sprites
+			if pos in ("left","right"):
+				self.sprite = MySprite(self.x_texture)
+
+				if pos == "left":
+					pass
+
+				if pos == "right":
+					self.sprite.clip.flip_horizontal()
+					self.sprite.x = RENDER_WIDTH - GRID
+
+
+			if pos in ("up","down"):
+				self.sprite = MySprite(self.y_texture)
+
+				if pos == "up":
+					pass
+
+				if pos == "down":
+					self.sprite.clip.flip_vertical()
+					self.sprite.y = RENDER_HEIGHT - GRID
+
+
+		def draw(self):
+			self.sprite.draw()

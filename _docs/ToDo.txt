@@ -78,7 +78,12 @@ x Add a SLIDE KICK.
 
 	! Make Camera tool
 		+ Lock graphics
-		up, down, left and right settings
+
+		graphics (sides/locks)
+			+ for one room
+			for all the rooms
+
+		side settings
 
 	! Make Camera sub-module for room
 
