@@ -53,10 +53,10 @@ x Add a SLIDE KICK.
 ! Add TIMER.
 ! Add REPLAYS.
 
+! Re-implement SLOPES. (They're broken!)
 ! clean overall state handling
 ! Use less MAGIC NUMBERS in state handling.
 ! Add PUNCHING.
-! Create a new LEVEL EDITOR.
 ! Holding both directional keys causes weird Nut walking.
 
 ====
@@ -68,14 +68,14 @@ x Add a SLIDE KICK.
 
 		+ saving
 		+ Tile
-
-		+ Made an interface for selecting tools. (ui)
-			+ Transparent. Opaque when selected.
-			+ Selects tools, saves name as string.
+		+ ui tool selection
 
 
-		Make moving camera (not a tool)
-			fix tile positioning
+		+ Camera movement (not the tool)
+			~ fixed cursor
+			~ bound all tile pos to cursor
+			~ fix saving + move
+			~ fix tile.tilesheet pos
 
 		Pointer
 			change texture

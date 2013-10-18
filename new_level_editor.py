@@ -28,9 +28,9 @@ class toolbox:
 		#
 		self.tile = tile()
 
-	def draw(self, mouse):
+	def draw(self, camera, mouse):
 		self.tile.draw()
-		self._draw_cursor(mouse)
+		self._draw_cursor(camera, mouse)
 
 	def static_draw(self):
 		self.ui.draw()
@@ -39,9 +39,10 @@ class toolbox:
 
 		self.ui.controls(mouse)
 
-		if self.ui.selected == "tile":
-			if not self.ui.is_hovering(mouse):
-				self.tile.controls(worldmap, mouse, key)
+		if not self.ui.is_hovering(mouse):
+			if self.ui.selected == "tile":
+				self.tile.controls\
+				(worldmap, mouse, key, self.cursor)
 
 		if key.L_CTRL.held():
 			if key.S.pressed():
@@ -56,8 +57,11 @@ class toolbox:
 		= MyTexture("assets/level_editor/cursor.png")
 		self.cursor = MySprite(cursor_tex)
 
-	def _draw_cursor(self, mouse): #draw
-		self.cursor.tile_position = mouse.tile_position
+	def _draw_cursor(self, camera, mouse): #draw
+		x,y = mouse.tile_position
+		x += camera.tile_x
+		y += camera.tile_y
+		self.cursor.tile_position = x,y
 		self.cursor.draw()
 	#
 
@@ -75,7 +79,7 @@ class ui: #toolbox
 		
 
 	def controls(self, mouse):
-		
+
 		if self.is_hovering(mouse):
 			if mouse.left.pressed():
 				self._select(mouse)
@@ -90,16 +94,17 @@ class ui: #toolbox
 
 	#
 
-	def _select(self, mouse):
-	#Color the icon.
-		x,y = mouse.tile_position
+	#controls, _init_icons
+	def _select(self, mouse=None, x=0, y=0):
+		if mouse != None:
+			x,y = mouse.tile_position
 		self._transparent_icons()
 		self.icons[x][y].opaque()
-
 		self.selected = self.icons[x][y].tool
 
 
-	def is_hovering(self, mouse): #controls, _controls
+	#controls, _controls
+	def is_hovering(self, mouse):
 		x,y = mouse.x, mouse.y
 		if 0 <= x <= 50\
 		and 0 <= y <= SCREEN_HEIGHT:
@@ -129,6 +134,9 @@ class ui: #toolbox
 		#Tools
 		self.icons[0][0].tool = "pointer"
 		self.icons[1][0].tool = "tile"
+
+		#default
+		self._select(x=1,y=0)
 
 
 	def _transparent_icons(self): #init_icons, select
@@ -192,35 +200,37 @@ class tile: #toolbox
 		if self.tilemap != None: self.tilemap.draw()
 
 
-	def controls(self, worldmap, mouse, key):
+	def controls(self, worldmap, mouse, key, cursor):
 
 		if not self.is_open:
 			if mouse.left.held():
-				self.create(worldmap, mouse)
+				self.create(worldmap, cursor)
 			if mouse.right.held():
-				self.remove(worldmap, mouse)
+				self.remove(worldmap, cursor)
 
 		if key.L_SHIFT.pressed():
-			self.open(worldmap, mouse)
+			self.open(worldmap, cursor)
 		if key.L_SHIFT.released():
 			self.close()
 
 		if self.is_open:
 			if mouse.left.pressed():
-				self.select(mouse)
+				self.select(cursor)
 
 
 	####
 
 	#controls
 
-	def create(self, worldmap, mouse):
-		x, y = mouse.tile_position
-		worldmap.tiles[x][y].change(self.selected)
+	def create(self, worldmap, cursor):
+		x, y = cursor.tile_position
+		if worldmap.in_range(x,y):
+			worldmap.tiles[x][y].change(self.selected)
 
-	def remove(self, worldmap, mouse):
-		x, y = mouse.tile_position
-		worldmap.tiles[x][y].change("____")
+	def remove(self, worldmap, cursor):
+		x, y = cursor.tile_position
+		if worldmap.in_range(x,y):
+			worldmap.tiles[x][y].change("____")
 
 
 	#tilemap
@@ -228,18 +238,18 @@ class tile: #toolbox
 	@property
 	def is_open(self): return bool(self.tilemap != None)
 
-	def open(self, worldmap, mouse):
+	def open(self, worldmap, cursor):
 		if self.tilemap == None:
-			self.tilemap = self._tilemap(worldmap, mouse)
+			self.tilemap = self._tilemap(worldmap, cursor)
 
 	def close(self):
 		if self.tilemap != None:
 			self.tilemap = None
 
-	def select(self, mouse):
+	def select(self, cursor):
 
 		#proportional pos from the tilesheet
-		x,y = mouse.tile_position
+		x,y = cursor.tile_position
 		ox,oy = self.tilemap.sprite.tile_position
 		x -= ox; y -= oy
 		x,y = self.tilemap.sprite.keep_in_tile_size(x,y)
@@ -255,14 +265,14 @@ class tile: #toolbox
 
 	class _tilemap:
 
-		def __init__(self, worldmap, mouse):
+		def __init__(self, worldmap, cursor):
 
 			#sprite
-			x,y = mouse.room_position
+			x,y = cursor.room_position
 			texture = worldmap.rooms[x][y].texture
 			self.sprite = MySprite(texture)
 
-			x,y = mouse.tile_position
+			x,y = cursor.tile_position
 			self.sprite.tile_position = x,y
 
 		def draw(self):
@@ -283,7 +293,14 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		Camera.x += 5
+		pass
+
+
+	if not key.L_CTRL.held():
+		if key.A.held(): Camera.x -= GRID
+		if key.D.held(): Camera.x += GRID
+		if key.W.held(): Camera.y -= GRID
+		if key.S.held(): Camera.y += GRID
 
 	TB.controls(worldmap, mouse, key) ###
 
@@ -294,7 +311,7 @@ while running:
 	window.clear(sf.Color(255, 200, 200))
 	#
 	worldmap.draw()
-	TB.draw(mouse) ###
+	TB.draw(Camera, mouse) ###
 	window.view = window.default_view
 	TB.static_draw() ###
 	#
