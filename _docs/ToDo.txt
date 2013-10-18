@@ -49,9 +49,12 @@ x Add a SLIDE KICK.
 
 
 ! Add DYNAMIC CAMERA.
+! Add RUNNING animation.
 ! Add COLLECTIBLES which OPEN ROOMS.
 ! Add TIMER.
 ! Add REPLAYS.
+
+
 
 ! Re-implement SLOPES. (They're broken!)
 ! clean overall state handling
@@ -70,12 +73,14 @@ x Add a SLIDE KICK.
 		+ Tile
 		+ ui tool selection
 		+ Camera movement (not the tool)
-
 		+ Pointer
-			+ changes texture
+
+
+	! Make Camera tool
+		+ Lock graphics
+		up, down, left and right settings
 
 	! Make Camera sub-module for room
-	! Make Camera tool
 
 
 	! Improve GameRectangle
