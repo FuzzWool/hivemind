@@ -1,34 +1,53 @@
-import code as mo
-import code.pysfml_game.key as key
-import code.level_editor as le
+from code.pysfml_game import sf
+from code.pysfml_game import quit
+from code.pysfml_game import window
+from code.pysfml_game import key
+from code.pysfml_game import MyCamera
 
-mouse = mo.MyMouse()
-
-Camera = mo.MyCamera()
+Camera = MyCamera()
 Camera.zoom = 1
-Camera.x, Camera.y = -50, 0
+Camera.x, Camera.y = 0, 0
 
-LevelEditor = le.LevelEditor(Camera)
+from code.game import WorldMap
+worldmap = WorldMap(4,4)
+
+
+###########
+from code.level_editor import toolbox
+from code.pysfml_game import GRID
+
 #########################################################
+from code.pysfml_game import MyMouse
+
+mouse = MyMouse()
+TB = toolbox() ###
+
+
 running = True
 while running:
-
 	#Logic
-	if mo.quit(): running = False
-
+	if quit(): running = False
 	if key.RETURN.pressed():
 		pass
 
-	LevelEditor.camera_controls(key, Camera)
-	LevelEditor.handle_controls(key, mouse, Camera)
+
+	if not key.L_CTRL.held():
+		if key.A.held(): Camera.x -= GRID
+		if key.D.held(): Camera.x += GRID
+		if key.W.held(): Camera.y -= GRID
+		if key.S.held(): Camera.y += GRID
+
+	TB.controls(worldmap, mouse, key) ###
+
+	key.reset_all()
 
 	#Video
-	mo.window.view = Camera
-	LevelEditor.Camera = Camera
-	mo.window.clear(mo.sf.Color(128, 128, 128))
+	window.view = Camera
+	window.clear(sf.Color(255, 200, 200))
 	#
-	LevelEditor.draw(mouse, Camera)
-	mo.window.view = mo.window.default_view
-	LevelEditor.ToolBox.UI.draw()
+	worldmap.draw()
+	TB.draw(Camera, mouse) ###
+	window.view = window.default_view
+	TB.static_draw() ###
 	#
-	mo.window.display()
+	window.display()

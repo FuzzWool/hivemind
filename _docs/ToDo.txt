@@ -69,13 +69,7 @@ x Add a SLIDE KICK.
 		+ saving
 		+ Tile
 		+ ui tool selection
-
-
 		+ Camera movement (not the tool)
-			~ fixed cursor
-			~ bound all tile pos to cursor
-			~ fix saving + move
-			~ fix tile.tilesheet pos
 
 		Pointer
 			change texture
