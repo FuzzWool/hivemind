@@ -66,14 +66,19 @@ x Add a SLIDE KICK.
 
 	! Remake ToolBox.
 
-		+ General
-			+ save
+		+ saving
+		+ Tile
+
+		+ Made an interface for selecting tools. (ui)
+			+ Transparent. Opaque when selected.
+			+ Selects tools, saves name as string.
+
+
+		Make moving camera (not a tool)
+			fix tile positioning
+
 		Pointer
 			change texture
-		+ Tile
-			+ place
-			+ remove
-			+ select
 
 	! Make Camera sub-module for room
 	! Make Camera tool
