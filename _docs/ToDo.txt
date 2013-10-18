@@ -71,8 +71,8 @@ x Add a SLIDE KICK.
 		+ ui tool selection
 		+ Camera movement (not the tool)
 
-		Pointer
-			change texture
+		+ Pointer
+			+ changes texture
 
 	! Make Camera sub-module for room
 	! Make Camera tool
