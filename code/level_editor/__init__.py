@@ -17,10 +17,11 @@ class toolbox:
 		self.camera = camera(worldmap)
 
 	def draw(self, camera, mouse):
+		self._move_cursor(camera, mouse)
 
 		if self.ui.selected == "tile":
 			self.tile.draw()
-			self._draw_cursor(camera, mouse)
+			self.cursor.draw()
 		if self.ui.selected == "camera":
 			self.camera.draw(camera)
 
@@ -43,7 +44,8 @@ class toolbox:
 				(worldmap, mouse, key, self.cursor)
 
 			if self.ui.selected == "camera":
-				self.camera.controls()
+				self.camera.controls\
+				(worldmap, mouse, self.cursor)
 
 
 		if key.L_CTRL.held():
@@ -59,12 +61,11 @@ class toolbox:
 		= MyTexture("assets/level_editor/cursor.png")
 		self.cursor = MySprite(cursor_tex)
 
-	def _draw_cursor(self, camera, mouse): #draw
+	def _move_cursor(self, camera, mouse): #draw
 		x,y = mouse.tile_position
 		x += camera.tile_x
 		y += camera.tile_y
 		self.cursor.tile_position = x,y
-		self.cursor.draw()
 	#
 
 
@@ -476,16 +477,25 @@ class camera:
 				self.all_locks[-1].append(lock)
 
 
-	def controls(self):
-		pass
-
 	def draw(self, camera):
-		x1, x2 = camera.room_x1, camera.room_x2
-		y1, y2 = camera.room_y1, camera.room_y2
-
 		for column in self.all_locks:
-			for locks in column:
+			for locks in column:	
 				locks.draw(camera)
+
+
+	def controls(self, worldmap, mouse, cursor):
+	#Press the locks in order to toggle them. 
+		
+		#find which lock to select
+		x,y = cursor.room_position
+
+		if 0 <= x < worldmap.rooms_h\
+		and 0 <= y < worldmap.rooms_w:
+			
+			self.all_locks[x][y].controls\
+			(mouse, cursor)
+
+
 
 #
 class locks:
@@ -511,11 +521,18 @@ class locks:
 	def draw(self, camera):
 		for side in self.sides:
 			side.draw(camera)
-
 		self.lock.draw(camera)
 
-	def controls(self):
-		pass
+
+	#
+
+	def controls(self, mouse, cursor):
+
+		if mouse.left.pressed():
+
+			for side in self.sides:
+				if cursor.in_bounds(side.sprite):
+					side.toggle()
 
 
 
@@ -524,6 +541,24 @@ from code.pysfml_game import MySprite_Loader
 class side(MySprite_Loader):
 #A conditions and configurations for loading the
 #side sprites.
+
+	#PUBLIC
+
+	def toggle(self):
+		if self.is_enabled: self.disable()
+		else: self.enable()
+
+	disable_c = sf.Color(0,0,0,100)
+	enable_c = sf.Color(255,255,255,255)
+	def disable(self): self.sprite.color = self.disable_c
+	def enable(self): self.sprite.color = self.enable_c
+
+	@property	
+	def is_enabled(self):
+		return bool(self.sprite.color == self.enable_c)
+
+
+	#PRIVATE
 
 	x_texture = MyTexture\
 	("assets/level_editor/camera/x_side.png")

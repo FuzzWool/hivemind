@@ -55,6 +55,7 @@ x Add a SLIDE KICK.
 ! Add REPLAYS.
 
 
+! running glitch (over the end of a tile)
 ! Re-implement SLOPES. (They're broken!)
 ! clean overall state handling
 ! Use less MAGIC NUMBERS in state handling.
@@ -76,18 +77,15 @@ x Add a SLIDE KICK.
 
 
 	! Make Camera tool
-		+ Lock graphics
-
 		+ graphics (sides/locks)
-			+ for one room
-			
-			+ for all the rooms
-				+ Make sides MySprite_Loader
-				+ Make lock MySprite_Loader
-				~ stress tested
+
+		! controls
+			+ fix: toggles in the wrong place
+			+ fixed: geometry in_bounds
+
+		! side settings
 
 
-		side settings
 
 	! Render Rooms only when they may be drawn.
 

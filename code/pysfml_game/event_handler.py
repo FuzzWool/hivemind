@@ -19,6 +19,8 @@ from code.pysfml_game import ROOM_WIDTH, ROOM_HEIGHT
 from code.pysfml_game import GameRectangle
 
 class MyMouse(GameRectangle):
+	w,h = 0,0
+
 	def __init__(self):
 		def left_held(self):
 			return sf.Mouse.is_button_pressed\
