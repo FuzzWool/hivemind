@@ -51,6 +51,8 @@ class GameRectangle: #virtual
 		if other.y2 < self.y1: return False
 		return True
 
+
+
 	# TILE
 
 	@property

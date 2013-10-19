@@ -9,7 +9,7 @@ Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
 from code.game import WorldMap
-worldmap = WorldMap(2,2)
+worldmap = WorldMap(20,20)
 
 
 ###########

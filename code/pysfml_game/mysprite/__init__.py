@@ -1,4 +1,8 @@
 
+from loader import *
+
+####
+
 from code.pysfml_game.window import sf, window
 from code.pysfml_game.geometry import GameRectangle
 from code.pysfml_game import physics_animation

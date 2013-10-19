@@ -480,10 +480,14 @@ class camera:
 		pass
 
 	def draw(self, camera):
+		x1, x2 = camera.room_x1, camera.room_x2
+		y1, y2 = camera.room_y1, camera.room_y2
+
 		for column in self.all_locks:
 			for locks in column:
 				locks.draw(camera)
 
+#
 class locks:
 #Sets camera locks for each side of a single room.
 
@@ -491,99 +495,93 @@ class locks:
 		args = room_x, room_y
 
 		#sides
-		self.left = self.side("left", *args)
-		self.right = self.side("right", *args)
-		self.up = self.side("up", *args)
-		self.down = self.side("down", *args)
+		self.left = side("left", *args)
+		self.right = side("right", *args)
+		self.up = side("up", *args)
+		self.down = side("down", *args)
 		#
 		self.sides \
 		= [self.left, self.right, self.up, self.down]
 
 
 		#lock
-		texture = MyTexture\
-		("assets/level_editor/camera/lock.png")
-		self.lock = MySprite(texture)
-		self.lock.clip.set(100,120)
-		self.lock.center = RENDER_WIDTH/2, RENDER_HEIGHT/2
-		self.lock.x += room_x*RENDER_WIDTH
-		self.lock.y += room_y*RENDER_HEIGHT
-
+		self.lock = lock(*args)
 
 
 	def draw(self, camera):
 		for side in self.sides:
 			side.draw(camera)
+
 		self.lock.draw(camera)
 
 	def controls(self):
 		pass
 
 
-	class side:
-		#Sprite/State class
 
-		x_texture = MyTexture\
-		("assets/level_editor/camera/x_side.png")
-		y_texture = MyTexture\
-		("assets/level_editor/camera/y_side.png")
+from code.pysfml_game import MySprite_Loader
+##
+class side(MySprite_Loader):
+#A conditions and configurations for loading the
+#side sprites.
 
+	x_texture = MyTexture\
+	("assets/level_editor/camera/x_side.png")
+	y_texture = MyTexture\
+	("assets/level_editor/camera/y_side.png")
 
-		def __init__(self, pos, room_x, room_y):
-			self._init_sprite(pos, room_x, room_y)
-
-
-		def draw(self, camera):
-
-			#Make (WIP)
-			if self.sprite == None:
-				c = camera
-				if c.room_x1 <= self.room_x <= c.room_x2\
-				and c.room_y1 <= self.room_y <= c.room_y2:
-					self._make_sprite()
-
-			#Delete
-			if self.sprite != None:
-				if not self.sprite.in_bounds(camera):
-					self.sprite = None
-
-			#Draw
-			if self.sprite != None:
-				self.sprite.draw(camera)
+	def __init__ (self, pos, room_x, room_y):
+		MySprite_Loader.__init__(self)
+		self.pos = pos
+		self.room_x, self.room_y = room_x, room_y
 
 
-		#SPRITE
+	def load(self, args=None):
+		pos = self.pos
+		room_x, room_y = self.room_x, self.room_y
 
-		def _init_sprite(self, pos, room_x, room_y):
-			self.sprite = None
-			self.pos = pos
-			self.room_x, self.room_y = room_x, room_y
+		if pos in ("left","right"):
+			self.sprite = MySprite(self.x_texture)
 
+			if pos == "left":
+				pass
 
-		def _make_sprite(self):
-			pos = self.pos
-			room_x, room_y = self.room_x, self.room_y
-
-			if pos in ("left","right"):
-				self.sprite = MySprite(self.x_texture)
-
-				if pos == "left":
-					pass
-
-				if pos == "right":
-					self.sprite.clip.flip_horizontal()
-					self.sprite.x = RENDER_WIDTH - GRID
+			if pos == "right":
+				self.sprite.clip.flip_horizontal()
+				self.sprite.x = RENDER_WIDTH - GRID
 
 
-			if pos in ("up","down"):
-				self.sprite = MySprite(self.y_texture)
+		if pos in ("up","down"):
+			self.sprite = MySprite(self.y_texture)
 
-				if pos == "up":
-					pass
+			if pos == "up":
+				pass
 
-				if pos == "down":
-					self.sprite.clip.flip_vertical()
-					self.sprite.y = RENDER_HEIGHT - GRID
+			if pos == "down":
+				self.sprite.clip.flip_vertical()
+				self.sprite.y = RENDER_HEIGHT - GRID
 
-			self.sprite.x += room_x*RENDER_WIDTH
-			self.sprite.y += room_y*RENDER_HEIGHT
+		self.sprite.x += room_x*RENDER_WIDTH
+		self.sprite.y += room_y*RENDER_HEIGHT
+
+
+from code.pysfml_game import MySprite_Loader
+##
+class lock(MySprite_Loader):
+	
+	texture = MyTexture\
+	("assets/level_editor/camera/lock.png")
+
+	def __init__(self, room_x, room_y):
+		self.sprite = None
+		self.room_x, self.room_y = room_x, room_y
+
+
+	def load(self, args=None):
+		s = MySprite(self.texture)
+		s.clip.set(100,120)
+		s.center = RENDER_WIDTH/2, RENDER_HEIGHT/2
+		s.x += self.room_x*RENDER_WIDTH
+		s.y += self.room_y*RENDER_HEIGHT
+
+		self.sprite = s

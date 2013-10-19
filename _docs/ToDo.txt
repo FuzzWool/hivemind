@@ -78,29 +78,16 @@ x Add a SLIDE KICK.
 	! Make Camera tool
 		+ Lock graphics
 
-		graphics (sides/locks)
+		+ graphics (sides/locks)
 			+ for one room
 			
-			for all the rooms
-				! draw only what's on-screen
-					~ MySprite.draw checks if it's on Camera
-					! laggy when there's a lot of rooms
-						removing & adding sprites !!
+			+ for all the rooms
+				+ Make sides MySprite_Loader
+				+ Make lock MySprite_Loader
+				~ stress tested
 
-					remove camera dependancy from side draw
-
-				position locks
 
 		side settings
-
-
-	!!+ MySprite_Loader
-	Holds onto Sprite loading information.
-	Loads the sprite when it's on-screen.
-	Unloads the sprite when it's off-screen.
-
-	Virtual class. Designed to be overriden.
-
 
 	! Render Rooms only when they may be drawn.
 
@@ -110,3 +97,5 @@ x Add a SLIDE KICK.
 		setters
 		keep_in functions
 		...for every function.
+
+		! bound_int (args: x,y or an object)
