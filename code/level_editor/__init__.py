@@ -8,21 +8,22 @@ from code.pysfml_game import window
 
 class toolbox:
 	
-	def __init__(self):
+	def __init__(self, worldmap):
 		self.ui = ui()
 		self._init_cursor()
 		#
 		self.pointer = pointer()
 		self.tile = tile()
-		self.camera = camera()
+		self.camera = camera(worldmap)
 
 	def draw(self, camera, mouse):
 
 		if self.ui.selected == "tile":
 			self.tile.draw()
+			self._draw_cursor(camera, mouse)
 		if self.ui.selected == "camera":
-			self.camera.draw()
-		self._draw_cursor(camera, mouse)
+			self.camera.draw(camera)
+
 
 	def static_draw(self):
 		self.ui.draw()
@@ -457,19 +458,43 @@ class _LevelProperties:
 
 from code.pysfml_game import RENDER_HEIGHT, RENDER_WIDTH
 
-class camera:
-#WIP - Sets camera locks for each side.
 
+class camera:
 #WIP - Created for each room.
 #Rendered ON-THE-FLY.
+	
+	def __init__(self, worldmap):
+	#Create locks for every room of the worldmap.
+		self.worldmap = worldmap
 
-	def __init__(self):
-		
+		self.all_locks = []
+		for x in range(self.worldmap.rooms_w):
+			self.all_locks.append([])
+
+			for y in range(self.worldmap.rooms_h):
+				lock = locks(x,y)
+				self.all_locks[-1].append(lock)
+
+
+	def controls(self):
+		pass
+
+	def draw(self, camera):
+		for column in self.all_locks:
+			for locks in column:
+				locks.draw(camera)
+
+class locks:
+#Sets camera locks for each side of a single room.
+
+	def __init__(self, room_x, room_y):
+		args = room_x, room_y
+
 		#sides
-		self.left = self.side("left")
-		self.right = self.side("right")
-		self.up = self.side("up")
-		self.down = self.side("down")
+		self.left = self.side("left", *args)
+		self.right = self.side("right", *args)
+		self.up = self.side("up", *args)
+		self.down = self.side("down", *args)
 		#
 		self.sides \
 		= [self.left, self.right, self.up, self.down]
@@ -481,11 +506,15 @@ class camera:
 		self.lock = MySprite(texture)
 		self.lock.clip.set(100,120)
 		self.lock.center = RENDER_WIDTH/2, RENDER_HEIGHT/2
+		self.lock.x += room_x*RENDER_WIDTH
+		self.lock.y += room_y*RENDER_HEIGHT
 
-	def draw(self):
+
+
+	def draw(self, camera):
 		for side in self.sides:
-			side.draw()
-		self.lock.draw()
+			side.draw(camera)
+		self.lock.draw(camera)
 
 	def controls(self):
 		pass
@@ -499,8 +528,42 @@ class camera:
 		y_texture = MyTexture\
 		("assets/level_editor/camera/y_side.png")
 
-		def __init__(self, pos):
-		#create sprites
+
+		def __init__(self, pos, room_x, room_y):
+			self._init_sprite(pos, room_x, room_y)
+
+
+		def draw(self, camera):
+
+			#Make (WIP)
+			if self.sprite == None:
+				c = camera
+				if c.room_x1 <= self.room_x <= c.room_x2\
+				and c.room_y1 <= self.room_y <= c.room_y2:
+					self._make_sprite()
+
+			#Delete
+			if self.sprite != None:
+				if not self.sprite.in_bounds(camera):
+					self.sprite = None
+
+			#Draw
+			if self.sprite != None:
+				self.sprite.draw(camera)
+
+
+		#SPRITE
+
+		def _init_sprite(self, pos, room_x, room_y):
+			self.sprite = None
+			self.pos = pos
+			self.room_x, self.room_y = room_x, room_y
+
+
+		def _make_sprite(self):
+			pos = self.pos
+			room_x, room_y = self.room_x, self.room_y
+
 			if pos in ("left","right"):
 				self.sprite = MySprite(self.x_texture)
 
@@ -522,6 +585,5 @@ class camera:
 					self.sprite.clip.flip_vertical()
 					self.sprite.y = RENDER_HEIGHT - GRID
 
-
-		def draw(self):
-			self.sprite.draw()
+			self.sprite.x += room_x*RENDER_WIDTH
+			self.sprite.y += room_y*RENDER_HEIGHT

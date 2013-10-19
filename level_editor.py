@@ -9,7 +9,7 @@ Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
 from code.game import WorldMap
-worldmap = WorldMap(4,4)
+worldmap = WorldMap(2,2)
 
 
 ###########
@@ -20,7 +20,7 @@ from code.pysfml_game import GRID
 from code.pysfml_game import MyMouse
 
 mouse = MyMouse()
-TB = toolbox() ###
+TB = toolbox(worldmap) ###
 
 
 running = True

@@ -35,6 +35,7 @@ class GameRectangle: #virtual
 		self.y = y-(self.h/2)
 
 
+	#
 
 	def say_absolute(self):
 		print "position", self.position
@@ -42,6 +43,13 @@ class GameRectangle: #virtual
 		print "points", self.points
 		print "center", self.center 
 
+
+	def in_bounds(self, other):
+		if self.x2 < other.x1: return False
+		if other.x2 < self.x1: return False
+		if self.y2 < other.y1: return False
+		if other.y2 < self.y1: return False
+		return True
 
 	# TILE
 

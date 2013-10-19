@@ -30,8 +30,14 @@ class MySprite(sf.Sprite, GameRectangle):
 
 
 
-	def draw(self): window.draw(self)
+	def draw(self, Camera=None):
+		if Camera == None:
+			window.draw(self)
 
+		#Draw only if it's within Camera bounds
+		if Camera != None:
+			if self.in_bounds(Camera):
+				window.draw(self)
 
 	#POSITIONING - linking inheritance + moving children
 
