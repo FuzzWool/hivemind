@@ -76,12 +76,20 @@ x Add a SLIDE KICK.
 		+ Pointer
 
 
-	+ Make Camera tool
+	! Make Camera tool
 		+ graphics (sides/locks)
 		+ controls
 		+ Room.Camera holds bools for each side.
+
 		
 		! camera tool loads/edits/saves room.camera
+			+ sides load locks
+			! sides save locks
+
+			! lock correctly updates for sides
+				(init loading)
+				make on_change event for sides
+
 
 		! Camera stops at enabled enabled sides.
 		! Camera smoothly animates past enabled sides.
@@ -91,9 +99,11 @@ x Add a SLIDE KICK.
 
 
 ! CLEANING
+	! level_editor camera controls go into toolbox
+
 	! clean room and worldmap
 		condense into classes
-		
+
 	! Improve GameRectangle
 		setters
 		keep_in functions

@@ -340,11 +340,11 @@ class Room(GameRectangle):
 		#_LOAD
 		#Loads values from a text file.
 
-		def __init__(self, key):
+		def __init__(self, key): #Room.init
 			self.key = key
 			self._load()
 		#
-		def _load(self):
+		def _load(self): #init
 			d = "assets/levels/unique/"+\
 			self.key+"_camera_locks.txt"
 
@@ -367,8 +367,8 @@ class Room(GameRectangle):
 		#PROPERTIES
 		left, right, up, down = False, False, False, False
 
-		#SAVING
-		def save(self):
+		#SAVE
+		def save(self): #level_editor
 
 			to_save = \
 			int(self.left),int(self.right),\

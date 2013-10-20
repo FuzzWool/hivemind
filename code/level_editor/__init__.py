@@ -464,25 +464,31 @@ class camera:
 #WIP - Created for each room.
 #Rendered ON-THE-FLY.
 	
+
+	#_LOAD
 	def __init__(self, worldmap):
-	#Create locks for every room of the worldmap.
-		self.worldmap = worldmap
+		self._create_locks(worldmap)
+
+	def _create_locks(self, worldmap):
 
 		self.all_locks = []
-		for x in range(self.worldmap.rooms_w):
+		for rooms_column in worldmap.rooms:
 			self.all_locks.append([])
 
-			for y in range(self.worldmap.rooms_h):
-				lock = locks(x,y)
+			for room in rooms_column:
+				lock = locks(room)
 				self.all_locks[-1].append(lock)
+	#
 
 
+	#DRAW
 	def draw(self, camera):
 		for column in self.all_locks:
 			for locks in column:	
 				locks.draw(camera)
 
 
+	#CONTROLS
 	def controls(self, worldmap, mouse, cursor):
 	#Press the locks in order to toggle them. 
 		
@@ -501,21 +507,20 @@ class camera:
 class locks:
 #Sets camera locks for each side of a single room.
 
-	def __init__(self, room_x, room_y):
-		args = room_x, room_y
+	def __init__(self, room):
 
 		#sides
-		self.left = side("left", *args)
-		self.right = side("right", *args)
-		self.up = side("up", *args)
-		self.down = side("down", *args)
+		self.left = side("left", room)
+		self.right = side("right", room)
+		self.up = side("up", room)
+		self.down = side("down", room)
 		#
 		self.sides \
 		= [self.left, self.right, self.up, self.down]
 
 
 		#lock
-		self.lock = lock(*args)
+		self.lock = lock(room.room_x, room.room_y)
 
 
 	def draw(self, camera):
@@ -574,47 +579,57 @@ class side(MySprite_Loader):
 #A conditions and configurations for loading the
 #side sprites.
 
-	def __init__ (self, pos, room_x, room_y):
+	def __init__ (self, pos, room):
 		MySprite_Loader.__init__(self)
-		self.init_position(pos, room_x, room_y)
-		self.init_toggle()
+		self._init_sprite(pos, room.room_x, room.room_y)
+		self._init_toggle(pos, room.camera_locks)
 
 
 	#TOGGLE
+	disable_color = sf.Color(0,0,0,100)
+	enable_color = sf.Color(255,255,255,255)
 
-	def init_toggle(self): #init
-		self.enabled = False
-		self.enable()
+	def _init_toggle(self, pos, locks): #init
+
+		#Find the lock.
+		lock = False
+		if pos == "left": lock = locks.left
+		if pos == "right": lock = locks.right
+		if pos == "up": lock = locks.up
+		if pos == "down": lock = locks.down
+
+		#Use it.
+		if lock == True: self.enable()
+		if lock == False: self.disable()
+
 
 	def toggle(self):
 		if self.enabled: self.disable()
 		else: self.enable()
 
-	disable_c = sf.Color(0,0,0,100)
-	enable_c = sf.Color(255,255,255,255)
 	def disable(self):
 		self.enabled = False
 		if self.sprite != None:
-			self.sprite.color = self.disable_c
+			self.sprite.color = self.disable_color
 	def enable(self):
 		self.enabled = True
 		if self.sprite != None:
-			self.sprite.color = self.enable_c
+			self.sprite.color = self.enable_color
 
 
-	#POSITION
+	#SPRITE
 
 	x_texture = MyTexture\
 	("assets/level_editor/camera/x_side.png")
 	y_texture = MyTexture\
 	("assets/level_editor/camera/y_side.png")
 
-	def init_position(self, pos, room_x, room_y): #init
+	def _init_sprite(self, pos, room_x, room_y): #init
 		self.pos = pos
 		self.room_x, self.room_y = room_x, room_y
 
 
-	def load(self, args=None):
+	def load(self, args=None): #parent
 		pos = self.pos
 		room_x, room_y = self.room_x, self.room_y
 
