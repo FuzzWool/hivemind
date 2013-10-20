@@ -549,27 +549,27 @@ class locks:
 			if side.enabled:
 				any_enabled = True
 		
-		# if pressed:
-		# 	if any_enabled:
-		# 		self.lock.enable()
-		# 	else:
-		# 		self.lock.disable()
+		if pressed:
+			if any_enabled:
+				self.lock.enable()
+			else:
+				self.lock.disable()
 
 
 		#Toggle the LOCK.
 		#Enables all sides if enabled.
 		#Disables all sides if disabled.
-		# if pressed:
+		if pressed:
 
-		# 	if self.lock.sprite != None:
-		# 		if self.lock.in_bounds(cursor):
-		# 			self.lock.toggle()
+			if self.lock.sprite != None:
+				if self.lock.in_bounds(cursor):
+					self.lock.toggle()
 
-		# 			for side in self.sides:
-		# 				if self.lock.enabled:
-		# 					side.enable()
-		# 				else:
-		# 					side.disable()
+					for side in self.sides:
+						if self.lock.enabled:
+							side.enable()
+						else:
+							side.disable()
 
 
 from code.pysfml_game import MySprite_Loader
@@ -691,6 +691,7 @@ class lock(MySprite_Loader):
 	def __init__(self, room_x, room_y):
 		self._init_position(room_x, room_y)
 		self._init_toggle()
+		MySprite_Loader.__init__(self)
 
 
 	#PUBLIC

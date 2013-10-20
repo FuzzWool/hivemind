@@ -87,24 +87,15 @@ x Add a SLIDE KICK.
 			+ sides save locks
 
 
-			~ fixed: sides were selected inappropriately
-				~ w,h were out of proportion
-
-			! add locks again
+			~ fix: locks don't show while tool activated off the first screen
+				~ loader init is now being called in lock
 
 
-			! lock correctly updates for sides
-				(init loading)
-				(side-of-screen selection)
-				make on_change event for sides
-
-
-			! locks are enabled by default
-			! cannot re-enable locks once disabled
+			! locks are enabled-only by default
 
 
 			! new MySprite_Loader
-				! has to load/deloat sprite immediately: slow
+				! has to load/unload sprite immediately: slow
 				! can't use clip w/h
 
 			! clean Room.Camera
