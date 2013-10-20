@@ -14,13 +14,13 @@ from code.pysfml_game import collision, slope_collision
 class load:
 	_filenames = []
 	textures = {}
-	collisions, _collisions = {}, {}
 
 	import glob
 	import os
 	directory = "assets/levels/shared"
 	os.chdir(directory)
 
+	# TEXTURES
 	for filename in glob.glob("*.png"):
 		texture = MyTexture(filename)
 		textures[filename] = texture
@@ -28,6 +28,7 @@ class load:
 
 
 	# COLLISIONS
+	collisions, _collisions = {}, {}
 
 	#grab
 	for filename in _filenames:
@@ -80,6 +81,7 @@ class load:
 
 		collisions[key] = formatted_data
 
+
 	os.chdir("../../../")
 #
 
@@ -89,7 +91,8 @@ class Room(GameRectangle):
 # * May be positioned in different areas of a WORLD MAP.
 # * Can load different TEXTURES.
 # * Can load different TILE LAYOUTS.
-# !WIP: Can load COLLISION INFORMATION.
+# * Can load COLLISION INFORMATION.
+# WIP - Can load CAMERA LOCKS.
 
 
 	def __init__(self, x=0, y=0, texture=None):
@@ -113,6 +116,10 @@ class Room(GameRectangle):
 		self.change_texture(texture, init=True)
 		self.render_graphics()
 
+
+		#
+
+		self.camera_locks = self._Camera_Locks(self.key())
 
 
 	# Loading TILE DATA
@@ -324,7 +331,54 @@ class Room(GameRectangle):
 	def save_collision_data(self): #save
 		pass
 
+	######
 
+
+	class _Camera_Locks:
+	#Loads the camera boundaries: the camera locks.
+		
+		#_LOAD
+		#Loads values from a text file.
+
+		def __init__(self, key):
+			self.key = key
+			self._load()
+		#
+		def _load(self):
+			d = "assets/levels/unique/"+\
+			self.key+"_camera_locks.txt"
+
+			try:
+				f = open(d,"r")
+				r = f.read()
+			except:
+				f = open(d,"w+")
+				r = "0000"
+				f.write(r)
+			f.close()
+			#
+
+			self.left = bool(r[0] == 0)
+			self.right = bool(r[1] == 0)
+			self.up = bool(r[2] == 0)
+			self.down = bool(r[3] == 0)
+
+
+		#PROPERTIES
+		left, right, up, down = False, False, False, False
+
+		#SAVING
+		def save(self):
+
+			to_save = \
+			int(self.left),int(self.right),\
+			int(self.up),int(self.down)
+
+			d = "assets/levels/unique/"+\
+			self.key+"_camera_locks.txt"
+			f = open(d,"w+")
+			f.write(to_save)
+			f.close()
 
 
 

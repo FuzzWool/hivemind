@@ -76,27 +76,16 @@ x Add a SLIDE KICK.
 		+ Pointer
 
 
-	! Make Camera tool
+	+ Make Camera tool
 		+ graphics (sides/locks)
-
 		+ controls
-
-			~ sides
-				~ fixed: crashes after moving the camera
-
-			+ Toggle the lock.
-			Lock toggling toggles all the sides, too.
-				+ If any sides are enabled, enable lock.
-				Otherwise, disable lock.
-				+ Retains data.
-
 
 	! Render Rooms only when they may be drawn.
 
 	! Room.Camera holds bools for each side.
-		Saves/Loads from a .txt
-		Camera tool loads from the Room
-		
+		+ Class loads/stores values
+		Camera tool loads/savbes to and fro the Room
+
 	! Camera stops at enabled enabled sides.
 	! Camera smoothly animates past enabled sides (megaman).
 
@@ -106,3 +95,8 @@ x Add a SLIDE KICK.
 		...for every function.
 
 		! bound_int (args: x,y or an object)
+
+
+! CLEANING
+	! clean room and worldmap
+		condense into classes
