@@ -85,14 +85,21 @@ x Add a SLIDE KICK.
 		! loading/saving values
 			+ sides load locks
 			+ sides save locks
-				~ side's enabled is binded room's camera lock side
 
 			! lock correctly updates for sides
 				(init loading)
+				(side-of-screen selection)
 				make on_change event for sides
 
-			! sprites don't render/draw when lock is first selected off the first screen
+			~ fix: sprites don't render/draw when not centered on camera
+				~ Loader - has no positioning data if the sprite isn't loaded straight away. Loads once, then removes the sprite.
 
+			Loader doesn't provide position UNTIL a sprite is made.
+
+
+			! clean Room.Camera
+			! consider MySprite_Loader alternative for
+			loading to get data. (Slow with many sprites)
 
 		! Camera stops at enabled enabled sides.
 		! Camera smoothly animates past enabled sides.

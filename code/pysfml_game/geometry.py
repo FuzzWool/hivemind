@@ -45,8 +45,8 @@ class GameRectangle: #virtual
 
 
 	def in_bounds(self, other):
-		if self.y_in_bounds(other) \
-		and self.x_in_bounds(other):
+		if self.x_in_bounds(other) \
+		and self.y_in_bounds(other):
 			return True
 
 	def y_in_bounds(self, other):
@@ -54,7 +54,6 @@ class GameRectangle: #virtual
 		if self.y1 <= other.y2 <= self.y2: return True
 		if other.y1 <= self.y1 <= other.y2: return True
 		if other.y1 <= self.y2 <= other.y2: return True
-
 		return False
 	#
 	def x_in_bounds(self, other):

@@ -6,6 +6,11 @@ class MySprite_Loader(GameRectangle):
 
 	def __init__(self):
 		self.sprite = None
+		
+		#Load the sprite in advance to get the position.
+		self.load()
+		self._update_position()
+		self.unload()
 
 	#PUBLIC
 	#Loading and drawing absolutely MUST be done here.
@@ -50,7 +55,7 @@ class MySprite_Loader(GameRectangle):
 
 
 	x,y,w,h = 0,0,0,0
-	def _update_position(self): #_events
+	def _update_position(self): #_events, init
 		if self.sprite == None: return
 		self.x, self.y, self.w, self.h \
 		= self.sprite.points

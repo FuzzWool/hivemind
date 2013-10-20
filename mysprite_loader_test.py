@@ -35,7 +35,7 @@ while running:
 	#Logic
 	if quit(): running = False
 
-	amt = 10
+	amt = 1
 	if key.A.pressed(): Camera.x -= amt
 	if key.D.pressed(): Camera.x += amt
 	if key.W.pressed(): Camera.y -= amt

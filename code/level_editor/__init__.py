@@ -526,6 +526,7 @@ class locks:
 	def draw(self, camera):
 		for side in self.sides:
 			side.draw(camera)
+
 		self.lock.draw(camera)
 
 
@@ -580,8 +581,10 @@ class side(object, MySprite_Loader):
 #side sprites.
 
 	def __init__ (self, pos, room):
-		MySprite_Loader.__init__(self)
 		self._init_sprite(pos, room.room_x, room.room_y)
+		self.pos = pos
+		self.room = room
+		MySprite_Loader.__init__(self)
 		self._init_toggle(pos, room)
 
 
