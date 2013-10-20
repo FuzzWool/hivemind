@@ -86,20 +86,29 @@ x Add a SLIDE KICK.
 			+ sides load locks
 			+ sides save locks
 
+
+			~ fixed: sides were selected inappropriately
+				~ w,h were out of proportion
+
+			! add locks again
+
+
 			! lock correctly updates for sides
 				(init loading)
 				(side-of-screen selection)
 				make on_change event for sides
 
-			~ fix: sprites don't render/draw when not centered on camera
 
 			! locks are enabled by default
-			! cannot re-enable locks
+			! cannot re-enable locks once disabled
 
+
+			! new MySprite_Loader
+				! has to load/deloat sprite immediately: slow
+				! can't use clip w/h
 
 			! clean Room.Camera
-			! consider MySprite_Loader alternative for
-			loading to get data. (Slow with many sprites)
+
 
 		! Camera stops at enabled enabled sides.
 		! Camera smoothly animates past enabled sides.

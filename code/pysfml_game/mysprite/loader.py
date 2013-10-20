@@ -57,5 +57,5 @@ class MySprite_Loader(GameRectangle):
 	x,y,w,h = 0,0,0,0
 	def _update_position(self): #_events, init
 		if self.sprite == None: return
-		self.x, self.y, self.w, self.h \
-		= self.sprite.points
+		self.x, self.y = self.sprite.position
+		self.w, self.h = self.sprite.size
