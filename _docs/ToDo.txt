@@ -79,17 +79,26 @@ x Add a SLIDE KICK.
 	! Make Camera tool
 		+ graphics (sides/locks)
 
-		! controls
-			+ fix: toggles in the wrong place
-			+ fixed: geometry in_bounds
+		+ controls
 
-		! side settings
+			~ sides
+				~ fixed: crashes after moving the camera
 
+			+ Toggle the lock.
+			Lock toggling toggles all the sides, too.
+				+ If any sides are enabled, enable lock.
+				Otherwise, disable lock.
+				+ Retains data.
 
 
 	! Render Rooms only when they may be drawn.
 
-	! Make Camera sub-module for room
+	! Room.Camera holds bools for each side.
+		Saves/Loads from a .txt
+		Camera tool loads from the Room
+		
+	! Camera stops at enabled enabled sides.
+	! Camera smoothly animates past enabled sides (megaman).
 
 	! Improve GameRectangle
 		setters

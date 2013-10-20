@@ -41,7 +41,7 @@ while running:
 
 	key.reset_all()
 
-	#Video
+	#Videoa
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
 	#

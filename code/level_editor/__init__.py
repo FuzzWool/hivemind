@@ -528,12 +528,44 @@ class locks:
 
 	def controls(self, mouse, cursor):
 
-		if mouse.left.pressed():
+		pressed = mouse.left.pressed()
 
-			for side in self.sides:
-				if cursor.in_bounds(side.sprite):
-					side.toggle()
+		#Toggle a SIDE.
+		#Enable the lock if any are enabled.
+		#Disable the lock if all are disabled.
+		any_enabled = False
 
+		for side in self.sides:
+			if side.sprite != None:
+				if pressed:
+					if cursor.in_bounds(side.sprite):
+						side.toggle()
+
+				if side.enabled:
+					self.lock.enable()
+					any_enabled = True
+		
+		if pressed:
+			if any_enabled:
+				self.lock.enable(); print 1
+			else:
+				self.lock.disable(); print 0
+
+
+		#Toggle the LOCK.
+		#Enables all sides if enabled.
+		#Disables all sides if disabled.
+		if pressed:
+
+			if self.lock.sprite != None:
+				if cursor.in_bounds(self.lock.sprite):
+					self.lock.toggle()
+
+					for side in self.sides:
+						if self.lock.enabled:
+							side.enable()
+						else:
+							side.disable()
 
 
 from code.pysfml_game import MySprite_Loader
@@ -542,31 +574,42 @@ class side(MySprite_Loader):
 #A conditions and configurations for loading the
 #side sprites.
 
-	#PUBLIC
+	def __init__ (self, pos, room_x, room_y):
+		MySprite_Loader.__init__(self)
+		self.init_position(pos, room_x, room_y)
+		self.init_toggle()
+
+
+	#TOGGLE
+
+	def init_toggle(self): #init
+		self.enabled = False
+		self.enable()
 
 	def toggle(self):
-		if self.is_enabled: self.disable()
+		if self.enabled: self.disable()
 		else: self.enable()
 
 	disable_c = sf.Color(0,0,0,100)
 	enable_c = sf.Color(255,255,255,255)
-	def disable(self): self.sprite.color = self.disable_c
-	def enable(self): self.sprite.color = self.enable_c
+	def disable(self):
+		self.enabled = False
+		if self.sprite != None:
+			self.sprite.color = self.disable_c
+	def enable(self):
+		self.enabled = True
+		if self.sprite != None:
+			self.sprite.color = self.enable_c
 
-	@property	
-	def is_enabled(self):
-		return bool(self.sprite.color == self.enable_c)
 
-
-	#PRIVATE
+	#POSITION
 
 	x_texture = MyTexture\
 	("assets/level_editor/camera/x_side.png")
 	y_texture = MyTexture\
 	("assets/level_editor/camera/y_side.png")
 
-	def __init__ (self, pos, room_x, room_y):
-		MySprite_Loader.__init__(self)
+	def init_position(self, pos, room_x, room_y): #init
 		self.pos = pos
 		self.room_x, self.room_y = room_x, room_y
 
@@ -599,15 +642,45 @@ class side(MySprite_Loader):
 		self.sprite.x += room_x*RENDER_WIDTH
 		self.sprite.y += room_y*RENDER_HEIGHT
 
+		#Render the sprite
+		self.toggle(); self.toggle()
+
 
 from code.pysfml_game import MySprite_Loader
 ##
 class lock(MySprite_Loader):
 	
+	def __init__(self, room_x, room_y):
+		self._init_position(room_x, room_y)
+		self._init_toggle()
+
+
+	#PUBLIC
+
+	def _init_toggle(self):
+		self.enabled = True
+		self.enable()
+
+	def toggle(self):
+		if self.enabled: self.disable()
+		else: self.enable()
+
+	def disable(self):
+		self.enabled = False
+		if self.sprite != None:
+			self.sprite.clip.use(1,0)
+	def enable(self):
+		self.enabled = True
+		if self.sprite != None:
+			self.sprite.clip.use(0,0)
+
+	#
+
 	texture = MyTexture\
 	("assets/level_editor/camera/lock.png")
 
-	def __init__(self, room_x, room_y):
+
+	def _init_position(self, room_x, room_y):
 		self.sprite = None
 		self.room_x, self.room_y = room_x, room_y
 
@@ -620,3 +693,5 @@ class lock(MySprite_Loader):
 		s.y += self.room_y*RENDER_HEIGHT
 
 		self.sprite = s
+
+		self.toggle(); self.toggle() #render the sprite
