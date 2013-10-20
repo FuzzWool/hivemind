@@ -301,6 +301,7 @@ class Room(GameRectangle):
 		self.save_room_texture()
 		self.save_tile_data()
 		self.save_collision_data()
+		self.camera_locks.save()
 	#
 	def save_room_texture(self): #save
 		key = self.key()
@@ -358,21 +359,22 @@ class Room(GameRectangle):
 			f.close()
 			#
 
-			self.left = bool(r[0] == 0)
-			self.right = bool(r[1] == 0)
-			self.up = bool(r[2] == 0)
-			self.down = bool(r[3] == 0)
-
+			self.left = bool(r[0] == "1")
+			self.right = bool(r[1] == "1")
+			self.up = bool(r[2] == "1")
+			self.down = bool(r[3] == "1")
+			
 
 		#PROPERTIES
 		left, right, up, down = False, False, False, False
 
 		#SAVE
+		#Saves values to a text file.
 		def save(self): #level_editor
 
 			to_save = \
-			int(self.left),int(self.right),\
-			int(self.up),int(self.down)
+			str(int(self.left))+str(int(self.right))+\
+			str(int(self.up))+str(int(self.down))
 
 			d = "assets/levels/unique/"+\
 			self.key+"_camera_locks.txt"

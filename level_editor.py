@@ -29,6 +29,7 @@ while running:
 	if quit(): running = False
 	if key.RETURN.pressed():
 		print worldmap.rooms[0][0].camera_locks.left
+		print TB.camera.all_locks[0][0].left.enabled
 
 
 	if not key.L_CTRL.held():
@@ -51,4 +52,3 @@ while running:
 	TB.static_draw() ###
 	#
 	window.display()
-	

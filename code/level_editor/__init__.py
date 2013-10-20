@@ -575,33 +575,55 @@ class locks:
 
 from code.pysfml_game import MySprite_Loader
 ##
-class side(MySprite_Loader):
+class side(object, MySprite_Loader):
 #A conditions and configurations for loading the
 #side sprites.
 
 	def __init__ (self, pos, room):
 		MySprite_Loader.__init__(self)
 		self._init_sprite(pos, room.room_x, room.room_y)
-		self._init_toggle(pos, room.camera_locks)
+		self._init_toggle(pos, room)
 
 
 	#TOGGLE
 	disable_color = sf.Color(0,0,0,100)
 	enable_color = sf.Color(255,255,255,255)
 
-	def _init_toggle(self, pos, locks): #init
+	def _init_toggle(self, pos, room): #init
+		self.pos = pos #enabled
+		self.room = room #enabled
 
-		#Find the lock.
-		lock = False
-		if pos == "left": lock = locks.left
-		if pos == "right": lock = locks.right
-		if pos == "up": lock = locks.up
-		if pos == "down": lock = locks.down
-
+		#
+		lock = self.enabled
 		#Use it.
 		if lock == True: self.enable()
 		if lock == False: self.disable()
 
+
+	#mutated ugliness
+
+	@property
+	def enabled(self):
+		pos = self.pos
+		locks = self.room.camera_locks
+		#
+		if pos == "left": lock = locks.left
+		if pos == "right": lock = locks.right
+		if pos == "up": lock = locks.up
+		if pos == "down": lock = locks.down
+		#
+		return lock
+	@enabled.setter
+	def enabled(self, truth):
+		pos = self.pos
+		locks = self.room.camera_locks
+		#
+		if pos == "left": locks.left = truth
+		if pos == "right": locks.right = truth
+		if pos == "up": locks.up = truth
+		if pos == "down": locks.down = truth
+
+	#
 
 	def toggle(self):
 		if self.enabled: self.disable()

@@ -82,13 +82,16 @@ x Add a SLIDE KICK.
 		+ Room.Camera holds bools for each side.
 
 		
-		! camera tool loads/edits/saves room.camera
+		! loading/saving values
 			+ sides load locks
-			! sides save locks
+			+ sides save locks
+				~ side's enabled is binded room's camera lock side
 
 			! lock correctly updates for sides
 				(init loading)
 				make on_change event for sides
+
+			! sprites don't render/draw when lock is first selected off the first screen
 
 
 		! Camera stops at enabled enabled sides.
