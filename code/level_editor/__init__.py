@@ -547,9 +547,9 @@ class locks:
 		
 		if pressed:
 			if any_enabled:
-				self.lock.enable()
+				self.lock.enable(); print 1
 			else:
-				self.lock.disable()
+				self.lock.disable(); print 0
 
 
 		#Toggle the LOCK.

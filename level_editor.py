@@ -28,7 +28,7 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		print worldmap.rooms[0][0].camera_locks.left
+		pass
 
 
 	if not key.L_CTRL.held():
