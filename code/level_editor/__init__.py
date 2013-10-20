@@ -542,14 +542,12 @@ class locks:
 		any_enabled = False
 
 		for side in self.sides:
-			if side.sprite != None:
-				if pressed:
-					if cursor.in_bounds(side.sprite):
-						side.toggle()
+			if pressed:
+				if cursor.in_bounds(side):
+					side.toggle()
 
-				if side.enabled:
-					self.lock.enable()
-					any_enabled = True
+			if side.enabled:
+				any_enabled = True
 		
 		if pressed:
 			if any_enabled:
@@ -564,7 +562,7 @@ class locks:
 		if pressed:
 
 			if self.lock.sprite != None:
-				if cursor.in_bounds(self.lock.sprite):
+				if cursor.in_bounds(self.lock):
 					self.lock.toggle()
 
 					for side in self.sides:

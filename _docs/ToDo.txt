@@ -92,9 +92,9 @@ x Add a SLIDE KICK.
 				make on_change event for sides
 
 			~ fix: sprites don't render/draw when not centered on camera
-				~ Loader - has no positioning data if the sprite isn't loaded straight away. Loads once, then removes the sprite.
 
-			Loader doesn't provide position UNTIL a sprite is made.
+			! locks are enabled by default
+			! cannot re-enable locks
 
 
 			! clean Room.Camera
