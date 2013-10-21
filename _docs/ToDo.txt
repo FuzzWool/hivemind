@@ -90,8 +90,7 @@ x Add a SLIDE KICK.
 			~ fix: locks don't show while tool activated off the first screen
 				~ loader init is now being called in lock
 
-
-			! locks are enabled-only by default
+			~ fix: locks do not enable/disable by default
 
 
 			! new MySprite_Loader

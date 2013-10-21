@@ -510,17 +510,25 @@ class locks:
 	def __init__(self, room):
 
 		#sides
-		self.left = side("left", room)
-		self.right = side("right", room)
-		self.up = side("up", room)
-		self.down = side("down", room)
+		self.left = _side("left", room)
+		self.right = _side("right", room)
+		self.up = _side("up", room)
+		self.down = _side("down", room)
 		#
 		self.sides \
 		= [self.left, self.right, self.up, self.down]
 
 
 		#lock
-		self.lock = lock(room.room_x, room.room_y)
+		self.lock = lock(room.room_x,room.room_y)
+
+		#set the lock's state
+		any_enabled = False
+		for side in self.sides:
+			if side.enabled: any_enabled = True
+		if any_enabled:
+			self.lock.enable()
+
 
 
 	def draw(self, camera):
@@ -574,7 +582,7 @@ class locks:
 
 from code.pysfml_game import MySprite_Loader
 ##
-class side(object, MySprite_Loader):
+class _side(object, MySprite_Loader):
 #A conditions and configurations for loading the
 #side sprites.
 
@@ -697,8 +705,8 @@ class lock(MySprite_Loader):
 	#PUBLIC
 
 	def _init_toggle(self):
-		self.enabled = True
-		self.enable()
+		self.enabled = False
+		self.disable()
 
 	def toggle(self):
 		if self.enabled: self.disable()
