@@ -82,30 +82,38 @@ x Add a SLIDE KICK.
 		+ Room.Camera holds bools for each side.
 		+ loading/saving values
 
+		===
+		GOAL: Fix lag. X
+		GOAL: Load and unload to conserve RAM.
 
-		! Lag
+		+ Fixed Lag
 			+ Make Room.Camera loaders into normal sprites
+			+ limit draw iterations
+				~ change WorldMap to a GameRectangle
+			~ test with 30,30 rooms
 
-			! limit draw iterations
-				! change WorldMap to a GameRectangle
-				! change Room to a GameRectangle
-
-			! test with 30,30 rooms
+		! Clean WorldMap > GameRectangle support
+			test with level editor, player_test
+		! Clean Room > GameRectangle
+			test with level editor, player test
 
 
 		! GameRectangle
-			! keep_in_(insert)_bounds inherits from...
+			! make keep_in_(insert)_bounds for abs,tile,room
+			keep_in_(insert)_bounds inherits from...
 				keep_in_x_bounds(x, x_bound)
 				keep_in_y_bounds(y, y_bound)
+
+			! make in_bounds for abs,tile,room
+				in_x_bounds
+				in_y_bounds
 
 		! Room_Loader
 		Loads sprites when they're in a room,
 		unloads when they're not.
 		Remembers prior and current camera.room_position
-
-
-		! clean Room.Camera
-			! automatic MySprite loading !!
+		====
+		
 
 		! Camera stops at enabled enabled sides.
 		! Camera smoothly animates past enabled sides.

@@ -84,11 +84,14 @@ class WorldMap(GameRectangle):
 
 	#POSITION
 
+	x,y = 0,0
 	@property
 	def w(self): return self.tiles_w*GRID
 	@property
 	def h(self): return self.tiles_h*GRID
 
+
+	#pre-GameRectangle support
 	@property
 	def tiles_w(self): return len(self.tiles)
 	@property

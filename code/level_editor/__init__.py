@@ -486,13 +486,13 @@ class camera:
 	#DRAW
 	def draw(self, camera):
 
+		#Draw within camera range
 		x1, y1, x2, y2 = camera.room_points
-		print camera.room_points
+		x1, y1 = self.worldmap.keep_in_room_bounds(x1,y1)
+		x2, y2 = self.worldmap.keep_in_room_bounds(x2,y2)
 
-		#WIP - worldmap GameRectangle object
-
-		for column in self.all_locks:
-			for locks in column:	
+		for column in self.all_locks[x1:x2]:
+			for locks in column[y1:y2]:
 				locks.draw()
 
 
