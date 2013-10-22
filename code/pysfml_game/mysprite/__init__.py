@@ -35,6 +35,8 @@ class MySprite(sf.Sprite, GameRectangle):
 
 
 	def draw(self, Camera=None):
+		if self.texture == None: return
+
 		if Camera == None:
 			window.draw(self)
 

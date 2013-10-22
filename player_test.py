@@ -28,7 +28,11 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		pass
+		if Nut.sprite.texture == None:
+			Nut.sprite.texture = sf.Texture.from_file\
+			("assets/characters/nut/sheet.png")
+		else:
+			Nut.sprite.texture = None
 
 
 	Nut.controls(key)

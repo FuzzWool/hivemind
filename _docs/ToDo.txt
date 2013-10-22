@@ -108,35 +108,49 @@ x Add a SLIDE KICK.
 
 ===
 
-!! new MySprite
-Loads sprites when on-screen. Unloads them when off-screen.
 
-	Contains a sprite.
-	Saves all properties designed to be forwarded to it.
-	When created, applies all the properties.
+~ Nut texture test.
+	~ MySprite may be None'd and then assigned a texture
 
-	* Given x,y
-	* Relies on clip for w,h
-	
+~ Stress test
+	No app
+		0% CPU, 2.36 GB RAM
 
-	! Store and load all sf.Sprite properties
-	Test with manual loading and unloading
-		texture
-		texture_rectangle
-		color
-		local_bounds
-		global_bounds
+	app (no texture)
+		0% CPU, 2.40 GB RAM
 
-	! add MySprite.clip
-	use it's bounds as w and h
-		! test with camera-bounded loading/unloading
+	app (w/ texture)
+		same as app no texture
 
-	! add all MySprite subclasses
-		clip
-		children
-		box
-		animation
-			clip_animation 
+	5000
+	Class with empty draw
+		15% CPU, 2.41 GB RAM (0.1 GB)
+
+	5000
+	Class with 15 sub-classes (w/ 10 variables and 2 methods)
+	+ empty draw
+		15% CPU, 2.83 GB RAM
+
+	5000 Sprites with textures
+		25% CPU,  2.73 GB RAM (0.4 GB)
+
+	5000 Sprites without textures
+		18% CPU, 2.73 GB RAM (0.4 GB)
+
+
+In conclusion...
+* Textures aren't RAM demanding.
+* Drawing isn't too CPU demanding.
+
+* Iterating through a 5000-object loop IS CPU demanding.
+* Classes with many sub-classes IS RAM demanding.
+
+
+MySprite suggestions/considerations:
+	* OPTIONAL sub-classes. Active only when specified.
+	* Be careful about the SCOPE of a loop through sprites.
+	* Only remove MySprites if the process is light.
+
 
 ===
 
