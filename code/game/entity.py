@@ -145,12 +145,12 @@ class collision:
 		#FIX the range
 		def fix_x(x):
 			if x < 0: x = 0
-			if x > WorldMap.tiles_w: x = WorldMap.tiles_w
+			if x > WorldMap.tile_w: x = WorldMap.tile_w
 			return x
 
 		def fix_y(y):
 			if y < 0: y = 0
-			if y > WorldMap.tiles_h: y = WorldMap.tiles_h
+			if y > WorldMap.tile_h: y = WorldMap.tile_h
 			return y
 
 		x1, x2 = fix_x(x1), fix_x(x2)
@@ -204,7 +204,7 @@ class collision:
 			if x_tile.collision.is_slope:
 				x, y = x_tile.tile_x, x_tile.tile_y
 
-				if x+1 < WorldMap.tiles_w:
+				if x+1 < WorldMap.tile_w:
 					extra_tile1 = WorldMap.tiles[x+1][y]
 					if not extra_tile1.collision.is_slope:
 						extra_tile1 = None
@@ -214,7 +214,7 @@ class collision:
 					if not extra_tile2.collision.is_slope:
 						extra_tile2 = None
 				
-				if y+1 < WorldMap.tiles_h:
+				if y+1 < WorldMap.tile_h:
 					extra_tile3 = WorldMap.tiles[x][y+1]
 					if not extra_tile3.collision.is_slope:
 						extra_tile3 = None
@@ -356,10 +356,10 @@ class collision:
 			next = None
 			x, y = y_tile.tile_position
 			if self.controls.facing_left:
-				if WorldMap.in_range(x-1, y):
+				if WorldMap.in_tile_bounds(x=x-1, y=y):
 					next = WorldMap.tiles[x-1][y]
 			if self.controls.facing_right:
-				if WorldMap.in_range(x+1, y):
+				if WorldMap.in_tile_bounds(x=x+1, y=y):
 					next = WorldMap.tiles[x+1][y]
 
 			if next != None:

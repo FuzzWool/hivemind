@@ -248,12 +248,12 @@ class tile: #toolbox
 
 	def create(self, worldmap, cursor):
 		x, y = cursor.tile_position
-		if worldmap.in_range(x,y):
+		if worldmap.in_tile_bounds(x=x,y=y):
 			worldmap.tiles[x][y].change(self.selected)
 
 	def remove(self, worldmap, cursor):
 		x, y = cursor.tile_position
-		if worldmap.in_range(x,y):
+		if worldmap.in_tile_bounds(x=x,y=y):
 			worldmap.tiles[x][y].change("____")
 
 
@@ -503,8 +503,8 @@ class camera:
 		#find which lock to select
 		x,y = cursor.room_position
 
-		if 0 <= x < worldmap.rooms_h\
-		and 0 <= y < worldmap.rooms_w:
+		if 0 <= x < worldmap.room_h\
+		and 0 <= y < worldmap.room_w:
 			
 			self.all_locks[x][y].controls\
 			(mouse, cursor)

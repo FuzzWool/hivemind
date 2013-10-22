@@ -118,6 +118,47 @@ class GameRectangle: #virtual
 
 	#
 
+
+	def in_tile_bounds(self, other=None, x=None, y=None):
+		if self.x_in_tile_bounds(other, x) \
+		and self.y_in_tile_bounds(other, y):
+			return True
+
+	def x_in_tile_bounds(self, other=None, x=None):
+		if other != None:
+			x1, x2 = other.tile_x1, other.tile_x2+1
+		if x != None: x1, x2 = x,x
+
+
+		if self.tile_x1 <= x1 <= self.tile_x2:
+			return True
+		if self.tile_x1 <= x2 <= self.tile_x2:
+			return True
+		if x1 <= self.tile_x1 <= x2:
+			return True
+		if x1 <= self.tile_x2 <= x2:
+			return True
+		return False
+	#
+	def y_in_tile_bounds(self, other=None, y=None):
+		if other != None:
+			y1, y2 = other.tile_y1, other.tile_y2+1
+		if y != None: y1, y2 = y,y
+
+		if self.tile_y1 <= y1 <= self.tile_y2:
+			return True
+		if self.tile_y1 <= y2 <= self.tile_y2:
+			return True
+		if y1 <= self.tile_y1 <= y2:
+			return True
+		if y1 <= self.tile_y2 <= y2:
+			return True
+		return False
+
+
+	#
+
+
 	def keep_in_tile_size(self, w=None, h=None):
 		if w != None:
 			if w < 0: w = 0

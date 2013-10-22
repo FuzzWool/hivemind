@@ -1,5 +1,6 @@
 from code.pysfml_game import GameRectangle
 from code.pysfml_game import GRID
+from code.pysfml_game import ROOM_WIDTH, ROOM_HEIGHT
 from code.game import Room
 
 class WorldMap(GameRectangle):
@@ -32,8 +33,8 @@ class WorldMap(GameRectangle):
 	#Draw only ROOMS shown by a Camera.
 
 		if camera == None:
-			x1, x2 = 0, self.rooms_w
-			y1, y2 = 0, self.rooms_h
+			x1, x2 = 0, self.room_w
+			y1, y2 = 0, self.room_h
 		else:
 			x1, y1, x2, y2 = camera.room_points
 			if x1 < 0: x1 = 0
@@ -79,35 +80,14 @@ class WorldMap(GameRectangle):
 		for column in self.rooms:
 			for room in column:
 				room.save()
-		print "%s Room(s) saved." % self.rooms_amt
+		print "%s Room(s) saved." \
+		% (self.room_w*self.room_h)
 
 
 	#POSITION
 
 	x,y = 0,0
 	@property
-	def w(self): return self.tiles_w*GRID
+	def w(self): return len(self.rooms)*ROOM_WIDTH
 	@property
-	def h(self): return self.tiles_h*GRID
-
-
-	#pre-GameRectangle support
-	@property
-	def tiles_w(self): return len(self.tiles)
-	@property
-	def tiles_h(self): return len(self.tiles[0])
-	@property
-	def tiles_amt(self): return self.tiles_w*self.tiles_h
-
-	@property
-	def rooms_w(self): return len(self.rooms)
-	@property
-	def rooms_h(self): return len(self.rooms[0])
-	@property
-	def rooms_amt(self): return self.rooms_w*self.rooms_h
-
-	def in_range(self, x, y):
-	#Check to see if the tiles provided are in range.
-		if 0 < x < self.tiles_w and 0 < y < self.tiles_h:
-			return True
-		return False
+	def h(self): return len(self.rooms[0])*ROOM_HEIGHT
