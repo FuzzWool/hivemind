@@ -31,14 +31,7 @@ while running:
 		print worldmap.rooms[0][0].camera_locks.left
 		print TB.camera.all_locks[0][0].left.enabled
 
-
-	if not key.L_CTRL.held():
-		if key.A.held(): Camera.x -= GRID
-		if key.D.held(): Camera.x += GRID
-		if key.W.held(): Camera.y -= GRID
-		if key.S.held(): Camera.y += GRID
-
-	TB.controls(worldmap, mouse, key) ###
+	TB.controls(worldmap, Camera, mouse, key) ###
 
 	key.reset_all()
 

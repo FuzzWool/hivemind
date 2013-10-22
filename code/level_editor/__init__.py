@@ -29,10 +29,25 @@ class toolbox:
 	def static_draw(self):
 		self.ui.draw()
 
-	def controls(self, worldmap, mouse, key):
+	def controls(self, worldmap, camera, mouse, key):
 
+		#Save
+		if key.L_CTRL.held():
+			if key.S.pressed():
+				worldmap.save()
+
+		#Move the camera
+		else:
+			if key.A.held(): camera.x -= GRID
+			if key.D.held(): camera.x += GRID
+			if key.W.held(): camera.y -= GRID
+			if key.S.held(): camera.y += GRID
+	
+		#Toolbox buttons
 		self.ui.controls(mouse)
 
+
+		#Tool controls
 		if not self.ui.is_hovering(mouse):
 
 			if self.ui.selected == "pointer":
@@ -47,10 +62,6 @@ class toolbox:
 				self.camera.controls\
 				(worldmap, mouse, self.cursor)
 
-
-		if key.L_CTRL.held():
-			if key.S.pressed():
-				worldmap.save()
 	#
 
 

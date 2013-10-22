@@ -92,15 +92,13 @@ x Add a SLIDE KICK.
 				~ change WorldMap to a GameRectangle
 			~ test with 30,30 rooms
 
-		=
-
+	
 		~ Cleaned WorldMap > GameRectangle support
-			tested with level editor, player_test
-			! there are glitches, see docs below.
-
 		~ Cleaned Room, Tile > GameRectangle
-			tested with level editor, player test
 
+
+		=
+		~ Moved General Camera Movement to ToolBox
 
 		! GameRectangle
 			! make keep_in_(insert)_bounds for abs,tile,room
