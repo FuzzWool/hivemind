@@ -93,7 +93,7 @@ x Add a SLIDE KICK.
 			~ fix: locks do not enable/disable by default
 
 
-			! new MySprite_Loader
+			! new MySprite_Loader !!
 				! has to load/unload sprite immediately: slow
 				! can't use clip w/h
 
@@ -106,6 +106,39 @@ x Add a SLIDE KICK.
 	! Render Rooms only when they may be drawn.
 
 
+===
+
+!! new MySprite
+Loads sprites when on-screen. Unloads them when off-screen.
+
+	Contains a sprite.
+	Saves all properties designed to be forwarded to it.
+	When created, applies all the properties.
+
+	* Given x,y
+	* Relies on clip for w,h
+	
+
+	! Store and load all sf.Sprite properties
+	Test with manual loading and unloading
+		texture
+		texture_rectangle
+		color
+		local_bounds
+		global_bounds
+
+	! add MySprite.clip
+	use it's bounds as w and h
+		! test with camera-bounded loading/unloading
+
+	! add all MySprite subclasses
+		clip
+		children
+		box
+		animation
+			clip_animation 
+
+===
 
 ! CLEANING
 	! level_editor camera controls go into toolbox
