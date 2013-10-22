@@ -82,6 +82,17 @@ x Add a SLIDE KICK.
 		+ Room.Camera holds bools for each side.
 		+ loading/saving values
 
+
+		! Lag
+			! Make Room.Camera loaders into normal sprites
+			! limit draw iterations
+
+			! test with 30,30 rooms
+
+		! load Sprites when tool is selected
+		! Unload sprites when tool is unselected
+
+
 		! clean Room.Camera
 			! automatic MySprite loading !!
 
@@ -89,16 +100,6 @@ x Add a SLIDE KICK.
 		! Camera smoothly animates past enabled sides.
 
 	! Render Rooms only when they may be drawn.
-
-
-===
-
-!! new MySprite
-* Optional sub-class usage.
-(Sprites have to opt in for certain sub-classes for memory)
-* May load/unload self.
-(if the process is light and can be reversed)
-
 
 ===
 

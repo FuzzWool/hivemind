@@ -1,4 +1,9 @@
 
+Only draw where appropriate.
+Cut down on drawing iterating.
+When a texture is LOADED, consider where it UNLOADS.
+When a sprite is LOADED, consider where it UNLOADS.
+
 
 ~ Stress test
 	No app
