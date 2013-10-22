@@ -400,7 +400,6 @@ class Room(GameRectangle):
 			self._ = room #used by: change
 			#
 			self.data = "____"
-			self._position_init()
 			self.vertices = []
 
 			self.init_collision()
@@ -577,21 +576,7 @@ class Room(GameRectangle):
 				self.vertices.append(point)
 
 		# POSITION
-		# Saved as an absolute value.
-		# Returned as a grid value.
-
-		def _position_init(self):
-			self._x, self._y = 0, 0
-
-		@property
-		def x(self): return self._x/GRID
-		@x.setter
-		def x(self, x): self._x = x*GRID
-		#
-		@property
-		def y(self): return self._y/GRID
-		@y.setter
-		def y(self, y): self._y = y*GRID
+		x,y,w,h = 0,0,0,0
 
 		#STATES
 

@@ -97,9 +97,9 @@ x Add a SLIDE KICK.
 		~ Cleaned WorldMap > GameRectangle support
 			tested with level editor, player_test
 			! there are glitches, see docs below.
-			
-		! Clean Room > GameRectangle
-			test with level editor, player test
+
+		~ Cleaned Room, Tile > GameRectangle
+			tested with level editor, player test
 
 
 		! GameRectangle
