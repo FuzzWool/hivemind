@@ -3,36 +3,29 @@ from code.pysfml_game import quit
 from code.pysfml_game import window
 from code.pysfml_game import key
 from code.pysfml_game import MyCamera
+from code.pysfml_game import MyMouse
+
+from code.game import WorldMap
+
+from code.level_editor import toolbox
 
 Camera = MyCamera()
 Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
-from code.game import WorldMap
 worldmap = WorldMap(2,2)
 
-
-###########
-from code.level_editor import toolbox
-from code.pysfml_game import GRID
-
-#########################################################
-from code.pysfml_game import MyMouse
-
 mouse = MyMouse()
-TB = toolbox(worldmap) ###
-
+toolbox = toolbox(worldmap) ###
 
 running = True
 while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		print worldmap.rooms[0][0].camera_locks.left
-		print TB.camera.all_locks[0][0].left.enabled
+		pass
 
-	TB.controls(worldmap, Camera, mouse, key) ###
-
+	toolbox.controls(worldmap, Camera, mouse, key) ###
 	key.reset_all()
 
 	#Videoa
@@ -40,8 +33,8 @@ while running:
 	window.clear(sf.Color(255, 200, 200))
 	#
 	worldmap.draw()
-	TB.draw(Camera, mouse) ###
+	toolbox.draw(Camera, mouse) ###
 	window.view = window.default_view
-	TB.static_draw() ###
+	toolbox.static_draw() ###
 	#
 	window.display()
