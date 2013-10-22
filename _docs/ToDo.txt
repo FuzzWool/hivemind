@@ -84,13 +84,24 @@ x Add a SLIDE KICK.
 
 
 		! Lag
-			! Make Room.Camera loaders into normal sprites
+			+ Make Room.Camera loaders into normal sprites
+
 			! limit draw iterations
+				! change WorldMap to a GameRectangle
+				! change Room to a GameRectangle
 
 			! test with 30,30 rooms
 
-		! load Sprites when tool is selected
-		! Unload sprites when tool is unselected
+
+		! GameRectangle
+			! keep_in_(insert)_bounds inherits from...
+				keep_in_x_bounds(x, x_bound)
+				keep_in_y_bounds(y, y_bound)
+
+		! Room_Loader
+		Loads sprites when they're in a room,
+		unloads when they're not.
+		Remembers prior and current camera.room_position
 
 
 		! clean Room.Camera

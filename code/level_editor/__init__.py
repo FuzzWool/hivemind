@@ -469,7 +469,9 @@ class camera:
 	def __init__(self, worldmap):
 		self._create_locks(worldmap)
 
-	def _create_locks(self, worldmap):
+		self.worldmap = worldmap #draw
+
+	def _create_locks(self, worldmap): #init
 
 		self.all_locks = []
 		for rooms_column in worldmap.rooms:
@@ -483,9 +485,15 @@ class camera:
 
 	#DRAW
 	def draw(self, camera):
+
+		x1, y1, x2, y2 = camera.room_points
+		print camera.room_points
+
+		#WIP - worldmap GameRectangle object
+
 		for column in self.all_locks:
 			for locks in column:	
-				locks.draw(camera)
+				locks.draw()
 
 
 	#CONTROLS
@@ -531,11 +539,11 @@ class locks:
 
 
 
-	def draw(self, camera):
+	def draw(self):
 		for side in self.sides:
-			side.draw(camera)
+			side.draw()
 
-		self.lock.draw(camera)
+		self.lock.draw()
 
 
 	#
@@ -551,7 +559,7 @@ class locks:
 
 		for side in self.sides:
 			if pressed:
-				if cursor.in_bounds(side):
+				if cursor.in_bounds(side.sprite):
 					side.toggle()
 
 			if side.enabled:
@@ -570,7 +578,7 @@ class locks:
 		if pressed:
 
 			if self.lock.sprite != None:
-				if self.lock.in_bounds(cursor):
+				if self.lock.sprite.in_bounds(cursor):
 					self.lock.toggle()
 
 					for side in self.sides:
@@ -582,7 +590,7 @@ class locks:
 
 from code.pysfml_game import MySprite_Loader
 ##
-class _side(object, MySprite_Loader):
+class _side(object):
 #A conditions and configurations for loading the
 #side sprites.
 
@@ -590,7 +598,10 @@ class _side(object, MySprite_Loader):
 		self._init_sprite(pos, room.room_x, room.room_y)
 		self.pos = pos
 		self.room = room
-		MySprite_Loader.__init__(self)
+		# MySprite_Loader.__init__(self)
+		self.sprite = None
+		self.load()
+		#
 		self._init_toggle(pos, room)
 
 
@@ -691,15 +702,19 @@ class _side(object, MySprite_Loader):
 		#Render the sprite
 		self.toggle(); self.toggle()
 
+	def draw(self, args=None):
+		self.sprite.draw()
+
 
 from code.pysfml_game import MySprite_Loader
 ##
-class lock(MySprite_Loader):
+class lock():
 	
 	def __init__(self, room_x, room_y):
 		self._init_position(room_x, room_y)
 		self._init_toggle()
-		MySprite_Loader.__init__(self)
+		# MySprite_Loader.__init__(self)
+		self.load()
 
 
 	#PUBLIC
@@ -742,3 +757,6 @@ class lock(MySprite_Loader):
 		self.sprite = s
 
 		self.toggle(); self.toggle() #render the sprite
+
+	def draw(self, args=None):
+		self.sprite.draw()

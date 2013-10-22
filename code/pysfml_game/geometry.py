@@ -181,6 +181,19 @@ class GameRectangle: #virtual
 
 
 
+	def keep_in_room_bounds(self, x=None,y=None):
+		if x != None:
+			if x < 0: x = 0
+			if x > self.room_x2: x = self.room_x2
+		if y != None:
+			if y < 0: y = 0
+			if y > self.room_y2: y = self.room_y2
+
+		if x != None and y != None: return x,y
+		if x != None: return x
+		if y != None: return y
+
+
 
 #	PHYSICAL
 from window import sf, window

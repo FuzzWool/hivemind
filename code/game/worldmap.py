@@ -2,7 +2,7 @@ from code.pysfml_game import GameRectangle
 from code.pysfml_game import GRID
 from code.game import Room
 
-class WorldMap:
+class WorldMap(GameRectangle):
 #Loads MULTIPLE ROOMS.
 #Provides shorthands for accessing all the rooms as one.
 	
