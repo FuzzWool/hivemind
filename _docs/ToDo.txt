@@ -80,25 +80,10 @@ x Add a SLIDE KICK.
 		+ graphics (sides/locks)
 		+ controls
 		+ Room.Camera holds bools for each side.
+		+ loading/saving values
 
-		
-		! loading/saving values
-			+ sides load locks
-			+ sides save locks
-
-
-			~ fix: locks don't show while tool activated off the first screen
-				~ loader init is now being called in lock
-
-			~ fix: locks do not enable/disable by default
-
-
-			! new MySprite_Loader !!
-				! has to load/unload sprite immediately: slow
-				! can't use clip w/h
-
-			! clean Room.Camera
-
+		! clean Room.Camera
+			! automatic MySprite loading !!
 
 		! Camera stops at enabled enabled sides.
 		! Camera smoothly animates past enabled sides.
@@ -108,48 +93,11 @@ x Add a SLIDE KICK.
 
 ===
 
-
-~ Nut texture test.
-	~ MySprite may be None'd and then assigned a texture
-
-~ Stress test
-	No app
-		0% CPU, 2.36 GB RAM
-
-	app (no texture)
-		0% CPU, 2.40 GB RAM
-
-	app (w/ texture)
-		same as app no texture
-
-	5000
-	Class with empty draw
-		15% CPU, 2.41 GB RAM (0.1 GB)
-
-	5000
-	Class with 15 sub-classes (w/ 10 variables and 2 methods)
-	+ empty draw
-		15% CPU, 2.83 GB RAM
-
-	5000 Sprites with textures
-		25% CPU,  2.73 GB RAM (0.4 GB)
-
-	5000 Sprites without textures
-		18% CPU, 2.73 GB RAM (0.4 GB)
-
-
-In conclusion...
-* Textures aren't RAM demanding.
-* Drawing isn't too CPU demanding.
-
-* Iterating through a 5000-object loop IS CPU demanding.
-* Classes with many sub-classes IS RAM demanding.
-
-
-MySprite suggestions/considerations:
-	* OPTIONAL sub-classes. Active only when specified.
-	* Be careful about the SCOPE of a loop through sprites.
-	* Only remove MySprites if the process is light.
+!! new MySprite
+* Optional sub-class usage.
+(Sprites have to opt in for certain sub-classes for memory)
+* May load/unload self.
+(if the process is light and can be reversed)
 
 
 ===
