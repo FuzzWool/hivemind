@@ -98,6 +98,8 @@ x Add a SLIDE KICK.
 
 		=
 
+		. Preparing to clean GameRectangle. 
+
 		! GameRectangle
 			! make keep_in_(insert)_bounds for abs,tile,room
 			keep_in_(insert)_bounds inherits from...
@@ -108,10 +110,12 @@ x Add a SLIDE KICK.
 				in_x_bounds
 				in_y_bounds
 
-
 		! crashes to fix after
 			! edge of level, x oob for next (player_test)
 			! tile: placing off right,down
+
+
+
 
 		! Room_Loader
 		Loads sprites when they're in a room,

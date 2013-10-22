@@ -8,6 +8,7 @@ from code.pysfml_game import MyMouse
 from code.game import WorldMap
 
 from code.level_editor import toolbox
+##########################################
 
 Camera = MyCamera()
 Camera.zoom = 1
@@ -18,6 +19,7 @@ worldmap = WorldMap(2,2)
 mouse = MyMouse()
 toolbox = toolbox(worldmap) ###
 
+##########################################
 running = True
 while running:
 	#Logic
