@@ -56,6 +56,8 @@ x Add a SLIDE KICK.
 
 
 ! running glitch (over the end of a tile)
+! slide > wall hang glitch (press l/r right before d)
+
 ! Re-implement SLOPES. (They're broken!)
 ! clean overall state handling
 ! Use less MAGIC NUMBERS in state handling.
@@ -96,9 +98,9 @@ x Add a SLIDE KICK.
 		~ Cleaned WorldMap > GameRectangle support
 		~ Cleaned Room, Tile > GameRectangle
 
-		=
-
 		. Preparing to clean GameRectangle. 
+
+		=
 
 		! GameRectangle
 			! make keep_in_(insert)_bounds for abs,tile,room
