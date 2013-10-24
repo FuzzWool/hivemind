@@ -188,11 +188,6 @@ class collision:
 					if new_x >= y_x:
 						if new_x > y_x: y_tile = tile
 						if new_y >= y_y: y_tile = tile
-		# #Fixes.
-		# if x_tile and y_tile:
-		# 	if y_tile.y == x_tile.y: y_tile = None
-		# 	elif x_tile.x == y_tile.x: x_tile = None
-		# #
 
 		# # EXTRA TILES
 		# #2-tile slopes need extra checks for their
@@ -318,6 +313,7 @@ class collision:
 		#wall hug
 		if x_tile != None:
 			y1, y2 = self.cbox.tile_y1, self.cbox.tile_y2
+			y2 += 1
 			x = x_tile.tile_x
 
 			for y in range(y1, y2):
@@ -359,7 +355,7 @@ class collision:
 				if WorldMap.in_tile_points((x-1,y)):
 					next = WorldMap.tiles[x-1][y]
 			if self.controls.facing_right:
-				if WorldMap.in_tile_points((x+1,y)):
+				if WorldMap.in_tile_points((x+2,y)):
 					next = WorldMap.tiles[x+1][y]
 
 			if next != None:

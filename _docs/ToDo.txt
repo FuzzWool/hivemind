@@ -94,14 +94,7 @@ x Add a SLIDE KICK.
 				~ change WorldMap to a GameRectangle
 			~ test with 30,30 rooms
 
-	
-		~ Cleaned WorldMap > GameRectangle support
-		~ Cleaned Room, Tile > GameRectangle
-
-		. Preparing to clean GameRectangle. 
-
-
-		! GameRectangle
+		+ GameRectangle
 
 			+ make basic properties for abs, tile and room
 			+ make in_points for abs,tile,room
@@ -109,13 +102,14 @@ x Add a SLIDE KICK.
 
 			=
 
-			! PLAYER_TEST
-			! Nut cannot wall-cling
-			! WorldMap doesn't render far enough
-			! edge of level, oob
+			Fixed Glitches
+			~ PLAYER_TEST
+			~ fixed: Nut cannot wall-cling
+			~ fixed: WorldMap doesn't render far enough
+			~ fixed: edge of level, oob
 
-			! LEVEL_EDITOR
-			! cursor: outside level, oob
+			~ LEVEL_EDITOR
+			~ fixed: cursor: outside level, oob
 
 
 

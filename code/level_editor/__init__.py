@@ -259,12 +259,12 @@ class tile: #toolbox
 
 	def create(self, worldmap, cursor):
 		x, y = cursor.tile_position
-		if worldmap.in_tile_points((x,y)):
+		if worldmap.in_tile_points((x+1,y+1)):
 			worldmap.tiles[x][y].change(self.selected)
 
 	def remove(self, worldmap, cursor):
 		x, y = cursor.tile_position
-		if worldmap.in_tile_points((x,y)):
+		if worldmap.in_tile_points((x+1,y+1)):
 			worldmap.tiles[x][y].change("____")
 
 
@@ -356,8 +356,9 @@ class pointer:
 
 	def _open(self, worldmap, cursor):
 		x,y = cursor.room_position
-		room = worldmap.rooms[x][y]
-		self.level_properties.open(room)
+		if worldmap.in_room_points((x+1,y+1)):
+			room = worldmap.rooms[x][y]
+			self.level_properties.open(room)
 
 	def _handle(self):
 		self.level_properties.handle_events()
@@ -499,8 +500,10 @@ class camera:
 
 		#Draw within camera range
 		x1, y1, x2, y2 = camera.room_points
-		x1, y1 = self.worldmap.keep_in_room_points(x1,y1)
-		x2, y2 = self.worldmap.keep_in_room_points(x2,y2)
+		x1, y1 = self.worldmap\
+		.keep_in_room_points((x1,y1))
+		x2, y2 = self.worldmap\
+		.keep_in_room_points((x2,y2))
 
 		for column in self.all_locks[x1:x2]:
 			for locks in column[y1:y2]:
@@ -570,7 +573,7 @@ class locks:
 
 		for side in self.sides:
 			if pressed:
-				if cursor.in_bounds(side.sprite):
+				if cursor.in_points(side.sprite):
 					side.toggle()
 
 			if side.enabled:
@@ -589,7 +592,7 @@ class locks:
 		if pressed:
 
 			if self.lock.sprite != None:
-				if self.lock.sprite.in_bounds(cursor):
+				if self.lock.sprite.in_points(cursor):
 					self.lock.toggle()
 
 					for side in self.sides:

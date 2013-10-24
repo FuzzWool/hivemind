@@ -37,10 +37,10 @@ class WorldMap(GameRectangle):
 			y1, y2 = 0, self.room_h
 		else:
 			x1, y1, x2, y2 = camera.room_points
-			if x1 < 0: x1 = 0
-			if x2 < 0: x2 = 0
-			if y1 < 0: y1 = 0
-			if y2 < 0: y2 = 0
+			x2 += 1; y2 += 1
+			x1,x2 = self.keep_in_room_x((x1,x2))
+			y1,y2 = self.keep_in_room_y((y1,y2))
+
 
 		for column in self.rooms[x1:x2]:
 			for room in column[y1:y2]:

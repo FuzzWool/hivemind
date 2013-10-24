@@ -432,14 +432,27 @@ class GameRectangle(object):
 	def _keep_in_z(self, left, value, right):
 		if value < left: value = left
 		if value > right: value = right
+		return value
 	#
 
 
 	# ABS
 	def keep_in_points(self, points):
-		x1, y1, x2, y2 = points
-		x1, x2 = self.keep_in_x(x1, x2)
-		y1, y2 = self.keep_in_y(y1, y2)
+		if tuple == type(points):
+			if len(points) == 4:
+				x1, y1, x2, y2 = points
+			if len(points) == 2:
+				x1, y1 = points
+				x2, y2 = points
+		else:
+			x1,y1,x2,y2 = points.points
+
+		x1, x2 = self.keep_in_x((x1, x2))
+		y1, y2 = self.keep_in_y((y1, y2))
+
+		if tuple == type(points):
+			if len(points) == 2:
+				return x1, y1
 		return x1, y1, x2, y2
 
 	def keep_in_x(self, o):
@@ -463,9 +476,21 @@ class GameRectangle(object):
 
 	# TILE
 	def keep_in_tile_points(self, points):
-		x1, y1, x2, y2 = points
-		x1, x2 = self.keep_in_tile_x(x1, x2)
-		y1, y2 = self.keep_in_tile_y(y1, y2)
+		if tuple == type(points):
+			if len(points) == 4:
+				x1, y1, x2, y2 = points
+			if len(points) == 2:
+				x1, y1 = points
+				x2, y2 = points
+		else:
+			x1,y1,x2,y2 = points.tile_points
+
+		x1, x2 = self.keep_in_tile_x((x1, x2))
+		y1, y2 = self.keep_in_tile_y((y1, y2))
+
+		if tuple == type(points):
+			if len(points) == 2:
+				return x1, y1
 		return x1, y1, x2, y2
 
 	def keep_in_tile_x(self, o):
@@ -489,12 +514,24 @@ class GameRectangle(object):
 
 	# ROOM
 	def keep_in_room_points(self, points):
-		x1, y1, x2, y2 = points
-		x1, x2 = self.keep_in_room_x(x1, x2)
-		y1, y2 = self.keep_in_room_y(y1, y2)
+		if tuple == type(points):
+			if len(points) == 4:
+				x1, y1, x2, y2 = points
+			if len(points) == 2:
+				x1, y1 = points
+				x2, y2 = points
+		else:
+			x1,y1,x2,y2 = points.room_points
+
+		x1, x2 = self.keep_in_room_x((x1, x2))
+		y1, y2 = self.keep_in_room_y((y1, y2))
+
+		if tuple == type(points):
+			if len(points) == 2:
+				return x1, y1
 		return x1, y1, x2, y2
 
-	def keep_in_x(self, o):
+	def keep_in_room_x(self, o):
 		ax1, ax2 = self.room_x1, self.room_x2
 		if tuple == type(o): bx1, bx2 = o
 		else: bx1, bx2 = o.room_x1, o.room_x2
