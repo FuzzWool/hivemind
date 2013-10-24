@@ -84,46 +84,18 @@ x Add a SLIDE KICK.
 		+ Room.Camera holds bools for each side.
 		+ loading/saving values
 
-		===
-		GOAL: Fix lag. X
-		GOAL: Load and unload to conserve RAM.
+	=
 
-		+ Fixed Lag
-			+ Make Room.Camera loaders into normal sprites
-			+ limit draw iterations
-				~ change WorldMap to a GameRectangle
-			~ test with 30,30 rooms
-
-		+ GameRectangle
-
-			+ make basic properties for abs, tile and room
-			+ make in_points for abs,tile,room
-			+ make keep_in_points for abs,tile,room
-
-			=
-
-			Fixed Glitches
-			~ PLAYER_TEST
-			~ fixed: Nut cannot wall-cling
-			~ fixed: WorldMap doesn't render far enough
-			~ fixed: edge of level, oob
-
-			~ LEVEL_EDITOR
-			~ fixed: cursor: outside level, oob
-
-
-
-		! Room_Loader
-		Loads sprites when they're in a room,
-		unloads when they're not.
-		Remembers prior and current camera.room_position
-		====
-
-
+	! Make GameCamera
 		! Camera stops at enabled enabled sides.
 		! Camera smoothly animates past enabled sides.
 
-	! Render Rooms only when they may be drawn.
+
+	! Load and unload to conserve RAM
+		! Render Rooms only on-screen
+			! Test to see if this stresses out the CPU
+			! Test if this lags the game at all
+		! Render Level Editor sprites only on-screen
 
 ===
 
@@ -132,10 +104,3 @@ x Add a SLIDE KICK.
 
 	! clean room and worldmap
 		condense into classes
-
-	! Improve GameRectangle
-		setters
-		keep_in functions
-		...for every function.
-
-		! bound_int (args: x,y or an object)

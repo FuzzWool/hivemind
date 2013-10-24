@@ -1,0 +1,19 @@
+
+main
+====
+
+Room
+=
+Every room's graphics are loaded on init
+Drawn only when on-screen
+
+
+
+
+level_editor
+============
+
+Camera locks
+=
+Every room's sprites are loaded on init
+Drawn only when on-screen
