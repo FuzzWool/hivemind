@@ -103,14 +103,15 @@ x Add a SLIDE KICK.
 		=
 
 		! GameRectangle
-			! make keep_in_(insert)_bounds for abs,tile,room
-			keep_in_(insert)_bounds inherits from...
-				keep_in_x_bounds(x, x_bound)
-				keep_in_y_bounds(y, y_bound)
 
-			! make in_bounds for abs,tile,room
-				in_x_bounds
-				in_y_bounds
+			+ make basic properties for abs, tile and room
+			+ make in_points for abs,tile,room
+			+ make keep_in_points for abs,tile,room
+
+			! test with MySprites
+				test basic properties (pos for abs,tile,room)
+				test in_bounds (for abs,tile,room)
+				test keep_in_bounds (for abs,tile,room)
 
 		! crashes to fix after
 			! edge of level, x oob for next (player_test)

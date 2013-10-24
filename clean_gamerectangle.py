@@ -14,24 +14,7 @@ sprite1 = MySprite(texture1)
 sprite2 = MySprite(texture2)
 
 sprite1.position = 100,100
-sprite2.position = 200,200
-
-########################################################
-# GAMERECTANGLE tests.
-
-# ! KEEP IN BOUNDS
-# ! keep_in_bounds
-# ! keep_in_tile_bounds
-# ! keep_in_room_bounds
-
-
-# IN BOUNDS
-# ! in_bounds
-# ! in_tile_bounds
-# ! in_room_bounds
-
-
-#########################################################
+sprite2.position = 300,300
 
 running = True
 while running:
@@ -39,9 +22,12 @@ while running:
 	if quit(): running = False
 	if key.RETURN.pressed():
 		pass
+		# print sprite1.in_points(sprite2)
 
 	#Animation
 	#
+
+	key.reset_all()
 
 	#Video
 	window.clear(sf.Color.WHITE)
