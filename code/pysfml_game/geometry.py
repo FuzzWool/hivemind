@@ -273,9 +273,9 @@ class GameRectangle(object):
 	#center
 	@property
 	def room_center(self):
-		return\
-		self.room_x+(self.room_w/2),\
-		self.room_y+(self.room_h/2)
+		x,y = float(self.x)/RX,float(self.y)/RY
+		w,h = float(self.w)/RX,float(self.h)/RY
+		return int(x+(w/2)), int(y+(h/2))
 	@room_center.setter
 	def room_center(self,a):
 		self.room_x,self.room_y = \

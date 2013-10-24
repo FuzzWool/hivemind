@@ -43,6 +43,9 @@ class toolbox:
 			if key.W.held(): camera.y -= GRID
 			if key.S.held(): camera.y += GRID
 	
+			# if key.ADD.pressed(): camera.zoom *= 2
+			# if key.SUBTRACT.pressed(): camera.zoom /= 2
+
 		#Toolbox buttons
 		self.ui.controls(mouse)
 

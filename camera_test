@@ -1,0 +1,91 @@
+from code.pysfml_game import sf
+from code.pysfml_game import quit
+from code.pysfml_game import window
+from code.pysfml_game import key
+from code.pysfml_game import MyCamera
+from code.game import Entity
+from code.game import WorldMap
+
+#########################################################
+# GAMECAMERA testing.
+
+class GameCamera(MyCamera):
+# * Obeys Camera Locks.
+# WIP - Smoothly animates between targets.
+
+	def __init__(self):
+		MyCamera.__init__(self)
+
+		self.focus = self #The object to focus on.
+
+
+	def process_movement(self, worldmap):
+	#Follow the focus, stay within bounds.
+
+		#Follow
+		self.center = self.focus.center
+
+		#Obey Locks
+		x,y = self.focus.room_center
+		room = worldmap.rooms[x][y]
+		self._obey_camera_locks(room)
+
+	def _obey_camera_locks(self, room):
+	#Obey the camera locks the focused object is in.
+
+		#Find lock points.
+		x1,y1,x2,y2 = None, None, None, None
+		if room.camera_locks.left: x1 = room.x1
+		if room.camera_locks.right: x2 = room.x2
+		if room.camera_locks.up: y1 = room.y1
+		if room.camera_locks.down: y2 = room.y2
+
+		#If any, keep within the bounds.
+		if x1 != None and self.x1 < x1: self.x1 = x1
+		if x2 != None and self.x2 > x2: self.x2 = x2
+		if y1 != None and self.y1 < y1: self.y1 = y1
+		if y2 != None and self.y2 > y2: self.y2 = y2
+
+#########################################################
+
+Camera = GameCamera()
+Camera.zoom = 2
+Camera.x, Camera.y = 0, 0
+
+Nut = Entity("nut")
+worldmap = WorldMap(3,3)
+
+Camera.focus = Nut.cbox
+
+running = True
+while running:
+		
+	#Logic
+	if quit(): running = False
+	if key.RETURN.pressed():
+		if Nut.sprite.texture == None:
+			Nut.sprite.texture = sf.Texture.from_file\
+			("assets/characters/nut/sheet.png")
+		else:
+			Nut.sprite.texture = None
+
+
+	Nut.controls(key)
+	Nut.physics()
+	Nut.collision(worldmap)
+
+	#key
+	key.reset_all()
+
+
+	#Video
+	#camera
+	# print Camera.center
+	Camera.process_movement(worldmap)
+
+	window.view = Camera
+	#drawing
+	window.clear(sf.Color(255, 200, 200))
+	worldmap.draw(Camera)
+	Nut.draw()
+	window.display()

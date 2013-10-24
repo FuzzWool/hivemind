@@ -14,7 +14,7 @@ Camera = MyCamera()
 Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
-worldmap = WorldMap(2,2)
+worldmap = WorldMap(3,3)
 
 mouse = MyMouse()
 toolbox = toolbox(worldmap) ###

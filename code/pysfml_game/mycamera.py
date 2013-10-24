@@ -12,7 +12,7 @@ class MyCamera(sf.View, GameRectangle):
 	#2:1 scale
 	def __init__(self):
 		sf.View.__init__(self)
-		self.zoom = float(2)
+		self.zoom = float(1)
 		self.center = the_window.view.center
 
 	# ZOOM
