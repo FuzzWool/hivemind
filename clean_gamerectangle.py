@@ -14,15 +14,14 @@ sprite1 = MySprite(texture1)
 sprite2 = MySprite(texture2)
 
 sprite1.position = 100,100
-sprite2.position = 300,300
+sprite2.position = 110,110
 
 running = True
 while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		pass
-		# print sprite1.in_points(sprite2)
+		print sprite1.in_points(sprite2)
 
 	#Animation
 	#

@@ -356,10 +356,10 @@ class collision:
 			next = None
 			x, y = y_tile.tile_position
 			if self.controls.facing_left:
-				if WorldMap.in_tile_bounds(x=x-1, y=y):
+				if WorldMap.in_tile_points((x-1,y)):
 					next = WorldMap.tiles[x-1][y]
 			if self.controls.facing_right:
-				if WorldMap.in_tile_bounds(x=x+1, y=y):
+				if WorldMap.in_tile_points((x+1,y)):
 					next = WorldMap.tiles[x+1][y]
 
 			if next != None:

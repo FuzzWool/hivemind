@@ -100,7 +100,6 @@ x Add a SLIDE KICK.
 
 		. Preparing to clean GameRectangle. 
 
-		=
 
 		! GameRectangle
 
@@ -108,15 +107,15 @@ x Add a SLIDE KICK.
 			+ make in_points for abs,tile,room
 			+ make keep_in_points for abs,tile,room
 
-			! test with MySprites
-				test basic properties (pos for abs,tile,room)
-				test in_bounds (for abs,tile,room)
-				test keep_in_bounds (for abs,tile,room)
+			=
 
-		! crashes to fix after
-			! edge of level, x oob for next (player_test)
-			! tile: placing off right,down
+			! PLAYER_TEST
+			! Nut cannot wall-cling
+			! WorldMap doesn't render far enough
+			! edge of level, oob
 
+			! LEVEL_EDITOR
+			! cursor: outside level, oob
 
 
 

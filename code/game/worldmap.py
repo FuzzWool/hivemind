@@ -66,11 +66,6 @@ class WorldMap(GameRectangle):
 				
 				self.tiles.append(column)
 
-	@property
-	def tiles(self):
-	#An xy-list of the tiles of every single room.
-		return self._tiles
-
 
 	# LEVEL EDITING
 

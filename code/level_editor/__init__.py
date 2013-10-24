@@ -259,12 +259,12 @@ class tile: #toolbox
 
 	def create(self, worldmap, cursor):
 		x, y = cursor.tile_position
-		if worldmap.in_tile_bounds(x=x,y=y):
+		if worldmap.in_tile_points((x,y)):
 			worldmap.tiles[x][y].change(self.selected)
 
 	def remove(self, worldmap, cursor):
 		x, y = cursor.tile_position
-		if worldmap.in_tile_bounds(x=x,y=y):
+		if worldmap.in_tile_points((x,y)):
 			worldmap.tiles[x][y].change("____")
 
 
@@ -499,8 +499,8 @@ class camera:
 
 		#Draw within camera range
 		x1, y1, x2, y2 = camera.room_points
-		x1, y1 = self.worldmap.keep_in_room_bounds(x1,y1)
-		x2, y2 = self.worldmap.keep_in_room_bounds(x2,y2)
+		x1, y1 = self.worldmap.keep_in_room_points(x1,y1)
+		x2, y2 = self.worldmap.keep_in_room_points(x2,y2)
 
 		for column in self.all_locks[x1:x2]:
 			for locks in column[y1:y2]:
