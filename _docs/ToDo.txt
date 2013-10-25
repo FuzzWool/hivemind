@@ -48,7 +48,22 @@ x Add a SLIDE KICK.
 	+ Walking - Greater effect depending on speed.
 
 
-! Add DYNAMIC CAMERA.
++ Added DYNAMIC CAMERA.
+
+	+ Remade ToolBox.
+	+ Made Camera tool
+		+ Room.Camera holds bools for each side.
+		+ loading/saving values
+
+	+ Made GameCamera
+		+ Camera stops at lock enabled sides of rooms.
+		+ Camera animates past enabled sides.
+
+		+ Animation - works out speed by frames wanted.
+			+ Good glitch
+			Smooths the camera by repeatedly lowering the speed.
+
+
 ! Add RUNNING animation.
 ! Add COLLECTIBLES which OPEN ROOMS.
 ! Add TIMER.
@@ -56,6 +71,7 @@ x Add a SLIDE KICK.
 
 
 ! running glitch (over the end of a tile)
+! crawling > ducking animation stuttering
 ! slide > wall hang glitch (press l/r right before d)
 ! Holding both directional keys causes weird Nut walking.
 
@@ -65,40 +81,14 @@ x Add a SLIDE KICK.
 ! Add PUNCHING.
 
 ====
+GOAL: Conserve RAM, speed up loading.
 
+! Render Rooms only on-screen
+	! Test to see if this stresses out the CPU
+	! Test if this lags the game at all
+! Render Level Editor sprites only on-screen
 
-! Add DYNAMIC CAMERA.
-
-	+ Remake ToolBox.
-
-		+ saving
-		+ Tile
-		+ ui tool selection
-		+ Camera movement (not the tool)
-		+ Pointer
-
-
-	! Make Camera tool
-		+ graphics (sides/locks)
-		+ controls
-		+ Room.Camera holds bools for each side.
-		+ loading/saving values
-
-
-	! Make GameCamera
-		+ Camera stops at lock enabled sides of rooms.
-		+ Camera animates past enabled sides.
-
-		! Animation - works out speed by frames wanted.
-
-
-	! crawling > ducking animation stuttering
-
-	! Load and unload to conserve RAM
-		! Render Rooms only on-screen
-			! Test to see if this stresses out the CPU
-			! Test if this lags the game at all
-		! Render Level Editor sprites only on-screen
+! fix Level Editor locks not appearing
 
 ===
 

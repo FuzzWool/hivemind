@@ -26,12 +26,14 @@ class physics_animation(object):
 		return move
 
 
-	#
+	# Helpful publics
 
 	@property
 	def stopped(self):
 		return (self.speed == 0 and self.vel == 0)
 
+	def speed_by_frames(self, point, frames=0):
+		self.speed = ((self.end-point)/frames)
 
 
 	# Overridables
