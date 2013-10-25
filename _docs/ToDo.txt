@@ -81,20 +81,17 @@ x Add a SLIDE KICK.
 ! Add PUNCHING.
 
 
-====
-! GOAL: Split WORLDMAP and ROOM into classes.
-	
-	~ Room class split into sub-classes.
-		~ layout (generates the layout of all the tiles)
-		~ graphics (holds vertex_array and texture)
-		~ collision (applies collision data to all tiles)
+=====
+
+! Add COLLECTIBLES which OPEN ROOMS.
+
+	~ level_editor tools split into tools directory
+
+	! create an Entity TOOL.
+		+ created a graphic
 
 
-	! WORLDMAP
-
-	! Test with player_test and level_editor
-
-====
+=====
 
 GOAL: Conserve RAM, speed up loading.
 
