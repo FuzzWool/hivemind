@@ -57,12 +57,12 @@ x Add a SLIDE KICK.
 
 ! running glitch (over the end of a tile)
 ! slide > wall hang glitch (press l/r right before d)
+! Holding both directional keys causes weird Nut walking.
 
 ! Re-implement SLOPES. (They're broken!)
 ! clean overall state handling
 ! Use less MAGIC NUMBERS in state handling.
 ! Add PUNCHING.
-! Holding both directional keys causes weird Nut walking.
 
 ====
 
@@ -84,15 +84,15 @@ x Add a SLIDE KICK.
 		+ Room.Camera holds bools for each side.
 		+ loading/saving values
 
-	=
 
 	! Make GameCamera
 		+ Camera stops at lock enabled sides of rooms.
+		+ Camera animates past enabled sides.
 
-		! Camera smoothly animates past enabled sides.
-			! Frames to move by (amt)
-			! Smoothing via vel
+		! Animation - works out speed by frames wanted.
 
+
+	! crawling > ducking animation stuttering
 
 	! Load and unload to conserve RAM
 		! Render Rooms only on-screen

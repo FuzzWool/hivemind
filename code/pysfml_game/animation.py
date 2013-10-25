@@ -26,6 +26,13 @@ class physics_animation(object):
 		return move
 
 
+	#
+
+	@property
+	def stopped(self):
+		return (self.speed == 0 and self.vel == 0)
+
+
 
 	# Overridables
 
