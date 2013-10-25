@@ -290,7 +290,14 @@ class tile: #toolbox
 		x,y = cursor.tile_position
 		ox,oy = self.tilemap.sprite.tile_position
 		x -= ox; y -= oy
-		x,y = self.tilemap.sprite.keep_in_tile_size(x,y)
+
+		if x < 0: x = 0
+		if x > self.tilemap.sprite.tile_w:
+			x = self.tilemap.sprite.tile_w
+		if y < 0: y = 0
+		if y > self.tilemap.sprite.tile_h:
+			y =self.tilemap.sprite.tile_h
+
 
 		#make key
 		x,y = str(x), str(y)
@@ -307,7 +314,8 @@ class tile: #toolbox
 
 			#sprite
 			x,y = cursor.room_position
-			texture = worldmap.rooms[x][y].texture
+			texture = \
+			worldmap.rooms[x][y].graphics.texture
 			self.sprite = MySprite(texture)
 
 			x,y = cursor.tile_position
@@ -386,7 +394,7 @@ class _LevelProperties:
 	#Opens the properties window.
 	#Passes over the values.
 		self.root = Tk()
-		self.root.wm_title(Level.texture_name)
+		self.root.wm_title(Level.graphics.texture_name)
 		self.lp1 = \
 		self.LevelProperties_1(self.root, Level)
 
@@ -432,7 +440,7 @@ class _LevelProperties:
 		def initUI(self, Level):
 		#Level Properties title
 			# name = Level.name
-			tileset = Level.texture_name
+			tileset = Level.graphics.texture_name
 
 			entry_row = 1
 			Ltileset = Label(self, text="Tileset")

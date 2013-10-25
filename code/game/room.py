@@ -92,7 +92,7 @@ class Room(GameRectangle):
 # * Can load different TEXTURES.
 # * Can load different TILE LAYOUTS.
 # * Can load COLLISION INFORMATION.
-# WIP - Can load CAMERA LOCKS.
+# * Can load CAMERA LOCKS.
 
 
 	def __init__(self, x=0, y=0, texture=None):
@@ -103,23 +103,204 @@ class Room(GameRectangle):
 		self.x, self.y = x*RENDER_WIDTH, y*RENDER_HEIGHT
 		self.w, self.h = RENDER_WIDTH, RENDER_HEIGHT
 
-		#LOGIC (load assets)
-		self.tiles\
-		= self.init_tiles(self.room_x, self.room_y)
-		if texture == None:
-			texture = self.load_room_texture()
-		self.texture_name = texture
-		self.tiles = self.load_tile_data(self.tiles)
-		self.tiles = self.load_tile_collisions(self.tiles)
-
-		#GRAPHIC
-		self.change_texture(texture, init=True)
-		self.render_graphics()
-
-
 		#
 
-		self.camera_locks = self._Camera_Locks(self.key())
+		key = self.key()
+		w,h = self.tile_w, self.tile_h
+
+	
+		self.tiles\
+		= self.init_tiles(self.room_x, self.room_y)
+		
+		tiles = self.tiles
+		
+		self.layout = self._layout(key,tiles)
+		self.graphics = self._graphics(texture,key,tiles)
+		
+		texture_n = self.graphics.texture_name
+		self.collision = self._collision(tiles,texture_n)
+
+		self.camera_locks = self._Camera_Locks(key)
+
+
+
+	def draw(self): self.graphics.draw()
+
+
+	#######
+
+	class _layout:
+	# * Generates the layout of all of the tiles.
+
+		def __init__(self, key, tiles):
+			self.key = key
+			self.tiles = tiles
+			#
+			self.load()
+
+
+		def load(self): #init
+		#Load the TILE DATA from the UNIQUE ROOM FILE.
+			
+			key = self.key
+			tiles = self.tiles
+			tiles_w = len(self.tiles)
+			tiles_h = len(self.tiles[0])
+
+			#load FILE DATA.
+			directory = "assets/levels/unique/"
+			location = directory+key+".txt"
+			try:
+				f = open(location,"r+")
+				file_data = f.read()
+			except:
+				#Create DATA to use.
+				file_data = ""
+				for x in range(tiles_w):
+					column = "____"*tiles_h
+					file_data = file_data + column + "\n"
+				file_data = file_data[:-1]
+
+
+				f = open(location,"w")
+				f.write(file_data)
+			f.close()
+
+
+			#format FILE DATA for use as a GRID.
+			formatted_data = [[]]
+
+			s = 0
+			while s < len(file_data):
+				if file_data[s] == "\n":
+					s += 1
+					formatted_data.append([])
+				tile = file_data[s:s+4]
+				formatted_data[-1].append(tile)
+				s += 4
+
+			#apply to all TILES.
+			for x, _x in enumerate(tiles):
+				for y, _y in enumerate(tiles[x]):
+					tiles[x][y].data \
+					= formatted_data[x][y]
+
+			return tiles
+
+
+
+	#######
+
+	class _graphics:
+	# * Creates a single VERTEX ARRAY which contains
+	# the graphics of all the TILES. 
+
+		vertex_array = None
+		render_states = None
+		texture = None
+		texture_name = None
+
+		def __init__(self, texture, key, tiles):
+			
+			self.key = key
+			self.tiles = tiles
+
+			self.texture_name = self._load_texture()
+			self.texture \
+			= load.textures[self.texture_name+".png"]
+
+			self.vertex_array =self._init_vertex_array()
+			# self.change_texture(self.texture, init=True)
+			self.render()
+
+
+		def _load_texture(self): #init
+
+			directory = "assets/levels/unique/"
+			file_dir = directory+self.key+"_texture.txt"
+
+			#Open FILE.
+			try:
+				open_file = open(file_dir, "r")
+				read_data = open_file.read()
+			except:
+				open_file = open(file_dir, "w+")
+				open_file.write("level1")
+				read_data = "level1"
+
+			open_file.close()
+
+			return read_data
+
+
+		def _init_vertex_array(self): #init
+			shape = sf.PrimitiveType.QUADS
+			vertex_array = sf.VertexArray(shape)
+
+			for column in self.tiles:
+				for tile in column:
+					
+					tile.init_vertices()
+					for point in tile.vertices:
+						vertex_array.append(point)
+			return vertex_array
+
+
+		#init, change_tile, change_texture
+		def render(self):
+			self.vertex_array =self._init_vertex_array()
+			self.render_states =sf.graphics.RenderStates()
+			self.render_states.texture =self.texture
+
+
+		def draw(self): #_.draw
+			window.draw\
+			(self.vertex_array, self.render_states)
+
+
+
+	#######
+
+	class _collision:
+	# * Applies COLLISIONS to all of the tiles.
+
+		def __init__(self, tiles, texture_name):
+			self.texture_name = texture_name
+			self.tiles = tiles
+			#
+			self.load()
+
+
+		def load(self): #init
+		#Load the COLLISION DATA for each tile.
+
+			tiles = self.tiles
+			texture_name = self.texture_name
+
+			#Grab SHARED COLLISION data for the tileset
+			#and merge it with UNIQUE POSITIONING.
+	
+			file_data = load.collisions[texture_name]
+
+			#Apply the DATA.
+			for x, _x in enumerate(tiles):
+				for y, _y in enumerate(tiles[x]):
+					
+					#Apply collisions based on tile data.
+					key = tiles[x][y].data
+					if key != "____":
+						kx, ky \
+						= int(key[0:2]), int(key[2:4])
+						collision\
+						 = load.collisions\
+						 [texture_name][kx][ky]
+					else:
+						collision = "____"
+
+					tiles[x][y].apply_collision(collision)
+
+
+	#######
 
 
 	# Loading TILE DATA
@@ -153,118 +334,6 @@ class Room(GameRectangle):
 		return x+y
 
 
-	def load_room_texture(self): #init
-		key = self.key()
-		directory = "assets/levels/unique/"
-		file_dir = directory+key+"_texture.txt"
-
-		#Open FILE.
-		try:
-			open_file = open(file_dir, "r")
-			read_data = open_file.read()
-		except:
-			open_file = open(file_dir, "w+")
-			open_file.write("level1")
-			read_data = "level1"
-
-		open_file.close()
-
-		return read_data
-
-
-	def load_tile_data(self, tiles): #(init)
-	#Load the TILE DATA from the UNIQUE ROOM FILE.
-		
-		#load FILE DATA.
-		key = self.key()
-		directory = "assets/levels/unique/"
-		location = directory+key+".txt"
-		try:
-			f = open(location,"r+")
-			file_data = f.read()
-		except:
-			#Create DATA to use.
-			file_data = ""
-			for x in range(self.tiles_w):
-				column = "____"*self.tiles_h
-				file_data = file_data + column + "\n"
-			file_data = file_data[:-1]
-
-
-			f = open(location,"w")
-			f.write(file_data)
-		f.close()
-
-
-		#format FILE DATA for use as a GRID.
-		formatted_data = [[]]
-
-		s = 0
-		while s < len(file_data):
-			if file_data[s] == "\n":
-				s += 1
-				formatted_data.append([])
-			tile = file_data[s:s+4]
-			formatted_data[-1].append(tile)
-			s += 4
-
-		#apply to all TILES.
-		for x, _x in enumerate(tiles):
-			for y, _y in enumerate(tiles[x]):
-				tiles[x][y].data = formatted_data[x][y]
-
-		return tiles
-
-
-	def load_tile_collisions(self, tiles): #init
-	#Load the COLLISION DATA for each tile.
-
-		#Grab SHARED COLLISION data for the tileset
-		#and merge it with UNIQUE POSITIONING.
-
-		file_data = load.collisions[self.texture_name]
-
-		#Apply the DATA.
-		for x, _x in enumerate(tiles):
-			for y, _y in enumerate(tiles[x]):
-				
-				#Apply collisions based on tile data.
-				key = tiles[x][y].data
-				if key != "____":
-					kx, ky = int(key[0:2]), int(key[2:4])
-					collision\
-					 = load.collisions\
-					 [self.texture_name][kx][ky]
-				else:
-					collision = "____"
-
-				tiles[x][y].apply_collision(collision)
-
-
-		return tiles
-
-
-
-
-	# GRAPHICS
-	#Create a VERTEX ARRAY carrying all of the
-	#TILES in a single drawable. 
-
-	def init_vertex_array(self): #(init)
-		shape = sf.PrimitiveType.QUADS
-		vertex_array = sf.VertexArray(shape)
-
-		for column in self.tiles:
-			for tile in column:
-				
-				tile.init_vertices()
-				for point in tile.vertices:
-					vertex_array.append(point)
-		return vertex_array
-
-	def draw(self):
-		window.draw(self.vertex_array, self.render_states)
-
 
 	# ROOM EDITING
 	#Functions designed for use by Level Editors.
@@ -275,7 +344,7 @@ class Room(GameRectangle):
 	def change_tile(self, position=(), data=""):
 		x, y = position
 		self.tiles[x][y].data = data
-		self.render_graphics()
+		self.graphics.render()
 
 	#init, level_editor
 	def change_texture(self, texture,
@@ -284,15 +353,9 @@ class Room(GameRectangle):
 		directory = "assets/levels/shared/%s.png" \
 		% texture
 
-		self.texture_name = texture
-		self.texture = MyTexture(directory)
-		if not init: self.render_graphics()
-
-	#init, change_tile, change_texture
-	def render_graphics(self): 
-		self.vertex_array = self.init_vertex_array()
-		self.render_states = sf.graphics.RenderStates()
-		self.render_states.texture = self.texture
+		self.graphics.texture_name = texture
+		self.graphics.texture = MyTexture(directory)
+		if not init: self.graphics.render()
 
 	#
 
@@ -308,7 +371,7 @@ class Room(GameRectangle):
 		directory = "assets/levels/unique/"
 		file_dir = directory+key+"_texture.txt"
 		f = open(file_dir, "w+")
-		f.write(self.texture_name)
+		f.write(self.graphics.texture_name)
 		f.close()
 	#
 	def save_tile_data(self): #save
@@ -417,12 +480,12 @@ class Room(GameRectangle):
 				kx, ky = int(key[0:2]), int(key[2:4])
 				collision\
 				 = load.collisions\
-				 [self._.texture_name][kx][ky]
+				 [self._.graphics.texture_name][kx][ky]
 			else:
 				collision = "____"
 			self.apply_collision(collision)
 			#
-			self._.render_graphics()
+			self._.graphics.render()
 
 
 
@@ -525,10 +588,6 @@ class Room(GameRectangle):
 				self.slope_collision.anchor = anchor
 
 			#Define SIDE PROPERTIES. (wall-jumping)
-
-
-
-
 
 
 

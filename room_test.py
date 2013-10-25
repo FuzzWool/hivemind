@@ -12,7 +12,7 @@ Camera.zoom = 1
 Camera.x, Camera.y = 0,0
 
 
-worldmap = WorldMap(4,4)
+worldmap = WorldMap(2,2)
 print "WorldMap INITIALIZED."
 
 #########################################################
@@ -27,14 +27,14 @@ while running:
 		tile = room.tiles[2][1]
 
 
-	amt = 5
+	amt = 20
 	if key.LEFT.held(): Camera.x -= amt
 	if key.RIGHT.held(): Camera.x += amt
 	if key.UP.held(): Camera.y -= amt
 	if key.DOWN.held(): Camera.y += amt
 
 	#VIDEO
-	window.clear(sf.Color.WHITE)
+	window.clear(sf.Color.RED)
 	window.view = Camera
 
 	#

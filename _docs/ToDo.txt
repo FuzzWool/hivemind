@@ -75,13 +75,29 @@ x Add a SLIDE KICK.
 ! slide > wall hang glitch (press l/r right before d)
 ! Holding both directional keys causes weird Nut walking.
 
-! Re-implement SLOPES. (They're broken!)
+! Add SLOPES. (They're broken!)
 ! clean overall state handling
 ! Use less MAGIC NUMBERS in state handling.
 ! Add PUNCHING.
 
+
 ====
+! GOAL: Split WORLDMAP and ROOM into classes.
+	
+	~ Room class split into sub-classes.
+		~ layout (generates the layout of all the tiles)
+		~ graphics (holds vertex_array and texture)
+		~ collision (applies collision data to all tiles)
+
+
+	! WORLDMAP
+
+	! Test with player_test and level_editor
+
+====
+
 GOAL: Conserve RAM, speed up loading.
+
 
 ! Render Rooms only on-screen
 	! Test to see if this stresses out the CPU
@@ -90,10 +106,4 @@ GOAL: Conserve RAM, speed up loading.
 
 ! fix Level Editor locks not appearing
 
-===
-
-! CLEANING
-	! level_editor camera controls go into toolbox
-
-	! clean room and worldmap
-		condense into classes
+====
