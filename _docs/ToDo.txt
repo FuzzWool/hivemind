@@ -87,8 +87,25 @@ x Add a SLIDE KICK.
 
 	~ level_editor tools split into tools directory
 
+	! load entities in ROOMS.
+		! entities are loaded from txt with name,pos
+		
+		orb
+		! orbs bop up and down
+		! orbs explode on impact with Nut
+
+		HUD
+		! counter which shows the amount of orbs to grab in a room
+
+		orb_tile
+		! removes the tile it is on top of.
+			! in a puff of smoke
+
+
 	! create an Entity TOOL.
-		+ created a graphic
+		+ orb graphic follows cursor
+
+
 
 
 =====

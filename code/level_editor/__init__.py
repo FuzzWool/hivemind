@@ -29,6 +29,10 @@ class toolbox:
 			self.cursor.draw()
 		if self.ui.selected == "camera":
 			self.camera.draw(camera)
+		if self.ui.selected == "entity":
+			self.cursor.draw()
+			self.entity.draw()
+
 
 
 	def static_draw(self):
@@ -71,7 +75,7 @@ class toolbox:
 				(worldmap, mouse, self.cursor)
 
 			if self.ui.selected == "entity":
-				self.entity.controls()
+				self.entity.controls(self.cursor)
 
 	#
 
