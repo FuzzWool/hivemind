@@ -3,3 +3,5 @@ from worldmap import *
 from entity import *
 
 from gamecamera import *
+
+from entities import *

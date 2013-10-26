@@ -23,6 +23,13 @@ class physics_animation(object):
 
 		move = self.speed
 		self.speed += self.vel
+
+
+		#Paranoia
+		if abs(self.speed) < 0.001: self.speed = 0
+		if abs(self.vel) < 0.001: self.vel = 0
+		#
+
 		return move
 
 

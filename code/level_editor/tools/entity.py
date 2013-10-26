@@ -6,7 +6,8 @@ class entity:
 
 	#A cursor of the selected entity.
 	def __init__(self):
-		t = MyTexture("assets/entities/orb/sheet.png")
+		t = MyTexture\
+		("assets/entities/shared/orb/sheet.png")
 		self.cursor = MySprite(t)
 
 	def controls(self, cursor):

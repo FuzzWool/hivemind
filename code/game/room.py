@@ -1,3 +1,7 @@
+from entities import entities
+
+########
+
 from code.pysfml_game import MyTexture
 from code.pysfml_game import RENDER_WIDTH, RENDER_HEIGHT
 from code.pysfml_game import GRID
