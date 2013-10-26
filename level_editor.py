@@ -36,12 +36,12 @@ while running:
 	(entities, worldmap, Camera, mouse, key) ###
 	key.reset_all()
 
-	#Videoa
+	#Video
 	window.view = Camera
 	window.clear(sf.Color(255, 200, 200))
 	#
 	worldmap.draw()
-	entities.draw()
+	entities.draw(Camera)
 	toolbox.draw(Camera, mouse) ###
 	window.view = window.default_view
 	toolbox.static_draw() ###

@@ -9,13 +9,6 @@ class orb(GameRectangle):
 		self.name = name
 		self.tile_x = tile_x
 		self.tile_y = tile_y
-
-		self._init()
-
-
-	#
-
-	def _init(self): #init
 		self.w, self.h = 10,10
 		self.sprite = None
 

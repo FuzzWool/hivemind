@@ -99,21 +99,30 @@ x Add a SLIDE KICK.
 		+ saves entities
 		! remove entities
 
-	===
+	===new
 
-	. tiles vs. lists: rendering vs. drawing
-		if the ROOMS were TILE-BASED
-		* they loop through more for DRAWING
-		* they loop through more for RENDERING
-
-		List-based entity rooms are better, as
-		+ they loop through less for DRAWING
-		+ they loop through less for RENDERING
+	+ render entities
+		+ entities render when focused by the camera
+		+ unrendered otherwise
 
 
-	! render entities
-		! entities render when focused by the camera
-		! unrendered otherwise
+	! editor - entity place/remove glitches
+		! entities may logically be in other rooms,
+		but are rendered in the same room
+			~ entities have abs values, but save/load pro
+
+			~ level editor fixed
+			~ player test camera fixed
+
+	===current
+
+	! geometry
+		! fix room_x2, room_y2 (+1 it)
+			worldmap rendering
+			entity rendering
+			camera lock rendering
+
+		! check/fix tile_x2, tile_y2 (+1 it)
 
 	! orb
 		! orbs bop up and down

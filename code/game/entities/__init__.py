@@ -18,6 +18,11 @@ def key(x,y):
 #####
 
 from code.pysfml_game import GameRectangle
+#
+from code.pysfml_game import GRID
+from code.pysfml_game import ROOM_WIDTH
+from code.pysfml_game import ROOM_HEIGHT
+
 
 class entities(GameRectangle):
 # * Holds all of the GAME'S entities in ROOMS.
@@ -29,10 +34,10 @@ class entities(GameRectangle):
 		self._init(room_w, room_h)
 		self._load()
 
-		self._render()
-
-	def draw(self):
+	def draw(self, camera):
 	#Draw all of the entity rooms.
+		self._render(camera)
+		#
 		for column in self.rooms:
 			for room in column:
 				room.draw()
@@ -55,11 +60,21 @@ class entities(GameRectangle):
 
 	####
 
-	def _render(self): #init
+	def _render(self, camera): #draw
 	#Prompt the entity rooms to render.
-		for column in self.rooms:
-			for room in column:
-				room.render()
+	#Check any rooms on-screen.
+
+		#range
+		points = camera.room_points
+		x1,y1,x2,y2 = points
+		points = x1,y1,x2+1,y2+1
+		points = self.keep_in_room_points(points)
+		x1,y1,x2,y2 = points
+
+		#do it
+		for column in self.rooms[x1:x2]:
+			for room in column[y1:y2]:
+				room.render(camera)
 
 
 	####
@@ -72,22 +87,22 @@ class entities(GameRectangle):
 		# Since there's no tile list,
 		# a global tile_pos has to be dissected
 		# into global rooms and local tile_pos
-		from code.pysfml_game import GRID
-		from code.pysfml_game import ROOM_WIDTH
-		from code.pysfml_game import ROOM_HEIGHT
-		x *= GRID; y *= GRID #abs
+		tile_x, tile_y = x, y
 
 		#get
+		x *= GRID; y *= GRID #abs
 		room_x = int(x/ROOM_WIDTH)
 		room_y = int(y/ROOM_HEIGHT)
 
-		tile_x = x
-		while tile_x >= ROOM_WIDTH: tile_x -= ROOM_WIDTH
-		tile_x = int(tile_x/GRID)
+		# tile_x = x
+		# while tile_x >= ROOM_WIDTH:
+			# tile_x -= ROOM_WIDTH
+		# tile_x = int(tile_x/GRID)
 
-		tile_y = y
-		while tile_y >= ROOM_HEIGHT: tile_y -= ROOM_HEIGHT
-		tile_y = int(tile_y/GRID)
+		# tile_y = y
+		# while tile_y >= ROOM_HEIGHT:
+			# tile_y -= ROOM_HEIGHT
+		# tile_y = int(tile_y/GRID)
 
 		#bound
 		rx, ry, tx, ty = room_x, room_y, tile_x, tile_y
@@ -129,9 +144,18 @@ class entity_room(GameRectangle):
 		for entity in self.entities:
 			entity.draw()
 
-	def render(self): #entities, create
+	def render(self, camera): #entities
+	#Render any entities within absolute bounds.
+	#Unrender otherwise.
+		points = camera.points
+
 		for entity in self.entities:
-			entity.render()
+
+			if entity.in_points(points):
+				if entity.sprite == None:
+					entity.render()
+			else:
+				entity.sprite = None
 
 	#
 
@@ -161,13 +185,19 @@ class entity_room(GameRectangle):
 		split_data = data.split("\n")
 		
 		for line in split_data:
+			
+			#values
 			split_line = line.split(",")
 			name = split_line[0]
 			x = int(split_line[1][0:2])
 			y = int(split_line[1][2:4])
 
+			#offset
+			ox = int((room_x*ROOM_WIDTH)/GRID)
+			oy = int((room_y*ROOM_HEIGHT)/GRID)
+
 			#Create
-			self._create(name, x, y)
+			self._create(name, x+ox, y+oy)
 
 	#
 
@@ -175,6 +205,13 @@ class entity_room(GameRectangle):
 
 	def _create(self, name, x, y): #load
 
+		#if that spot isn't taken
+		for entity in self.entities:
+			if entity.tile_x == x\
+			and entity.tile_y == y:
+				return
+
+		#add it
 		entity_class = getattr(self,name)
 		new_entity = entity_class(name, x, y)
 		self.entities.append(new_entity)
@@ -188,9 +225,9 @@ class entity_room(GameRectangle):
 	def create(self, name, x, y): #entities w/ editor
 	#Create an entity in the selected tile.
 		self._create(name,x,y)
-		self.render()
 
 	def remove(self, x, y): #entities w/ editor
+
 		for e, entity in enumerate(self.entities):
 			if entity.tile_x == x\
 			and entity.tile_y == y:
@@ -206,10 +243,18 @@ class entity_room(GameRectangle):
 		#Grab
 		data = ""
 		for entity in self.entities:
+
+			#pos offset
+			ox = int((self.room_x*ROOM_WIDTH)/GRID)
+			oy = int((self.room_y*ROOM_HEIGHT)/GRID)
+
+			#values
 			name = entity.name
 			x, y = entity.tile_position
-			k = key(x,y)
+			k = key(x-ox,y-oy)
+			#
 			data = data + name+","+k+"\n"
+		
 		if data != "": data = data[:-1]
 		
 

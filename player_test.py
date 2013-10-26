@@ -56,6 +56,6 @@ while running:
 	#drawing
 	window.clear(sf.Color(255, 200, 200))
 	worldmap.draw(Camera)
-	entities.draw()
+	entities.draw(Camera)
 	Nut.draw()
 	window.display()
