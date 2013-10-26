@@ -37,6 +37,34 @@ class entities(GameRectangle):
 			for room in column:
 				room.draw()
 
+	#
+
+	def _init(self, room_w, room_h): #init
+	#Make space for the entity rooms.
+		for x in range(room_w):
+			self.rooms.append([])
+			for y in range(room_h):
+				self.rooms[-1].append(None)
+
+	def _load(self): #init
+	#Prompt the entity rooms to load.
+		for x, column in enumerate(self.rooms):
+			for y, room in enumerate(column):
+				room = entity_room(x,y)
+				self.rooms[x][y] = room
+
+	####
+
+	def _render(self): #init
+	#Prompt the entity rooms to render.
+		for column in self.rooms:
+			for room in column:
+				room.render()
+
+
+	####
+
+	# LEVEL EDITOR
 
 	def _global_to_room_tile(self, x, y): #create, remove
 	#Create a new entity in the selected tile.
@@ -85,30 +113,6 @@ class entities(GameRectangle):
 		msg = "%s Rooms(s) saved. (Entities)" % i
 		print msg
 
-	#
-
-	def _init(self, room_w, room_h): #init
-	#Make space for the entity rooms.
-		for x in range(room_w):
-			self.rooms.append([])
-			for y in range(room_h):
-				self.rooms[-1].append(None)
-
-	def _load(self): #init
-	#Prompt the entity rooms to load.
-		for x, column in enumerate(self.rooms):
-			for y, room in enumerate(column):
-				room = entity_room(x,y)
-				self.rooms[x][y] = room
-
-	####
-
-	def _render(self): #init
-	#Prompt the entity rooms to render.
-		for column in self.rooms:
-			for room in column:
-				room.render()
-
 
 
 class entity_room(GameRectangle):
@@ -130,6 +134,56 @@ class entity_room(GameRectangle):
 			entity.render()
 
 	#
+
+	def _init(self): #init
+		self.entities = []
+
+	def _load(self, room_x, room_y): #init
+	# Load a unique .TXT file with names and positioning.
+	# Positioning is now in TILES.
+		
+		#Grab
+		global key
+		k = key(room_x, room_y)
+		directory = "assets/entities/unique/%s.txt" % k
+
+		try:
+			f = open(directory, "r")
+			data = f.read()
+		except:
+			f = open(directory, "w+")
+			data = ""
+
+		f.close()
+		if data == "": return
+
+		#Interpret
+		split_data = data.split("\n")
+		
+		for line in split_data:
+			split_line = line.split(",")
+			name = split_line[0]
+			x = int(split_line[1][0:2])
+			y = int(split_line[1][2:4])
+
+			#Create
+			self._create(name, x, y)
+
+	#
+
+	from orb import orb
+
+	def _create(self, name, x, y): #load
+
+		entity_class = getattr(self,name)
+		new_entity = entity_class(name, x, y)
+		self.entities.append(new_entity)
+
+
+	#########
+
+	# LEVEL EDITOR
+
 
 	def create(self, name, x, y): #entities w/ editor
 	#Create an entity in the selected tile.
@@ -168,48 +222,3 @@ class entity_room(GameRectangle):
 		f.close()
 
 	#
-
-	def _init(self): #init
-		self.entities = []
-
-	def _load(self, room_x, room_y): #init
-	# Load a unique .TXT file with names and positioning.
-	# Positioning is now in TILES.
-		
-		#Grab
-		global key
-		k = key(room_x, room_y)
-		directory = "assets/entities/unique/%s.txt" % k
-
-		try:
-			f = open(directory, "r")
-			data = f.read()
-		except:
-			f = open(directory, "w+")
-			data = ""
-
-		f.close()
-		if data == "": return
-
-		#Interpret
-		split_data = data.split("\n")
-		
-		for line in split_data:
-			split_line = line.split(",")
-			name = split_line[0]
-			x = int(split_line[1][0:2])
-			y = int(split_line[1][2:4])
-
-			#Create
-			self._create(name, x, y)
-
-
-	#
-
-	from orb import orb
-
-	def _create(self, name, x, y): #load
-
-		entity_class = getattr(self,name)
-		new_entity = entity_class(name, x, y)
-		self.entities.append(new_entity)

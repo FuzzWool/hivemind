@@ -35,7 +35,7 @@ while running:
 	#
 	#window
 	if quit(): running = False
-	if key.RETURN.pressed():
+	if key.RETURN.held():
 		pass
 
 	#entity

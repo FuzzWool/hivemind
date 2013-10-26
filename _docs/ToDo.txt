@@ -95,23 +95,21 @@ x Add a SLIDE KICK.
 	+ created an Entity TOOL.
 		+ orb graphic follows cursor
 
-		===
-
 		+ places down entities
 		+ saves entities
 		! remove entities
 
-	! clean
-		! make entity functions clearer
+	===
 
-		! change Room > Entities hierachy
-		to Room > Tiles
+	. tiles vs. lists: rendering vs. drawing
+		if the ROOMS were TILE-BASED
+		* they loop through more for DRAWING
+		* they loop through more for RENDERING
 
+		List-based entity rooms are better, as
+		+ they loop through less for DRAWING
+		+ they loop through less for RENDERING
 
-	! stress test
-		press enter,
-		a room completely filled with orbs is rendered
-		does it lag?
 
 	! render entities
 		! entities render when focused by the camera
