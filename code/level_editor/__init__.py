@@ -12,14 +12,14 @@ from code.pysfml_game import window
 
 class toolbox:
 	
-	def __init__(self, worldmap):
+	def __init__(self, worldmap, entities):
 		self.ui = ui()
 		self._init_cursor()
 		#
 		self.pointer = pointer()
 		self.tile = tile()
 		self.camera = camera(worldmap)
-		self.entity = entity()
+		self.entity = entity(entities)
 
 	def draw(self, camera, mouse):
 		self._move_cursor(camera, mouse)
@@ -38,12 +38,14 @@ class toolbox:
 	def static_draw(self):
 		self.ui.draw()
 
-	def controls(self, worldmap, camera, mouse, key):
+	def controls(self, entities, worldmap,\
+	 camera, mouse, key):
 
 		#Save
 		if key.L_CTRL.held():
 			if key.S.pressed():
 				worldmap.save()
+				entities.save()
 
 		#Move the camera
 		else:
@@ -75,7 +77,7 @@ class toolbox:
 				(worldmap, mouse, self.cursor)
 
 			if self.ui.selected == "entity":
-				self.entity.controls(self.cursor)
+				self.entity.controls(mouse, self.cursor)
 
 	#
 

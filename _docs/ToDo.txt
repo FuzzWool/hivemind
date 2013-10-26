@@ -64,8 +64,8 @@ x Add a SLIDE KICK.
 			Smooths the camera by repeatedly lowering the speed.
 
 
-! Add RUNNING animation.
 ! Add COLLECTIBLES which OPEN ROOMS.
+! Add RUNNING animation.
 ! Add TIMER.
 ! Add REPLAYS.
 
@@ -92,16 +92,30 @@ x Add a SLIDE KICK.
 		+ for each room there is a list of entities to load
 		+ entities are loaded by name and position
 
-	! create an Entity TOOL.
+	+ created an Entity TOOL.
 		+ orb graphic follows cursor
-		! place down entities
-		! save entities
-		! load entities
+
+		===
+
+		+ places down entities
+		+ saves entities
+		! remove entities
+
+	! clean
+		! make entity functions clearer
+
+		! change Room > Entities hierachy
+		to Room > Tiles
+
 
 	! stress test
 		press enter,
 		a room completely filled with orbs is rendered
 		does it lag?
+
+	! render entities
+		! entities render when focused by the camera
+		! unrendered otherwise
 
 	! orb
 		! orbs bop up and down

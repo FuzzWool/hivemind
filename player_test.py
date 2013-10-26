@@ -30,7 +30,7 @@ entities = entities(x,y)
 
 running = True
 while running:
-		
+
 	#LOGIC
 	#
 	#window

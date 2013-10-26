@@ -6,6 +6,7 @@ from code.pysfml_game import MyCamera
 from code.pysfml_game import MyMouse
 
 from code.game import WorldMap
+from code.game import entities
 
 from code.level_editor import toolbox
 ##########################################
@@ -14,10 +15,14 @@ Camera = MyCamera()
 Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
-worldmap = WorldMap(3,3)
+###
+x,y = 3,3
+worldmap = WorldMap(x,y)
+entities = entities(x,y)
+###
 
 mouse = MyMouse()
-toolbox = toolbox(worldmap) ###
+toolbox = toolbox(worldmap, entities) ###
 
 ##########################################
 running = True
@@ -27,7 +32,8 @@ while running:
 	if key.RETURN.pressed():
 		pass
 
-	toolbox.controls(worldmap, Camera, mouse, key) ###
+	toolbox.controls\
+	(entities, worldmap, Camera, mouse, key) ###
 	key.reset_all()
 
 	#Videoa
@@ -35,6 +41,7 @@ while running:
 	window.clear(sf.Color(255, 200, 200))
 	#
 	worldmap.draw()
+	entities.draw()
 	toolbox.draw(Camera, mouse) ###
 	window.view = window.default_view
 	toolbox.static_draw() ###

@@ -17,10 +17,14 @@ def key(x,y):
 
 #####
 
-class entities:
+from code.pysfml_game import GameRectangle
+
+class entities(GameRectangle):
 # * Holds all of the GAME'S entities in ROOMS.
 	
 	def __init__(self, room_w, room_h):
+		self.room_w, self.room_h = room_w, room_h
+
 		self.rooms = []
 		self._init(room_w, room_h)
 		self._load()
@@ -32,6 +36,54 @@ class entities:
 		for column in self.rooms:
 			for room in column:
 				room.draw()
+
+
+	def _global_to_room_tile(self, x, y): #create, remove
+	#Create a new entity in the selected tile.
+
+		# Since there's no tile list,
+		# a global tile_pos has to be dissected
+		# into global rooms and local tile_pos
+		from code.pysfml_game import GRID
+		from code.pysfml_game import ROOM_WIDTH
+		from code.pysfml_game import ROOM_HEIGHT
+		x *= GRID; y *= GRID #abs
+
+		#get
+		room_x = int(x/ROOM_WIDTH)
+		room_y = int(y/ROOM_HEIGHT)
+
+		tile_x = x
+		while tile_x >= ROOM_WIDTH: tile_x -= ROOM_WIDTH
+		tile_x = int(tile_x/GRID)
+
+		tile_y = y
+		while tile_y >= ROOM_HEIGHT: tile_y -= ROOM_HEIGHT
+		tile_y = int(tile_y/GRID)
+
+		#bound
+		rx, ry, tx, ty = room_x, room_y, tile_x, tile_y
+		rx, ry = self.keep_in_room_points((rx, ry))
+		tx, ty = self.keep_in_tile_points((tx, ty))
+		return rx, ry, tx, ty
+	#
+	def create(self, name, x, y): #editor
+		rx, ry, tx, ty = self._global_to_room_tile(x,y)
+		self.rooms[rx][ry].create(name, tx,ty)
+	#
+	def remove(self, x, y): #editor
+		rx, ry, tx, ty = self._global_to_room_tile(x,y)
+		self.rooms[rx][ry].remove(tx, ty)
+
+
+	def save(self): #level_editor general controls
+		i = 0
+		for column in self.rooms:
+			for room in column:
+				room.save()
+				i += 1
+		msg = "%s Rooms(s) saved. (Entities)" % i
+		print msg
 
 	#
 
@@ -59,11 +111,12 @@ class entities:
 
 
 
-class entity_room:
-# WIP - Loads all of the ENTITIES in a room.
-# WIP - Forwards prompts to individual entities.
+class entity_room(GameRectangle):
+# * LOADS all of the entities in a room.
+# WIP - SAVES all of the entities in a room (editor).
 
 	def __init__(self, room_x, room_y):
+		self.room_x, self.room_y = room_x, room_y
 		self._init()
 		self._load(room_x, room_y)
 
@@ -72,10 +125,47 @@ class entity_room:
 		for entity in self.entities:
 			entity.draw()
 
-	def render(self): #entities
+	def render(self): #entities, create
 		for entity in self.entities:
 			entity.render()
 
+	#
+
+	def create(self, name, x, y): #entities w/ editor
+	#Create an entity in the selected tile.
+		self._create(name,x,y)
+		self.render()
+
+	def remove(self, x, y): #entities w/ editor
+		for e, entity in enumerate(self.entities):
+			if entity.tile_x == x\
+			and entity.tile_y == y:
+				
+				del self.entities[e]
+
+
+	def save(self): #entities w/ editor
+	# Save all of the entities back back to room .TXT.
+		
+		global key
+
+		#Grab
+		data = ""
+		for entity in self.entities:
+			name = entity.name
+			x, y = entity.tile_position
+			k = key(x,y)
+			data = data + name+","+k+"\n"
+		if data != "": data = data[:-1]
+		
+
+		#Save
+		k = key(self.room_x, self.room_y)
+		directory = "assets/entities/unique/%s.txt" % k
+
+		f = open(directory,"w+")
+		f.write(data)
+		f.close()
 
 	#
 
@@ -121,5 +211,5 @@ class entity_room:
 	def _create(self, name, x, y): #load
 
 		entity_class = getattr(self,name)
-		new_entity = entity_class(x, y)
+		new_entity = entity_class(name, x, y)
 		self.entities.append(new_entity)
