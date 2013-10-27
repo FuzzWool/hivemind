@@ -119,11 +119,14 @@ x Add a SLIDE KICK.
 			~ fixed bounce and oscillate
 		+ keys are "collected" on impact with Nut
 	
-	===
 	
-	! tile_lock and tile_key tools		
+	+ tile_lock and tile_key tools		
 		+ use their own portrait
 		+ individual tools
+	
+	===
+
+	! entity tool generator
 
 		PROBLEM:
 		For every new entity, it needs a new tool.
@@ -135,14 +138,20 @@ x Add a SLIDE KICK.
 
 
 		SOLUTION:
-		! when new entities are added,
+		x when new entities are added,
 		they're automatically given a tool
 
-			! read from the entities module,
+			x Too difficult and implict
+			x read from the entities module,
 			take class names
 				! ignore "entity", "entities" and "entity_room"
 
-			! logic: only 'name' changes in the entity tool
+
+		! provide a list of entities in the __init__
+
+			! modules are loaded from it: __init__ use
+			! level_editor automatically grabs names
+
 
 
 
