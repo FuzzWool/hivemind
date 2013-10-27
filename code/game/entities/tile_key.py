@@ -3,8 +3,8 @@ from code.pysfml_game import MyTexture, MySprite
 from code.pysfml_game.animation import oscillate
 
 class tile_key(GameRectangle):
-# WIP - Bobs up and down.
-# WIP - Explodes on contact with Nut.
+# * Bobs up and down.
+# * 'Collected' on contact with Nut.
 # WIP - Opens up an assigned tile_lock.
 
 	def __init__(self, name, tile_x, tile_y):

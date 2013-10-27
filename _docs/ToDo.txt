@@ -117,9 +117,40 @@ x Add a SLIDE KICK.
 		+ graphic
 		+ keys bop up and down
 			~ fixed bounce and oscillate
-	===
 		+ keys are "collected" on impact with Nut
-			
+	
+	===
+	
+	! tile_lock and tile_key tools		
+		+ use their own portrait
+		+ individual tools
+
+		PROBLEM:
+		For every new entity, it needs a new tool.
+		Making a new tool requires a lot of small core code changes peppered around the toolbox.
+
+		Additionally, every new tool for each entity,
+		unnecessarily creates a new entity tool for
+		a new name.
+
+
+		SOLUTION:
+		! when new entities are added,
+		they're automatically given a tool
+
+			! read from the entities module,
+			take class names
+				! ignore "entity", "entities" and "entity_room"
+
+			! logic: only 'name' changes in the entity tool
+
+
+
+
+	! entity.react checks every single entity
+	Limit the Player scope to nearby rooms
+
+
 	! tile_lock
 		+ graphic
 		! removes the tile it is on top of.

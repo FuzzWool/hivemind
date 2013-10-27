@@ -214,6 +214,7 @@ class entity_room(GameRectangle):
 	#
 
 	from tile_key import tile_key
+	from tile_lock import tile_lock
 
 	def _create(self, name, x, y): #load
 

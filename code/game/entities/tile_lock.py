@@ -1,9 +1,8 @@
 from code.pysfml_game import GameRectangle
 from code.pysfml_game import MyTexture, MySprite
 
-class entity(GameRectangle): #template
-# * Grabs name and position.
-
+class tile_lock(GameRectangle):
+# * Just grabs the name and position.
 	
 	def __init__(self, name, tile_x, tile_y):
 		self.name = name
@@ -16,10 +15,16 @@ class entity(GameRectangle): #template
 	###
 
 	def render(self):
-		pass
+		d = "assets/entities/shared/tile_lock/sheet.png"
+		t = MyTexture(d)
+		sprite = MySprite(t)
+		sprite.position = self.position
+		#
+		self.sprite = sprite
 
 	def draw(self):
-		pass
+		if self.sprite != None:
+			self.sprite.draw()
 
 	###
 

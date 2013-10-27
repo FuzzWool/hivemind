@@ -19,7 +19,11 @@ class toolbox:
 		self.pointer = pointer()
 		self.tile = tile()
 		self.camera = camera(worldmap)
-		self.entity = entity(entities)
+
+		#Entities
+		self.tile_key = entity(entities, "tile_key")
+		self.tile_lock = entity(entities, "tile_lock")
+
 
 	def draw(self, camera, mouse):
 		self._move_cursor(camera, mouse)
@@ -29,9 +33,17 @@ class toolbox:
 			self.cursor.draw()
 		if self.ui.selected == "camera":
 			self.camera.draw(camera)
-		if self.ui.selected == "entity":
+
+		#Entities
+		if self.ui.selected in \
+		["tile_key", "tile_lock"]:
 			self.cursor.draw()
-			self.entity.draw()
+
+			if self.ui.selected == "tile_key":
+				self.tile_key.draw()
+
+			if self.ui.selected == "tile_lock":
+				self.tile_lock.draw()
 
 
 
@@ -76,8 +88,11 @@ class toolbox:
 				self.camera.controls\
 				(worldmap, mouse, self.cursor)
 
-			if self.ui.selected == "entity":
-				self.entity.controls(mouse, self.cursor)
+			#Entities
+			if self.ui.selected == "tile_key":
+				self.tile_key.controls(mouse,self.cursor)
+			if self.ui.selected == "tile_lock":
+				self.tile_lock.controls(mouse,self.cursor)
 
 	#
 
@@ -166,7 +181,11 @@ class ui: #toolbox
 		self.icons[0][0].tool = "pointer"
 		self.icons[1][0].tool = "tile"
 		self.icons[0][1].tool = "camera"
-		self.icons[0][3].tool = "entity"
+
+		#Entities
+		self.icons[0][4].tool = "tile_key"
+		self.icons[1][4].tool = "tile_lock"
+
 
 		#default
 		self._select(x=1,y=0)
@@ -205,7 +224,10 @@ class icon(object): #toolbox.ui
 		if name == "pointer": self.sprite.clip.use(1,0)
 		if name == "tile": self.sprite.clip.use(2,0)
 		if name == "camera": self.sprite.clip.use(3,0)
-		if name == "entity": self.sprite.clip.use(4,0)
+
+		#Entities
+		if name == "tile_key": self.sprite.clip.use(5,0)
+		if name == "tile_lock": self.sprite.clip.use(6,0)
 
 	#
 
