@@ -99,8 +99,6 @@ x Add a SLIDE KICK.
 		+ saves entities
 		! remove entities
 
-	===new
-
 	+ render entities
 		+ entities render when focused by the camera
 		+ unrendered otherwise
@@ -114,25 +112,25 @@ x Add a SLIDE KICK.
 			~ level editor fixed
 			~ player test camera fixed
 
-	===current
+	===
 
-	! geometry
-		! fix room_x2, room_y2 (+1 it)
-			worldmap rendering
-			entity rendering
-			camera lock rendering
+	! tile_key
+		+ graphic
+		~ keys bop up and down
+			~ fixed bounce and oscillate
 
-		! check/fix tile_x2, tile_y2 (+1 it)
+		! keys explode on impact with Nut
+			! special hitbox
+		! keys have a shine behind them
 
-	! orb
-		! orbs bop up and down
-		! orbs explode on impact with Nut
-		! orbs have a shine behind them
+	! tile_lock
+		+ graphic
+		! removes the tile it is on top of.
+			! in a puff of smoke
 
-	orb_tile
-	! removes the tile it is on top of.
-		! in a puff of smoke
 
+	~ fixed physics_animation
+		the ending point can't be called immediately after
 
 
 

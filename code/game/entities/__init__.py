@@ -201,7 +201,7 @@ class entity_room(GameRectangle):
 
 	#
 
-	from orb import orb
+	from tile_key import tile_key
 
 	def _create(self, name, x, y): #load
 

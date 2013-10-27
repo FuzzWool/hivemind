@@ -3,6 +3,8 @@ class physics_animation(object):
 #One for each axis: x and y.
 	def __init__(self, called_directly=True):
 
+		self.init = True
+
 		#Pre-sets - they subclass this class.
 		if called_directly:
 			self.bounce = bounce(False)
@@ -13,6 +15,7 @@ class physics_animation(object):
 
 	end = None
 	speed, vel = 0, 0
+	init = True #first loop check
 
 	def play(self, point): #float
 	#Performs movement operations,
@@ -30,6 +33,7 @@ class physics_animation(object):
 		if abs(self.vel) < 0.001: self.vel = 0
 		#
 
+		self.init = False
 		return move
 
 
@@ -55,10 +59,19 @@ class physics_animation(object):
 
 	# Private
 
+	had_passed_end = False #for odd passing (tile_key)
+
 	def _just_passed_end(self, point, move): #bool
-		if point <= self.end <= point+move: return True
-		if point >= self.end >= point+move: return True
-		return False
+		if self.had_passed_end:
+			self.had_passed_end = False
+			return False
+
+		truth = False
+		if point <= self.end <= point+move: truth = True
+		if point >= self.end >= point+move: truth = True
+
+		self.had_passed_end = truth
+		return truth
 
 	#
 
@@ -69,6 +82,7 @@ class bounce(physics_animation):
 	speed_divide = 1
 
 	def just_passed_end_event(self, point):
+		if self.init: return
 
 		#Bounce back.
 		self.speed = \
@@ -95,6 +109,8 @@ class oscillate(physics_animation):
 	vel_divide = 1
 
 	def just_passed_end_event(self, point):
+		if self.init: return
+
 		self.vel = -(self.vel/self.vel_divide)
 
 		#Stopping

@@ -27,6 +27,7 @@ toolbox = toolbox(worldmap, entities) ###
 ##########################################
 running = True
 while running:
+
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
