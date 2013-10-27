@@ -23,7 +23,7 @@ Camera.focus = Nut.cbox
 #
 x,y = 3,3
 worldmap = WorldMap(x,y)
-entities = entities(x,y)
+entities = entities(x,y) ####
 
 ############
 
@@ -43,6 +43,9 @@ while running:
 	Nut.physics()
 	Nut.collision(worldmap)
 
+	entities.react(Nut)
+
+
 	#key
 	key.reset_all()
 
@@ -56,6 +59,6 @@ while running:
 	#drawing
 	window.clear(sf.Color(255, 200, 200))
 	worldmap.draw(Camera)
-	entities.draw(Camera)
+	entities.draw(Camera) ####
 	Nut.draw()
 	window.display()

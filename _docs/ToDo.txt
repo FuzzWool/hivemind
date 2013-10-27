@@ -112,27 +112,30 @@ x Add a SLIDE KICK.
 			~ level editor fixed
 			~ player test camera fixed
 
-	===
 
-	! tile_key
+	+ tile_key
 		+ graphic
-		~ keys bop up and down
+		+ keys bop up and down
 			~ fixed bounce and oscillate
-
-		! keys explode on impact with Nut
-			! special hitbox
-		! keys have a shine behind them
-
+	===
+		+ keys are "collected" on impact with Nut
+			
 	! tile_lock
 		+ graphic
 		! removes the tile it is on top of.
-			! in a puff of smoke
 
+	! tile_key > tile_lock
+		each key has it's own lock
+		on collection, the key opens the lock
 
-	~ fixed physics_animation
-		the ending point can't be called immediately after
+	! pretty effects
+		! tile_key
+			! passive: shines nicely
+			! collected: explodes in shines
 
-
+		! tile_lock
+			! passive: shines a bit
+			! unlocked: drops lock, bounces
 
 
 =====

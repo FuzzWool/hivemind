@@ -34,6 +34,7 @@ class entities(GameRectangle):
 		self._init(room_w, room_h)
 		self._load()
 
+
 	def draw(self, camera):
 	#Draw all of the entity rooms.
 		self._render(camera)
@@ -41,6 +42,12 @@ class entities(GameRectangle):
 		for column in self.rooms:
 			for room in column:
 				room.draw()
+
+
+	def react(self, Player):
+		for column in self.rooms:
+			for room in column:
+				room.react(Player)
 
 	#
 
@@ -132,7 +139,7 @@ class entities(GameRectangle):
 
 class entity_room(GameRectangle):
 # * LOADS all of the entities in a room.
-# WIP - SAVES all of the entities in a room (editor).
+# * SAVES all of the entities in a room (editor).
 
 	def __init__(self, room_x, room_y):
 		self.room_x, self.room_y = room_x, room_y
@@ -156,6 +163,11 @@ class entity_room(GameRectangle):
 					entity.render()
 			else:
 				entity.sprite = None
+
+
+	def react(self, Player): #entities
+		for entity in self.entities:
+			entity.react(Player)
 
 	#
 

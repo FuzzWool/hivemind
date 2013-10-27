@@ -1,5 +1,3 @@
-tile_key,0207
-tile_key,0307
 tile_key,0407
 tile_key,0507
 tile_key,0607
@@ -15,7 +13,3 @@ tile_key,1507
 tile_key,1607
 tile_key,1707
 tile_key,1807
-tile_key,1907
-tile_key,2007
-tile_key,2107
-tile_key,2207

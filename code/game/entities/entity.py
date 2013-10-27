@@ -5,3 +5,16 @@ class entity: #inherit, don't use
 		self.name = name
 		self.tile_x = tile_x
 		self.tile_y = tile_y
+
+	###
+
+	def render(self):
+		pass
+
+	def draw(self):
+		pass
+
+	###
+
+	def react(self, Player):
+		pass
