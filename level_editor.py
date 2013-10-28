@@ -31,7 +31,12 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		pass
+		
+		###WIP
+		es = entities.rooms[0][0].entities
+		for e in es:
+			print e.name, e.id
+		####
 
 	toolbox.controls\
 	(entities, worldmap, Camera, mouse, key)

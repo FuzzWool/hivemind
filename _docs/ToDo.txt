@@ -138,11 +138,6 @@ x Add a SLIDE KICK.
 	===
 
 
-	+ Test (_.py) - ID each Entity class by name.
-	May:
-		* Contains __all__, which has every single
-		sub-class contained keyed by their name.
-		* Makes an incremental ID for each sub-class.
 
 
 
@@ -152,12 +147,22 @@ x Add a SLIDE KICK.
 		on collection, the key opens the lock
 
 
-		IDs
-		! identify each other by their IDs
-			+ ID is int, incremented for each new class
+		! IDs
+		------
+		+ Test (_.py) - ID each Entity class by name.
+		May:
+			* Contains __all__, which has every single
+			sub-class contained keyed by their name.
+			* Makes an incremental ID for each sub-class.
+		------
 
-		! graphic
-			easy identification for the level editor
+			+ identify each other by their IDs
+				+ ID is int, incremented for each new class
+
+			! graphic
+				easy identification for the level editor
+
+				! create highlight with id number
 
 
 	! entity.react checks every single entity

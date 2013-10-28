@@ -6,9 +6,14 @@ class entity(GameRectangle): #template
 # * Assumes a sprite exists for it. Renders and draws it.
 # * Uses GameRectangle positioning.
 
-# And most importantly...
+# And, grandly:
 # * Provides every single method it's hierachy references.
+# * IDs every single differently named entity.
 
+	####
+	# Must NOT be totally overriden, as:
+	# * It contains important init values.
+	# * It contains and handles sub-class IDs.
 
 	def __init__(self, name, tile_x, tile_y):
 		self.name = name
@@ -17,6 +22,8 @@ class entity(GameRectangle): #template
 
 		self.w, self.h = 25, 25
 		self.sprite = None
+
+		self._init_subclass_ids()
 
 	###
 
@@ -39,3 +46,27 @@ class entity(GameRectangle): #template
 
 	def worldmap_react(self, WorldMap):
 		pass
+
+
+
+	#######################
+	# SUB-CLASS ID'ing
+
+	__all__ = {}
+	id = 0
+
+	def _init_subclass_ids(self): #init
+		self._contain_instance()
+		self._get_id()
+
+
+	def _contain_instance(self): #init_subclass_ids
+		name = self.__class__.__name__
+		try:
+			entity.__all__[name].append(self)
+		except:
+			entity.__all__[name] = [self]
+
+	def _get_id(self): #init_subclass_ids
+		name = self.__class__.__name__
+		self.id = len(entity.__all__[name])
