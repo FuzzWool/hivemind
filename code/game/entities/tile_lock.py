@@ -6,17 +6,31 @@ class tile_lock(entity):
 # * WIP - Waits for a tile_key to unlock it.
 # * WIP - Once so, it removes the tile it is occupying.
 
-	locked = True
 
-	# def react(self):
-	# 	WorldMap = self.WorldMap
+	def __init__(self, args):
+		entity.__init__(self, args)
+		#
+		self.locked = True
 
-	# 	if self.locked:
-	# 		x,y = self.tile_x, self.tile_y
-	# 		WorldMap.tiles[x][y].change("____")
-	# 		#
-	# 		self.locked = False
+	####
 
+	def render(self):
+		if self.locked:
+			entity.render(self)
+
+	def react(self):
+		WorldMap = self.WorldMap
+
+		key = entity.__all__["tile_key"][self.id]
+		if key.collected and self.locked:
+			if self.locked:
+				x,y = self.tile_x, self.tile_y
+				WorldMap.tiles[x][y].change("____")
+				#
+				self.locked = False
+
+
+	####
 
 	def can_save(self):
 
@@ -31,7 +45,11 @@ class tile_lock(entity):
 			print "Keys: ",[k.id for k in keys]
 			return False
 
-		#The lock is COVERING a TILE.
-		pass
+		#The lock is NOT covering a tile.
+		x, y = self.tile_position
+		tile = self.WorldMap.tiles[x][y]
+		if tile.data == "____":
+			print "! Lock placed on top of empty tile."
+			return False
 
 		return True

@@ -27,14 +27,23 @@ from code.pysfml_game import ROOM_HEIGHT
 class entities(GameRectangle):
 # * Holds all of the GAME'S entities in ROOMS.
 	
-	def __init__(self, WorldMap):
+	def __init__(self, Player, WorldMap):
 
 		self.WorldMap = WorldMap #worldmap reactions
 		self.room_size = WorldMap.room_w, WorldMap.room_h
 
+		#####
+
+		self.Player = Player
+		self.WorldMap = WorldMap
+
+		#####
+
 		self.rooms = []
 		self._init(*self.room_size)
-		self._load()
+
+		args = Player, WorldMap
+		self._load(args)
 
 
 	def draw(self, camera):
@@ -46,12 +55,11 @@ class entities(GameRectangle):
 				room.draw()
 
 
-	def react(self, Player):
-	#reacts with PLAYER and WORLDMAP.
+	def react(self):
 	#! checks ALL of the rooms in existence.
 		for column in self.rooms:
 			for room in column:
-				room.react(Player)
+				room.react()
 	#
 
 	def _init(self, room_w, room_h): #init
@@ -61,11 +69,12 @@ class entities(GameRectangle):
 			for y in range(room_h):
 				self.rooms[-1].append(None)
 
-	def _load(self): #init
+	def _load(self, args): #init
 	#Prompt the entity rooms to load.
 		for x, column in enumerate(self.rooms):
 			for y, room in enumerate(column):
-				room = entity_room(x,y)
+				new_args = (x,y) + args
+				room = entity_room(new_args)
 				self.rooms[x][y] = room
 
 
@@ -112,7 +121,9 @@ class entities(GameRectangle):
 	#
 	def create(self, name, x, y): #editor
 		rx, ry, tx, ty = self._global_to_room_tile(x,y)
-		self.rooms[rx][ry].create(name, tx,ty)
+
+		args = name, tx,ty, self.Player, self.WorldMap
+		self.rooms[rx][ry].create(args)
 	#
 	def remove(self, x, y): #editor
 		rx, ry, tx, ty = self._global_to_room_tile(x,y)
@@ -144,10 +155,12 @@ class entity_room(GameRectangle):
 # * LOADS all of the entities in a room.
 # * SAVES all of the entities in a room (editor).
 
-	def __init__(self, room_x, room_y):
+	def __init__(self, args):
+		room_x, room_y, Player, WorldMap = args
+
 		self.room_x, self.room_y = room_x, room_y
 		self._init()
-		self._load(room_x, room_y)
+		self._load(args)
 
 
 	def draw(self): #entities
@@ -168,23 +181,20 @@ class entity_room(GameRectangle):
 				entity.sprite = None
 
 
-	def react(self, Player): #entities
+	def react(self): #entities
 		for entity in self.entities:
-			entity.react(Player)
-
-	def worldmap_react(self, WorldMap): #entities
-		for entity in self.entities:
-			entity.worldmap_react(WorldMap)
+			entity.react()
 
 	#
 
 	def _init(self): #init
 		self.entities = []
 
-	def _load(self, room_x, room_y): #init
+	def _load(self, args): #init
 	# Load a unique .TXT file with names and positioning.
 	# Positioning is now in TILES.
-		
+		room_x, room_y = self.room_x, self.room_y
+
 		#Grab
 		global key
 		k = key(room_x, room_y)
@@ -216,14 +226,16 @@ class entity_room(GameRectangle):
 			oy = int((room_y*ROOM_HEIGHT)/GRID)
 
 			#Create
-			self._create(name, x+ox, y+oy)
+			new_args = (name, x+ox, y+oy) + args[2:]
+			self._create(new_args)
 
 	#
 
 	from tile_key import tile_key
 	from tile_lock import tile_lock
 
-	def _create(self, name, x, y): #load
+	def _create(self, args): #load
+		x, y = args[1], args[2]
 
 		#if that spot isn't taken
 		for entity in self.entities:
@@ -232,8 +244,9 @@ class entity_room(GameRectangle):
 				return
 
 		#add it
+		name = args[0]
 		entity_class = getattr(self,name)
-		new_entity = entity_class(name, x, y)
+		new_entity = entity_class(args)
 		self.entities.append(new_entity)
 
 
@@ -242,9 +255,9 @@ class entity_room(GameRectangle):
 	# LEVEL EDITOR
 
 
-	def create(self, name, x, y): #entities w/ editor
-	#Create an entity in the selected tile.
-		self._create(name,x,y)
+	def create(self, args): #entities w/ editor
+		#Create an entity in the selected tile.
+		self._create(args)
 
 	def remove(self, x, y): #entities w/ editor
 		to_delete = None

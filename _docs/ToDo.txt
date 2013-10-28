@@ -44,8 +44,8 @@ x Add a SLIDE KICK.
 
 
 	+ Dive - slamming the ground. Bigger effect if faster.
-	+ Wall-jumping - trail in mid-air; hitting a surface.
-	+ Walking - Greater effect depending on speed.
+	+ Wall-hugging - dust forms continously.
+	+ Walking - dust every step.
 
 
 + Added DYNAMIC CAMERA.
@@ -82,6 +82,10 @@ x Add a SLIDE KICK.
 
 ! check CONSIDERATIONS.
 ! update DESIGN GOALS.
+
+=======
+DEMO RELEASE
+========
 
 
 =====
@@ -138,7 +142,7 @@ x Add a SLIDE KICK.
 
 
 
-	! tile_key > tile_lock
+	+ tile_key > tile_lock
 
 
 		+ IDs
@@ -155,34 +159,20 @@ x Add a SLIDE KICK.
 
 		=======
 
-		wip (!! about to change hierachy)
 		+ Entities do not save if any entities complain.
+			+ key save prevention
+				+ throw error if keys and locks are't equal
+			+ lock save prevention
+				+ throw error if keys and locks aren't equal
+				+ throw error if not covering a filled tile
 
-		+ key save prevention
-			+ throw error if keys and locks are't equal
-		! lock save prevention
-			+ throw error if keys and locks aren't equal
-			!! throw error if not covering a filled tile
+		~ Hierachy needs to be changed.
+			~ WorldMap needs to be forwarded upon init
+			~ Player should be forwarded upon init 
+			* Ugly as sin. Added to CONSIDERATIONS.
 
+		+ When a key is collected, it opens a lock.
 
-		!! Hierachy needs to be changed.
-			! WorldMap needs to be forwarded upon init
-			! Player should be forwarded upon init 
-
-
-
-		! each key has it's own lock
-		! on collection, the key opens the lock
-
-
-	! check CONSIDERATIONS.
-	Build a new hierachy for the entities.
-
-	! entity.react checks every single entity
-
-	! level_editor tools are generated for entities opted in
-
-	! level editor - camera locks are properly rendered on-screen
 
 	! pretty effects
 		! tile_key
@@ -192,6 +182,12 @@ x Add a SLIDE KICK.
 		! tile_lock
 			! passive: shines a bit
 			! unlocked: drops lock, bounces
+
+
+	! level_editor tools are generated for entities opted in
+
+	! level editor - camera locks are properly rendered on-screen
+
 
 
 =====

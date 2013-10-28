@@ -18,7 +18,7 @@ Camera.x, Camera.y = 0, 0
 ###
 x,y = 3,3
 worldmap = WorldMap(x,y)
-entities = entities(worldmap)
+entities = entities(None, worldmap)
 ###
 
 mouse = MyMouse()
@@ -31,12 +31,7 @@ while running:
 	#Logic
 	if quit(): running = False
 	if key.RETURN.pressed():
-		
-		###WIP
-		es = entities.rooms[0][0].entities
-		for e in es:
-			print e.name, e.id
-		####
+		pass
 
 	toolbox.controls\
 	(entities, worldmap, Camera, mouse, key)

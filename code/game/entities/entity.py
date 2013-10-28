@@ -15,13 +15,23 @@ class entity(GameRectangle): #template
 	# * It contains important init values.
 	# * It contains and handles sub-class IDs.
 
-	def __init__(self, name, tile_x, tile_y):
+	def __init__(self, args):
+		name, tile_x, tile_y, Player, WorldMap = args
+
 		self.name = name
 		self.tile_x = tile_x
 		self.tile_y = tile_y
 
 		self.w, self.h = 25, 25
 		self.sprite = None
+
+		#####
+
+		self.Player = Player
+		self.WorldMap = WorldMap
+
+		#####
+
 
 		self._init_subclass_ids()
 
@@ -41,7 +51,7 @@ class entity(GameRectangle): #template
 
 	###
 
-	def react(self, Player):
+	def react(self):
 		pass
 
 

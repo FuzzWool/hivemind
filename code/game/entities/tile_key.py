@@ -11,9 +11,11 @@ class tile_key(entity):
 # * 'Collected' on contact with Nut.
 # WIP - Opens up an assigned tile_lock.
 
-	def __init__(self, name, tile_x, tile_y):
-		entity.__init__(self, name, tile_x, tile_y)
+	def __init__(self, args):
+		entity.__init__(self, args)
+		#
 		self._init_cbox()
+		self.collected = False
 
 	##
 
@@ -64,8 +66,9 @@ class tile_key(entity):
 		# window.draw(rect)
 		# #
 
-	def react(self, Player): #entity_room
+	def react(self): #entity_room
 	#Collected on collision with the player.
+		Player = self.Player
 
 		if Player.cbox.in_points(self.cbox):
 			self.collected = True
