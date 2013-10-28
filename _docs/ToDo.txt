@@ -137,16 +137,35 @@ x Add a SLIDE KICK.
 		+ removes the tile it is on top of.
 	===
 
+
+	+ Test (_.py) - ID each Entity class by name.
+	May:
+		* Contains __all__, which has every single
+		sub-class contained keyed by their name.
+		* Makes an incremental ID for each sub-class.
+
+
+
+
 	! tile_key > tile_lock
 		each key has it's own lock
 		on collection, the key opens the lock
 
+
+		IDs
 		! identify each other by their IDs
-			! ID is int, incremented for each new class
+			+ ID is int, incremented for each new class
+
+		! graphic
+			easy identification for the level editor
 
 
 	! entity.react checks every single entity
 	Limit the Player scope to nearby rooms
+
+	! level_editor tools are generated for entities opted in
+
+	! level editor - camera locks are properly rendered on-screen
 
 	! pretty effects
 		! tile_key
