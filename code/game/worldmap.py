@@ -75,7 +75,7 @@ class WorldMap(GameRectangle):
 		for column in self.rooms:
 			for room in column:
 				room.save()
-		print "%s Room(s) saved." \
+		print "WorldMap saved: %s Room(s)" \
 		% (self.room_w*self.room_h)
 
 

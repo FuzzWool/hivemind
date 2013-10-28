@@ -52,8 +52,6 @@ class entities(GameRectangle):
 		for column in self.rooms:
 			for room in column:
 				room.react(Player)
-				room.worldmap_react(self.WorldMap)
-
 	#
 
 	def _init(self, room_w, room_h): #init
@@ -106,16 +104,6 @@ class entities(GameRectangle):
 		room_x = int(x/ROOM_WIDTH)
 		room_y = int(y/ROOM_HEIGHT)
 
-		# tile_x = x
-		# while tile_x >= ROOM_WIDTH:
-			# tile_x -= ROOM_WIDTH
-		# tile_x = int(tile_x/GRID)
-
-		# tile_y = y
-		# while tile_y >= ROOM_HEIGHT:
-			# tile_y -= ROOM_HEIGHT
-		# tile_y = int(tile_y/GRID)
-
 		#bound
 		rx, ry, tx, ty = room_x, room_y, tile_x, tile_y
 		rx, ry = self.keep_in_room_points((rx, ry))
@@ -132,12 +120,22 @@ class entities(GameRectangle):
 
 
 	def save(self): #level_editor general controls
+
+		# Is saving allowed?
+		for column in self.rooms:
+			for room in column:
+				if room.can_save() == False:
+
+					print "! ERROR: Entities NOT saved."
+					return
+
+		# Save everything.
 		i = 0
 		for column in self.rooms:
 			for room in column:
 				room.save()
 				i += 1
-		msg = "%s Rooms(s) saved. (Entities)" % i
+		msg = "Entities saved: %s Room(s)" % i
 		print msg
 
 
@@ -249,17 +247,38 @@ class entity_room(GameRectangle):
 		self._create(name,x,y)
 
 	def remove(self, x, y): #entities w/ editor
+		to_delete = None
 
+		#find the value to delete
 		for e, entity in enumerate(self.entities):
 			if entity.tile_x == x\
 			and entity.tile_y == y:
 				
-				del self.entities[e]
+				to_delete = self.entities[e]
+
+		if to_delete == None: return
+
+		#delete from both lists
+		# room
+		self.entities \
+		= [i for i in self.entities if i != to_delete]
+
+		# total entities
+		from code.game.entities.entity import entity
+		name = to_delete.name
+		entities = entity.__all__[name]
+		entities \
+		= [i for i in entities if i != to_delete]
+		entity.__all__[name] = entities
+
+		# give total entities new ids
+		for i, entity in enumerate(entity.__all__[name]):
+			entity.id = i
 
 
 	def save(self): #entities w/ editor
 	# Save all of the entities back back to room .TXT.
-		
+
 		global key
 
 		#Grab
@@ -287,5 +306,18 @@ class entity_room(GameRectangle):
 		f = open(directory,"w+")
 		f.write(data)
 		f.close()
+
+	def can_save(self): #entities.save
+		for entity in self.entities:
+			if entity.can_save() == False:
+
+				msg = "! %s at %s has STOPPED saving."\
+				% (entity.name, entity.tile_position)
+
+				print msg
+
+				return False
+
+		return True
 
 	#

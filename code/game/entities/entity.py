@@ -44,8 +44,15 @@ class entity(GameRectangle): #template
 	def react(self, Player):
 		pass
 
-	def worldmap_react(self, WorldMap):
-		pass
+
+	###
+	# LEVEL EDITOR
+
+	def can_save(self): #level editor
+	#Prevent saving if inappropriately placed.
+		return True
+
+
 
 
 
@@ -69,4 +76,4 @@ class entity(GameRectangle): #template
 
 	def _get_id(self): #init_subclass_ids
 		name = self.__class__.__name__
-		self.id = len(entity.__all__[name])
+		self.id = len(entity.__all__[name])-1

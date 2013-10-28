@@ -20,11 +20,9 @@ Drawn only when on-screen
 
 
 
-
-
-
+====
 ENTITY
-=======
+
 For each new entity...
 * It has to inherit from ENTITY.
 * It has to have a "sheet" image. It is assumed 25x25.
@@ -40,3 +38,32 @@ tool
 ! Explicitly made their own classes.
 Requires their own changes.
 Make it read from a list of Entities.
+
+
+
+=====
+
+
+BAD
+
+
+Entities
+======
+
+ENTITY(NUT)
+=======
+! Outside of ENTITIES. Not treated like one.
+
+
+ENTITIES
+=======
+
+! too much faffing in processing
+EVERYTHING top-level goes from entities > entity_room > entity
+
+! create and remove are clunky
+	! especially remove
+
+! remove has to alter the room's entities
+  AND all of the entities behind held
+  AND give them new IDs

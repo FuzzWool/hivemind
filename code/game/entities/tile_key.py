@@ -66,7 +66,25 @@ class tile_key(entity):
 
 	def react(self, Player): #entity_room
 	#Collected on collision with the player.
-		
+
 		if Player.cbox.in_points(self.cbox):
 			self.collected = True
 			self.sprite = None
+
+
+	##########
+
+	def can_save(self):
+	#Has to have a matching LOCK.
+
+		keys = entity.__all__["tile_key"]
+		locks = entity.__all__["tile_lock"]
+		try: locks[self.id]
+		except:
+			print "! Key has no Lock with the same ID."
+			print "Keys: ",[k.id for k in keys]
+			print "Locks: ",[l.id for l in locks]
+
+			return False
+
+		return True

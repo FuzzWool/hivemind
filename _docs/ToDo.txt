@@ -107,7 +107,7 @@ x Add a SLIDE KICK.
 		+ unrendered otherwise
 
 
-	! editor - entity place/remove glitches
+	~ editor - entity place/remove glitches
 		! entities may logically be in other rooms,
 		but are rendered in the same room
 			~ entities have abs values, but save/load pro
@@ -135,19 +135,13 @@ x Add a SLIDE KICK.
 	+ tile_lock
 		+ graphic
 		+ removes the tile it is on top of.
-	===
-
-
-
 
 
 
 	! tile_key > tile_lock
-		each key has it's own lock
-		on collection, the key opens the lock
 
 
-		! IDs
+		+ IDs
 		------
 		+ Test (_.py) - ID each Entity class by name.
 		May:
@@ -159,14 +153,32 @@ x Add a SLIDE KICK.
 			+ identify each other by their IDs
 				+ ID is int, incremented for each new class
 
-			! graphic
-				easy identification for the level editor
+		=======
 
-				! create highlight with id number
+		wip (!! about to change hierachy)
+		+ Entities do not save if any entities complain.
 
+		+ key save prevention
+			+ throw error if keys and locks are't equal
+		! lock save prevention
+			+ throw error if keys and locks aren't equal
+			!! throw error if not covering a filled tile
+
+
+		!! Hierachy needs to be changed.
+			! WorldMap needs to be forwarded upon init
+			! Player should be forwarded upon init 
+
+
+
+		! each key has it's own lock
+		! on collection, the key opens the lock
+
+
+	! check CONSIDERATIONS.
+	Build a new hierachy for the entities.
 
 	! entity.react checks every single entity
-	Limit the Player scope to nearby rooms
 
 	! level_editor tools are generated for entities opted in
 

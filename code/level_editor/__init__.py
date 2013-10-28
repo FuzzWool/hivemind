@@ -67,8 +67,10 @@ class toolbox:
 		#Save
 		if key.L_CTRL.held():
 			if key.S.pressed():
+				print "====SAVING==="
 				worldmap.save()
 				entities.save()
+				print "============="
 
 		#Move the camera
 		else:
