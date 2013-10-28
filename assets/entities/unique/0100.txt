@@ -1,4 +1,0 @@
-tile_lock,0309
-tile_lock,1409
-tile_key,0308
-tile_key,1408

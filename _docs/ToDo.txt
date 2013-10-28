@@ -157,7 +157,6 @@ DEMO RELEASE
 			+ identify each other by their IDs
 				+ ID is int, incremented for each new class
 
-		=======
 
 		+ Entities do not save if any entities complain.
 			+ key save prevention
@@ -173,15 +172,20 @@ DEMO RELEASE
 
 		+ When a key is collected, it opens a lock.
 
+	=======
+
+	~~ unrender the lock sprite when it's off-screen
+		~ hacky fix: when the default animation is set
+		to end, it forces a stop the loop after
 
 	! pretty effects
 		! tile_key
 			! passive: shines nicely
-			! collected: explodes in shines
+			! collected: disappears quickly
 
 		! tile_lock
-			! passive: shines a bit
-			! unlocked: drops lock, bounces
+			+~~ unlocked: hops and falls
+			! tile explodes in a puff of smoke
 
 
 	! level_editor tools are generated for entities opted in

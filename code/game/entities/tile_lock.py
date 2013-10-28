@@ -3,8 +3,8 @@ from code.game.entities.entity import entity
 from code.pysfml_game import MyTexture, MySprite
 
 class tile_lock(entity):
-# * WIP - Waits for a tile_key to unlock it.
-# * WIP - Once so, it removes the tile it is occupying.
+# * Waits for a tile_key to unlock it.
+# * Once so, it removes the tile it is occupying.
 
 
 	def __init__(self, args):
@@ -18,6 +18,11 @@ class tile_lock(entity):
 		if self.locked:
 			entity.render(self)
 
+	def draw(self):
+		if self.sprite:
+			entity.draw(self)
+			self._animate()
+
 	def react(self):
 		WorldMap = self.WorldMap
 
@@ -28,6 +33,24 @@ class tile_lock(entity):
 				WorldMap.tiles[x][y].change("____")
 				#
 				self.locked = False
+
+				#optional
+				if self.sprite:
+					self._init_animation()
+
+
+	#
+
+	def _init_animation(self): #react
+		self.sprite.animation.y.end = self.y1+1000
+		self.sprite.animation.y.speed = -4
+		self.sprite.animation.y.vel = +0.3
+
+	def _animate(self):
+		self.sprite.animation.play()
+		if self.locked == False:
+			if self.sprite.animation.y.stopped:
+				self.sprite = None
 
 
 	####

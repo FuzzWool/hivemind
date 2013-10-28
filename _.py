@@ -1,25 +1,43 @@
+import code.pysfml_game.key as key
+from code.pysfml_game import quit, window, sf
+from code.pysfml_game import MySprite, MyTexture
+from code.pysfml_game import MyCamera
 
-# Two lists contain instances.
-# Choose the instance to be deleted.
-# Delete that reference from both lists.
+Camera = MyCamera()
+Camera.zoom = 1
+Camera.x, Camera.y = 0, 0
 
-class foo: pass
+texture = MyTexture("assets/levels/shared/level1.png")
+sprite = MySprite(texture)
+sprite.clip.set(25, 25)
+sprite.clip.use(0, 0)
+sprite.position = 300,300
 
-list1 = []
-list2 = []
 
-for i in range(2):
-	f = foo()
-	list1.append(f)
-	list2.append(f); list2.append(f)
+sprite.animation.y.end = sprite.y+0.1
+sprite.animation.y.speed = -8
+sprite.animation.y.vel = 1
 
-print list1
-print list2
 
-to_delete = list1[0]
-list1 = [item for item in list1 if item != to_delete]
-list2 = [item for item in list2 if item != to_delete]
+#########################################################
 
-print
-print list1
-print list2
+running = True
+while running:
+	#Logic
+	if quit(): running = False
+	if key.RETURN.pressed():
+		pass
+
+	#Animation
+	#
+
+	#Video
+	window.clear(sf.Color.WHITE)
+	#
+
+	sprite.animation.play()
+	sprite.draw()
+
+	#
+	window.view = Camera
+	window.display()

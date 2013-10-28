@@ -9,7 +9,7 @@ from code.pysfml_game.animation import oscillate
 class tile_key(entity):
 # * Bobs up and down.
 # * 'Collected' on contact with Nut.
-# WIP - Opens up an assigned tile_lock.
+# * Opens up a tile_lock of the same ID position.
 
 	def __init__(self, args):
 		entity.__init__(self, args)

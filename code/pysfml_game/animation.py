@@ -27,6 +27,8 @@ class physics_animation(object):
 		move = self.speed
 		self.speed += self.vel
 
+		#
+		self._to_stop() #(b/c of cut_off ignore)
 
 		#Paranoia
 		if abs(self.speed) < 0.001: self.speed = 0
@@ -55,6 +57,14 @@ class physics_animation(object):
 	def cut_off(self, point): #void
 		self.speed = self.end - point
 		self.vel = 0
+		self.to_stop = True
+
+	to_stop = False
+	def _to_stop(self): #play (used by cut_off)
+		if self.to_stop:
+			self.speed, self.vel = 0,0
+			self.to_stop = False
+
 
 
 	# Private
