@@ -10,6 +10,17 @@ from code.pysfml_game import GRID
 from code.pysfml_game import sf
 from code.pysfml_game import window
 
+
+# ####
+# #ENTITY TOOLS
+# entities = []
+# def e(append): entities.append(append)
+# #
+# e("tile_key")
+# e("tile_lock")
+
+# ####
+
 class toolbox:
 	
 	def __init__(self, worldmap, entities):

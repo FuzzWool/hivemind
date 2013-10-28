@@ -27,11 +27,13 @@ from code.pysfml_game import ROOM_HEIGHT
 class entities(GameRectangle):
 # * Holds all of the GAME'S entities in ROOMS.
 	
-	def __init__(self, room_w, room_h):
-		self.room_w, self.room_h = room_w, room_h
+	def __init__(self, WorldMap):
+
+		self.WorldMap = WorldMap #worldmap reactions
+		self.room_size = WorldMap.room_w, WorldMap.room_h
 
 		self.rooms = []
-		self._init(room_w, room_h)
+		self._init(*self.room_size)
 		self._load()
 
 
@@ -45,9 +47,12 @@ class entities(GameRectangle):
 
 
 	def react(self, Player):
+	#reacts with PLAYER and WORLDMAP.
+	#! checks ALL of the rooms in existence.
 		for column in self.rooms:
 			for room in column:
 				room.react(Player)
+				room.worldmap_react(self.WorldMap)
 
 	#
 
@@ -64,6 +69,7 @@ class entities(GameRectangle):
 			for y, room in enumerate(column):
 				room = entity_room(x,y)
 				self.rooms[x][y] = room
+
 
 	####
 
@@ -82,7 +88,6 @@ class entities(GameRectangle):
 		for column in self.rooms[x1:x2]:
 			for room in column[y1:y2]:
 				room.render(camera)
-
 
 	####
 
@@ -168,6 +173,10 @@ class entity_room(GameRectangle):
 	def react(self, Player): #entities
 		for entity in self.entities:
 			entity.react(Player)
+
+	def worldmap_react(self, WorldMap): #entities
+		for entity in self.entities:
+			entity.worldmap_react(WorldMap)
 
 	#
 

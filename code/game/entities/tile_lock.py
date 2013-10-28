@@ -1,32 +1,17 @@
-from code.pysfml_game import GameRectangle
+from code.game.entities.entity import entity
+
 from code.pysfml_game import MyTexture, MySprite
 
-class tile_lock(GameRectangle):
-# * Just grabs the name and position.
-	
-	def __init__(self, name, tile_x, tile_y):
-		self.name = name
-		self.tile_x = tile_x
-		self.tile_y = tile_y
+class tile_lock(entity):
+# * WIP - Waits for a tile_key to unlock it.
+# * WIP - Once so, it removes the tile it is occupying.
 
-		self.w, self.h = 25, 25
-		self.sprite = None
+	locked = True
 
-	###
-
-	def render(self):
-		d = "assets/entities/shared/tile_lock/sheet.png"
-		t = MyTexture(d)
-		sprite = MySprite(t)
-		sprite.position = self.position
-		#
-		self.sprite = sprite
-
-	def draw(self):
-		if self.sprite != None:
-			self.sprite.draw()
-
-	###
-
-	def react(self, Player):
-		pass
+	def worldmap_react(self, worldmap):
+		
+		if self.locked:
+			x,y = self.tile_x, self.tile_y
+			worldmap.tiles[x][y].change("____")
+			#
+			self.locked = False

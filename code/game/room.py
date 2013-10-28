@@ -478,7 +478,11 @@ class Room(GameRectangle):
 		#data, collision, graphics
 
 			self.data = new_data
-			#
+			self._update_collision()
+			self._.graphics.render()
+
+
+		def _update_collision(self): #change
 			key = self.data
 			if key != "____":
 				kx, ky = int(key[0:2]), int(key[2:4])
@@ -488,9 +492,6 @@ class Room(GameRectangle):
 			else:
 				collision = "____"
 			self.apply_collision(collision)
-			#
-			self._.graphics.render()
-
 
 
 		# COLLISION

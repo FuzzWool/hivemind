@@ -18,7 +18,7 @@ Camera.x, Camera.y = 0, 0
 ###
 x,y = 3,3
 worldmap = WorldMap(x,y)
-entities = entities(x,y)
+entities = entities(worldmap)
 ###
 
 mouse = MyMouse()
@@ -34,7 +34,7 @@ while running:
 		pass
 
 	toolbox.controls\
-	(entities, worldmap, Camera, mouse, key) ###
+	(entities, worldmap, Camera, mouse, key)
 	key.reset_all()
 
 	#Video
@@ -42,9 +42,9 @@ while running:
 	window.clear(sf.Color(255, 200, 200))
 	#
 	worldmap.draw()
-	entities.draw(Camera)
-	toolbox.draw(Camera, mouse) ###
+	entities.draw(Camera) ###
+	toolbox.draw(Camera, mouse)
 	window.view = window.default_view
-	toolbox.static_draw() ###
+	toolbox.static_draw()
 	#
 	window.display()

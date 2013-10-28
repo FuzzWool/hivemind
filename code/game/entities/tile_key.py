@@ -1,45 +1,33 @@
-from code.pysfml_game import GameRectangle
+from code.game.entities.entity import entity
+
 from code.pysfml_game import MyTexture, MySprite
+from code.pysfml_game import GameRectangle
 from code.pysfml_game.animation import oscillate
 
-class tile_key(GameRectangle):
+
+
+class tile_key(entity):
 # * Bobs up and down.
 # * 'Collected' on contact with Nut.
 # WIP - Opens up an assigned tile_lock.
 
 	def __init__(self, name, tile_x, tile_y):
-		self.name = name
-		self.tile_x = tile_x
-		self.tile_y = tile_y
-		self.w, self.h = 25,25
-		self.sprite = None
-
+		entity.__init__(self, name, tile_x, tile_y)
 		self._init_cbox()
 
 	##
 
 	def render(self): #entity_room
-		if self.collected: return
-
-		#Create a MySprite for drawing.
-		t = MyTexture\
-		("assets/entities/shared/tile_key/sheet.png")
-
-		sprite = MySprite(t)
-		sprite.position = self.x, self.y
-		sprite.clip.set(self.w, self.h)
-		self.sprite = sprite
-
-		self._init_animation()
+		if not self.collected:
+			entity.render(self)
+			self._init_animation()
 
 
 	def draw(self): #entity_room
-
 		if self.sprite != None:
 			self._animate()
 			self._update_cbox()
 			self.sprite.draw()
-
 
 
 	# ANIMATION
@@ -54,7 +42,6 @@ class tile_key(GameRectangle):
 
 		sprite, animation_y = self.sprite, self.animation_y
 		sprite.y += animation_y.play(sprite.y)
-
 
 
 	# EVENTS

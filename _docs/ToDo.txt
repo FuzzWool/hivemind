@@ -126,47 +126,21 @@ x Add a SLIDE KICK.
 	
 	===
 
-	! entity tool generator
+	~ cleaning
+		~ Entity is clearer about it's standard
+		~ All entities inherit from Entity
 
-		PROBLEM:
-		For every new entity, it needs a new tool.
-		Making a new tool requires a lot of small core code changes peppered around the toolbox.
-
-		Additionally, every new tool for each entity,
-		unnecessarily creates a new entity tool for
-		a new name.
-
-
-		SOLUTION:
-		x when new entities are added,
-		they're automatically given a tool
-
-			x Too difficult and implict
-			x read from the entities module,
-			take class names
-				! ignore "entity", "entities" and "entity_room"
-
-
-		! provide a list of entities in the __init__
-
-			! modules are loaded from it: __init__ use
-			! level_editor automatically grabs names
-
-
-
-
-
-	! entity.react checks every single entity
-	Limit the Player scope to nearby rooms
-
-
-	! tile_lock
+	+ tile_lock
 		+ graphic
-		! removes the tile it is on top of.
+		+ removes the tile it is on top of.
 
 	! tile_key > tile_lock
 		each key has it's own lock
 		on collection, the key opens the lock
+
+
+	! entity.react checks every single entity
+	Limit the Player scope to nearby rooms
 
 	! pretty effects
 		! tile_key

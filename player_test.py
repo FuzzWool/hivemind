@@ -23,7 +23,7 @@ Camera.focus = Nut.cbox
 #
 x,y = 3,3
 worldmap = WorldMap(x,y)
-entities = entities(x,y) ####
+entities = entities(worldmap) ####
 
 ############
 
@@ -43,7 +43,7 @@ while running:
 	Nut.physics()
 	Nut.collision(worldmap)
 
-	entities.react(Nut)
+	entities.react(Nut) ####
 
 
 	#key
