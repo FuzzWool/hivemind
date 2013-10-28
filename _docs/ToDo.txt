@@ -80,6 +80,9 @@ x Add a SLIDE KICK.
 ! Use less MAGIC NUMBERS in state handling.
 ! Add PUNCHING.
 
+! check CONSIDERATIONS.
+! update DESIGN GOALS.
+
 
 =====
 
@@ -124,7 +127,6 @@ x Add a SLIDE KICK.
 		+ use their own portrait
 		+ individual tools
 	
-	===
 
 	~ cleaning
 		~ Entity is clearer about it's standard
@@ -133,10 +135,14 @@ x Add a SLIDE KICK.
 	+ tile_lock
 		+ graphic
 		+ removes the tile it is on top of.
+	===
 
 	! tile_key > tile_lock
 		each key has it's own lock
 		on collection, the key opens the lock
+
+		! identify each other by their IDs
+			! ID is int, incremented for each new class
 
 
 	! entity.react checks every single entity

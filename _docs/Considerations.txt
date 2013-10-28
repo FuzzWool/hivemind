@@ -17,3 +17,26 @@ Camera locks
 =
 Every room's sprites are loaded on init
 Drawn only when on-screen
+
+
+
+
+
+
+ENTITY
+=======
+For each new entity...
+* It has to inherit from ENTITY.
+* It has to have a "sheet" image. It is assumed 25x25.
+* import it to the __init__ of entities.
+
+tool
+!! add it to the level_editor list of tools
+
+
+!! level_editor entity tools
+=========================
+
+! Explicitly made their own classes.
+Requires their own changes.
+Make it read from a list of Entities.
