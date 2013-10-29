@@ -179,23 +179,14 @@ DEMO RELEASE
 
 	=======
 
-	! pretty effects
+	+ pretty effects
 
-		! tile_lock
-			+ unlocked: hops and falls
-			+ locked: bumps around
-
-			!* tile explodes in a puff of smoke
-
-	!* changes to particle system
-		! move to Game
-
-		! "cover" function
-			entirely covers all the points of a sprite.
-
-
-
-
+		+ tile_lock
+			+ unlocked:
+				+ hops and falls
+				+ tile explodes in a puff of smoke
+			+ locked:
+				+ bumps around
 
 	! level_editor tools are generated for entities opted in
 

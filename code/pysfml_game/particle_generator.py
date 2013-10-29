@@ -65,7 +65,7 @@ class particle_generator:
 				del self.particles[i]
 
 
-	# ANIMATE (private)
+	# ANIMATE
 
 	def _play(self): #draw
 		for particle in self.particles:

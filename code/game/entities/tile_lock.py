@@ -1,6 +1,8 @@
 from code.game.entities.entity import entity
 from code.pysfml_game import MyTexture, MySprite
+
 from random import randint as random_int
+from code.pysfml_game import particle_generator
 
 class tile_lock(entity):
 # * Waits for a tile_key to unlock it.
@@ -11,7 +13,7 @@ class tile_lock(entity):
 		entity.__init__(self, args)
 		#
 		self.locked = True
-		self._init_rocking_animation()
+		self._init_animation()
 
 	####
 
@@ -25,7 +27,9 @@ class tile_lock(entity):
 			self._animate()
 
 			if self.locked:
-				self._init_rocking_animation()
+				self._rocking_animation()
+
+		self.pg.draw()
 
 	def react(self):
 		WorldMap = self.WorldMap
@@ -40,12 +44,15 @@ class tile_lock(entity):
 
 				#optional
 				if self.sprite:
-					self._init_fall_animation()
+					self._fall_animation()
 
 
 	#
 
-	def _init_rocking_animation(self): #init
+	def _init_animation(self): #init
+		self.pg = particle_generator()
+
+	def _rocking_animation(self): #init
 		if self.sprite == None: return
 
 		#randomize axis
@@ -70,10 +77,12 @@ class tile_lock(entity):
 			animation.vel = vel
 
 
-	def _init_fall_animation(self): #react
+	def _fall_animation(self): #react
 		self.sprite.animation.y.end = self.y1+1000
 		self.sprite.animation.y.speed = -4
 		self.sprite.animation.y.vel = +0.3
+
+		self.pg.create(10, self.points)
 
 	def _animate(self):
 		self.sprite.animation.play()
