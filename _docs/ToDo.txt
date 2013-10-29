@@ -66,14 +66,10 @@ x Add a SLIDE KICK.
 + Added COLLECTIBLES which OPEN ROOMS.
 
 ! Add TIMER.
+	! level_editor tools are generated for entities opted in
 
 
 ! Add RUNNING animation.
-! running glitch (over the end of a tile)
-! slide > wall hang glitch (press l/r right before d)
-! Holding both directional keys causes weird Nut walking.
-
-! level_editor tools are generated for entities opted in
 
 
 ! check CONSIDERATIONS.

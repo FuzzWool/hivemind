@@ -658,7 +658,7 @@ class controls(object):
 	# ACTIONS
 	
 	def move(self, left, right):
-		
+
 		#Stop
 		self.moving(False)
 
@@ -667,17 +667,18 @@ class controls(object):
 			self.moving(True)
 
 		#Effect
+		#speed-up
 		amt = 0.15
 		walkLim = 3
 
-		if self.moving():
+		if self.moving()\
+		and not (left.held() and right.held()):
 
 			if left.held():
 
 				self.facing_left = True
 				if -walkLim <= self.physics.xVel - amt:
 					self.physics.move(-amt, 0)
-				self.physics.right_slowdown(amt)
 
 
 			if right.held():
@@ -685,10 +686,20 @@ class controls(object):
 				self.facing_right = True
 				if self.physics.xVel + amt <= walkLim:
 					self.physics.move(+amt, 0)
-				self.physics.left_slowdown(amt)
 
+		#slowdown
+		if self.moving():
+			if left.held():
+				self.physics.right_slowdown(amt)
+			if right.held():
+				self.physics.left_slowdown(amt)
+		#
 		elif not self.collision.in_air:
 			self.physics.x_slowdown()
+
+		if not self.physics.moving:
+			self.moving(False)
+			self.idle(True)
 
 
 	def jump(self, jump):
