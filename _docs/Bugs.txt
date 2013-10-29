@@ -1,7 +1,0 @@
-! Collision:
-	* On-top of a slope collision
-		Nut is in a falling pose,
-		Upon moving off, she has built up yVel speed.
-
-	* Hugging a wall while jumping
-		Causes Nut to fall pre-maturely.

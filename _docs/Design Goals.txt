@@ -1,62 +1,12 @@
 ======
 TO MAKE
 
-Player Controls
-===========
-Nut is born, and she has basic controls.
-She can walk across slopes.
-
-Goals:
-x Make Nut with basic left and right controls.
-x Allow Nut to run across 1/2-block slopes.
-
-
-Game Camera
-============
-A dynamic, zooming camera for focusing on special events.
-*Relies on the game's 2x ratio for zooming out.
-
-Goals:
-TU-styled camera positioning for level sections.
-Camera may zoom in and out within certain boundaries.
-
-! Special 'smoothing' mode for popping back and forth objects.
-(eg, wall hanging)
-
-
-
-Collectables
-============
-Nut may collect Puppies splewn across the map.
-Collect the puppies in every room!
-
-
++ WorldMap loading
+~ Slope Collisions (since removed)
+! Cool Controls
 
 *****
 DEMO #1 (CONTROLS) RELEASE
 ******
 
-
-
-Let there be Pain and Death
-=============
-Entities will now have health and can die.
-
-Add (100) health to each Entity by default.
-Add an attack for Nut (a slap) and the enemy (running in to her).
-When Nut dies (0), add a death transition which resets the level.
-When the enemy dies, make it disappear.
-
-
-====
-COMPLETED
-
-X Let there be Levels
-===========
-Seamless loading from level to level. No transitions.
-
-Goals:
-x Load levels from a file.
-x Append a level to another level from two level files.
-x Gradually load and de-load levels during exploration.
-x Append levels based on a world file's data.
+! Enemies and Damage

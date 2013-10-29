@@ -1,4 +1,4 @@
-Let there be Cool Moves
+Cool Controls
 ===========
 Nut is born, and she has basic controls.
 She can walk across slopes.
@@ -63,22 +63,20 @@ x Add a SLIDE KICK.
 			+ Good glitch
 			Smooths the camera by repeatedly lowering the speed.
 
++ Added COLLECTIBLES which OPEN ROOMS.
 
-! Add COLLECTIBLES which OPEN ROOMS.
-! Add RUNNING animation.
 ! Add TIMER.
-! Add REPLAYS.
 
 
+! Conserve RAM, speed up loading.
+! Add RUNNING animation.
 ! running glitch (over the end of a tile)
 ! crawling > ducking animation stuttering
 ! slide > wall hang glitch (press l/r right before d)
 ! Holding both directional keys causes weird Nut walking.
 
-! Add SLOPES. (They're broken!)
-! clean overall state handling
-! Use less MAGIC NUMBERS in state handling.
-! Add PUNCHING.
+! level_editor tools are generated for entities opted in
+
 
 ! check CONSIDERATIONS.
 ! update DESIGN GOALS.
@@ -87,110 +85,8 @@ x Add a SLIDE KICK.
 DEMO RELEASE
 ========
 
-
-=====
-
-! Add COLLECTIBLES which OPEN ROOMS.
-
-	~ level_editor tools split into tools directory
-
-	+ load entities
-		* entities > entity_room > entity hierachy
-		+ for each room there is a list of entities to load
-		+ entities are loaded by name and position
-
-	+ created an Entity TOOL.
-		+ orb graphic follows cursor
-
-		+ places down entities
-		+ saves entities
-		! remove entities
-
-	+ render entities
-		+ entities render when focused by the camera
-		+ unrendered otherwise
-
-
-	~ editor - entity place/remove glitches
-		! entities may logically be in other rooms,
-		but are rendered in the same room
-			~ entities have abs values, but save/load pro
-
-			~ level editor fixed
-			~ player test camera fixed
-
-
-	+ tile_key
-		+ graphic
-		+ keys bop up and down
-			~ fixed bounce and oscillate
-		+ keys are "collected" on impact with Nut
-	
-	
-	+ tile_lock and tile_key tools		
-		+ use their own portrait
-		+ individual tools
-	
-
-	~ cleaning
-		~ Entity is clearer about it's standard
-		~ All entities inherit from Entity
-
-	+ tile_lock
-		+ graphic
-		+ removes the tile it is on top of.
-
-
-
-	+ tile_key > tile_lock
-
-
-		+ IDs
-		------
-		+ Test (_.py) - ID each Entity class by name.
-		May:
-			* Contains __all__, which has every single
-			sub-class contained keyed by their name.
-			* Makes an incremental ID for each sub-class.
-		------
-
-			+ identify each other by their IDs
-				+ ID is int, incremented for each new class
-
-
-		+ Entities do not save if any entities complain.
-			+ key save prevention
-				+ throw error if keys and locks are't equal
-			+ lock save prevention
-				+ throw error if keys and locks aren't equal
-				+ throw error if not covering a filled tile
-
-		~ Hierachy needs to be changed.
-			~ WorldMap needs to be forwarded upon init
-			~ Player should be forwarded upon init 
-			* Ugly as sin. Added to CONSIDERATIONS.
-
-		+ When a key is collected, it opens a lock.
-
-
-	~~ unrender the lock sprite when it's off-screen
-		~ hacky fix: when the default animation is set
-		to end, it forces a stop the loop after
-
-
-	+ pretty effects
-
-		+ tile_lock
-			+ unlocked:
-				+ hops and falls
-				+ tile explodes in a puff of smoke
-			+ locked:
-				+ bumps around
-	=======
-
-	! level_editor tools are generated for entities opted in
-
-
+! Add REPLAYS.
+! Remake entity hierachy.
 
 =====
 
@@ -200,8 +96,5 @@ GOAL: Conserve RAM, speed up loading.
 ! Render Rooms only on-screen
 	! Test to see if this stresses out the CPU
 	! Test if this lags the game at all
-! Render Level Editor sprites only on-screen
-
-! fix Level Editor locks not appearing
 
 ====
