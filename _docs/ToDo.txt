@@ -177,7 +177,6 @@ DEMO RELEASE
 		~ hacky fix: when the default animation is set
 		to end, it forces a stop the loop after
 
-	=======
 
 	+ pretty effects
 
@@ -187,10 +186,9 @@ DEMO RELEASE
 				+ tile explodes in a puff of smoke
 			+ locked:
 				+ bumps around
+	=======
 
 	! level_editor tools are generated for entities opted in
-
-	! level editor - camera locks are properly rendered on-screen
 
 
 

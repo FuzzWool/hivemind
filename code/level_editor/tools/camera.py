@@ -32,6 +32,7 @@ class camera:
 
 		#Draw within camera range
 		x1, y1, x2, y2 = camera.room_points
+		x2 += 1; y2 += 1
 		x1, y1 = self.worldmap\
 		.keep_in_room_points((x1,y1))
 		x2, y2 = self.worldmap\
