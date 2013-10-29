@@ -631,6 +631,7 @@ class controls(object):
 				animation.loop = True
 			else:
 				clip.use(0,3)
+				animation.clips = ()
 
 
 		if self.wall_hanging():

@@ -68,10 +68,8 @@ x Add a SLIDE KICK.
 ! Add TIMER.
 
 
-! Conserve RAM, speed up loading.
 ! Add RUNNING animation.
 ! running glitch (over the end of a tile)
-! crawling > ducking animation stuttering
 ! slide > wall hang glitch (press l/r right before d)
 ! Holding both directional keys causes weird Nut walking.
 
@@ -88,13 +86,12 @@ DEMO RELEASE
 ! Add REPLAYS.
 ! Remake entity hierachy.
 
-=====
-
-GOAL: Conserve RAM, speed up loading.
 
 
-! Render Rooms only on-screen
-	! Test to see if this stresses out the CPU
-	! Test if this lags the game at all
 
-====
+
+==========================
+
+
+
+

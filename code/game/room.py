@@ -205,16 +205,14 @@ class Room(GameRectangle):
 		texture_name = None
 
 		def __init__(self, texture, key, tiles):
-			
-			self.key = key
 			self.tiles = tiles
 
+			self.key = key
 			self.texture_name = self._load_texture()
 			self.texture \
 			= load.textures[self.texture_name+".png"]
 
 			self.vertex_array =self._init_vertex_array()
-			# self.change_texture(self.texture, init=True)
 			self.render()
 
 
