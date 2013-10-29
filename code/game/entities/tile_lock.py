@@ -1,6 +1,6 @@
 from code.game.entities.entity import entity
-
 from code.pysfml_game import MyTexture, MySprite
+from random import randint as random_int
 
 class tile_lock(entity):
 # * Waits for a tile_key to unlock it.
@@ -11,6 +11,7 @@ class tile_lock(entity):
 		entity.__init__(self, args)
 		#
 		self.locked = True
+		self._init_rocking_animation()
 
 	####
 
@@ -22,6 +23,9 @@ class tile_lock(entity):
 		if self.sprite:
 			entity.draw(self)
 			self._animate()
+
+			if self.locked:
+				self._init_rocking_animation()
 
 	def react(self):
 		WorldMap = self.WorldMap
@@ -36,12 +40,37 @@ class tile_lock(entity):
 
 				#optional
 				if self.sprite:
-					self._init_animation()
+					self._init_fall_animation()
 
 
 	#
 
-	def _init_animation(self): #react
+	def _init_rocking_animation(self): #init
+		if self.sprite == None: return
+
+		#randomize axis
+		sprite = self.sprite
+		number = random_int(0,1)
+		choice = [sprite.animation.x, sprite.animation.y]
+		animation = choice[number]
+
+		if sprite != None \
+		and sprite.animation.x.stopped\
+		and sprite.animation.y.stopped:
+
+			#choose correct end point
+			end_choice = [self.x, self.y]
+			animation.end = end_choice[number]
+
+			#randomize direction
+			speed, vel = +0.5, -0.1
+			if random_int(0,1) == 1:
+				speed, vel = -speed, -vel
+			animation.speed = speed
+			animation.vel = vel
+
+
+	def _init_fall_animation(self): #react
 		self.sprite.animation.y.end = self.y1+1000
 		self.sprite.animation.y.speed = -4
 		self.sprite.animation.y.vel = +0.3
