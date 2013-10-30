@@ -79,11 +79,16 @@ x Add a SLIDE KICK.
 DEMO RELEASE
 ========
 
-! Add REPLAYS.
 ! Remake entity hierachy.
+! Add REPLAYS.
 
+! Text holding standard
+	! CSS box style
+	! Word positioning (left, middle, right) style
+	! Text size
 
-
+	! Dialogue
+	! Menus
 
 
 ==========================
@@ -100,8 +105,6 @@ GOAL: Add TIMER.
 		+ padding inside around the sprites
 		+ move the timer: move the box, move the sprites
 
-=====
-
 + updates states
 	+ stopped: grey, everything at zero
 	+ started:
@@ -113,10 +116,11 @@ GOAL: Add TIMER.
 	+ stop > start
 	+ start goes over 99:99
 
----
+=====
 
-! move
-	player_test has timer
++ move
+	+ player_test has timer
+
 
 ! listed level_editor tools are auto-generated
 	

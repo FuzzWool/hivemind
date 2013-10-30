@@ -9,7 +9,7 @@ from code.game import Entity
 from code.game import WorldMap
 from code.game import GameCamera
 from code.game import entities
-
+from code.game import Timer
 
 Camera = GameCamera()
 Camera.zoom = 2
@@ -25,6 +25,9 @@ x,y = 3,3
 worldmap = WorldMap(x,y)
 entities = entities(Nut, worldmap) ####
 
+timer = Timer()
+
+
 ############
 
 
@@ -36,7 +39,7 @@ while running:
 	#window
 	if quit(): running = False
 	if key.RETURN.held():
-		pass
+		timer.start()
 
 	#entity
 	Nut.controls(key)
@@ -61,4 +64,5 @@ while running:
 	worldmap.draw(Camera)
 	entities.draw(Camera) ####
 	Nut.draw()
+	timer.draw()
 	window.display()
