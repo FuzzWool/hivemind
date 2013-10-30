@@ -132,10 +132,13 @@ GOAL: Add TIMER.
 
 ! tools
 	+ graphics
+	+ timer_start added to toolbox, appears in world
+	+ timer_stop added to toolbox, appears in world
 
-	! start_timer entity (timer sprite)
+
+	! timer_start entity (timer sprite)
 		! disappears after being touched
-	! stop_timer entity (flag sprite)
+	! timer_stop entity (flag sprite)
 
 
 

@@ -235,6 +235,8 @@ class entity_room(GameRectangle):
 
 	from tile_key import tile_key
 	from tile_lock import tile_lock
+	from timer_start import timer_start
+	from timer_stop import timer_stop
 
 	def _create(self, args): #load
 		x, y = args[1], args[2]

@@ -18,6 +18,8 @@ def e(append): opted_entities.append(append)
 #
 e("tile_key")
 e("tile_lock")
+e("timer_start")
+e("timer_stop")
 # ####
 
 class toolbox:
@@ -185,6 +187,8 @@ class ui: #toolbox
 		#Entities
 		self.icons[0][4].tool = "tile_key"
 		self.icons[1][4].tool = "tile_lock"
+		self.icons[0][5].tool = "timer_start"
+		self.icons[0][6].tool = "timer_stop"
 
 
 		#default
@@ -228,6 +232,8 @@ class icon(object): #toolbox.ui
 		#Entities
 		if name == "tile_key": self.sprite.clip.use(5,0)
 		if name == "tile_lock": self.sprite.clip.use(6,0)
+		if name == "timer_start":self.sprite.clip.use(7,0)
+		if name == "timer_stop": self.sprite.clip.use(8,0)
 
 	#
 
