@@ -17,11 +17,12 @@ Camera.x, Camera.y = 0, 0
 Nut = Entity("nut")
 Camera.focus = Nut.cbox
 
+timer = Timer()
+
 x,y = 3,3
 worldmap = WorldMap(x,y)
-entities = entities(Nut, worldmap) ####
+entities = entities(Nut, worldmap, timer) ####
 
-timer = Timer()
 ############
 
 

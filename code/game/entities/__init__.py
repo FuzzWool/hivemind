@@ -27,7 +27,7 @@ from code.pysfml_game import ROOM_HEIGHT
 class entities(GameRectangle):
 # * Holds all of the GAME'S entities in ROOMS.
 	
-	def __init__(self, Player, WorldMap):
+	def __init__(self, Player, WorldMap, Timer):
 
 		self.WorldMap = WorldMap #worldmap reactions
 		self.room_size = WorldMap.room_w, WorldMap.room_h
@@ -36,13 +36,14 @@ class entities(GameRectangle):
 
 		self.Player = Player
 		self.WorldMap = WorldMap
+		self.Timer = Timer
 
 		#####
 
 		self.rooms = []
 		self._init(*self.room_size)
 
-		args = Player, WorldMap
+		args = Player, WorldMap, Timer
 		self._load(args)
 
 
@@ -122,7 +123,8 @@ class entities(GameRectangle):
 	def create(self, name, x, y): #editor
 		rx, ry, tx, ty = self._global_to_room_tile(x,y)
 
-		args = name, tx,ty, self.Player, self.WorldMap
+		args = name, tx,ty, \
+		self.Player,self.WorldMap,self.Timer
 		self.rooms[rx][ry].create(args)
 	#
 	def remove(self, x, y): #editor
@@ -156,7 +158,7 @@ class entity_room(GameRectangle):
 # * SAVES all of the entities in a room (editor).
 
 	def __init__(self, args):
-		room_x, room_y, Player, WorldMap = args
+		room_x, room_y, Player, WorldMap, Timer = args
 
 		self.room_x, self.room_y = room_x, room_y
 		self._init()

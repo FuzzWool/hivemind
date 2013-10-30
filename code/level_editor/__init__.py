@@ -18,7 +18,6 @@ def e(append): opted_entities.append(append)
 #
 e("tile_key")
 e("tile_lock")
-
 # ####
 
 class toolbox:

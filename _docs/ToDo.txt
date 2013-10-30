@@ -127,8 +127,7 @@ GOAL: Add TIMER.
 	~ just use 'entity' tool
 	~ ui references individual opted_entities
 
-
-! listed level_editor tools are auto-generated
++ forward timer object to all entities
 
 
 ! tools

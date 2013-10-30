@@ -18,7 +18,7 @@ Camera.x, Camera.y = 0, 0
 ###
 x,y = 3,3
 worldmap = WorldMap(x,y)
-entities = entities(None, worldmap)
+entities = entities(None, worldmap, None)
 ###
 
 mouse = MyMouse()

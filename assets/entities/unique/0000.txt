@@ -1,2 +1,4 @@
 tile_lock,2309
 tile_key,2009
+tile_lock,1306
+tile_key,1307

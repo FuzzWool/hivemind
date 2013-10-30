@@ -16,7 +16,10 @@ class entity(GameRectangle): #template
 	# * It contains and handles sub-class IDs.
 
 	def __init__(self, args):
-		name, tile_x, tile_y, Player, WorldMap = args
+
+		name, tile_x, tile_y,\
+		Player, WorldMap, Timer\
+		 = args
 
 		self.name = name
 		self.tile_x = tile_x
@@ -29,6 +32,7 @@ class entity(GameRectangle): #template
 
 		self.Player = Player
 		self.WorldMap = WorldMap
+		self.Timer = Timer
 
 		#####
 
