@@ -131,6 +131,8 @@ GOAL: Add TIMER.
 
 
 ! tools
+	+ graphics
+
 	! start_timer entity (timer sprite)
 		! disappears after being touched
 	! stop_timer entity (flag sprite)
