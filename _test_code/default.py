@@ -15,6 +15,6 @@ while running:
 
 
 	#Video
-	window.clear(sf.Color(255,200,200))
 	window.view = Camera
+	window.clear(sf.Color(255,200,200))
 	window.display()

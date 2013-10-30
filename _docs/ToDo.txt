@@ -69,8 +69,8 @@ x Add a SLIDE KICK.
 	! level_editor tools are generated for entities opted in
 
 
-! Add RUNNING animation.
-
+! Add running animation.
+! Test sliding > wall hanging.
 
 ! check CONSIDERATIONS.
 ! update DESIGN GOALS.
@@ -88,6 +88,35 @@ DEMO RELEASE
 
 ==========================
 
+GOAL: Add TIMER.
+	
++ create graphics
+	+ mock-up
+	+ sheet
 
++ added graphics
+	+ init, load, label sprites
+	! box which holds the sprites
+		+ padding inside around the sprites
+		+ move the timer: move the box, move the sprites
+
+! update states
+	! stopped: grey, everything at zero
+	! started:
+		! white
+		! colon flashes
+		! count updates
+	! paused:
+		! white > grey flashing
+
+
+
+box that wraps around the total size of the sprites
+
+
+
+---
+
+! level_editor tools are generated for entities opted in
 
 
