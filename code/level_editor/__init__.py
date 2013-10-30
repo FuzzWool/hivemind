@@ -12,12 +12,12 @@ from code.pysfml_game import window
 
 
 # ####
-# #ENTITY TOOLS
-# entities = []
-# def e(append): entities.append(append)
-# #
-# e("tile_key")
-# e("tile_lock")
+#ENTITY TOOLS
+opted_entities = []
+def e(append): opted_entities.append(append)
+#
+e("tile_key")
+e("tile_lock")
 
 # ####
 
@@ -32,8 +32,7 @@ class toolbox:
 		self.camera = camera(worldmap)
 
 		#Entities
-		self.tile_key = entity(entities, "tile_key")
-		self.tile_lock = entity(entities, "tile_lock")
+		self.entity = entity(entities, "tile_key")
 
 
 	def draw(self, camera, mouse):
@@ -46,15 +45,9 @@ class toolbox:
 			self.camera.draw(camera)
 
 		#Entities
-		if self.ui.selected in \
-		["tile_key", "tile_lock"]:
+		if self.ui.selected in opted_entities:
 			self.cursor.draw()
-
-			if self.ui.selected == "tile_key":
-				self.tile_key.draw()
-
-			if self.ui.selected == "tile_lock":
-				self.tile_lock.draw()
+			self.entity.draw()
 
 
 
@@ -78,13 +71,9 @@ class toolbox:
 			if key.D.held(): camera.x += GRID
 			if key.W.held(): camera.y -= GRID
 			if key.S.held(): camera.y += GRID
-	
-			# if key.ADD.pressed(): camera.zoom *= 2
-			# if key.SUBTRACT.pressed(): camera.zoom /= 2
 
 		#Toolbox buttons
 		self.ui.controls(mouse)
-
 
 		#Tool controls
 		if not self.ui.is_hovering(mouse):
@@ -102,10 +91,9 @@ class toolbox:
 				(worldmap, mouse, self.cursor)
 
 			#Entities
-			if self.ui.selected == "tile_key":
-				self.tile_key.controls(mouse,self.cursor)
-			if self.ui.selected == "tile_lock":
-				self.tile_lock.controls(mouse,self.cursor)
+			if self.ui.selected in opted_entities:
+				self.entity.name = self.ui.selected
+				self.entity.controls(mouse,self.cursor)
 
 	#
 
