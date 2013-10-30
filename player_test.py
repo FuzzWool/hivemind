@@ -19,7 +19,7 @@ Camera.focus = Nut.cbox
 
 timer = Timer()
 
-x,y = 3,3
+x,y = 5,20
 worldmap = WorldMap(x,y)
 entities = entities(Nut, worldmap, timer) ####
 
@@ -34,7 +34,7 @@ while running:
 	#window
 	if quit(): running = False
 	if key.RETURN.held():
-		timer.start()
+		pass
 
 	#entity
 	Nut.controls(key)

@@ -1,8 +1,0 @@
-timer_stop,1909
-timer_stop,1908
-timer_stop,1907
-timer_stop,1906
-timer_stop,1905
-timer_stop,1904
-timer_stop,1903
-timer_stop,1902

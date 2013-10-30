@@ -64,10 +64,7 @@ x Add a SLIDE KICK.
 			Smooths the camera by repeatedly lowering the speed.
 
 + Added COLLECTIBLES which OPEN ROOMS.
-
-! Add TIMER.
-	! level_editor tools are generated for entities opted in
-
++ Added TIMER.
 
 ! Add running animation.
 ! Test sliding > wall hanging.
@@ -92,54 +89,3 @@ DEMO RELEASE
 
 
 ==========================
-
-GOAL: Add TIMER.
-	
-+ create graphics
-	+ mock-up
-	+ sheet
-
-+ added graphics
-	+ init, load, label sprites
-	! box which holds the sprites
-		+ padding inside around the sprites
-		+ move the timer: move the box, move the sprites
-
-+ updates states
-	+ stopped: grey, everything at zero
-	+ started:
-		+ white
-		+ count updates
-
-+ tested
-	+ start > stop
-	+ stop > start
-	+ start goes over 99:99
-
-
-+ move
-	+ player_test has timer
-	+ timer is static
-=====
-
-
-~ level_editor entities is just one tool
-	~ just use 'entity' tool
-	~ ui references individual opted_entities
-
-+ forward timer object to all entities
-
-
-! tools
-	+ graphics
-	+ timer_start added to toolbox, appears in world
-	+ timer_stop added to toolbox, appears in world
-
-
-	! timer_start entity (timer sprite)
-		! disappears after being touched
-	! timer_stop entity (flag sprite)
-
-
-
-
