@@ -14,20 +14,14 @@ from code.game import Timer
 Camera = GameCamera()
 Camera.zoom = 2
 Camera.x, Camera.y = 0, 0
-#
 Nut = Entity("nut")
-#
 Camera.focus = Nut.cbox
 
-
-#
 x,y = 3,3
 worldmap = WorldMap(x,y)
 entities = entities(Nut, worldmap) ####
 
 timer = Timer()
-
-
 ############
 
 
@@ -64,5 +58,12 @@ while running:
 	worldmap.draw(Camera)
 	entities.draw(Camera) ####
 	Nut.draw()
+
+	#static drawing
+	old_pos = Camera.position
+	Camera.position = 0,0
+	window.view = Camera
 	timer.draw()
+	Camera.position = old_pos
+
 	window.display()

@@ -116,11 +116,11 @@ GOAL: Add TIMER.
 	+ stop > start
 	+ start goes over 99:99
 
-=====
 
 + move
 	+ player_test has timer
-
+	+ timer is static
+=====
 
 ! listed level_editor tools are auto-generated
 	
