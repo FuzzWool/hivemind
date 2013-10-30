@@ -100,23 +100,31 @@ GOAL: Add TIMER.
 		+ padding inside around the sprites
 		+ move the timer: move the box, move the sprites
 
-! update states
-	! stopped: grey, everything at zero
-	! started:
-		! white
-		! colon flashes
-		! count updates
-	! paused:
-		! white > grey flashing
+=====
 
++ updates states
+	+ stopped: grey, everything at zero
+	+ started:
+		+ white
+		+ count updates
 
-
-box that wraps around the total size of the sprites
-
-
++ tested
+	+ start > stop
+	+ stop > start
+	+ start goes over 99:99
 
 ---
 
-! level_editor tools are generated for entities opted in
+! move
+	player_test has timer
+
+! listed level_editor tools are auto-generated
+	
+! tools
+	! start_timer entity (timer sprite)
+		! disappears after being touched
+	! stop_timer entity (flag sprite)
+
+
 
 
