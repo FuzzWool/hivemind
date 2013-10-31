@@ -66,6 +66,8 @@ x Add a SLIDE KICK.
 + Added COLLECTIBLES which OPEN ROOMS.
 + Added TIMER.
 
+~ Create a LEVEL that lasts 5 MINUTES to play.
+
 ! Add running animation.
 ! Test sliding > wall hanging.
 
@@ -89,3 +91,5 @@ DEMO RELEASE
 
 
 ==========================
+
+GOAL: Create a LEVEL that lasts 5 MINUTES to play.

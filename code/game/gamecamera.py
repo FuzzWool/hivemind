@@ -24,6 +24,7 @@ class GameCamera(MyCamera):
 		#Stop at locks
 		x,y = self.focus.room_center
 		room = worldmap.rooms[x][y]
+
 		self._obey_camera_locks(room)
 
 		#Animate past locks

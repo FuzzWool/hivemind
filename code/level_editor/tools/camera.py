@@ -49,12 +49,10 @@ class camera:
 		
 		#find which lock to select
 		x,y = cursor.room_position
-
-		if 0 <= x < worldmap.room_h\
-		and 0 <= y < worldmap.room_w:
-			
-			self.all_locks[x][y].controls\
-			(mouse, cursor)
+		x += 1; y += 1
+		x,y = worldmap.keep_in_room_points((x,y))
+		x -= 1; y -= 1
+		self.all_locks[x][y].controls(mouse, cursor)
 
 
 

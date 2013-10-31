@@ -16,7 +16,7 @@ Camera.zoom = 1
 Camera.x, Camera.y = 0, 0
 
 ###
-x,y = 5, 20
+x,y = 4, 30
 worldmap = WorldMap(x,y)
 entities = entities(None, worldmap, None)
 ###

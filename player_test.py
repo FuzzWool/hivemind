@@ -19,7 +19,7 @@ Camera.focus = Nut.cbox
 
 timer = Timer()
 
-x,y = 5,20
+x,y = 4,30
 worldmap = WorldMap(x,y)
 entities = entities(Nut, worldmap, timer) ####
 
